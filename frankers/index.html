@@ -268,7 +268,7 @@ const guardado = {
   escribir(clave, valor) { try { localStorage.setItem(clave, JSON.stringify(valor)); } catch {} },
   borrar(clave) { try { localStorage.removeItem(clave); } catch {} },
 };
-let memoria = guardado.leer("frankers-memoria", { nombre: null, datos: {} });
+let memoria = { nombre: null, datos: {}, gustos: [], hechos: [], aprendido: {}, ...guardado.leer("frankers-memoria", {}) };
 let historial = guardado.leer("frankers-historial", []);
 let token = guardado.leer("frankers-token", null);
 let conocimiento = { version: 1, actualizado: "", entradas: [] };
@@ -323,7 +323,7 @@ function parecido(a, na, b, nb) {
 }
 // Palabras "importantes" de una frase: si le preguntás algo con una palabra que la
 // respuesta aprendida no tiene (ej: "comida" vs "color"), baja la confianza. Así no inventa.
-const VACIAS = new Set("que como cual cuales es son tu tus te el la los las de del al un una uno me mi mis y o vos sos frankers mas muy por para lo se en con hay a le les nos su sus esto eso esta este ese esa decime contame sabes".split(" "));
+const VACIAS = new Set("que como cual cuales es son tu tus te el la los las de del al un una uno me mi mis y o vos sos frankers mas muy por para lo se en con hay a le les nos su sus esto eso esta este ese esa decime contame sabes todo".split(" "));
 const importantes = (t) => normalizar(t).split(" ").filter(w => w.length > 2 && !VACIAS.has(w));
 function trigramas(w) { const p = ` ${w} `, s = new Set(); for (let i = 0; i < p.length - 2; i++) s.add(p.slice(i, i + 3)); return s; }
 function palabraParecida(a, b) {
@@ -338,7 +338,7 @@ function pensar(texto) {
     let s = parecido(v, n, it.v, it.n);
     if (s < 0.25) continue;
     const faltan = mias.filter(w => !it.p.some(p => palabraParecida(w, p))).length;
-    s *= Math.pow(0.6, faltan);
+    s *= Math.pow(0.45, faltan);
     if (s > puntaje) { puntaje = s; mejor = it.e; frase = it.q; }
   }
   return { entrada: mejor, puntaje, frase };
@@ -445,9 +445,191 @@ function esFalso(texto) {
   return null;
 }
 
+const capitalizar = (s) => s.charAt(0).toUpperCase() + s.slice(1);
+/* ---------- 2c. ANALIZADOR DE ORACIONES (idea y código de Franco) ----------
+   Lee la oración, la parte en pedazos, busca sujeto, verbo y predicado en cada uno,
+   y responde a TODO lo que se dijo.
+   [hola soy Franco y tengo un perro, cómo estás?]
+     -> [saludo] [yo + ser + "Franco"] [yo + tener + "un perro"] [pregunta: vos + estar]
+   Para ver cómo piensa, escribile: "analizá: el sol es una estrella" */
+const PERSONAS = ["yo", "vos", "vos", "él/ella", "nosotros", "ellos/ellas"];
+const VERBOS_IRREGULARES = {
+  ser:      ["soy", "sos", "eres", "es", "somos", "son"],
+  estar:    ["estoy", "estás", "estás", "está", "estamos", "están"],
+  tener:    ["tengo", "tenés", "tienes", "tiene", "tenemos", "tienen"],
+  querer:   ["quiero", "querés", "quieres", "quiere", "queremos", "quieren"],
+  jugar:    ["juego", "jugás", "juegas", "juega", "jugamos", "juegan"],
+  hacer:    ["hago", "hacés", "haces", "hace", "hacemos", "hacen"],
+  ir:       ["voy", "vas", "vas", "va", "vamos", "van"],
+  saber:    ["sé", "sabés", "sabes", "sabe", "sabemos", "saben"],
+  poder:    ["puedo", "podés", "puedes", "puede", "podemos", "pueden"],
+  llamarse: ["llamo", "llamás", "llamas", "llama", "llamamos", "llaman"],
+  gustar:   [null, null, null, "gusta", null, "gustan"],
+  vivir:    ["vivo", "vivís", "vives", "vive", "vivimos", "viven"],
+  sentir:   ["siento", "sentís", "sientes", "siente", "sentimos", "sienten"],
+  encantar: [null, null, null, "encanta", null, "encantan"],
+};
+const VERBOS_REGULARES = [
+  "programar", "escuchar", "estudiar", "cocinar", "dibujar", "cantar", "bailar", "mirar",
+  "trabajar", "hablar", "usar", "crear", "necesitar", "ayudar", "odiar", "amar", "extrañar",
+  "tocar", "comer", "beber", "aprender", "leer", "correr", "escribir", "compartir", "viajar",
+];
+function conjugar(infinitivo) {
+  const raiz = infinitivo.slice(0, -2), fin = infinitivo.slice(-2);
+  if (fin === "ar") return [raiz + "o", raiz + "ás", raiz + "as", raiz + "a", raiz + "amos", raiz + "an"];
+  if (fin === "er") return [raiz + "o", raiz + "és", raiz + "es", raiz + "e", raiz + "emos", raiz + "en"];
+  return [raiz + "o", raiz + "ís", raiz + "es", raiz + "e", raiz + "imos", raiz + "en"];
+}
+const VERBOS = {}; // "tengo" -> { infinitivo: "tener", persona: 0, formas: [...] }
+function agregarVerbo(infinitivo, formas) {
+  formas.forEach((forma, persona) => {
+    if (!forma) return;
+    const clave = normalizar(forma);
+    if (clave === "se") return; // "sé" se confunde con "se"
+    if (!VERBOS[clave]) VERBOS[clave] = { infinitivo, persona, formas };
+  });
+}
+for (const inf in VERBOS_IRREGULARES) agregarVerbo(inf, VERBOS_IRREGULARES[inf]);
+VERBOS_REGULARES.forEach(inf => agregarVerbo(inf, conjugar(inf)));
+
+const PALABRAS_PREGUNTA = ["que", "como", "cuando", "donde", "quien", "quienes", "cual", "cuales", "cuanto", "cuantos", "adonde"];
+const CLITICOS = ["me", "te", "se", "le", "les", "nos", "lo", "la"];
+const CONJUNCIONES = ["y", "e", "pero"];
+const SALUDOS_AL_INICIO = ["hola", "buenas", "hey", "ey", "chau", "gracias", "buen", "dia", "tardes", "noches", "che", "bueno"];
+const ARTICULOS = ["el", "la", "los", "las", "un", "una", "unos", "unas"];
+const ESTADOS = {
+  feliz: "feliz", contento: "feliz", contenta: "feliz", bien: "feliz", alegre: "feliz",
+  triste: "triste", mal: "triste",
+  enojado: "enojado", enojada: "enojado", furioso: "enojado", furiosa: "enojado",
+  aburrido: "aburrido", aburrida: "aburrido",
+  cansado: "cansado", cansada: "cansado",
+  nervioso: "nervioso", nerviosa: "nervioso",
+};
+const NO_SON_NOMBRES = ["un", "una", "el", "la", "muy", "re", "de", "del", "yo", "nene", "nena", "chico", "chica", "nuevo", "nueva", "tu", "su", "mi", "una", "persona", "humano", "ia", "robot", "de"];
+const DAR_VUELTA = { yo: "vos", vos: "yo", "tú": "yo", tu: "mi", mi: "tu", mis: "tus", tus: "mis", me: "te", te: "me", conmigo: "con vos", contigo: "conmigo" };
+const PRONOMBRES = new Set("esto eso aquello este esta ese esa el ella ellos ellas todo nada algo que lo hoy ayer manana yo vos nosotros".split(" "));
+// Palabras de opinión: "el fútbol es lo más" se guarda como opinión tuya, no como un hecho
+const OPINIONES = /\b(lind[oa]s?|fe[oa]s?|mejor(es)?|peor(es)?|lo mas|genial(es)?|aburrid[oa]s?|divertid[oa]s?|horribles?|hermos[oa]s?|copad[oa]s?|mal[oa]s?|buen[oa]s?|buenisim[oa]s?|ric[oa]s?|asqueros[oa]s?|increibles?|espectacular(es)?|un embole|tremend[oa]s?|maravillos[oa]s?|gross?o|crack|lo peor|lo mejor|un capo|una capa)\b/;
+// Cosas del cuerpo o la apariencia de alguien: no las repite (regla de respeto)
+const CUERPO = /\b(gord[oa]s?|flac[oa]s?|enan[oa]s?|petis[oa]?s?|narigon\w*|orejon\w*|cuatro ojos|pelad[oa]s?|fe[oa]s?)\b/;
+
+const RESP = {
+  nombre:       ["¡Mucho gusto, [nombre]! Me voy a acordar de tu nombre. 😊", "¡Encantado, [nombre]!", "Listo, ya sé que te llamás [nombre]."],
+  tuNombre:     ["Te llamás [nombre].", "¡Sos [nombre]! No me olvido. 😄"],
+  noSeTuNombre: ["Todavía no me dijiste tu nombre. ¿Cómo te llamás?"],
+  feliz:        ["¡Qué bueno! Me alegra muchísimo.", "¡Buenísimo! Contame más.", "¡Genial! Esa energía me encanta.", "¡Qué lindo! ¿Qué pasó?"],
+  enojado:      ["Uy, parece que estás enojado. ¿Querés contarme qué pasó?", "Te entiendo, a veces las cosas salen mal. ¿Te puedo ayudar en algo?", "Está bien enojarse. Si querés, respiramos y lo vemos juntos."],
+  aburrido:     ["¡Charlemos! Enseñame algo nuevo.", "¿Querés que dibujemos algo? Pedime un dibujo.", "¡Pedime un chiste o un dibujo!"],
+  cansado:      ["Uf, descansá un rato, te lo merecés.", "Tomate un descanso, después seguimos."],
+  nervioso:     ["Tranqui, respirá hondo. ¡Vas a estar bien!", "Es normal ponerse nervioso. ¡Vos podés!"],
+  meGusta:      ["¡Qué bueno que te guste [cosa]! Lo anoto.", "¡Anotado: te gusta [cosa]!"],
+  noMeGusta:    ["Entendido, no te gusta [cosa]. Lo anoto."],
+  teGusta:      ["Todavía no probé [cosa], ¡pero me encantaría aprender! ¿A vos te gusta?"],
+  queMeGusta:   ["Me dijiste que te gusta: [valor]."],
+  noSeGustos:   ["Todavía no me contaste qué te gusta. ¿Qué te gusta?"],
+  aprendi:      ["¡Gracias! Aprendí que [cosa] es [valor].", "¡No lo sabía! Ahora sé que [cosa] es [valor]."],
+  opinion:      ["Anotado: para vos, [frase]. Lo guardo como tu opinión. 😊", "¡Entendido! Esa es tu opinión: [frase]."],
+  seQueEs:      ["Me contaste que [cosa] es [valor].", "Me enseñaste que [cosa] es [valor]."],
+  noSeQueEs:    ["Todavía no sé qué es [cosa]. ¿Me lo enseñás?", "No aprendí qué es [cosa]. ¿Me contás?"],
+  entendi:      ["Anotado: [frase].", "Entendí: [frase].", "¡Ah, mirá! [frase]."],
+  parteRara:    ["No entendí bien la parte de \"[frase]\". ¿Me la explicás?"],
+};
+
+function separarPalabras(texto) { return texto.replace(/[¿¡"()]/g, " ").replace(/[.!?;,]/g, " ").split(/\s+/).filter(Boolean); }
+function sacarArticulos(texto) { return normalizar(texto).split(" ").filter(p => !ARTICULOS.includes(p)).join(" ").trim(); }
+function rellenar(frase, datos = {}) {
+  frase = memoria.nombre ? frase.replace(/\[nombre\]/g, memoria.nombre) : frase.replace(/,?\s*\[nombre\]/g, "");
+  return frase.replace(/\[cosa\]/g, datos.cosa || "eso").replace(/\[valor\]/g, datos.valor || "").replace(/\[frase\]/g, datos.frase || "");
+}
+function arreglarMayusculas(texto) { return texto.replace(/(^|[.!?]\s+)([¡¿"]?)(\p{Ll})/gu, (m, a, b, c) => a + b + c.toUpperCase()); }
+
+// Partir: "hola soy Franco y tengo un perro, cómo estás?" -> ["hola"] ["soy Franco"] ["tengo un perro"] ["cómo estás" (pregunta)]
+function partirEnPedazos(texto) {
+  const trozos = texto.match(/[^.!?;,]+[.!?;,]*/g) || [];
+  const pedazos = [];
+  for (const trozo of trozos) {
+    const esPregunta = trozo.includes("?") || trozo.includes("¿");
+    const palabras = separarPalabras(trozo);
+    const saludo = [];
+    while (palabras.length > 1 && SALUDOS_AL_INICIO.includes(normalizar(palabras[0])) && !VERBOS[normalizar(palabras[0])]) saludo.push(palabras.shift());
+    if (saludo.some(p => !["che", "bueno"].includes(normalizar(p)))) pedazos.push({ palabras: saludo, esPregunta: false });
+    let actual = [];
+    palabras.forEach((palabra, i) => {
+      const sigueVerbo = palabras.slice(i + 1).some(p => VERBOS[normalizar(p)]);
+      if (CONJUNCIONES.includes(normalizar(palabra)) && actual.length && sigueVerbo) { pedazos.push({ palabras: actual, esPregunta }); actual = []; }
+      else actual.push(palabra);
+    });
+    if (actual.length) pedazos.push({ palabras: actual, esPregunta });
+  }
+  return pedazos;
+}
+
+// Analizar un pedazo: sujeto, verbo y predicado
+function analizarPedazo(pedazo) {
+  const p = pedazo.palabras, n = p.map(w => normalizar(w));
+  const palabraPregunta = PALABRAS_PREGUNTA.includes(n[0]) ? n[0] : null;
+  const a = {
+    texto: p.join(" "), tipo: (pedazo.esPregunta || palabraPregunta) ? "pregunta" : "afirmación", palabraPregunta,
+    sujeto: null, sujetoImplicito: false, verbo: null, infinitivo: null, persona: null, formas: null,
+    predicado: null, complemento: "", cliticos: [], negacion: n.includes("no"),
+  };
+  let iv = -1;
+  for (let i = 0; i < n.length; i++) {
+    if (!VERBOS[n[i]]) continue;
+    if (n[i] === "como" && i === 0 && (a.tipo === "pregunta" || VERBOS[n[1]])) continue; // "cómo" de pregunta, no "yo como"
+    iv = i; break;
+  }
+  if (iv === -1) { a.complemento = a.texto; return a; }
+  const v = VERBOS[n[iv]];
+  Object.assign(a, { verbo: p[iv], infinitivo: v.infinitivo, persona: v.persona, formas: v.formas, complemento: p.slice(iv + 1).join(" ") });
+  const antes = [], cliticosOriginales = [];
+  for (let i = 0; i < iv; i++) {
+    if (i === 0 && palabraPregunta) continue;
+    if (n[i] === "no") continue;
+    if (n[i] === "a" || (n[i] === "mi" && n[i - 1] === "a")) continue; // "a mí me gusta"
+    // "la"/"lo" son artículo si no van pegados al verbo: "la luna es…"
+    if (CLITICOS.includes(n[i]) && !(["la", "lo"].includes(n[i]) && i + 1 < iv)) { a.cliticos.push(n[i]); cliticosOriginales.push(p[i]); continue; }
+    antes.push(p[i]);
+  }
+  if (a.infinitivo === "llamarse") { if (a.cliticos.includes("me")) a.persona = 0; else if (a.cliticos.includes("te")) a.persona = 1; }
+  if (a.infinitivo === "gustar" || a.infinitivo === "encantar") {
+    a.aQuien = a.cliticos.includes("me") ? 0 : a.cliticos.includes("te") ? 1 : 3;
+    a.sujeto = a.complemento || antes.join(" ");
+  } else if (antes.length) a.sujeto = antes.join(" ");
+  else { a.sujeto = PERSONAS[a.persona]; a.sujetoImplicito = true; }
+  a.predicado = [a.negacion ? "no" : "", ...cliticosOriginales, ...p.slice(iv)].filter(Boolean).join(" ");
+  return a;
+}
+function analizarOracion(texto) { return partirEnPedazos(texto).map(analizarPedazo); }
+
+// Dar vuelta: "tengo un perro" -> "tenés un perro"
+function darVuelta(a) {
+  const nuevaPersona = a.persona === 0 ? 1 : (a.persona === 1 || a.persona === 2) ? 0 : a.persona;
+  const cambiar = (w) => DAR_VUELTA[normalizar(w)] || w;
+  const sujeto = a.sujetoImplicito ? "" : a.sujeto.split(" ").map(cambiar).join(" ");
+  const verbo = a.formas[nuevaPersona] || a.verbo;
+  return [sujeto, a.negacion ? "no" : "", a.cliticos.map(cambiar).join(" "), verbo, a.complemento.split(" ").map(cambiar).join(" ")].filter(Boolean).join(" ");
+}
+// Buscar un nombre: "soy Franco", "me llamo Franco"
+function buscarNombre(a) {
+  if (a.tipo !== "afirmación" || a.persona !== 0) return null;
+  if (a.infinitivo !== "ser" && a.infinitivo !== "llamarse") return null;
+  const palabra = a.complemento.split(" ")[0] || "", limpia = normalizar(palabra);
+  if (limpia.length < 2 || ESTADOS[limpia] || NO_SON_NOMBRES.includes(limpia) || OPINIONES.test(limpia)) return null;
+  return capitalizar(palabra.toLowerCase());
+}
+// Mostrar cómo pensó una oración
+function explicarAnalisis(texto) {
+  const partes = analizarOracion(texto);
+  if (!partes.length) return "No encontré ninguna oración para analizar.";
+  return "Así la entendí:\n" + partes.map((a, i) => {
+    if (!a.verbo) return `${i + 1}) "${a.texto}" → no tiene verbo (saludo, gracias o algo suelto)`;
+    return `${i + 1}) "${a.texto}" → ${a.tipo} · sujeto: ${a.sujeto}${a.sujetoImplicito ? " (implícito)" : ""} · verbo: ${a.verbo} (${a.infinitivo}) · predicado: ${a.predicado}`;
+  }).join("\n");
+}
+
 /* ---------- 3. HABILIDADES ---------- */
 let ultimaRespuesta = null; // para poder corregir: { pregunta, entradaId }
-const capitalizar = (s) => s.charAt(0).toUpperCase() + s.slice(1);
 let ultimoDibujo = null;
 
 function responder(original) {
@@ -466,8 +648,11 @@ function responder(original) {
     return { texto: alAzar(["¡Gracias por avisarme! Así voy aprendiendo.", "Uy, perdón. Puede ser que me haya equivocado: todavía estoy aprendiendo."]) + " Franco revisa todo lo que sé para corregirlo." };
   }
 
+  const verAnalisis = original.match(/^\s*analiz[aá](?:me)?(?:\s+(?:la|esta))?(?:\s+(?:oraci[oó]n|frase))?\s*:?\s+(.+)$/i);
+  if (verAnalisis) return { texto: explicarAnalisis(verAnalisis[1]) };
+
   if (/\b(olvida(te)? (de )?todo|borra tu memoria|resetea(te)?)\b/.test(t)) {
-    memoria = { nombre: null, datos: {} }; guardarMemoria();
+    memoria = { nombre: null, datos: {}, gustos: [], hechos: [], aprendido: {} }; guardarMemoria();
     return { texto: "Listo, me olvidé de todo lo que me contaste. 🫥 ¡Empecemos de nuevo!" };
   }
 
@@ -492,41 +677,6 @@ function responder(original) {
     return { texto, dibujo: { prompt: pedido, semilla: Date.now() % 1e9 } };
   }
 
-  // Recordar el nombre
-  const nom = original.match(/(?:me llamo|mi nombre es)\s+([a-záéíóúñü]+)/i);
-  if (nom && !/^(que|como|cual)/.test(t)) {
-    memoria.nombre = capitalizar(nom[1].toLowerCase()); guardarMemoria();
-    return { texto: `¡Mucho gusto, ${memoria.nombre}! Me voy a acordar de tu nombre. 😊` };
-  }
-  if (/\b(como me llamo|cual es mi nombre|sabes (como me llamo|mi nombre)|quien soy( yo)?)\b/.test(t)) {
-    return { texto: memoria.nombre ? `¡Sos ${memoria.nombre}! 😄` : "Todavía no me dijiste tu nombre. ¿Cómo te llamás?" };
-  }
-  if (/\b(que sabes de mi|que te acordas de mi|que recordas)\b/.test(t)) {
-    const datos = Object.entries(memoria.datos);
-    if (!memoria.nombre && !datos.length) return { texto: "Todavía no sé nada de vos. ¡Contame algo! Por ejemplo: \"mi comida favorita es la pizza\"." };
-    const lineas = [];
-    if (memoria.nombre) lineas.push(`Te llamás ${memoria.nombre}.`);
-    for (const [k, v] of datos) lineas.push(`Tu ${k} es ${v}.`);
-    return { texto: "Esto es lo que me acuerdo de vos:\n" + lineas.join("\n") };
-  }
-
-  // Preguntar un dato guardado: "cuál es mi color favorito"
-  const preg = t.match(/\b(?:cual|que|como|quien|cuales|donde)\s+(?:es|son|era)\s+(?:mi|mis)\s+(.+)$/);
-  if (preg) {
-    const clave = preg[1].trim();
-    const encontrada = Object.keys(memoria.datos).find(k => k === clave || k.includes(clave) || clave.includes(k));
-    if (encontrada) return { texto: `Tu ${encontrada} es ${memoria.datos[encontrada]}. ¡Me acordé! 🧠` };
-    return { texto: `Todavía no me contaste tu ${clave}. ¿Cuál es?` };
-  }
-
-  // Guardar un dato: "mi color favorito es el azul"
-  const dato = original.match(/\bmis?\s+([^.!?]{2,30}?)\s+(?:es|son|se llama)\s+([^?]{1,60}?)[.!]*$/i);
-  if (dato && !/^(cual|que|como|quien|sabes|adivina|donde)/.test(t)) {
-    const clave = normalizar(dato[1]);
-    memoria.datos[clave] = dato[2].trim(); guardarMemoria();
-    return { texto: `¡Anotado! Me voy a acordar de que tu ${clave} es ${dato[2].trim()}. 📝` };
-  }
-
   // Cuentas
   const cuenta = normalizar(original, true)
     .replace(/\b(cuanto (es|da|son)|calcula(me)?|resolve(me)?|resuelve|cuanto)\b/g, "")
@@ -543,23 +693,161 @@ function responder(original) {
   if (/\bque hora es\b/.test(t)) return { texto: `Son las ${new Date().toLocaleTimeString("es-AR", { hour: "2-digit", minute: "2-digit", hour12: false })}. ⏰` };
   if (/\bque (dia|fecha) es( hoy)?\b/.test(t)) return { texto: `Hoy es ${new Date().toLocaleDateString("es-AR", { weekday: "long", day: "numeric", month: "long", year: "numeric" })}. 📅` };
 
-  // Lo que aprendió
-  const { entrada, puntaje } = pensar(original);
-  if (entrada && puntaje >= 0.42) {
-    ultimaRespuesta = { pregunta: original, entradaId: entrada.id };
-    const r = personalizar(alAzar(entrada.respuestas));
-    return { texto: entrada.tipo === "opinion" ? `${entrada.autor || "Alguien"} opina: "${r}" (es una opinión, no un hecho).` : r };
-  }
-  ultimaRespuesta = null;
+  // Todo lo demás: el analizador parte el mensaje y responde cada parte
+  return responderPorPartes(original);
+}
 
-  // No sabe
-  if (token) return { texto: alAzar(["Todavía no lo sé. ¿Me lo enseñás?", "Uy, eso no lo aprendí aún. ¿Me lo enseñás?", "No tengo idea, pero me encantaría saberlo. 🤔", "Esa me la ganaste. ¿Cuál es la respuesta?"]), ensenar: { pregunta: original } };
+function noSabe(pregunta) {
+  ultimaRespuesta = null;
+  if (token) return { texto: alAzar(["Todavía no lo sé. ¿Me lo enseñás?", "Uy, eso no lo aprendí aún. ¿Me lo enseñás?", "No tengo idea, pero me encantaría saberlo. 🤔", "Esa me la ganaste. ¿Cuál es la respuesta?"]), ensenar: { pregunta } };
   return { texto: alAzar([
     "Todavía no lo sé. 🤔 Prefiero decírtelo antes que inventar.",
     "Uy, eso no lo aprendí aún. Franco me enseña cosas nuevas seguido.",
     "No tengo idea, pero me encantaría saberlo. Todavía estoy aprendiendo. 👶",
     "Esa me la ganaste: todavía no lo sé. Probá preguntarme otra cosa o pedime un dibujo.",
   ]) };
+}
+// Busca en lo aprendido. Devuelve el texto de la respuesta o null.
+function conocimientoPara(texto, umbral) {
+  const { entrada, puntaje, frase } = pensar(texto);
+  if (!entrada || puntaje < umbral) return null;
+  if (/\bno\b/.test(normalizar(texto)) !== /\bno\b/.test(normalizar(frase))) return null; // "no estoy feliz" ≠ "estoy feliz"
+  ultimaRespuesta = { pregunta: texto, entradaId: entrada.id };
+  const r = personalizar(alAzar(entrada.respuestas));
+  return entrada.tipo === "opinion" ? `${entrada.autor || "Alguien"} opina: "${r}" (es una opinión, no un hecho).` : r;
+}
+// Memoria de cosas tuyas: "mi color favorito es el azul", "cuál es mi color favorito", "qué sabés de mí"
+function datosPersonales(texto) {
+  const t = normalizar(texto);
+  if (/\b(como me llamo|cual es mi nombre|sabes (como me llamo|mi nombre)|quien soy( yo)?)\b/.test(t))
+    return rellenar(alAzar(memoria.nombre ? RESP.tuNombre : RESP.noSeTuNombre));
+  if (/\b(que (cosas )?me (gusta|gustan)|sabes (que|lo que) me gusta)\b/.test(t))
+    return memoria.gustos.length ? rellenar(alAzar(RESP.queMeGusta), { valor: memoria.gustos.join(", ") }) : alAzar(RESP.noSeGustos);
+  if (/\b(que sabes de mi|que te acordas de mi|que recordas de mi|que recordas)\b/.test(t)) {
+    const lineas = [];
+    if (memoria.nombre) lineas.push(`Te llamás ${memoria.nombre}.`);
+    for (const [k, v] of Object.entries(memoria.datos)) lineas.push(`Tu ${k} ${v.startsWith("se llama") ? "" : "es "}${v}.`);
+    if (memoria.gustos.length) lineas.push(`Te gusta: ${memoria.gustos.join(", ")}.`);
+    for (const h of memoria.hechos.slice(-5)) lineas.push(capitalizar(h) + ".");
+    for (const [k, v] of Object.entries(memoria.aprendido)) lineas.push(`Me enseñaste que ${v.cosa || k} es ${v.valor || v}.`);
+    return lineas.length ? "Esto es lo que me acuerdo de vos:\n" + lineas.join("\n") : "Todavía no sé nada de vos. ¡Contame algo! Por ejemplo: \"me gusta programar\".";
+  }
+  const preg = t.match(/\b(?:cual|que|como|quien|cuales|donde)\s+(?:es|son|era)\s+(?:mi|mis)\s+(.+)$/);
+  if (preg) {
+    const clave = preg[1].trim();
+    if (clave === "nombre") return rellenar(alAzar(memoria.nombre ? RESP.tuNombre : RESP.noSeTuNombre));
+    const encontrada = Object.keys(memoria.datos).find(k => k === clave || k.includes(clave) || clave.includes(k));
+    return encontrada ? `Tu ${encontrada} ${memoria.datos[encontrada].startsWith("se llama") ? "" : "es "}${memoria.datos[encontrada]}. ¡Me acordé! 🧠` : `Todavía no me contaste tu ${clave}. ¿Cuál es?`;
+  }
+  const dato = texto.match(/\bmis?\s+([^.!?]{2,30}?)\s+(es|son|se llama|se llaman)\s+([^?]{1,60}?)[.!]*$/i);
+  if (dato && !/^(cual|que|como|quien|sabes|adivina|donde)/.test(t)) {
+    const clave = normalizar(dato[1]), valor = (dato[2].startsWith("se") ? "se llama " : "") + dato[3].trim();
+    if (clave === "nombre") { memoria.nombre = capitalizar(dato[3].trim().split(" ")[0].toLowerCase()); guardarMemoria(); return rellenar(alAzar(RESP.nombre)); }
+    memoria.datos[clave] = valor; guardarMemoria();
+    return `¡Anotado! Me voy a acordar de que tu ${clave} ${valor.startsWith("se llama") ? "" : "es "}${valor}. 📝`;
+  }
+  return undefined;
+}
+// Aprender "el sol es una estrella"
+function aprenderHecho(a, extras) {
+  const sujeto = a.sujeto.trim(), valor = a.complemento.replace(/[.!]+$/, "").trim();
+  const clave = sacarArticulos(sujeto), frase = `${sujeto} ${a.negacion ? "no " : ""}${a.verbo} ${valor}`;
+  if (CUERPO.test(normalizar(valor))) return "Prefiero no hablar del cuerpo o de cómo se ve alguien: cada persona es como es. 💜";
+  const falso = esFalso(frase);
+  if (falso) return alAzar(["Mmm, creo que eso no es así.", "Eso no me cierra.", "Me parece que me estás haciendo una broma. 😄"]) + " " + falso;
+  if (OPINIONES.test(normalizar(valor)) || a.negacion) {
+    memoria.hechos.push(`para vos, ${frase}`); memoria.hechos = memoria.hechos.slice(-30); guardarMemoria();
+    return rellenar(alAzar(RESP.opinion), { frase });
+  }
+  if (token) {
+    const { entrada, puntaje } = pensar("que es " + sujeto);
+    if (entrada && puntaje >= 0.6 && !entrada.respuestas.some(r => normalizar(r).includes(normalizar(valor)))) {
+      extras.ensenar = extras.ensenar || { pregunta: "que es " + clave, respuesta: capitalizar(frase) + "." };
+      return `Eso choca con lo que sé: ${entrada.respuestas[0]} ¿Me pasás de dónde lo sacaste? Si querés cambiarlo, tocá "Enseñarme".`;
+    }
+    const preguntas = [...new Set(["que es " + clave, "que es " + normalizar(sujeto), clave.length >= 4 ? clave : null].filter(Boolean))];
+    extras.publicar = agregarEntrada(preguntas, [capitalizar(frase) + "."], { tipo: "hecho" });
+    return rellenar(alAzar(RESP.aprendi), { cosa: sujeto, valor }) + " Ya lo sabe todo el mundo. 🎓";
+  }
+  memoria.aprendido[clave] = { cosa: sujeto, valor }; guardarMemoria();
+  return rellenar(alAzar(RESP.aprendi), { cosa: sujeto, valor });
+}
+// Responder un pedazo. Devuelve texto, "" (ya respondido) o null (no lo entendió).
+function responderPedazo(a, nombreNuevo, extras) {
+  if (buscarNombre(a)) return nombreNuevo ? "" : rellenar(alAzar(RESP.nombre));
+  const dp = datosPersonales(a.texto);
+  if (dp !== undefined) return dp;
+  if (a.tipo === "afirmación" && a.infinitivo === "ser" && a.persona === 3 && PRONOMBRES.has(normalizar(a.sujeto || "")) && OPINIONES.test(normalizar(a.complemento))) {
+    const negativo = /\b(fe[oa]s?|peor(es)?|lo peor|aburrid[oa]s?|horribles?|mal[oa]s?|asqueros[oa]s?|un embole)\b/.test(normalizar(a.complemento)) !== a.negacion;
+    return negativo ? alAzar(["Uy, ¿qué no te gustó? Contame y lo mejoro.", "¡Qué lástima! ¿Qué podemos cambiar?"]) : alAzar(["¡Me alegra que te guste! 😄", "¡Qué bueno! A mí también me gusta.", "¡Genial! Esa energía me encanta."]);
+  }
+  const seguro = conocimientoPara(a.texto, 0.6);
+  if (seguro) return seguro;
+
+  if (a.verbo) {
+    const primera = normalizar(a.complemento.split(" ").find(p => !["muy", "re", "un", "poco", "medio", "bastante"].includes(normalizar(p))) || "");
+    if (a.tipo === "pregunta" && a.persona === 0 && (a.infinitivo === "llamarse" || a.infinitivo === "ser"))
+      return rellenar(alAzar(memoria.nombre ? RESP.tuNombre : RESP.noSeTuNombre));
+    // Cómo estoy yo: "estoy cansado", "no estoy feliz"
+    if (a.tipo === "afirmación" && a.persona === 0 && ["estar", "ser", "sentir"].includes(a.infinitivo) && ESTADOS[primera]) {
+      const estado = a.negacion ? (ESTADOS[primera] === "feliz" ? "triste" : "feliz") : ESTADOS[primera];
+      if (estado === "triste") return alAzar(FILTROS.find(f => f.tipo === "tristeza").msg);
+      return alAzar(RESP[estado]);
+    }
+    // Gustos
+    if (a.infinitivo === "gustar" || a.infinitivo === "encantar") {
+      const cosa = a.sujeto ? a.sujeto.split(" ").map(p => DAR_VUELTA[normalizar(p)] || p).join(" ") : "";
+      if (a.aQuien === 0 && a.tipo === "afirmación" && cosa) {
+        if (!a.negacion && !memoria.gustos.includes(cosa)) { memoria.gustos.push(cosa); memoria.gustos = memoria.gustos.slice(-20); guardarMemoria(); }
+        return rellenar(alAzar(a.negacion ? RESP.noMeGusta : RESP.meGusta), { cosa });
+      }
+      if (a.aQuien === 0 && a.tipo === "pregunta")
+        return memoria.gustos.length ? rellenar(alAzar(RESP.queMeGusta), { valor: memoria.gustos.join(", ") }) : alAzar(RESP.noSeGustos);
+      if (a.aQuien === 1 && a.tipo === "pregunta") return conocimientoPara(a.texto, 0.42) || rellenar(alAzar(RESP.teGusta), { cosa: a.sujeto });
+    }
+    // Qué es algo: "qué es el sol?"
+    if (a.tipo === "pregunta" && a.infinitivo === "ser" && a.persona === 3 && ["que", "quien"].includes(a.palabraPregunta) && a.complemento) {
+      const cosa = a.complemento.trim(), clave = sacarArticulos(cosa);
+      const sabido = conocimientoPara(a.texto, 0.42) || conocimientoPara("que es " + cosa, 0.42);
+      if (sabido) return sabido;
+      const local = memoria.aprendido[clave];
+      if (local) return rellenar(alAzar(RESP.seQueEs), { cosa: local.cosa || cosa, valor: local.valor || local });
+      if (token && !extras.ensenar) extras.ensenar = { pregunta: a.texto };
+      return rellenar(alAzar(RESP.noSeQueEs), { cosa });
+    }
+    // Enseñar algo: "el sol es una estrella"
+    if (a.tipo === "afirmación" && a.infinitivo === "ser" && a.persona === 3 && !a.sujetoImplicito && a.complemento
+        && !PRONOMBRES.has(normalizar(a.sujeto)) && !/^(mi|mis|tu|tus|su|sus)\b/.test(normalizar(a.sujeto)) && a.sujeto.split(" ").length <= 4)
+      return aprenderHecho(a, extras);
+  }
+  const parecido = conocimientoPara(a.texto, 0.42);
+  if (parecido) return parecido;
+  // Cualquier otra afirmación con verbo: la guarda y la confirma
+  if (a.verbo && a.tipo === "afirmación") {
+    const frase = darVuelta(a);
+    memoria.hechos.push(frase); memoria.hechos = memoria.hechos.slice(-30); guardarMemoria();
+    return rellenar(alAzar(RESP.entendi), { frase });
+  }
+  return null;
+}
+// Une las respuestas de todos los pedazos
+function responderPorPartes(original) {
+  const analisis = analizarOracion(original);
+  if (!analisis.length) return noSabe(original);
+  let nombreNuevo = false;
+  for (const a of analisis) { const n = buscarNombre(a); if (n) { memoria.nombre = n; nombreNuevo = true; } }
+  if (nombreNuevo) guardarMemoria();
+  ultimaRespuesta = null;
+  const partes = [], raras = [], extras = {};
+  for (const a of analisis) {
+    const r = responderPedazo(a, nombreNuevo, extras);
+    if (r === null) raras.push(a.texto); else if (r) partes.push(r);
+  }
+  if (nombreNuevo && !partes.some(r => r.includes(memoria.nombre))) partes.unshift(rellenar(alAzar(RESP.nombre)));
+  if (!partes.length) return noSabe(original);
+  for (const t of raras) partes.push(rellenar(alAzar(RESP.parteRara), { frase: t }));
+  if (raras.length && token && !extras.ensenar) extras.ensenar = { pregunta: raras[0] };
+  return { texto: arreglarMayusculas([...new Set(partes)].join(" ")), ...extras };
 }
 
 /* ---------- 4. PINTOR ---------- */
@@ -875,7 +1163,7 @@ function mostrar(m) {
   if (m.ensenar && token) {
     const extra = document.createElement("div"); extra.className = "extra";
     const b = document.createElement("button"); b.className = "boton principal"; b.textContent = m.ensenar.reemplazar ? "✏️ Corregirme" : "🎓 Enseñarme";
-    b.onclick = () => typeof m.ensenar === "string" ? abrirEnsenar(m.ensenar) : abrirEnsenar(m.ensenar.pregunta, m.ensenar.reemplazar);
+    b.onclick = () => typeof m.ensenar === "string" ? abrirEnsenar(m.ensenar) : abrirEnsenar(m.ensenar.pregunta, m.ensenar.reemplazar, m.ensenar.respuesta || "");
     extra.appendChild(b); div.appendChild(extra);
   }
   chat.appendChild(div);
@@ -923,7 +1211,12 @@ async function enviar(texto) {
     const consejo = CONSEJOS.find(x => x.re.test(normalizar(texto)));
     if (consejo && !respuesta.dibujo && !respuesta.filtro) respuesta.texto += "\n" + consejo.texto;
   } catch (e) { console.error(e); respuesta = { texto: "Uy, se me cruzaron los cables. 😵 ¿Probás de nuevo?" }; }
-  agregar({ de: "frankers", ...respuesta });
+  const { publicar: aprender, ...paraMostrar } = respuesta;
+  agregar({ de: "frankers", ...paraMostrar });
+  if (aprender) {
+    const r = await publicar(aprender);
+    if (!r.ok) agregar({ de: "frankers", texto: "No pude guardarlo para todos: " + r.motivo });
+  }
   ocupado = false;
 }
 
@@ -937,12 +1230,12 @@ $("#btnLimpiar").onclick = () => { historial = []; guardarHistorial(); chat.inne
 // Enseñar
 const dlgEnsenar = $("#dlgEnsenar");
 let ensReemplazar = null, ensConflicto = null; // corrección pedida / choque detectado
-function abrirEnsenar(pregunta = "", reemplazar = null) {
+function abrirEnsenar(pregunta = "", reemplazar = null, respuesta = "") {
   ensReemplazar = reemplazar; ensConflicto = null;
-  $("#ensPreguntas").value = pregunta; $("#ensRespuestas").value = ""; $("#ensEstado").textContent = ""; $("#ensEstado").className = "estado";
+  $("#ensPreguntas").value = pregunta; $("#ensRespuestas").value = respuesta; $("#ensEstado").textContent = ""; $("#ensEstado").className = "estado";
   $("#ensTipo").value = "hecho"; $("#ensAutorCaja").hidden = true; $("#ensFuenteCaja").hidden = true; $("#ensFuente").value = "";
   $("#ensGuardar").textContent = reemplazar ? "Corregir" : "Enseñar";
-  dlgEnsenar.showModal(); (pregunta ? $("#ensRespuestas") : $("#ensPreguntas")).focus();
+  dlgEnsenar.showModal(); (pregunta && !respuesta ? $("#ensRespuestas") : $("#ensPreguntas")).focus();
 }
 $("#ensTipo").onchange = () => { $("#ensAutorCaja").hidden = $("#ensTipo").value !== "opinion"; };
 $("#ensPreguntas").oninput = $("#ensRespuestas").oninput = () => { // si cambia el texto, se vuelve a revisar el choque
