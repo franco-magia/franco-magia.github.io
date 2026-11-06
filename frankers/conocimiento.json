@@ -1,6 +1,6 @@
 {
 "version": 1,
-"actualizado": "2026-11-06T23:38:12.988Z",
+"actualizado": "2026-11-06T23:39:26.204Z",
 "entradas": [
 {
 "id": "saludo",
@@ -14021,6 +14021,1987 @@
 ],
 "respuestas": [
 "¡Feliz cumpleaños! 🎂🎉 Que tengas un día buenísimo."
+]
+},
+{
+"id": "dic-comer",
+"tipo": "hecho",
+"preguntas": [
+"que es comer",
+"que significa comer",
+"que quiere decir comer",
+"definicion de comer",
+"ejemplo de comer",
+"comer"
+],
+"respuestas": [
+"Comer: Meter comida en la boca, masticarla y tragarla para alimentarse. Por ejemplo: \"Vamos a comer a las doce.\""
+]
+},
+{
+"id": "dic-dormir",
+"tipo": "hecho",
+"preguntas": [
+"que es dormir",
+"que significa dormir",
+"que quiere decir dormir",
+"definicion de dormir",
+"ejemplo de dormir",
+"dormir"
+],
+"respuestas": [
+"Dormir: Descansar con los ojos cerrados, sin estar despierto. Por ejemplo: \"Anoche dormí diez horas.\""
+]
+},
+{
+"id": "dic-correr",
+"tipo": "hecho",
+"preguntas": [
+"que es correr",
+"que significa correr",
+"que quiere decir correr",
+"definicion de correr",
+"ejemplo de correr",
+"correr"
+],
+"respuestas": [
+"Correr: Moverse rápido con las piernas, más rápido que caminando. Por ejemplo: \"Corrí hasta la esquina.\""
+]
+},
+{
+"id": "dic-caminar",
+"tipo": "hecho",
+"preguntas": [
+"que es caminar",
+"que significa caminar",
+"que quiere decir caminar",
+"definicion de caminar",
+"ejemplo de caminar",
+"caminar"
+],
+"respuestas": [
+"Caminar: Moverse dando pasos. Por ejemplo: \"Me gusta caminar por el parque.\""
+]
+},
+{
+"id": "dic-saltar",
+"tipo": "hecho",
+"preguntas": [
+"que es saltar",
+"que significa saltar",
+"que quiere decir saltar",
+"definicion de saltar",
+"ejemplo de saltar",
+"saltar"
+],
+"respuestas": [
+"Saltar: Despegarse del suelo con un impulso de las piernas. Por ejemplo: \"El canguro salta muy alto.\""
+]
+},
+{
+"id": "dic-nadar",
+"tipo": "hecho",
+"preguntas": [
+"que es nadar",
+"que significa nadar",
+"que quiere decir nadar",
+"definicion de nadar",
+"ejemplo de nadar",
+"nadar"
+],
+"respuestas": [
+"Nadar: Moverse dentro del agua usando brazos y piernas. Por ejemplo: \"Aprendí a nadar en la pileta.\""
+]
+},
+{
+"id": "dic-leer",
+"tipo": "hecho",
+"preguntas": [
+"que es leer",
+"que significa leer",
+"que quiere decir leer",
+"definicion de leer",
+"ejemplo de leer"
+],
+"respuestas": [
+"Leer: Mirar letras escritas y entender lo que dicen. Por ejemplo: \"Me gusta leer antes de dormir.\""
+]
+},
+{
+"id": "dic-escribir",
+"tipo": "hecho",
+"preguntas": [
+"que es escribir",
+"que significa escribir",
+"que quiere decir escribir",
+"definicion de escribir",
+"ejemplo de escribir",
+"escribir"
+],
+"respuestas": [
+"Escribir: Poner letras y palabras en un papel o una pantalla. Por ejemplo: \"Escribí un cuento.\""
+]
+},
+{
+"id": "dic-dibujar",
+"tipo": "hecho",
+"preguntas": [
+"que es dibujar",
+"que significa dibujar",
+"que quiere decir dibujar",
+"definicion de dibujar",
+"ejemplo de dibujar",
+"dibujar"
+],
+"respuestas": [
+"Dibujar: Hacer figuras o imágenes con lápiz, colores o en la compu. Por ejemplo: \"Me encanta dibujar dragones.\""
+]
+},
+{
+"id": "dic-pintar",
+"tipo": "hecho",
+"preguntas": [
+"que es pintar",
+"que significa pintar",
+"que quiere decir pintar",
+"definicion de pintar",
+"ejemplo de pintar",
+"pintar"
+],
+"respuestas": [
+"Pintar: Poner colores sobre algo con pincel, lápices o aerosol. Por ejemplo: \"Pintamos la pared de celeste.\""
+]
+},
+{
+"id": "dic-cantar",
+"tipo": "hecho",
+"preguntas": [
+"que es cantar",
+"que significa cantar",
+"que quiere decir cantar",
+"definicion de cantar",
+"ejemplo de cantar",
+"cantar"
+],
+"respuestas": [
+"Cantar: Hacer música con la voz. Por ejemplo: \"Cantamos el feliz cumpleaños.\""
+]
+},
+{
+"id": "dic-bailar",
+"tipo": "hecho",
+"preguntas": [
+"que es bailar",
+"que significa bailar",
+"que quiere decir bailar",
+"definicion de bailar",
+"ejemplo de bailar",
+"bailar"
+],
+"respuestas": [
+"Bailar: Mover el cuerpo siguiendo la música. Por ejemplo: \"En la fiesta bailamos toda la noche.\""
+]
+},
+{
+"id": "dic-aprender",
+"tipo": "hecho",
+"preguntas": [
+"que es aprender",
+"que significa aprender",
+"que quiere decir aprender",
+"definicion de aprender",
+"ejemplo de aprender",
+"aprender"
+],
+"respuestas": [
+"Aprender: Llegar a saber algo que antes no sabías. Por ejemplo: \"Aprendí a programar.\""
+]
+},
+{
+"id": "dic-ensenar",
+"tipo": "hecho",
+"preguntas": [
+"que es enseñar",
+"que significa enseñar",
+"que quiere decir enseñar",
+"definicion de enseñar",
+"ejemplo de enseñar",
+"enseñar"
+],
+"respuestas": [
+"Enseñar: Ayudar a otra persona a aprender algo. Por ejemplo: \"Le enseñé a mi hermano a andar en bici.\""
+]
+},
+{
+"id": "dic-estudiar",
+"tipo": "hecho",
+"preguntas": [
+"que es estudiar",
+"que significa estudiar",
+"que quiere decir estudiar",
+"definicion de estudiar",
+"ejemplo de estudiar",
+"estudiar"
+],
+"respuestas": [
+"Estudiar: Leer, practicar y repasar para aprender algo. Por ejemplo: \"Estudié para la prueba.\""
+]
+},
+{
+"id": "dic-pensar",
+"tipo": "hecho",
+"preguntas": [
+"que es pensar",
+"que significa pensar",
+"que quiere decir pensar",
+"definicion de pensar",
+"ejemplo de pensar",
+"pensar"
+],
+"respuestas": [
+"Pensar: Usar la mente para tener ideas o resolver algo. Por ejemplo: \"Pensé una solución.\""
+]
+},
+{
+"id": "dic-recordar",
+"tipo": "hecho",
+"preguntas": [
+"que es recordar",
+"que significa recordar",
+"que quiere decir recordar",
+"definicion de recordar",
+"ejemplo de recordar",
+"recordar"
+],
+"respuestas": [
+"Recordar: Traer a la mente algo que pasó o que sabías. Por ejemplo: \"Recuerdo mi primer día de clases.\""
+]
+},
+{
+"id": "dic-olvidar",
+"tipo": "hecho",
+"preguntas": [
+"que es olvidar",
+"que significa olvidar",
+"que quiere decir olvidar",
+"definicion de olvidar",
+"ejemplo de olvidar",
+"olvidar"
+],
+"respuestas": [
+"Olvidar: Dejar de acordarse de algo. Por ejemplo: \"Me olvidé la mochila.\""
+]
+},
+{
+"id": "dic-preguntar",
+"tipo": "hecho",
+"preguntas": [
+"que es preguntar",
+"que significa preguntar",
+"que quiere decir preguntar",
+"definicion de preguntar",
+"ejemplo de preguntar",
+"preguntar"
+],
+"respuestas": [
+"Preguntar: Decir algo para que otro te dé una respuesta o información. Por ejemplo: \"Le pregunté la hora.\""
+]
+},
+{
+"id": "dic-responder",
+"tipo": "hecho",
+"preguntas": [
+"que es responder",
+"que significa responder",
+"que quiere decir responder",
+"definicion de responder",
+"ejemplo de responder",
+"responder"
+],
+"respuestas": [
+"Responder: Contestar una pregunta. Por ejemplo: \"Respondé cuando te llaman.\""
+]
+},
+{
+"id": "dic-hablar",
+"tipo": "hecho",
+"preguntas": [
+"que es hablar",
+"que significa hablar",
+"que quiere decir hablar",
+"definicion de hablar",
+"ejemplo de hablar",
+"hablar"
+],
+"respuestas": [
+"Hablar: Decir palabras con la voz. Por ejemplo: \"Hablé con mi abuela por teléfono.\""
+]
+},
+{
+"id": "dic-mirar",
+"tipo": "hecho",
+"preguntas": [
+"que es mirar",
+"que significa mirar",
+"que quiere decir mirar",
+"definicion de mirar",
+"ejemplo de mirar",
+"mirar"
+],
+"respuestas": [
+"Mirar: Dirigir los ojos hacia algo. Por ejemplo: \"Mirá qué lindo el atardecer.\""
+]
+},
+{
+"id": "dic-ver",
+"tipo": "hecho",
+"preguntas": [
+"que es ver",
+"que significa ver",
+"que quiere decir ver",
+"definicion de ver",
+"ejemplo de ver"
+],
+"respuestas": [
+"Ver: Percibir algo con los ojos. Por ejemplo: \"Vi una estrella fugaz.\""
+]
+},
+{
+"id": "dic-oir",
+"tipo": "hecho",
+"preguntas": [
+"que es oír",
+"que significa oír",
+"que quiere decir oír",
+"definicion de oír",
+"ejemplo de oír"
+],
+"respuestas": [
+"Oír: Percibir un sonido con los oídos. Por ejemplo: \"Oí un ruido raro.\""
+]
+},
+{
+"id": "dic-tocar",
+"tipo": "hecho",
+"preguntas": [
+"que es tocar",
+"que significa tocar",
+"que quiere decir tocar",
+"definicion de tocar",
+"ejemplo de tocar",
+"tocar"
+],
+"respuestas": [
+"Tocar: Poner la mano sobre algo, o hacer sonar un instrumento. Por ejemplo: \"Toco la guitarra.\""
+]
+},
+{
+"id": "dic-abrir",
+"tipo": "hecho",
+"preguntas": [
+"que es abrir",
+"que significa abrir",
+"que quiere decir abrir",
+"definicion de abrir",
+"ejemplo de abrir",
+"abrir"
+],
+"respuestas": [
+"Abrir: Hacer que algo cerrado quede abierto. Por ejemplo: \"Abrí la ventana.\""
+]
+},
+{
+"id": "dic-cerrar",
+"tipo": "hecho",
+"preguntas": [
+"que es cerrar",
+"que significa cerrar",
+"que quiere decir cerrar",
+"definicion de cerrar",
+"ejemplo de cerrar",
+"cerrar"
+],
+"respuestas": [
+"Cerrar: Hacer que algo abierto quede cerrado. Por ejemplo: \"Cerrá la puerta, por favor.\""
+]
+},
+{
+"id": "dic-empezar",
+"tipo": "hecho",
+"preguntas": [
+"que es empezar",
+"que significa empezar",
+"que quiere decir empezar",
+"definicion de empezar",
+"ejemplo de empezar",
+"empezar"
+],
+"respuestas": [
+"Empezar: Hacer la primera parte de algo. Por ejemplo: \"La película empieza a las cinco.\""
+]
+},
+{
+"id": "dic-terminar",
+"tipo": "hecho",
+"preguntas": [
+"que es terminar",
+"que significa terminar",
+"que quiere decir terminar",
+"definicion de terminar",
+"ejemplo de terminar",
+"terminar"
+],
+"respuestas": [
+"Terminar: Llegar al final de algo. Por ejemplo: \"Terminé la tarea.\""
+]
+},
+{
+"id": "dic-ganar",
+"tipo": "hecho",
+"preguntas": [
+"que es ganar",
+"que significa ganar",
+"que quiere decir ganar",
+"definicion de ganar",
+"ejemplo de ganar",
+"ganar"
+],
+"respuestas": [
+"Ganar: Salir primero en un juego o una competencia, o conseguir algo. Por ejemplo: \"Ganamos el partido.\""
+]
+},
+{
+"id": "dic-perder",
+"tipo": "hecho",
+"preguntas": [
+"que es perder",
+"que significa perder",
+"que quiere decir perder",
+"definicion de perder",
+"ejemplo de perder",
+"perder"
+],
+"respuestas": [
+"Perder: Quedar atrás en un juego, o dejar de tener algo. Por ejemplo: \"Perdí mi lápiz.\""
+]
+},
+{
+"id": "dic-buscar",
+"tipo": "hecho",
+"preguntas": [
+"que es buscar",
+"que significa buscar",
+"que quiere decir buscar",
+"definicion de buscar",
+"ejemplo de buscar",
+"buscar"
+],
+"respuestas": [
+"Buscar: Tratar de encontrar algo. Por ejemplo: \"Busqué mi pelota por toda la casa.\""
+]
+},
+{
+"id": "dic-encontrar",
+"tipo": "hecho",
+"preguntas": [
+"que es encontrar",
+"que significa encontrar",
+"que quiere decir encontrar",
+"definicion de encontrar",
+"ejemplo de encontrar",
+"encontrar"
+],
+"respuestas": [
+"Encontrar: Dar con algo que buscabas o que no esperabas. Por ejemplo: \"Encontré una moneda.\""
+]
+},
+{
+"id": "dic-comprar",
+"tipo": "hecho",
+"preguntas": [
+"que es comprar",
+"que significa comprar",
+"que quiere decir comprar",
+"definicion de comprar",
+"ejemplo de comprar",
+"comprar"
+],
+"respuestas": [
+"Comprar: Conseguir algo dando dinero a cambio. Por ejemplo: \"Compramos pan.\""
+]
+},
+{
+"id": "dic-vender",
+"tipo": "hecho",
+"preguntas": [
+"que es vender",
+"que significa vender",
+"que quiere decir vender",
+"definicion de vender",
+"ejemplo de vender",
+"vender"
+],
+"respuestas": [
+"Vender: Dar algo a cambio de dinero. Por ejemplo: \"Mi vecino vende empanadas.\""
+]
+},
+{
+"id": "dic-compartir",
+"tipo": "hecho",
+"preguntas": [
+"que es compartir",
+"que significa compartir",
+"que quiere decir compartir",
+"definicion de compartir",
+"ejemplo de compartir",
+"compartir"
+],
+"respuestas": [
+"Compartir: Dar parte de lo tuyo a otros, o usar algo juntos. Por ejemplo: \"Compartí mis galletitas.\""
+]
+},
+{
+"id": "dic-cuidar",
+"tipo": "hecho",
+"preguntas": [
+"que es cuidar",
+"que significa cuidar",
+"que quiere decir cuidar",
+"definicion de cuidar",
+"ejemplo de cuidar",
+"cuidar"
+],
+"respuestas": [
+"Cuidar: Ocuparse de que alguien o algo esté bien. Por ejemplo: \"Cuido a mi perro.\""
+]
+},
+{
+"id": "dic-limpiar",
+"tipo": "hecho",
+"preguntas": [
+"que es limpiar",
+"que significa limpiar",
+"que quiere decir limpiar",
+"definicion de limpiar",
+"ejemplo de limpiar",
+"limpiar"
+],
+"respuestas": [
+"Limpiar: Sacar la suciedad. Por ejemplo: \"Limpié mi cuarto.\""
+]
+},
+{
+"id": "dic-ordenar",
+"tipo": "hecho",
+"preguntas": [
+"que es ordenar",
+"que significa ordenar",
+"que quiere decir ordenar",
+"definicion de ordenar",
+"ejemplo de ordenar",
+"ordenar"
+],
+"respuestas": [
+"Ordenar: Poner las cosas en su lugar. Por ejemplo: \"Ordené los juguetes.\""
+]
+},
+{
+"id": "dic-cocinar",
+"tipo": "hecho",
+"preguntas": [
+"que es cocinar",
+"que significa cocinar",
+"que quiere decir cocinar",
+"definicion de cocinar",
+"ejemplo de cocinar",
+"cocinar"
+],
+"respuestas": [
+"Cocinar: Preparar comida, muchas veces con calor. Por ejemplo: \"Cocinamos fideos.\""
+]
+},
+{
+"id": "dic-viajar",
+"tipo": "hecho",
+"preguntas": [
+"que es viajar",
+"que significa viajar",
+"que quiere decir viajar",
+"definicion de viajar",
+"ejemplo de viajar",
+"viajar"
+],
+"respuestas": [
+"Viajar: Ir de un lugar a otro, sobre todo lejos. Por ejemplo: \"Viajamos a Córdoba.\""
+]
+},
+{
+"id": "dic-esperar",
+"tipo": "hecho",
+"preguntas": [
+"que es esperar",
+"que significa esperar",
+"que quiere decir esperar",
+"definicion de esperar",
+"ejemplo de esperar",
+"esperar"
+],
+"respuestas": [
+"Esperar: Quedarse hasta que pase algo o llegue alguien. Por ejemplo: \"Esperé el colectivo.\""
+]
+},
+{
+"id": "dic-llegar",
+"tipo": "hecho",
+"preguntas": [
+"que es llegar",
+"que significa llegar",
+"que quiere decir llegar",
+"definicion de llegar",
+"ejemplo de llegar",
+"llegar"
+],
+"respuestas": [
+"Llegar: Alcanzar el lugar al que ibas. Por ejemplo: \"Llegamos tarde.\""
+]
+},
+{
+"id": "dic-salir",
+"tipo": "hecho",
+"preguntas": [
+"que es salir",
+"que significa salir",
+"que quiere decir salir",
+"definicion de salir",
+"ejemplo de salir",
+"salir"
+],
+"respuestas": [
+"Salir: Ir de adentro hacia afuera. Por ejemplo: \"Salimos a jugar.\""
+]
+},
+{
+"id": "dic-entrar",
+"tipo": "hecho",
+"preguntas": [
+"que es entrar",
+"que significa entrar",
+"que quiere decir entrar",
+"definicion de entrar",
+"ejemplo de entrar",
+"entrar"
+],
+"respuestas": [
+"Entrar: Ir de afuera hacia adentro. Por ejemplo: \"Entrá que hace frío.\""
+]
+},
+{
+"id": "dic-subir",
+"tipo": "hecho",
+"preguntas": [
+"que es subir",
+"que significa subir",
+"que quiere decir subir",
+"definicion de subir",
+"ejemplo de subir",
+"subir"
+],
+"respuestas": [
+"Subir: Ir hacia arriba. Por ejemplo: \"Subí la escalera.\""
+]
+},
+{
+"id": "dic-bajar",
+"tipo": "hecho",
+"preguntas": [
+"que es bajar",
+"que significa bajar",
+"que quiere decir bajar",
+"definicion de bajar",
+"ejemplo de bajar",
+"bajar"
+],
+"respuestas": [
+"Bajar: Ir hacia abajo. Por ejemplo: \"Bajá del árbol con cuidado.\""
+]
+},
+{
+"id": "dic-llorar",
+"tipo": "hecho",
+"preguntas": [
+"que es llorar",
+"que significa llorar",
+"que quiere decir llorar",
+"definicion de llorar",
+"ejemplo de llorar",
+"llorar"
+],
+"respuestas": [
+"Llorar: Echar lágrimas, por tristeza, dolor o mucha emoción. Por ejemplo: \"Lloré con la película.\""
+]
+},
+{
+"id": "dic-reir",
+"tipo": "hecho",
+"preguntas": [
+"que es reír",
+"que significa reír",
+"que quiere decir reír",
+"definicion de reír",
+"ejemplo de reír"
+],
+"respuestas": [
+"Reír: Hacer sonidos y gestos de alegría cuando algo causa gracia. Por ejemplo: \"Nos reímos mucho con el chiste.\""
+]
+},
+{
+"id": "dic-sonreir",
+"tipo": "hecho",
+"preguntas": [
+"que es sonreír",
+"que significa sonreír",
+"que quiere decir sonreír",
+"definicion de sonreír",
+"ejemplo de sonreír",
+"sonreír"
+],
+"respuestas": [
+"Sonreír: Hacer un gesto de alegría con la boca, sin hacer ruido. Por ejemplo: \"Sonreí para la foto.\""
+]
+},
+{
+"id": "dic-abrazar",
+"tipo": "hecho",
+"preguntas": [
+"que es abrazar",
+"que significa abrazar",
+"que quiere decir abrazar",
+"definicion de abrazar",
+"ejemplo de abrazar",
+"abrazar"
+],
+"respuestas": [
+"Abrazar: Rodear a alguien con los brazos, con cariño. Por ejemplo: \"Abracé a mi mamá.\""
+]
+},
+{
+"id": "dic-sonar",
+"tipo": "hecho",
+"preguntas": [
+"que es soñar",
+"que significa soñar",
+"que quiere decir soñar",
+"definicion de soñar",
+"ejemplo de soñar",
+"soñar"
+],
+"respuestas": [
+"Soñar: Imaginar cosas mientras dormís, o desear algo mucho. Por ejemplo: \"Soñé que volaba.\""
+]
+},
+{
+"id": "dic-querer",
+"tipo": "hecho",
+"preguntas": [
+"que es querer",
+"que significa querer",
+"que quiere decir querer",
+"definicion de querer",
+"ejemplo de querer",
+"querer"
+],
+"respuestas": [
+"Querer: Tener cariño por alguien, o tener ganas de algo. Por ejemplo: \"Quiero mucho a mi familia.\""
+]
+},
+{
+"id": "dic-necesitar",
+"tipo": "hecho",
+"preguntas": [
+"que es necesitar",
+"que significa necesitar",
+"que quiere decir necesitar",
+"definicion de necesitar",
+"ejemplo de necesitar",
+"necesitar"
+],
+"respuestas": [
+"Necesitar: Tener que tener algo porque hace falta. Por ejemplo: \"Necesito un lápiz.\""
+]
+},
+{
+"id": "dic-poder",
+"tipo": "hecho",
+"preguntas": [
+"que es poder",
+"que significa poder",
+"que quiere decir poder",
+"definicion de poder",
+"ejemplo de poder",
+"poder"
+],
+"respuestas": [
+"Poder: Ser capaz de hacer algo, o tener permiso. Por ejemplo: \"¿Puedo ir a la plaza?\""
+]
+},
+{
+"id": "dic-saber",
+"tipo": "hecho",
+"preguntas": [
+"que es saber",
+"que significa saber",
+"que quiere decir saber",
+"definicion de saber",
+"ejemplo de saber",
+"saber"
+],
+"respuestas": [
+"Saber: Tener conocimiento de algo. Por ejemplo: \"Sé andar en bici.\""
+]
+},
+{
+"id": "dic-grande",
+"tipo": "hecho",
+"preguntas": [
+"que es grande",
+"que significa grande",
+"que quiere decir grande",
+"definicion de grande",
+"ejemplo de grande",
+"grande"
+],
+"respuestas": [
+"Grande: De mucho tamaño. Por ejemplo: \"El elefante es grande.\""
+]
+},
+{
+"id": "dic-chico",
+"tipo": "hecho",
+"preguntas": [
+"que es chico",
+"que significa chico",
+"que quiere decir chico",
+"definicion de chico",
+"ejemplo de chico",
+"chico"
+],
+"respuestas": [
+"Chico: De poco tamaño. También se le dice así a un niño. Por ejemplo: \"Tengo un perro chico.\""
+]
+},
+{
+"id": "dic-alto",
+"tipo": "hecho",
+"preguntas": [
+"que es alto",
+"que significa alto",
+"que quiere decir alto",
+"definicion de alto",
+"ejemplo de alto"
+],
+"respuestas": [
+"Alto: Que mide mucho de abajo hacia arriba. Por ejemplo: \"La jirafa es muy alta.\""
+]
+},
+{
+"id": "dic-bajo",
+"tipo": "hecho",
+"preguntas": [
+"que es bajo",
+"que significa bajo",
+"que quiere decir bajo",
+"definicion de bajo",
+"ejemplo de bajo"
+],
+"respuestas": [
+"Bajo: Que mide poco de abajo hacia arriba. Por ejemplo: \"El banquito es bajo.\""
+]
+},
+{
+"id": "dic-largo",
+"tipo": "hecho",
+"preguntas": [
+"que es largo",
+"que significa largo",
+"que quiere decir largo",
+"definicion de largo",
+"ejemplo de largo",
+"largo"
+],
+"respuestas": [
+"Largo: Que mide mucho de punta a punta. Por ejemplo: \"El río Paraná es muy largo.\""
+]
+},
+{
+"id": "dic-corto",
+"tipo": "hecho",
+"preguntas": [
+"que es corto",
+"que significa corto",
+"que quiere decir corto",
+"definicion de corto",
+"ejemplo de corto",
+"corto"
+],
+"respuestas": [
+"Corto: Que mide poco de punta a punta, o dura poco. Por ejemplo: \"La película fue corta.\""
+]
+},
+{
+"id": "dic-rapido",
+"tipo": "hecho",
+"preguntas": [
+"que es rápido",
+"que significa rápido",
+"que quiere decir rápido",
+"definicion de rápido",
+"ejemplo de rápido",
+"rápido"
+],
+"respuestas": [
+"Rápido: Que se mueve o pasa en poco tiempo. Por ejemplo: \"El guepardo es muy rápido.\""
+]
+},
+{
+"id": "dic-lento",
+"tipo": "hecho",
+"preguntas": [
+"que es lento",
+"que significa lento",
+"que quiere decir lento",
+"definicion de lento",
+"ejemplo de lento",
+"lento"
+],
+"respuestas": [
+"Lento: Que se mueve o pasa despacio. Por ejemplo: \"La tortuga es lenta.\""
+]
+},
+{
+"id": "dic-nuevo",
+"tipo": "hecho",
+"preguntas": [
+"que es nuevo",
+"que significa nuevo",
+"que quiere decir nuevo",
+"definicion de nuevo",
+"ejemplo de nuevo",
+"nuevo"
+],
+"respuestas": [
+"Nuevo: Que se hizo o se consiguió hace poco. Por ejemplo: \"Me compraron zapatillas nuevas.\""
+]
+},
+{
+"id": "dic-viejo",
+"tipo": "hecho",
+"preguntas": [
+"que es viejo",
+"que significa viejo",
+"que quiere decir viejo",
+"definicion de viejo",
+"ejemplo de viejo",
+"viejo"
+],
+"respuestas": [
+"Viejo: Que tiene muchos años o se usó mucho. Por ejemplo: \"Este libro es muy viejo.\""
+]
+},
+{
+"id": "dic-lindo",
+"tipo": "hecho",
+"preguntas": [
+"que es lindo",
+"que significa lindo",
+"que quiere decir lindo",
+"definicion de lindo",
+"ejemplo de lindo",
+"lindo"
+],
+"respuestas": [
+"Lindo: Que se ve o se siente bien, agradable. Por ejemplo: \"¡Qué lindo día!\""
+]
+},
+{
+"id": "dic-feo",
+"tipo": "hecho",
+"preguntas": [
+"que es feo",
+"que significa feo",
+"que quiere decir feo",
+"definicion de feo",
+"ejemplo de feo"
+],
+"respuestas": [
+"Feo: Que no es agradable de ver o de sentir. Por ejemplo: \"Hace un tiempo feo.\""
+]
+},
+{
+"id": "dic-facil",
+"tipo": "hecho",
+"preguntas": [
+"que es fácil",
+"que significa fácil",
+"que quiere decir fácil",
+"definicion de fácil",
+"ejemplo de fácil",
+"fácil"
+],
+"respuestas": [
+"Fácil: Que se hace sin mucho esfuerzo. Por ejemplo: \"El ejercicio fue fácil.\""
+]
+},
+{
+"id": "dic-dificil",
+"tipo": "hecho",
+"preguntas": [
+"que es difícil",
+"que significa difícil",
+"que quiere decir difícil",
+"definicion de difícil",
+"ejemplo de difícil",
+"difícil"
+],
+"respuestas": [
+"Difícil: Que cuesta hacer o entender. Por ejemplo: \"Esa adivinanza es difícil.\""
+]
+},
+{
+"id": "dic-caliente",
+"tipo": "hecho",
+"preguntas": [
+"que es caliente",
+"que significa caliente",
+"que quiere decir caliente",
+"definicion de caliente",
+"ejemplo de caliente",
+"caliente"
+],
+"respuestas": [
+"Caliente: Que tiene mucha temperatura. Por ejemplo: \"Cuidado, la sopa está caliente.\""
+]
+},
+{
+"id": "dic-contento",
+"tipo": "hecho",
+"preguntas": [
+"que es contento",
+"que significa contento",
+"que quiere decir contento",
+"definicion de contento",
+"ejemplo de contento",
+"contento"
+],
+"respuestas": [
+"Contento: Que siente alegría. Por ejemplo: \"Estoy contento porque terminé mi juego.\""
+]
+},
+{
+"id": "dic-triste",
+"tipo": "hecho",
+"preguntas": [
+"que es triste",
+"que significa triste",
+"que quiere decir triste",
+"definicion de triste",
+"ejemplo de triste",
+"triste"
+],
+"respuestas": [
+"Triste: Que siente pena o tristeza. Por ejemplo: \"Estaba triste porque llovió.\""
+]
+},
+{
+"id": "dic-cansado",
+"tipo": "hecho",
+"preguntas": [
+"que es cansado",
+"que significa cansado",
+"que quiere decir cansado",
+"definicion de cansado",
+"ejemplo de cansado",
+"cansado"
+],
+"respuestas": [
+"Cansado: Que necesita descansar. Por ejemplo: \"Después del partido quedé cansado.\""
+]
+},
+{
+"id": "dic-aburrido",
+"tipo": "hecho",
+"preguntas": [
+"que es aburrido",
+"que significa aburrido",
+"que quiere decir aburrido",
+"definicion de aburrido",
+"ejemplo de aburrido",
+"aburrido"
+],
+"respuestas": [
+"Aburrido: Que no tiene nada interesante para hacer, o algo que no divierte. Por ejemplo: \"Estoy aburrido, ¿jugamos?\""
+]
+},
+{
+"id": "dic-divertido",
+"tipo": "hecho",
+"preguntas": [
+"que es divertido",
+"que significa divertido",
+"que quiere decir divertido",
+"definicion de divertido",
+"ejemplo de divertido",
+"divertido"
+],
+"respuestas": [
+"Divertido: Que hace pasar un buen rato. Por ejemplo: \"El juego es re divertido.\""
+]
+},
+{
+"id": "dic-valiente",
+"tipo": "hecho",
+"preguntas": [
+"que es valiente",
+"que significa valiente",
+"que quiere decir valiente",
+"definicion de valiente",
+"ejemplo de valiente",
+"valiente"
+],
+"respuestas": [
+"Valiente: Que se anima a hacer algo aunque le dé miedo. Por ejemplo: \"Fue valiente y pidió ayuda.\""
+]
+},
+{
+"id": "dic-amable",
+"tipo": "hecho",
+"preguntas": [
+"que es amable",
+"que significa amable",
+"que quiere decir amable",
+"definicion de amable",
+"ejemplo de amable",
+"amable"
+],
+"respuestas": [
+"Amable: Que trata bien a los demás. Por ejemplo: \"La maestra es muy amable.\""
+]
+},
+{
+"id": "dic-inteligente",
+"tipo": "hecho",
+"preguntas": [
+"que es inteligente",
+"que significa inteligente",
+"que quiere decir inteligente",
+"definicion de inteligente",
+"ejemplo de inteligente",
+"inteligente"
+],
+"respuestas": [
+"Inteligente: Que entiende y aprende con facilidad. Por ejemplo: \"Los delfines son inteligentes.\""
+]
+},
+{
+"id": "dic-curioso",
+"tipo": "hecho",
+"preguntas": [
+"que es curioso",
+"que significa curioso",
+"que quiere decir curioso",
+"definicion de curioso",
+"ejemplo de curioso",
+"curioso"
+],
+"respuestas": [
+"Curioso: Que tiene ganas de saber y descubrir cosas. Por ejemplo: \"Soy curioso y pregunto mucho.\""
+]
+},
+{
+"id": "dic-limpio",
+"tipo": "hecho",
+"preguntas": [
+"que es limpio",
+"que significa limpio",
+"que quiere decir limpio",
+"definicion de limpio",
+"ejemplo de limpio",
+"limpio"
+],
+"respuestas": [
+"Limpio: Que no tiene suciedad. Por ejemplo: \"Las manos están limpias.\""
+]
+},
+{
+"id": "dic-sucio",
+"tipo": "hecho",
+"preguntas": [
+"que es sucio",
+"que significa sucio",
+"que quiere decir sucio",
+"definicion de sucio",
+"ejemplo de sucio",
+"sucio"
+],
+"respuestas": [
+"Sucio: Que tiene manchas o suciedad. Por ejemplo: \"Las zapatillas quedaron sucias.\""
+]
+},
+{
+"id": "dic-lleno",
+"tipo": "hecho",
+"preguntas": [
+"que es lleno",
+"que significa lleno",
+"que quiere decir lleno",
+"definicion de lleno",
+"ejemplo de lleno",
+"lleno"
+],
+"respuestas": [
+"Lleno: Que no tiene lugar libre. Por ejemplo: \"El vaso está lleno.\""
+]
+},
+{
+"id": "dic-vacio",
+"tipo": "hecho",
+"preguntas": [
+"que es vacío",
+"que significa vacío",
+"que quiere decir vacío",
+"definicion de vacío",
+"ejemplo de vacío",
+"vacío"
+],
+"respuestas": [
+"Vacío: Que no tiene nada adentro. Por ejemplo: \"La caja está vacía.\""
+]
+},
+{
+"id": "dic-mucho",
+"tipo": "hecho",
+"preguntas": [
+"que es mucho",
+"que significa mucho",
+"que quiere decir mucho",
+"definicion de mucho",
+"ejemplo de mucho",
+"mucho"
+],
+"respuestas": [
+"Mucho: En gran cantidad. Por ejemplo: \"Tengo mucha tarea.\""
+]
+},
+{
+"id": "dic-poco",
+"tipo": "hecho",
+"preguntas": [
+"que es poco",
+"que significa poco",
+"que quiere decir poco",
+"definicion de poco",
+"ejemplo de poco"
+],
+"respuestas": [
+"Poco: En pequeña cantidad. Por ejemplo: \"Queda poco jugo.\""
+]
+},
+{
+"id": "dic-siempre",
+"tipo": "hecho",
+"preguntas": [
+"que es siempre",
+"que significa siempre",
+"que quiere decir siempre",
+"definicion de siempre",
+"ejemplo de siempre",
+"siempre"
+],
+"respuestas": [
+"Siempre: En todo momento, todas las veces. Por ejemplo: \"Siempre me lavo los dientes.\""
+]
+},
+{
+"id": "dic-nunca",
+"tipo": "hecho",
+"preguntas": [
+"que es nunca",
+"que significa nunca",
+"que quiere decir nunca",
+"definicion de nunca",
+"ejemplo de nunca",
+"nunca"
+],
+"respuestas": [
+"Nunca: En ningún momento, ninguna vez. Por ejemplo: \"Nunca vi la nieve.\""
+]
+},
+{
+"id": "dic-antes",
+"tipo": "hecho",
+"preguntas": [
+"que es antes",
+"que significa antes",
+"que quiere decir antes",
+"definicion de antes",
+"ejemplo de antes",
+"antes"
+],
+"respuestas": [
+"Antes: En un momento anterior. Por ejemplo: \"Antes de comer, lavate las manos.\""
+]
+},
+{
+"id": "dic-despues",
+"tipo": "hecho",
+"preguntas": [
+"que es después",
+"que significa después",
+"que quiere decir después",
+"definicion de después",
+"ejemplo de después",
+"después"
+],
+"respuestas": [
+"Después: En un momento posterior. Por ejemplo: \"Después de la tarea, jugamos.\""
+]
+},
+{
+"id": "dic-ahora",
+"tipo": "hecho",
+"preguntas": [
+"que es ahora",
+"que significa ahora",
+"que quiere decir ahora",
+"definicion de ahora",
+"ejemplo de ahora",
+"ahora"
+],
+"respuestas": [
+"Ahora: En este momento. Por ejemplo: \"Ahora estoy programando.\""
+]
+},
+{
+"id": "dic-temprano",
+"tipo": "hecho",
+"preguntas": [
+"que es temprano",
+"que significa temprano",
+"que quiere decir temprano",
+"definicion de temprano",
+"ejemplo de temprano",
+"temprano"
+],
+"respuestas": [
+"Temprano: Antes de la hora de siempre o al comienzo del día. Por ejemplo: \"Me levanté temprano.\""
+]
+},
+{
+"id": "dic-tarde",
+"tipo": "hecho",
+"preguntas": [
+"que es tarde",
+"que significa tarde",
+"que quiere decir tarde",
+"definicion de tarde",
+"ejemplo de tarde",
+"tarde"
+],
+"respuestas": [
+"Tarde: Después de la hora esperada. También la parte del día después del mediodía. Por ejemplo: \"Llegué tarde a la escuela.\""
+]
+},
+{
+"id": "dic-cerca",
+"tipo": "hecho",
+"preguntas": [
+"que es cerca",
+"que significa cerca",
+"que quiere decir cerca",
+"definicion de cerca",
+"ejemplo de cerca",
+"cerca"
+],
+"respuestas": [
+"Cerca: A poca distancia. Por ejemplo: \"La plaza queda cerca.\""
+]
+},
+{
+"id": "dic-lejos",
+"tipo": "hecho",
+"preguntas": [
+"que es lejos",
+"que significa lejos",
+"que quiere decir lejos",
+"definicion de lejos",
+"ejemplo de lejos",
+"lejos"
+],
+"respuestas": [
+"Lejos: A mucha distancia. Por ejemplo: \"Japón queda muy lejos.\""
+]
+},
+{
+"id": "dic-arriba",
+"tipo": "hecho",
+"preguntas": [
+"que es arriba",
+"que significa arriba",
+"que quiere decir arriba",
+"definicion de arriba",
+"ejemplo de arriba",
+"arriba"
+],
+"respuestas": [
+"Arriba: En un lugar más alto. Por ejemplo: \"El gato está arriba del ropero.\""
+]
+},
+{
+"id": "dic-abajo",
+"tipo": "hecho",
+"preguntas": [
+"que es abajo",
+"que significa abajo",
+"que quiere decir abajo",
+"definicion de abajo",
+"ejemplo de abajo",
+"abajo"
+],
+"respuestas": [
+"Abajo: En un lugar más bajo. Por ejemplo: \"La pelota quedó abajo de la cama.\""
+]
+},
+{
+"id": "dic-adentro",
+"tipo": "hecho",
+"preguntas": [
+"que es adentro",
+"que significa adentro",
+"que quiere decir adentro",
+"definicion de adentro",
+"ejemplo de adentro",
+"adentro"
+],
+"respuestas": [
+"Adentro: En el interior de algo. Por ejemplo: \"Los chicos están adentro.\""
+]
+},
+{
+"id": "dic-afuera",
+"tipo": "hecho",
+"preguntas": [
+"que es afuera",
+"que significa afuera",
+"que quiere decir afuera",
+"definicion de afuera",
+"ejemplo de afuera",
+"afuera"
+],
+"respuestas": [
+"Afuera: En el exterior. Por ejemplo: \"Salimos afuera a jugar.\""
+]
+},
+{
+"id": "dic-izquierda",
+"tipo": "hecho",
+"preguntas": [
+"que es izquierda",
+"que significa izquierda",
+"que quiere decir izquierda",
+"definicion de izquierda",
+"ejemplo de izquierda",
+"izquierda"
+],
+"respuestas": [
+"Izquierda: El lado contrario a la derecha. Por ejemplo: \"Doblá a la izquierda.\""
+]
+},
+{
+"id": "dic-derecha",
+"tipo": "hecho",
+"preguntas": [
+"que es derecha",
+"que significa derecha",
+"que quiere decir derecha",
+"definicion de derecha",
+"ejemplo de derecha",
+"derecha"
+],
+"respuestas": [
+"Derecha: El lado contrario a la izquierda. Por ejemplo: \"La escuela está a la derecha.\""
+]
+},
+{
+"id": "dic-gracias",
+"tipo": "hecho",
+"preguntas": [
+"que es gracias",
+"que significa gracias",
+"que quiere decir gracias",
+"definicion de gracias",
+"ejemplo de gracias",
+"gracias"
+],
+"respuestas": [
+"Gracias: Palabra que se dice para agradecer. Por ejemplo: \"Gracias por ayudarme.\""
+]
+},
+{
+"id": "dic-por-favor",
+"tipo": "hecho",
+"preguntas": [
+"que es por favor",
+"que significa por favor",
+"que quiere decir por favor",
+"definicion de por favor",
+"ejemplo de por favor",
+"por favor"
+],
+"respuestas": [
+"Por favor: Palabras amables que se dicen al pedir algo. Por ejemplo: \"¿Me pasás el agua, por favor?\""
+]
+},
+{
+"id": "dic-perdon",
+"tipo": "hecho",
+"preguntas": [
+"que es perdón",
+"que significa perdón",
+"que quiere decir perdón",
+"definicion de perdón",
+"ejemplo de perdón",
+"perdón"
+],
+"respuestas": [
+"Perdón: Palabra para disculparse. Por ejemplo: \"Perdón, no fue mi intención.\""
+]
+},
+{
+"id": "dic-hola",
+"tipo": "hecho",
+"preguntas": [
+"que es hola",
+"que significa hola",
+"que quiere decir hola",
+"definicion de hola",
+"ejemplo de hola"
+],
+"respuestas": [
+"Hola: Palabra para saludar cuando te encontrás con alguien. Por ejemplo: \"¡Hola! ¿Cómo andás?\""
+]
+},
+{
+"id": "dic-chau",
+"tipo": "hecho",
+"preguntas": [
+"que es chau",
+"que significa chau",
+"que quiere decir chau",
+"definicion de chau",
+"ejemplo de chau"
+],
+"respuestas": [
+"Chau: Palabra para despedirse. Por ejemplo: \"¡Chau, nos vemos mañana!\""
+]
+},
+{
+"id": "dic-si",
+"tipo": "hecho",
+"preguntas": [
+"que es sí",
+"que significa sí",
+"que quiere decir sí",
+"definicion de sí",
+"ejemplo de sí"
+],
+"respuestas": [
+"Sí: Palabra para afirmar o decir que estás de acuerdo. Por ejemplo: \"Sí, quiero jugar.\""
+]
+},
+{
+"id": "dic-no",
+"tipo": "hecho",
+"preguntas": [
+"que es no",
+"que significa no",
+"que quiere decir no",
+"definicion de no",
+"ejemplo de no"
+],
+"respuestas": [
+"No: Palabra para negar o decir que no estás de acuerdo. Por ejemplo: \"No, gracias.\""
+]
+},
+{
+"id": "dic-mate-cocido",
+"tipo": "hecho",
+"preguntas": [
+"que es mate cocido",
+"que significa mate cocido",
+"que quiere decir mate cocido",
+"definicion de mate cocido",
+"ejemplo de mate cocido",
+"mate cocido"
+],
+"respuestas": [
+"Mate cocido: Bebida de yerba mate preparada como un té. Por ejemplo: \"De merienda tomé mate cocido.\""
+]
+},
+{
+"id": "dic-ropa",
+"tipo": "hecho",
+"preguntas": [
+"que es ropa",
+"que significa ropa",
+"que quiere decir ropa",
+"definicion de ropa",
+"ejemplo de ropa"
+],
+"respuestas": [
+"Ropa: Lo que nos ponemos para vestirnos. Por ejemplo: \"Guardé la ropa en el placard.\""
+]
+},
+{
+"id": "dic-remera",
+"tipo": "hecho",
+"preguntas": [
+"que es remera",
+"que significa remera",
+"que quiere decir remera",
+"definicion de remera",
+"ejemplo de remera",
+"remera"
+],
+"respuestas": [
+"Remera: Prenda de tela liviana, de mangas cortas, para la parte de arriba del cuerpo. Por ejemplo: \"Me puse una remera azul.\""
+]
+},
+{
+"id": "dic-pantalon",
+"tipo": "hecho",
+"preguntas": [
+"que es pantalón",
+"que significa pantalón",
+"que quiere decir pantalón",
+"definicion de pantalón",
+"ejemplo de pantalón",
+"pantalón"
+],
+"respuestas": [
+"Pantalón: Prenda que cubre desde la cintura hasta los pies, con una parte para cada pierna. Por ejemplo: \"Se me rompió el pantalón.\""
+]
+},
+{
+"id": "dic-zapatillas",
+"tipo": "hecho",
+"preguntas": [
+"que es zapatillas",
+"que significa zapatillas",
+"que quiere decir zapatillas",
+"definicion de zapatillas",
+"ejemplo de zapatillas",
+"zapatillas"
+],
+"respuestas": [
+"Zapatillas: Calzado cómodo para caminar o hacer deporte. Por ejemplo: \"Me até las zapatillas.\""
+]
+},
+{
+"id": "dic-campera",
+"tipo": "hecho",
+"preguntas": [
+"que es campera",
+"que significa campera",
+"que quiere decir campera",
+"definicion de campera",
+"ejemplo de campera",
+"campera"
+],
+"respuestas": [
+"Campera: Abrigo que se pone encima de la ropa. Por ejemplo: \"Llevá la campera, que refresca.\""
+]
+},
+{
+"id": "dic-gorra",
+"tipo": "hecho",
+"preguntas": [
+"que es gorra",
+"que significa gorra",
+"que quiere decir gorra",
+"definicion de gorra",
+"ejemplo de gorra",
+"gorra"
+],
+"respuestas": [
+"Gorra: Gorro con visera para protegerse del sol. Por ejemplo: \"Usá gorra en la playa.\""
+]
+},
+{
+"id": "dic-anteojos",
+"tipo": "hecho",
+"preguntas": [
+"que es anteojos",
+"que significa anteojos",
+"que quiere decir anteojos",
+"definicion de anteojos",
+"ejemplo de anteojos",
+"anteojos"
+],
+"respuestas": [
+"Anteojos: Lentes que se usan para ver mejor o para protegerse del sol. Por ejemplo: \"Mi abuelo usa anteojos para leer.\""
+]
+},
+{
+"id": "dic-paraguas",
+"tipo": "hecho",
+"preguntas": [
+"que es paraguas",
+"que significa paraguas",
+"que quiere decir paraguas",
+"definicion de paraguas",
+"ejemplo de paraguas",
+"paraguas"
+],
+"respuestas": [
+"Paraguas: Objeto que se abre para taparse de la lluvia. Por ejemplo: \"Abrí el paraguas, que llueve.\""
+]
+},
+{
+"id": "dic-llave",
+"tipo": "hecho",
+"preguntas": [
+"que es llave",
+"que significa llave",
+"que quiere decir llave",
+"definicion de llave",
+"ejemplo de llave",
+"llave"
+],
+"respuestas": [
+"Llave: Objeto de metal para abrir y cerrar cerraduras. Por ejemplo: \"No encuentro la llave de casa.\""
+]
+},
+{
+"id": "dic-telefono",
+"tipo": "hecho",
+"preguntas": [
+"que es teléfono",
+"que significa teléfono",
+"que quiere decir teléfono",
+"definicion de teléfono",
+"ejemplo de teléfono",
+"teléfono"
+],
+"respuestas": [
+"Teléfono: Aparato para hablar con alguien que está lejos. Por ejemplo: \"Sonó el teléfono.\""
+]
+},
+{
+"id": "dic-television",
+"tipo": "hecho",
+"preguntas": [
+"que es televisión",
+"que significa televisión",
+"que quiere decir televisión",
+"definicion de televisión",
+"ejemplo de televisión",
+"televisión"
+],
+"respuestas": [
+"Televisión: Aparato para ver programas y películas. También se dice \"tele\". Por ejemplo: \"Vimos el partido en la tele.\""
+]
+},
+{
+"id": "dic-heladera",
+"tipo": "hecho",
+"preguntas": [
+"que es heladera",
+"que significa heladera",
+"que quiere decir heladera",
+"definicion de heladera",
+"ejemplo de heladera",
+"heladera"
+],
+"respuestas": [
+"Heladera: Electrodoméstico que mantiene fría la comida. Por ejemplo: \"Guardá la leche en la heladera.\""
+]
+},
+{
+"id": "dic-pileta",
+"tipo": "hecho",
+"preguntas": [
+"que es pileta",
+"que significa pileta",
+"que quiere decir pileta",
+"definicion de pileta",
+"ejemplo de pileta",
+"pileta"
+],
+"respuestas": [
+"Pileta: Lugar con agua para nadar. También la bacha de la cocina o del baño. Por ejemplo: \"En verano vamos a la pileta.\""
+]
+},
+{
+"id": "dic-bano",
+"tipo": "hecho",
+"preguntas": [
+"que es baño",
+"que significa baño",
+"que quiere decir baño",
+"definicion de baño",
+"ejemplo de baño"
+],
+"respuestas": [
+"Baño: Lugar de la casa donde está el inodoro, la ducha y el lavatorio. Por ejemplo: \"Me lavé las manos en el baño.\""
+]
+},
+{
+"id": "dic-jardin",
+"tipo": "hecho",
+"preguntas": [
+"que es jardín",
+"que significa jardín",
+"que quiere decir jardín",
+"definicion de jardín",
+"ejemplo de jardín",
+"jardín"
+],
+"respuestas": [
+"Jardín: Lugar con plantas y pasto alrededor de una casa. También la primera etapa de la escuela. Por ejemplo: \"Plantamos flores en el jardín.\""
+]
+},
+{
+"id": "dic-patio",
+"tipo": "hecho",
+"preguntas": [
+"que es patio",
+"que significa patio",
+"que quiere decir patio",
+"definicion de patio",
+"ejemplo de patio",
+"patio"
+],
+"respuestas": [
+"Patio: Lugar abierto dentro de una casa o una escuela. Por ejemplo: \"Jugamos en el patio.\""
+]
+},
+{
+"id": "dic-balcon",
+"tipo": "hecho",
+"preguntas": [
+"que es balcón",
+"que significa balcón",
+"que quiere decir balcón",
+"definicion de balcón",
+"ejemplo de balcón",
+"balcón"
+],
+"respuestas": [
+"Balcón: Espacio que sale hacia afuera de una pared de un edificio, con baranda. Por ejemplo: \"Desde el balcón se ve la calle.\""
+]
+},
+{
+"id": "dic-escalera",
+"tipo": "hecho",
+"preguntas": [
+"que es escalera",
+"que significa escalera",
+"que quiere decir escalera",
+"definicion de escalera",
+"ejemplo de escalera",
+"escalera"
+],
+"respuestas": [
+"Escalera: Serie de escalones para subir o bajar. Por ejemplo: \"Subí la escalera despacio.\""
+]
+},
+{
+"id": "dic-ascensor",
+"tipo": "hecho",
+"preguntas": [
+"que es ascensor",
+"que significa ascensor",
+"que quiere decir ascensor",
+"definicion de ascensor",
+"ejemplo de ascensor",
+"ascensor"
+],
+"respuestas": [
+"Ascensor: Aparato que sube y baja personas entre los pisos de un edificio. Por ejemplo: \"Tomamos el ascensor hasta el quinto piso.\""
+]
+},
+{
+"id": "dic-semaforo",
+"tipo": "hecho",
+"preguntas": [
+"que es semáforo",
+"que significa semáforo",
+"que quiere decir semáforo",
+"definicion de semáforo",
+"ejemplo de semáforo",
+"semáforo"
+],
+"respuestas": [
+"Semáforo: Aparato con luces que ordena el tránsito. Por ejemplo: \"Esperá que el semáforo esté en verde.\""
+]
+},
+{
+"id": "dic-vereda",
+"tipo": "hecho",
+"preguntas": [
+"que es vereda",
+"que significa vereda",
+"que quiere decir vereda",
+"definicion de vereda",
+"ejemplo de vereda",
+"vereda"
+],
+"respuestas": [
+"Vereda: Camino al costado de la calle, para las personas que caminan. Por ejemplo: \"Caminá por la vereda.\""
+]
+},
+{
+"id": "dic-esquina",
+"tipo": "hecho",
+"preguntas": [
+"que es esquina",
+"que significa esquina",
+"que quiere decir esquina",
+"definicion de esquina",
+"ejemplo de esquina",
+"esquina"
+],
+"respuestas": [
+"Esquina: Lugar donde se juntan dos calles. Por ejemplo: \"Nos vemos en la esquina.\""
+]
+},
+{
+"id": "dic-kiosco",
+"tipo": "hecho",
+"preguntas": [
+"que es kiosco",
+"que significa kiosco",
+"que quiere decir kiosco",
+"definicion de kiosco",
+"ejemplo de kiosco",
+"kiosco"
+],
+"respuestas": [
+"Kiosco: Negocio chico donde se venden golosinas, bebidas y otras cosas. Por ejemplo: \"Compré un alfajor en el kiosco.\""
+]
+},
+{
+"id": "dic-golosina",
+"tipo": "hecho",
+"preguntas": [
+"que es golosina",
+"que significa golosina",
+"que quiere decir golosina",
+"definicion de golosina",
+"ejemplo de golosina",
+"golosina"
+],
+"respuestas": [
+"Golosina: Dulce que se come por gusto, como caramelos o chupetines. Por ejemplo: \"No comas tantas golosinas.\""
 ]
 }
 ]
