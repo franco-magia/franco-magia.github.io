@@ -1,6 +1,6 @@
 {
 "version": 1,
-"actualizado": "2026-11-06T23:28:58.464Z",
+"actualizado": "2026-11-06T23:30:04.055Z",
 "entradas": [
 {
 "id": "saludo",
@@ -5198,6 +5198,1095 @@
 ],
 "respuestas": [
 "Un glaciar es una enorme masa de hielo que se mueve muy despacio. En Argentina está el Perito Moreno, en Santa Cruz."
+]
+},
+{
+"id": "qa-qa03txt-1",
+"tipo": "hecho",
+"preguntas": [
+"cuantos huesos tiene el cuerpo humano",
+"cuantos huesos tenemos"
+],
+"respuestas": [
+"Un adulto tiene 206 huesos. Los bebés nacen con más, y algunos se van uniendo al crecer."
+]
+},
+{
+"id": "qa-qa03txt-2",
+"tipo": "hecho",
+"preguntas": [
+"cual es el hueso mas largo del cuerpo",
+"cual es el hueso mas grande"
+],
+"respuestas": [
+"El fémur, el hueso del muslo, es el más largo del cuerpo."
+]
+},
+{
+"id": "qa-qa03txt-3",
+"tipo": "hecho",
+"preguntas": [
+"cual es el hueso mas chico del cuerpo",
+"cual es el hueso mas pequeno"
+],
+"respuestas": [
+"El estribo, que está dentro del oído, es el hueso más chico del cuerpo."
+]
+},
+{
+"id": "qa-qa03txt-4",
+"tipo": "hecho",
+"preguntas": [
+"cuantos dientes tiene una persona",
+"cuantos dientes tenemos"
+],
+"respuestas": [
+"Un adulto tiene 32 dientes y un chico tiene 20 dientes de leche."
+]
+},
+{
+"id": "qa-qa03txt-5",
+"tipo": "hecho",
+"preguntas": [
+"que son los dientes de leche",
+"por que se caen los dientes de leche"
+],
+"respuestas": [
+"Son los primeros dientes. Se caen para dejar lugar a los dientes definitivos, que son más grandes."
+]
+},
+{
+"id": "qa-qa03txt-6",
+"tipo": "hecho",
+"preguntas": [
+"cuantas veces late el corazon",
+"cuantas veces por minuto late el corazon"
+],
+"respuestas": [
+"En reposo, el corazón late entre 60 y 100 veces por minuto en un adulto, y un poco más rápido en los chicos."
+]
+},
+{
+"id": "qa-qa03txt-7",
+"tipo": "hecho",
+"preguntas": [
+"para que sirve el corazon",
+"que hace el corazon"
+],
+"respuestas": [
+"El corazón es un músculo que bombea la sangre por todo el cuerpo."
+]
+},
+{
+"id": "qa-qa03txt-8",
+"tipo": "hecho",
+"preguntas": [
+"para que sirven los pulmones",
+"que hacen los pulmones"
+],
+"respuestas": [
+"Los pulmones toman el oxígeno del aire cuando respiramos y sacan el dióxido de carbono."
+]
+},
+{
+"id": "qa-qa03txt-9",
+"tipo": "hecho",
+"preguntas": [
+"para que sirve el cerebro",
+"que hace el cerebro"
+],
+"respuestas": [
+"El cerebro controla todo el cuerpo: pensar, moverse, sentir, recordar y aprender."
+]
+},
+{
+"id": "qa-qa03txt-10",
+"tipo": "hecho",
+"preguntas": [
+"para que sirve el estomago",
+"que hace el estomago"
+],
+"respuestas": [
+"El estómago recibe la comida y empieza a deshacerla para que el cuerpo la aproveche."
+]
+},
+{
+"id": "qa-qa03txt-11",
+"tipo": "hecho",
+"preguntas": [
+"para que sirve la sangre",
+"que hace la sangre"
+],
+"respuestas": [
+"La sangre lleva oxígeno y alimento a todo el cuerpo, y ayuda a defenderlo de enfermedades."
+]
+},
+{
+"id": "qa-qa03txt-12",
+"tipo": "hecho",
+"preguntas": [
+"para que sirven los huesos",
+"que hacen los huesos"
+],
+"respuestas": [
+"Los huesos sostienen el cuerpo, protegen órganos como el cerebro y el corazón, y nos ayudan a movernos."
+]
+},
+{
+"id": "qa-qa03txt-13",
+"tipo": "hecho",
+"preguntas": [
+"para que sirven los musculos",
+"que hacen los musculos"
+],
+"respuestas": [
+"Los músculos mueven el cuerpo: al estirarse y encogerse, mueven los huesos."
+]
+},
+{
+"id": "qa-qa03txt-14",
+"tipo": "hecho",
+"preguntas": [
+"cuantos musculos tenemos",
+"cuantos musculos tiene el cuerpo"
+],
+"respuestas": [
+"El cuerpo humano tiene más de 600 músculos."
+]
+},
+{
+"id": "qa-qa03txt-15",
+"tipo": "hecho",
+"preguntas": [
+"cual es el organo mas grande del cuerpo",
+"cual es el organo mas grande"
+],
+"respuestas": [
+"La piel es el órgano más grande del cuerpo."
+]
+},
+{
+"id": "qa-qa03txt-16",
+"tipo": "hecho",
+"preguntas": [
+"para que sirve la piel",
+"que hace la piel"
+],
+"respuestas": [
+"La piel nos protege de los gérmenes, del sol y de los golpes, y nos deja sentir el tacto, el frío y el calor."
+]
+},
+{
+"id": "qa-qa03txt-17",
+"tipo": "hecho",
+"preguntas": [
+"cuales son los cinco sentidos",
+"cuantos sentidos tenemos"
+],
+"respuestas": [
+"Los cinco sentidos son la vista, el oído, el olfato, el gusto y el tacto."
+]
+},
+{
+"id": "qa-qa03txt-18",
+"tipo": "hecho",
+"preguntas": [
+"con que vemos",
+"que sentido usamos para ver"
+],
+"respuestas": [
+"Vemos con los ojos: es el sentido de la vista."
+]
+},
+{
+"id": "qa-qa03txt-19",
+"tipo": "hecho",
+"preguntas": [
+"con que oimos",
+"que sentido usamos para oir"
+],
+"respuestas": [
+"Oímos con los oídos: es el sentido del oído."
+]
+},
+{
+"id": "qa-qa03txt-20",
+"tipo": "hecho",
+"preguntas": [
+"con que olemos",
+"que sentido usamos para oler"
+],
+"respuestas": [
+"Olemos con la nariz: es el sentido del olfato."
+]
+},
+{
+"id": "qa-qa03txt-21",
+"tipo": "hecho",
+"preguntas": [
+"con que sentimos los sabores",
+"que es el gusto"
+],
+"respuestas": [
+"Sentimos los sabores con la lengua: es el sentido del gusto."
+]
+},
+{
+"id": "qa-qa03txt-22",
+"tipo": "hecho",
+"preguntas": [
+"que es el tacto",
+"con que tocamos"
+],
+"respuestas": [
+"El tacto es el sentido que nos deja sentir cuando tocamos algo, sobre todo con la piel y las manos."
+]
+},
+{
+"id": "qa-qa03txt-23",
+"tipo": "hecho",
+"preguntas": [
+"cuales son los sabores basicos",
+"que sabores puede sentir la lengua"
+],
+"respuestas": [
+"Dulce, salado, ácido, amargo y umami (un sabor sabroso, como el del queso o el tomate)."
+]
+},
+{
+"id": "qa-qa03txt-24",
+"tipo": "hecho",
+"preguntas": [
+"que es el adn",
+"para que sirve el adn"
+],
+"respuestas": [
+"El ADN es como un manual de instrucciones dentro de cada célula, que dice cómo es y cómo funciona cada ser vivo."
+]
+},
+{
+"id": "qa-qa03txt-25",
+"tipo": "hecho",
+"preguntas": [
+"que es una celula",
+"que son las celulas"
+],
+"respuestas": [
+"La célula es la parte más chiquita de un ser vivo. Nuestro cuerpo tiene billones de células."
+]
+},
+{
+"id": "qa-qa03txt-26",
+"tipo": "hecho",
+"preguntas": [
+"que son los globulos rojos",
+"para que sirven los globulos rojos"
+],
+"respuestas": [
+"Los glóbulos rojos son células de la sangre que llevan el oxígeno por el cuerpo."
+]
+},
+{
+"id": "qa-qa03txt-27",
+"tipo": "hecho",
+"preguntas": [
+"que son los globulos blancos",
+"para que sirven los globulos blancos"
+],
+"respuestas": [
+"Los glóbulos blancos son células de la sangre que defienden al cuerpo de los gérmenes."
+]
+},
+{
+"id": "qa-qa03txt-28",
+"tipo": "hecho",
+"preguntas": [
+"que es un germen",
+"que son los microbios"
+],
+"respuestas": [
+"Los gérmenes o microbios son seres vivos tan chiquitos que no se ven, como bacterias y virus. Algunos enferman y otros son buenos."
+]
+},
+{
+"id": "qa-qa03txt-29",
+"tipo": "hecho",
+"preguntas": [
+"que es una bacteria",
+"las bacterias son malas"
+],
+"respuestas": [
+"Las bacterias son seres vivos de una sola célula. Muchas son buenas, como las que ayudan a digerir, y algunas enferman."
+]
+},
+{
+"id": "qa-qa03txt-30",
+"tipo": "hecho",
+"preguntas": [
+"por que hay que lavarse las manos",
+"para que sirve lavarse las manos"
+],
+"respuestas": [
+"Lavarse las manos con agua y jabón saca los gérmenes y evita que nos enfermemos."
+]
+},
+{
+"id": "qa-qa03txt-31",
+"tipo": "hecho",
+"preguntas": [
+"cuanto tiempo hay que lavarse las manos",
+"como lavarse bien las manos"
+],
+"respuestas": [
+"Hay que frotarlas con jabón unos 20 segundos, entre los dedos y las uñas, y después enjuagarlas."
+]
+},
+{
+"id": "qa-qa03txt-32",
+"tipo": "hecho",
+"preguntas": [
+"por que hay que lavarse los dientes",
+"para que sirve cepillarse los dientes"
+],
+"respuestas": [
+"Para sacar restos de comida y bacterias que hacen caries. Conviene hacerlo después de comer y antes de dormir."
+]
+},
+{
+"id": "qa-qa03txt-33",
+"tipo": "hecho",
+"preguntas": [
+"que es una caries",
+"que son las caries"
+],
+"respuestas": [
+"Una caries es un agujerito en el diente causado por bacterias que se alimentan del azúcar."
+]
+},
+{
+"id": "qa-qa03txt-34",
+"tipo": "hecho",
+"preguntas": [
+"cuantas horas hay que dormir",
+"cuanto tiene que dormir un chico"
+],
+"respuestas": [
+"Los chicos de 6 a 12 años necesitan dormir entre 9 y 12 horas, y los adolescentes entre 8 y 10."
+]
+},
+{
+"id": "qa-qa03txt-35",
+"tipo": "hecho",
+"preguntas": [
+"por que tenemos que dormir",
+"para que sirve dormir"
+],
+"respuestas": [
+"Al dormir el cuerpo descansa y crece, y el cerebro ordena lo que aprendimos en el día."
+]
+},
+{
+"id": "qa-qa03txt-36",
+"tipo": "hecho",
+"preguntas": [
+"por que sonamos",
+"que son los suenos"
+],
+"respuestas": [
+"Soñamos mientras dormimos; los científicos creen que ayuda al cerebro a ordenar recuerdos y emociones."
+]
+},
+{
+"id": "qa-qa03txt-37",
+"tipo": "hecho",
+"preguntas": [
+"por que bostezamos",
+"que es un bostezo"
+],
+"respuestas": [
+"Bostezamos cuando estamos cansados o aburridos; es un reflejo y además es contagioso."
+]
+},
+{
+"id": "qa-qa03txt-38",
+"tipo": "hecho",
+"preguntas": [
+"por que estornudamos",
+"que es un estornudo"
+],
+"respuestas": [
+"Estornudamos para sacar de la nariz polvo o cosas que la molestan. Conviene taparse con el codo."
+]
+},
+{
+"id": "qa-qa03txt-39",
+"tipo": "hecho",
+"preguntas": [
+"que es el hipo",
+"por que da hipo"
+],
+"respuestas": [
+"El hipo pasa cuando un músculo debajo de los pulmones, el diafragma, se contrae solo de golpe."
+]
+},
+{
+"id": "qa-qa03txt-40",
+"tipo": "hecho",
+"preguntas": [
+"por que nos da hambre",
+"que es el hambre"
+],
+"respuestas": [
+"El hambre es la señal del cuerpo para avisar que necesita energía y alimento."
+]
+},
+{
+"id": "qa-qa03txt-41",
+"tipo": "hecho",
+"preguntas": [
+"cuanta agua hay que tomar",
+"cuanta agua tengo que tomar por dia"
+],
+"respuestas": [
+"Depende de la edad y del calor, pero en general conviene tomar agua varias veces al día, sobre todo si hacés ejercicio."
+]
+},
+{
+"id": "qa-qa03txt-42",
+"tipo": "hecho",
+"preguntas": [
+"por que es importante tomar agua",
+"para que sirve tomar agua"
+],
+"respuestas": [
+"Nuestro cuerpo es más o menos 60 % agua y la necesita para funcionar, regular la temperatura y llevar nutrientes."
+]
+},
+{
+"id": "qa-qa03txt-43",
+"tipo": "hecho",
+"preguntas": [
+"por que transpiramos",
+"para que sirve la transpiracion"
+],
+"respuestas": [
+"Transpiramos para enfriar el cuerpo cuando hace calor o hacemos ejercicio."
+]
+},
+{
+"id": "qa-qa03txt-44",
+"tipo": "hecho",
+"preguntas": [
+"que es la fiebre",
+"por que da fiebre"
+],
+"respuestas": [
+"La fiebre es cuando la temperatura del cuerpo sube, casi siempre porque el cuerpo está peleando contra una infección."
+]
+},
+{
+"id": "qa-qa03txt-45",
+"tipo": "hecho",
+"preguntas": [
+"cual es la temperatura normal del cuerpo",
+"cuanto es la temperatura normal"
+],
+"respuestas": [
+"La temperatura normal del cuerpo está alrededor de 36 a 37 grados."
+]
+},
+{
+"id": "qa-qa03txt-46",
+"tipo": "hecho",
+"preguntas": [
+"que es una vacuna",
+"para que sirven las vacunas"
+],
+"respuestas": [
+"Una vacuna entrena a las defensas del cuerpo para reconocer una enfermedad y protegernos de ella."
+]
+},
+{
+"id": "qa-qa03txt-47",
+"tipo": "hecho",
+"preguntas": [
+"que es un resfrio",
+"que es un resfriado"
+],
+"respuestas": [
+"El resfrío es una infección leve que da mocos, estornudos y a veces tos. Casi siempre se pasa en unos días con descanso."
+]
+},
+{
+"id": "qa-qa03txt-48",
+"tipo": "hecho",
+"preguntas": [
+"que es una alergia",
+"por que da alergia"
+],
+"respuestas": [
+"Una alergia es cuando el cuerpo reacciona de más ante algo inofensivo, como el polen o el polvo."
+]
+},
+{
+"id": "qa-qa03txt-49",
+"tipo": "hecho",
+"preguntas": [
+"que es el ejercicio",
+"por que hacer ejercicio es bueno"
+],
+"respuestas": [
+"Hacer ejercicio fortalece el corazón, los músculos y los huesos, y también pone de buen humor."
+]
+},
+{
+"id": "qa-qa03txt-50",
+"tipo": "hecho",
+"preguntas": [
+"cuanto ejercicio hay que hacer",
+"cuanto tiempo tengo que moverme por dia"
+],
+"respuestas": [
+"A los chicos se les recomienda moverse y jugar activamente alrededor de una hora por día."
+]
+},
+{
+"id": "qa-qa03txt-51",
+"tipo": "hecho",
+"preguntas": [
+"que es una alimentacion saludable",
+"que es comer sano"
+],
+"respuestas": [
+"Es comer variado: frutas, verduras, legumbres, cereales, lácteos, carnes o huevos, y tomar agua, con pocos dulces y gaseosas."
+]
+},
+{
+"id": "qa-qa03txt-52",
+"tipo": "hecho",
+"preguntas": [
+"por que hay que comer frutas y verduras",
+"para que sirven las frutas y verduras"
+],
+"respuestas": [
+"Tienen vitaminas, minerales y fibra que ayudan a que el cuerpo crezca sano y se defienda."
+]
+},
+{
+"id": "qa-qa03txt-53",
+"tipo": "hecho",
+"preguntas": [
+"que son las vitaminas",
+"para que sirven las vitaminas"
+],
+"respuestas": [
+"Las vitaminas son sustancias que el cuerpo necesita en poquita cantidad para funcionar bien. Están en frutas, verduras y otros alimentos."
+]
+},
+{
+"id": "qa-qa03txt-54",
+"tipo": "hecho",
+"preguntas": [
+"que son las proteinas",
+"para que sirven las proteinas"
+],
+"respuestas": [
+"Las proteínas ayudan a construir y reparar músculos y otras partes del cuerpo. Están en la carne, el huevo, la leche y las legumbres."
+]
+},
+{
+"id": "qa-qa03txt-55",
+"tipo": "hecho",
+"preguntas": [
+"que son los carbohidratos",
+"para que sirven los carbohidratos"
+],
+"respuestas": [
+"Los carbohidratos dan energía. Están en el pan, el arroz, las pastas y las papas."
+]
+},
+{
+"id": "qa-qa03txt-56",
+"tipo": "hecho",
+"preguntas": [
+"que es el calcio",
+"para que sirve el calcio"
+],
+"respuestas": [
+"El calcio es un mineral que hace fuertes los huesos y los dientes. Está en la leche, el queso y el yogur."
+]
+},
+{
+"id": "qa-qa03txt-57",
+"tipo": "hecho",
+"preguntas": [
+"por que crecemos",
+"como crece el cuerpo"
+],
+"respuestas": [
+"Crecemos porque nuestras células se multiplican, sobre todo en la infancia y la adolescencia, con buena comida y buen descanso."
+]
+},
+{
+"id": "qa-qa03txt-58",
+"tipo": "hecho",
+"preguntas": [
+"por que nos duele cuando nos golpeamos",
+"que es el dolor"
+],
+"respuestas": [
+"El dolor es una señal de los nervios para avisarle al cerebro que algo puede estar lastimado."
+]
+},
+{
+"id": "qa-qa03txt-59",
+"tipo": "hecho",
+"preguntas": [
+"que son los nervios",
+"para que sirven los nervios"
+],
+"respuestas": [
+"Los nervios son como cables que llevan mensajes entre el cerebro y el resto del cuerpo."
+]
+},
+{
+"id": "qa-qa03txt-60",
+"tipo": "hecho",
+"preguntas": [
+"que es la columna vertebral",
+"para que sirve la columna"
+],
+"respuestas": [
+"La columna es la fila de huesos de la espalda que nos sostiene y protege la médula espinal."
+]
+},
+{
+"id": "qa-qa03txt-61",
+"tipo": "hecho",
+"preguntas": [
+"que es el esqueleto",
+"como es el esqueleto"
+],
+"respuestas": [
+"El esqueleto es el conjunto de todos los huesos del cuerpo."
+]
+},
+{
+"id": "qa-qa03txt-62",
+"tipo": "hecho",
+"preguntas": [
+"que son los rinones",
+"para que sirven los rinones"
+],
+"respuestas": [
+"Los riñones limpian la sangre y fabrican la orina para sacar lo que el cuerpo no necesita."
+]
+},
+{
+"id": "qa-qa03txt-63",
+"tipo": "hecho",
+"preguntas": [
+"para que sirve el higado",
+"que hace el higado"
+],
+"respuestas": [
+"El hígado limpia la sangre, guarda energía y ayuda a digerir las grasas."
+]
+},
+{
+"id": "qa-qa03txt-64",
+"tipo": "hecho",
+"preguntas": [
+"que es la digestion",
+"como funciona la digestion"
+],
+"respuestas": [
+"La digestión es cómo el cuerpo transforma la comida en pedacitos chiquitos para aprovechar sus nutrientes."
+]
+},
+{
+"id": "qa-qa03txt-65",
+"tipo": "hecho",
+"preguntas": [
+"cuanto mide el intestino",
+"que largo tiene el intestino"
+],
+"respuestas": [
+"El intestino delgado de un adulto mide unos 6 o 7 metros."
+]
+},
+{
+"id": "qa-qa03txt-66",
+"tipo": "hecho",
+"preguntas": [
+"por que tenemos ombligo",
+"que es el ombligo"
+],
+"respuestas": [
+"El ombligo es la marca que queda del cordón que nos unía a mamá antes de nacer."
+]
+},
+{
+"id": "qa-qa03txt-67",
+"tipo": "hecho",
+"preguntas": [
+"por que tenemos huellas digitales",
+"las huellas digitales son unicas"
+],
+"respuestas": [
+"Cada persona tiene huellas digitales únicas, distintas a las de cualquier otra."
+]
+},
+{
+"id": "qa-qa03txt-68",
+"tipo": "hecho",
+"preguntas": [
+"de que color son los ojos",
+"por que tenemos ojos de distintos colores"
+],
+"respuestas": [
+"El color de los ojos depende de una sustancia llamada melanina y se hereda de la familia."
+]
+},
+{
+"id": "qa-qa03txt-69",
+"tipo": "hecho",
+"preguntas": [
+"por que nos salen lagrimas",
+"para que sirven las lagrimas"
+],
+"respuestas": [
+"Las lágrimas limpian y mojan los ojos. También lloramos por emociones fuertes, y eso ayuda a aliviarnos."
+]
+},
+{
+"id": "qa-qa03txt-70",
+"tipo": "hecho",
+"preguntas": [
+"por que nos ponemos rojos",
+"por que nos sonrojamos"
+],
+"respuestas": [
+"Cuando sentimos vergüenza, llega más sangre a la cara y nos ponemos colorados."
+]
+},
+{
+"id": "qa-qa03txt-71",
+"tipo": "hecho",
+"preguntas": [
+"que es la adrenalina",
+"que pasa cuando tenemos miedo"
+],
+"respuestas": [
+"La adrenalina es una sustancia que el cuerpo larga en momentos de susto o emoción: acelera el corazón y nos prepara para actuar."
+]
+},
+{
+"id": "qa-qa03txt-72",
+"tipo": "hecho",
+"preguntas": [
+"por que se nos pone la piel de gallina",
+"que es la piel de gallina"
+],
+"respuestas": [
+"Es cuando se paran los pelitos por frío o emoción; es un reflejo que heredamos de nuestros antepasados peludos."
+]
+},
+{
+"id": "qa-qa03txt-73",
+"tipo": "hecho",
+"preguntas": [
+"por que el pelo crece",
+"cuanto crece el pelo"
+],
+"respuestas": [
+"El pelo crece desde la raíz, más o menos un centímetro por mes."
+]
+},
+{
+"id": "qa-qa03txt-74",
+"tipo": "hecho",
+"preguntas": [
+"por que nos crecen las unas",
+"de que estan hechas las unas"
+],
+"respuestas": [
+"Las uñas están hechas de queratina, como el pelo, y crecen todo el tiempo desde la raíz."
+]
+},
+{
+"id": "qa-qa03txt-75",
+"tipo": "hecho",
+"preguntas": [
+"que es la respiracion",
+"como respiramos"
+],
+"respuestas": [
+"Al respirar, el aire entra por la nariz o la boca, llega a los pulmones, que toman el oxígeno, y sacamos el aire usado."
+]
+},
+{
+"id": "qa-qa03txt-76",
+"tipo": "hecho",
+"preguntas": [
+"cuantas veces respiramos por minuto",
+"cuantas veces respiramos"
+],
+"respuestas": [
+"En reposo, un adulto respira unas 12 a 20 veces por minuto."
+]
+},
+{
+"id": "qa-qa03txt-77",
+"tipo": "hecho",
+"preguntas": [
+"que pasa si no dormimos",
+"es malo no dormir"
+],
+"respuestas": [
+"Si no dormimos lo suficiente, nos cuesta concentrarnos, nos ponemos de mal humor y el cuerpo se defiende peor."
+]
+},
+{
+"id": "qa-qa03txt-78",
+"tipo": "hecho",
+"preguntas": [
+"por que no hay que mirar pantallas antes de dormir",
+"las pantallas quitan el sueno"
+],
+"respuestas": [
+"La luz de las pantallas engaña al cerebro y le hace creer que es de día, y eso hace más difícil dormirse."
+]
+},
+{
+"id": "qa-qa03txt-79",
+"tipo": "hecho",
+"preguntas": [
+"cuanto tiempo de pantalla es sano",
+"cuanto tiempo puedo usar la compu"
+],
+"respuestas": [
+"Conviene hacer pausas, mirar lejos de vez en cuando, moverse y no dejar de dormir bien. Pactalo con los adultos de tu casa."
+]
+},
+{
+"id": "qa-qa03txt-80",
+"tipo": "hecho",
+"preguntas": [
+"como cuidar la vista",
+"como cuidar los ojos"
+],
+"respuestas": [
+"Usá buena luz, hacé pausas cuando mirás pantallas, no te acerques demasiado y visitá al oculista si ves borroso."
+]
+},
+{
+"id": "qa-qa03txt-81",
+"tipo": "hecho",
+"preguntas": [
+"que es el protector solar",
+"para que sirve el protector solar"
+],
+"respuestas": [
+"El protector solar cuida la piel de los rayos del Sol, que pueden quemarla. Hay que ponerlo y renovarlo en la playa o la pileta."
+]
+},
+{
+"id": "qa-qa03txt-82",
+"tipo": "hecho",
+"preguntas": [
+"que es la postura",
+"como sentarse bien"
+],
+"respuestas": [
+"Tener buena postura es sentarse con la espalda derecha y los pies apoyados. Ayuda a que no duela la espalda."
+]
+},
+{
+"id": "qa-qa03txt-83",
+"tipo": "hecho",
+"preguntas": [
+"que es la salud mental",
+"que significa salud mental"
+],
+"respuestas": [
+"Es cómo nos sentimos por dentro: nuestras emociones y pensamientos. Hablar con alguien de confianza ayuda a cuidarla."
+]
+},
+{
+"id": "qa-qa03txt-84",
+"tipo": "hecho",
+"preguntas": [
+"que hago si estoy nervioso",
+"como calmarme"
+],
+"respuestas": [
+"Probá respirar hondo y despacio, contar hasta diez, moverte un poco o hablar con alguien de confianza."
+]
+},
+{
+"id": "qa-qa03txt-85",
+"tipo": "hecho",
+"preguntas": [
+"que es la empatia",
+"que significa empatia"
+],
+"respuestas": [
+"La empatía es ponerse en el lugar del otro y entender cómo se siente."
+]
+},
+{
+"id": "qa-qa03txt-86",
+"tipo": "hecho",
+"preguntas": [
+"que es la autoestima",
+"que significa autoestima"
+],
+"respuestas": [
+"La autoestima es cómo nos vemos y nos valoramos a nosotros mismos."
+]
+},
+{
+"id": "qa-qa03txt-87",
+"tipo": "hecho",
+"preguntas": [
+"que son las emociones",
+"cuales son las emociones"
+],
+"respuestas": [
+"Las emociones son lo que sentimos, como alegría, tristeza, miedo, enojo o sorpresa. Todas son normales."
+]
+},
+{
+"id": "qa-qa03txt-88",
+"tipo": "hecho",
+"preguntas": [
+"esta mal llorar",
+"los varones lloran"
+],
+"respuestas": [
+"No está mal llorar: es una forma normal de sacar lo que sentimos, para cualquier persona."
+]
+},
+{
+"id": "qa-qa03txt-89",
+"tipo": "hecho",
+"preguntas": [
+"por que nos reimos",
+"para que sirve reirse"
+],
+"respuestas": [
+"Reírse nos hace sentir bien, nos relaja y nos ayuda a conectar con otras personas."
+]
+},
+{
+"id": "qa-qa03txt-90",
+"tipo": "hecho",
+"preguntas": [
+"que es un medico",
+"que hace un pediatra"
+],
+"respuestas": [
+"Un médico cura y cuida la salud. El pediatra es el médico de los chicos."
+]
+},
+{
+"id": "qa-qa03txt-91",
+"tipo": "hecho",
+"preguntas": [
+"que hace un dentista",
+"que hace un odontologo"
+],
+"respuestas": [
+"El dentista u odontólogo cuida los dientes y la boca."
+]
+},
+{
+"id": "qa-qa03txt-92",
+"tipo": "hecho",
+"preguntas": [
+"que es una ambulancia",
+"cual es el numero de emergencias"
+],
+"respuestas": [
+"La ambulancia lleva personas enfermas o lastimadas al hospital. En Argentina, para emergencias médicas se llama al 107, o al 911."
+]
+},
+{
+"id": "qa-qa03txt-93",
+"tipo": "hecho",
+"preguntas": [
+"cual es el numero de los bomberos",
+"como llamo a los bomberos"
+],
+"respuestas": [
+"En Argentina, a los bomberos se los llama al 100, o al 911."
+]
+},
+{
+"id": "qa-qa03txt-94",
+"tipo": "hecho",
+"preguntas": [
+"cual es el numero de la policia",
+"como llamo a la policia"
+],
+"respuestas": [
+"En Argentina, a la policía se la llama al 911."
+]
+},
+{
+"id": "qa-qa03txt-95",
+"tipo": "hecho",
+"preguntas": [
+"que hago si me pierdo",
+"que hacer si me pierdo"
+],
+"respuestas": [
+"Quedate quieto en un lugar seguro, buscá a un policía, un guardia o una mamá o papá con chicos, y decí tu nombre y el teléfono de tu familia."
+]
+},
+{
+"id": "qa-qa03txt-96",
+"tipo": "hecho",
+"preguntas": [
+"que es un primer auxilio",
+"que son los primeros auxilios"
+],
+"respuestas": [
+"Es la primera ayuda que se le da a una persona lastimada mientras llega un médico. Lo más importante: pedir ayuda a un adulto o llamar al 107."
+]
+},
+{
+"id": "qa-qa03txt-97",
+"tipo": "hecho",
+"preguntas": [
+"que hago si me corto",
+"como curar un raspon"
+],
+"respuestas": [
+"Contale a un adulto, lavá la herida con agua y jabón, y tapala con una curita. Si sangra mucho, pedí ayuda enseguida."
+]
+},
+{
+"id": "qa-qa03txt-98",
+"tipo": "hecho",
+"preguntas": [
+"que hago si me quemo con algo caliente",
+"como curar una quemadura chica"
+],
+"respuestas": [
+"Avisale a un adulto y poné la zona bajo agua fresca unos minutos. No pongas manteca ni pasta de dientes."
+]
+},
+{
+"id": "qa-qa03txt-99",
+"tipo": "hecho",
+"preguntas": [
+"por que no hay que tocar los enchufes",
+"son peligrosos los enchufes"
+],
+"respuestas": [
+"La electricidad de los enchufes puede dar una descarga muy peligrosa. Nunca metas dedos ni objetos."
 ]
 }
 ]
