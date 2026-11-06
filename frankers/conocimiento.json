@@ -1,6 +1,6 @@
 {
 "version": 1,
-"actualizado": "2026-11-06T23:31:34.607Z",
+"actualizado": "2026-11-06T23:32:26.143Z",
 "entradas": [
 {
 "id": "saludo",
@@ -7431,6 +7431,1095 @@
 ],
 "respuestas": [
 "La birome es el bolígrafo. Lo desarrolló en Argentina Ladislao Biro, que vivía en el país."
+]
+},
+{
+"id": "qa-qa05txt-1",
+"tipo": "hecho",
+"preguntas": [
+"cual es la capital de francia",
+"capital de francia"
+],
+"respuestas": [
+"La capital de Francia es París."
+]
+},
+{
+"id": "qa-qa05txt-2",
+"tipo": "hecho",
+"preguntas": [
+"cual es la capital de espana",
+"capital de espana"
+],
+"respuestas": [
+"La capital de España es Madrid."
+]
+},
+{
+"id": "qa-qa05txt-3",
+"tipo": "hecho",
+"preguntas": [
+"cual es la capital de italia",
+"capital de italia"
+],
+"respuestas": [
+"La capital de Italia es Roma."
+]
+},
+{
+"id": "qa-qa05txt-4",
+"tipo": "hecho",
+"preguntas": [
+"cual es la capital de alemania",
+"capital de alemania"
+],
+"respuestas": [
+"La capital de Alemania es Berlín."
+]
+},
+{
+"id": "qa-qa05txt-5",
+"tipo": "hecho",
+"preguntas": [
+"cual es la capital de inglaterra",
+"capital del reino unido"
+],
+"respuestas": [
+"La capital de Inglaterra y del Reino Unido es Londres."
+]
+},
+{
+"id": "qa-qa05txt-6",
+"tipo": "hecho",
+"preguntas": [
+"cual es la capital de portugal",
+"capital de portugal"
+],
+"respuestas": [
+"La capital de Portugal es Lisboa."
+]
+},
+{
+"id": "qa-qa05txt-7",
+"tipo": "hecho",
+"preguntas": [
+"cual es la capital de grecia",
+"capital de grecia"
+],
+"respuestas": [
+"La capital de Grecia es Atenas."
+]
+},
+{
+"id": "qa-qa05txt-8",
+"tipo": "hecho",
+"preguntas": [
+"cual es la capital de rusia",
+"capital de rusia"
+],
+"respuestas": [
+"La capital de Rusia es Moscú."
+]
+},
+{
+"id": "qa-qa05txt-9",
+"tipo": "hecho",
+"preguntas": [
+"cual es la capital de china",
+"capital de china"
+],
+"respuestas": [
+"La capital de China es Pekín (Beijing)."
+]
+},
+{
+"id": "qa-qa05txt-10",
+"tipo": "hecho",
+"preguntas": [
+"cual es la capital de japon",
+"capital de japon"
+],
+"respuestas": [
+"La capital de Japón es Tokio."
+]
+},
+{
+"id": "qa-qa05txt-11",
+"tipo": "hecho",
+"preguntas": [
+"cual es la capital de india",
+"capital de la india"
+],
+"respuestas": [
+"La capital de la India es Nueva Delhi."
+]
+},
+{
+"id": "qa-qa05txt-12",
+"tipo": "hecho",
+"preguntas": [
+"cual es la capital de corea del sur",
+"capital de corea del sur"
+],
+"respuestas": [
+"La capital de Corea del Sur es Seúl."
+]
+},
+{
+"id": "qa-qa05txt-13",
+"tipo": "hecho",
+"preguntas": [
+"cual es la capital de australia",
+"capital de australia"
+],
+"respuestas": [
+"La capital de Australia es Canberra (no Sídney, aunque Sídney es más grande)."
+]
+},
+{
+"id": "qa-qa05txt-14",
+"tipo": "hecho",
+"preguntas": [
+"cual es la capital de canada",
+"capital de canada"
+],
+"respuestas": [
+"La capital de Canadá es Ottawa."
+]
+},
+{
+"id": "qa-qa05txt-15",
+"tipo": "hecho",
+"preguntas": [
+"cual es la capital de estados unidos",
+"capital de estados unidos"
+],
+"respuestas": [
+"La capital de Estados Unidos es Washington D. C."
+]
+},
+{
+"id": "qa-qa05txt-16",
+"tipo": "hecho",
+"preguntas": [
+"cual es la capital de mexico",
+"capital de mexico"
+],
+"respuestas": [
+"La capital de México es la Ciudad de México."
+]
+},
+{
+"id": "qa-qa05txt-17",
+"tipo": "hecho",
+"preguntas": [
+"cual es la capital de brasil",
+"capital de brasil"
+],
+"respuestas": [
+"La capital de Brasil es Brasilia."
+]
+},
+{
+"id": "qa-qa05txt-18",
+"tipo": "hecho",
+"preguntas": [
+"cual es la capital de chile",
+"capital de chile"
+],
+"respuestas": [
+"La capital de Chile es Santiago."
+]
+},
+{
+"id": "qa-qa05txt-19",
+"tipo": "hecho",
+"preguntas": [
+"cual es la capital de uruguay",
+"capital de uruguay"
+],
+"respuestas": [
+"La capital de Uruguay es Montevideo."
+]
+},
+{
+"id": "qa-qa05txt-20",
+"tipo": "hecho",
+"preguntas": [
+"cual es la capital de paraguay",
+"capital de paraguay"
+],
+"respuestas": [
+"La capital de Paraguay es Asunción."
+]
+},
+{
+"id": "qa-qa05txt-21",
+"tipo": "hecho",
+"preguntas": [
+"cual es la capital de bolivia",
+"capital de bolivia"
+],
+"respuestas": [
+"Bolivia tiene dos: Sucre es la capital constitucional y La Paz es la sede del gobierno."
+]
+},
+{
+"id": "qa-qa05txt-22",
+"tipo": "hecho",
+"preguntas": [
+"cual es la capital de peru",
+"capital de peru"
+],
+"respuestas": [
+"La capital de Perú es Lima."
+]
+},
+{
+"id": "qa-qa05txt-23",
+"tipo": "hecho",
+"preguntas": [
+"cual es la capital de colombia",
+"capital de colombia"
+],
+"respuestas": [
+"La capital de Colombia es Bogotá."
+]
+},
+{
+"id": "qa-qa05txt-24",
+"tipo": "hecho",
+"preguntas": [
+"cual es la capital de venezuela",
+"capital de venezuela"
+],
+"respuestas": [
+"La capital de Venezuela es Caracas."
+]
+},
+{
+"id": "qa-qa05txt-25",
+"tipo": "hecho",
+"preguntas": [
+"cual es la capital de ecuador",
+"capital de ecuador"
+],
+"respuestas": [
+"La capital de Ecuador es Quito."
+]
+},
+{
+"id": "qa-qa05txt-26",
+"tipo": "hecho",
+"preguntas": [
+"cual es la capital de cuba",
+"capital de cuba"
+],
+"respuestas": [
+"La capital de Cuba es La Habana."
+]
+},
+{
+"id": "qa-qa05txt-27",
+"tipo": "hecho",
+"preguntas": [
+"cual es la capital de egipto",
+"capital de egipto"
+],
+"respuestas": [
+"La capital de Egipto es El Cairo."
+]
+},
+{
+"id": "qa-qa05txt-28",
+"tipo": "hecho",
+"preguntas": [
+"cual es la capital de sudafrica",
+"capital de sudafrica"
+],
+"respuestas": [
+"Sudáfrica tiene tres capitales: Pretoria, Ciudad del Cabo y Bloemfontein."
+]
+},
+{
+"id": "qa-qa05txt-29",
+"tipo": "hecho",
+"preguntas": [
+"cual es la capital de marruecos",
+"capital de marruecos"
+],
+"respuestas": [
+"La capital de Marruecos es Rabat."
+]
+},
+{
+"id": "qa-qa05txt-30",
+"tipo": "hecho",
+"preguntas": [
+"cual es la capital de kenia",
+"capital de kenia"
+],
+"respuestas": [
+"La capital de Kenia es Nairobi."
+]
+},
+{
+"id": "qa-qa05txt-31",
+"tipo": "hecho",
+"preguntas": [
+"cual es la capital de nigeria",
+"capital de nigeria"
+],
+"respuestas": [
+"La capital de Nigeria es Abuya."
+]
+},
+{
+"id": "qa-qa05txt-32",
+"tipo": "hecho",
+"preguntas": [
+"cual es la capital de turquia",
+"capital de turquia"
+],
+"respuestas": [
+"La capital de Turquía es Ankara."
+]
+},
+{
+"id": "qa-qa05txt-33",
+"tipo": "hecho",
+"preguntas": [
+"cual es la capital de holanda",
+"capital de los paises bajos"
+],
+"respuestas": [
+"La capital de los Países Bajos es Ámsterdam."
+]
+},
+{
+"id": "qa-qa05txt-34",
+"tipo": "hecho",
+"preguntas": [
+"cual es la capital de belgica",
+"capital de belgica"
+],
+"respuestas": [
+"La capital de Bélgica es Bruselas."
+]
+},
+{
+"id": "qa-qa05txt-35",
+"tipo": "hecho",
+"preguntas": [
+"cual es la capital de suiza",
+"capital de suiza"
+],
+"respuestas": [
+"La capital de Suiza es Berna."
+]
+},
+{
+"id": "qa-qa05txt-36",
+"tipo": "hecho",
+"preguntas": [
+"cual es la capital de suecia",
+"capital de suecia"
+],
+"respuestas": [
+"La capital de Suecia es Estocolmo."
+]
+},
+{
+"id": "qa-qa05txt-37",
+"tipo": "hecho",
+"preguntas": [
+"cual es la capital de noruega",
+"capital de noruega"
+],
+"respuestas": [
+"La capital de Noruega es Oslo."
+]
+},
+{
+"id": "qa-qa05txt-38",
+"tipo": "hecho",
+"preguntas": [
+"cual es la capital de irlanda",
+"capital de irlanda"
+],
+"respuestas": [
+"La capital de Irlanda es Dublín."
+]
+},
+{
+"id": "qa-qa05txt-39",
+"tipo": "hecho",
+"preguntas": [
+"cual es la capital de nueva zelanda",
+"capital de nueva zelanda"
+],
+"respuestas": [
+"La capital de Nueva Zelanda es Wellington."
+]
+},
+{
+"id": "qa-qa05txt-40",
+"tipo": "hecho",
+"preguntas": [
+"cual es el pais mas grande del mundo",
+"que pais es el mas grande"
+],
+"respuestas": [
+"Rusia es el país más grande del mundo."
+]
+},
+{
+"id": "qa-qa05txt-41",
+"tipo": "hecho",
+"preguntas": [
+"cual es el pais mas chico del mundo",
+"que pais es el mas pequeno"
+],
+"respuestas": [
+"El Vaticano es el país más chico del mundo; está dentro de Roma."
+]
+},
+{
+"id": "qa-qa05txt-42",
+"tipo": "hecho",
+"preguntas": [
+"cual es el pais mas grande de sudamerica",
+"que pais es el mas grande de america del sur"
+],
+"respuestas": [
+"Brasil es el país más grande de Sudamérica. Argentina es el segundo."
+]
+},
+{
+"id": "qa-qa05txt-43",
+"tipo": "hecho",
+"preguntas": [
+"cual es el pais con mas habitantes",
+"que pais tiene mas gente"
+],
+"respuestas": [
+"India y China son los países con más habitantes, con más de 1.400 millones cada uno."
+]
+},
+{
+"id": "qa-qa05txt-44",
+"tipo": "hecho",
+"preguntas": [
+"cuantos paises hay en el mundo",
+"cuantos paises existen"
+],
+"respuestas": [
+"Hay alrededor de 195 países en el mundo."
+]
+},
+{
+"id": "qa-qa05txt-45",
+"tipo": "hecho",
+"preguntas": [
+"que idioma se habla en brasil",
+"que se habla en brasil"
+],
+"respuestas": [
+"En Brasil se habla portugués."
+]
+},
+{
+"id": "qa-qa05txt-46",
+"tipo": "hecho",
+"preguntas": [
+"que idioma se habla en estados unidos",
+"que se habla en estados unidos"
+],
+"respuestas": [
+"En Estados Unidos se habla sobre todo inglés, y también mucho español."
+]
+},
+{
+"id": "qa-qa05txt-47",
+"tipo": "hecho",
+"preguntas": [
+"que idioma se habla en china",
+"que se habla en china"
+],
+"respuestas": [
+"En China se habla sobre todo chino mandarín."
+]
+},
+{
+"id": "qa-qa05txt-48",
+"tipo": "hecho",
+"preguntas": [
+"que idioma se habla en francia",
+"que se habla en francia"
+],
+"respuestas": [
+"En Francia se habla francés."
+]
+},
+{
+"id": "qa-qa05txt-49",
+"tipo": "hecho",
+"preguntas": [
+"que idioma se habla en alemania",
+"que se habla en alemania"
+],
+"respuestas": [
+"En Alemania se habla alemán."
+]
+},
+{
+"id": "qa-qa05txt-50",
+"tipo": "hecho",
+"preguntas": [
+"cual es el idioma mas hablado del mundo",
+"que idioma habla mas gente"
+],
+"respuestas": [
+"El inglés y el chino mandarín son los idiomas que más personas hablan. El español también está entre los más hablados."
+]
+},
+{
+"id": "qa-qa05txt-51",
+"tipo": "hecho",
+"preguntas": [
+"en cuantos paises se habla espanol",
+"donde se habla espanol"
+],
+"respuestas": [
+"El español es idioma oficial en unos 20 países, como España, México, Argentina y Colombia."
+]
+},
+{
+"id": "qa-qa05txt-52",
+"tipo": "hecho",
+"preguntas": [
+"que es la torre eiffel",
+"donde esta la torre eiffel"
+],
+"respuestas": [
+"La Torre Eiffel es una torre de hierro de París, Francia, construida en 1889."
+]
+},
+{
+"id": "qa-qa05txt-53",
+"tipo": "hecho",
+"preguntas": [
+"que es la estatua de la libertad",
+"donde esta la estatua de la libertad"
+],
+"respuestas": [
+"Es una estatua gigante en Nueva York, regalo de Francia a Estados Unidos en 1886."
+]
+},
+{
+"id": "qa-qa05txt-54",
+"tipo": "hecho",
+"preguntas": [
+"que es la gran muralla china",
+"que tan larga es la muralla china"
+],
+"respuestas": [
+"Es una muralla larguísima construida durante siglos en China para defenderse. Con todos sus tramos, mide miles de kilómetros."
+]
+},
+{
+"id": "qa-qa05txt-55",
+"tipo": "hecho",
+"preguntas": [
+"que son las piramides de egipto",
+"quien construyo las piramides"
+],
+"respuestas": [
+"Son tumbas gigantes que construyeron los antiguos egipcios para sus faraones hace más de 4.500 años."
+]
+},
+{
+"id": "qa-qa05txt-56",
+"tipo": "hecho",
+"preguntas": [
+"que es el coliseo",
+"donde esta el coliseo"
+],
+"respuestas": [
+"El Coliseo es un anfiteatro enorme de la antigua Roma, en Italia, donde se hacían espectáculos."
+]
+},
+{
+"id": "qa-qa05txt-57",
+"tipo": "hecho",
+"preguntas": [
+"que es machu picchu",
+"donde esta machu picchu"
+],
+"respuestas": [
+"Machu Picchu es una ciudad inca en las montañas de Perú, construida hace unos 600 años."
+]
+},
+{
+"id": "qa-qa05txt-58",
+"tipo": "hecho",
+"preguntas": [
+"que es el cristo redentor",
+"donde esta el cristo redentor"
+],
+"respuestas": [
+"Es una estatua gigante de Cristo con los brazos abiertos, sobre un cerro de Río de Janeiro, Brasil."
+]
+},
+{
+"id": "qa-qa05txt-59",
+"tipo": "hecho",
+"preguntas": [
+"que es el big ben",
+"donde esta el big ben"
+],
+"respuestas": [
+"El Big Ben es la gran campana de la torre del reloj del Parlamento, en Londres."
+]
+},
+{
+"id": "qa-qa05txt-60",
+"tipo": "hecho",
+"preguntas": [
+"que es el taj mahal",
+"donde esta el taj mahal"
+],
+"respuestas": [
+"El Taj Mahal es un palacio-mausoleo de mármol blanco en la India, construido en el siglo XVII."
+]
+},
+{
+"id": "qa-qa05txt-61",
+"tipo": "hecho",
+"preguntas": [
+"que es la torre de pisa",
+"por que esta inclinada la torre de pisa"
+],
+"respuestas": [
+"Es un campanario en Pisa, Italia, que se inclinó porque el suelo de abajo es blando."
+]
+},
+{
+"id": "qa-qa05txt-62",
+"tipo": "hecho",
+"preguntas": [
+"que son las maravillas del mundo",
+"cuales son las siete maravillas"
+],
+"respuestas": [
+"Son lugares increíbles. Las nuevas siete maravillas incluyen la Muralla China, Machu Picchu, el Cristo Redentor, el Coliseo, el Taj Mahal, Petra y Chichén Itzá."
+]
+},
+{
+"id": "qa-qa05txt-63",
+"tipo": "hecho",
+"preguntas": [
+"que es chichen itza",
+"donde esta chichen itza"
+],
+"respuestas": [
+"Chichén Itzá es una ciudad maya en México, famosa por su gran pirámide."
+]
+},
+{
+"id": "qa-qa05txt-64",
+"tipo": "hecho",
+"preguntas": [
+"que es el amazonas",
+"donde esta el amazonas"
+],
+"respuestas": [
+"El Amazonas es el río y la selva más grande del mundo, sobre todo en Brasil y otros países de Sudamérica."
+]
+},
+{
+"id": "qa-qa05txt-65",
+"tipo": "hecho",
+"preguntas": [
+"que es el sahara",
+"donde esta el sahara"
+],
+"respuestas": [
+"El Sahara es el desierto cálido más grande del mundo, en el norte de África."
+]
+},
+{
+"id": "qa-qa05txt-66",
+"tipo": "hecho",
+"preguntas": [
+"que es el everest",
+"donde esta el everest"
+],
+"respuestas": [
+"El Everest es la montaña más alta del mundo, en la cordillera del Himalaya, entre Nepal y China."
+]
+},
+{
+"id": "qa-qa05txt-67",
+"tipo": "hecho",
+"preguntas": [
+"que es el mar muerto",
+"por que se flota en el mar muerto"
+],
+"respuestas": [
+"El Mar Muerto es un lago tan salado que las personas flotan sin esfuerzo."
+]
+},
+{
+"id": "qa-qa05txt-68",
+"tipo": "hecho",
+"preguntas": [
+"que es la isla de pascua",
+"que son los moais"
+],
+"respuestas": [
+"La Isla de Pascua pertenece a Chile y es famosa por los moáis, enormes estatuas de piedra."
+]
+},
+{
+"id": "qa-qa05txt-69",
+"tipo": "hecho",
+"preguntas": [
+"que es groenlandia",
+"groenlandia es un pais"
+],
+"respuestas": [
+"Groenlandia es la isla más grande del mundo; pertenece al Reino de Dinamarca."
+]
+},
+{
+"id": "qa-qa05txt-70",
+"tipo": "hecho",
+"preguntas": [
+"cual es la isla mas grande del mundo",
+"que isla es la mas grande"
+],
+"respuestas": [
+"Groenlandia es la isla más grande del mundo."
+]
+},
+{
+"id": "qa-qa05txt-71",
+"tipo": "hecho",
+"preguntas": [
+"cual es el lago mas grande del mundo",
+"que lago es el mas grande"
+],
+"respuestas": [
+"El mar Caspio es el lago más grande del mundo."
+]
+},
+{
+"id": "qa-qa05txt-72",
+"tipo": "hecho",
+"preguntas": [
+"cual es la cascada mas alta del mundo",
+"que es el salto angel"
+],
+"respuestas": [
+"El Salto Ángel, en Venezuela, es la cascada más alta del mundo: casi 1.000 metros."
+]
+},
+{
+"id": "qa-qa05txt-73",
+"tipo": "hecho",
+"preguntas": [
+"que es la union europea",
+"que es la ue"
+],
+"respuestas": [
+"La Unión Europea es un grupo de países de Europa que trabajan juntos y muchos comparten la misma moneda, el euro."
+]
+},
+{
+"id": "qa-qa05txt-74",
+"tipo": "hecho",
+"preguntas": [
+"que es la onu",
+"que significa onu"
+],
+"respuestas": [
+"La ONU, Organización de las Naciones Unidas, reúne a casi todos los países para trabajar por la paz y ayudar a la gente."
+]
+},
+{
+"id": "qa-qa05txt-75",
+"tipo": "hecho",
+"preguntas": [
+"que es unicef",
+"que hace unicef"
+],
+"respuestas": [
+"UNICEF es la parte de la ONU que trabaja para cuidar los derechos de los chicos en todo el mundo."
+]
+},
+{
+"id": "qa-qa05txt-76",
+"tipo": "hecho",
+"preguntas": [
+"que son los derechos del nino",
+"que derechos tienen los chicos"
+],
+"respuestas": [
+"Todos los chicos tienen derecho a jugar, estudiar, tener salud, ser cuidados, ser escuchados y vivir sin violencia."
+]
+},
+{
+"id": "qa-qa05txt-77",
+"tipo": "hecho",
+"preguntas": [
+"que es el mercosur",
+"que paises estan en el mercosur"
+],
+"respuestas": [
+"El Mercosur es un acuerdo entre países de Sudamérica, como Argentina, Brasil, Uruguay y Paraguay, para comerciar entre ellos."
+]
+},
+{
+"id": "qa-qa05txt-78",
+"tipo": "hecho",
+"preguntas": [
+"que es un mapa",
+"para que sirve un mapa"
+],
+"respuestas": [
+"Un mapa es un dibujo de un lugar visto desde arriba, que sirve para ubicarse y saber cómo llegar."
+]
+},
+{
+"id": "qa-qa05txt-79",
+"tipo": "hecho",
+"preguntas": [
+"que es un globo terraqueo",
+"que es un planisferio"
+],
+"respuestas": [
+"El globo terráqueo es una maqueta redonda de la Tierra; el planisferio es un mapa de todo el mundo en papel."
+]
+},
+{
+"id": "qa-qa05txt-80",
+"tipo": "hecho",
+"preguntas": [
+"cuales son los puntos cardinales",
+"que son los puntos cardinales"
+],
+"respuestas": [
+"Norte, sur, este y oeste. El sol sale por el este y se pone por el oeste."
+]
+},
+{
+"id": "qa-qa05txt-81",
+"tipo": "hecho",
+"preguntas": [
+"que es una brujula",
+"como funciona una brujula"
+],
+"respuestas": [
+"La brújula tiene una aguja imantada que siempre apunta al norte, y sirve para orientarse."
+]
+},
+{
+"id": "qa-qa05txt-82",
+"tipo": "hecho",
+"preguntas": [
+"que es el hemisferio sur",
+"en que hemisferio esta argentina"
+],
+"respuestas": [
+"Argentina está en el hemisferio sur, la mitad de la Tierra que queda debajo del ecuador."
+]
+},
+{
+"id": "qa-qa05txt-83",
+"tipo": "hecho",
+"preguntas": [
+"por que en europa es verano cuando aca es invierno",
+"por que las estaciones son al reves"
+],
+"respuestas": [
+"Porque los hemisferios norte y sur reciben el sol de forma opuesta: cuando en uno es verano, en el otro es invierno."
+]
+},
+{
+"id": "qa-qa05txt-84",
+"tipo": "hecho",
+"preguntas": [
+"que es un huso horario",
+"por que hay distintas horas en el mundo"
+],
+"respuestas": [
+"Como la Tierra gira, no es de día en todos lados a la vez; por eso cada zona tiene su propia hora."
+]
+},
+{
+"id": "qa-qa05txt-85",
+"tipo": "hecho",
+"preguntas": [
+"que es una isla",
+"que es una peninsula"
+],
+"respuestas": [
+"Una isla es tierra rodeada de agua por todos lados. Una península está rodeada de agua por casi todos, menos uno."
+]
+},
+{
+"id": "qa-qa05txt-86",
+"tipo": "hecho",
+"preguntas": [
+"que es un lago",
+"que diferencia hay entre lago y laguna"
+],
+"respuestas": [
+"Un lago es una gran masa de agua rodeada de tierra. Una laguna es parecida pero más chica y menos profunda."
+]
+},
+{
+"id": "qa-qa05txt-87",
+"tipo": "hecho",
+"preguntas": [
+"que es una bahia",
+"que es un golfo"
+],
+"respuestas": [
+"Una bahía es una entrada del mar en la costa; un golfo es lo mismo pero más grande."
+]
+},
+{
+"id": "qa-qa05txt-88",
+"tipo": "hecho",
+"preguntas": [
+"que es un estrecho",
+"que es el estrecho de magallanes"
+],
+"respuestas": [
+"Un estrecho es un paso angosto de mar entre dos tierras. El de Magallanes, en el sur, une el Atlántico y el Pacífico."
+]
+},
+{
+"id": "qa-qa05txt-89",
+"tipo": "hecho",
+"preguntas": [
+"quien fue cristobal colon",
+"que hizo colon"
+],
+"respuestas": [
+"Cristóbal Colón fue un navegante que en 1492 llegó a América buscando un camino hacia Asia."
+]
+},
+{
+"id": "qa-qa05txt-90",
+"tipo": "hecho",
+"preguntas": [
+"que paso en 1492",
+"que se recuerda el 12 de octubre"
+],
+"respuestas": [
+"El 12 de octubre de 1492 Colón llegó a América. En Argentina ese día es el Día del Respeto a la Diversidad Cultural."
+]
+},
+{
+"id": "qa-qa05txt-91",
+"tipo": "hecho",
+"preguntas": [
+"quien fue magallanes",
+"que hizo magallanes"
+],
+"respuestas": [
+"Fernando de Magallanes encabezó la primera expedición que dio la vuelta al mundo, entre 1519 y 1522."
+]
+},
+{
+"id": "qa-qa05txt-92",
+"tipo": "hecho",
+"preguntas": [
+"quienes eran los incas",
+"que fue el imperio inca"
+],
+"respuestas": [
+"Los incas fueron un gran pueblo de los Andes, con capital en Cusco, Perú, famosos por sus caminos y ciudades de piedra."
+]
+},
+{
+"id": "qa-qa05txt-93",
+"tipo": "hecho",
+"preguntas": [
+"quienes eran los mayas",
+"que fueron los mayas"
+],
+"respuestas": [
+"Los mayas fueron un pueblo de México y Centroamérica, con grandes conocimientos de astronomía, matemática y escritura."
+]
+},
+{
+"id": "qa-qa05txt-94",
+"tipo": "hecho",
+"preguntas": [
+"quienes eran los aztecas",
+"que fueron los aztecas"
+],
+"respuestas": [
+"Los aztecas fueron un gran pueblo de México, con capital en Tenochtitlan, donde hoy está la Ciudad de México."
+]
+},
+{
+"id": "qa-qa05txt-95",
+"tipo": "hecho",
+"preguntas": [
+"que pueblos originarios hay en argentina",
+"quienes son los pueblos originarios"
+],
+"respuestas": [
+"En Argentina viven muchos pueblos originarios, como los mapuches, qom, wichís, guaraníes, kollas y diaguitas, entre otros."
+]
+},
+{
+"id": "qa-qa05txt-96",
+"tipo": "hecho",
+"preguntas": [
+"que es la edad media",
+"que fue la edad media"
+],
+"respuestas": [
+"Es una época de la historia de Europa, entre los años 500 y 1500 aproximadamente, la de los castillos y caballeros."
+]
+},
+{
+"id": "qa-qa05txt-97",
+"tipo": "hecho",
+"preguntas": [
+"quienes eran los vikingos",
+"que hacian los vikingos"
+],
+"respuestas": [
+"Los vikingos eran navegantes del norte de Europa, de hace unos mil años, famosos por sus barcos."
+]
+},
+{
+"id": "qa-qa05txt-98",
+"tipo": "hecho",
+"preguntas": [
+"que fue la antigua grecia",
+"por que es importante grecia antigua"
+],
+"respuestas": [
+"La antigua Grecia dio ideas muy importantes: la filosofía, el teatro, los Juegos Olímpicos y la democracia."
+]
+},
+{
+"id": "qa-qa05txt-99",
+"tipo": "hecho",
+"preguntas": [
+"que son los juegos olimpicos",
+"donde nacieron los juegos olimpicos"
+],
+"respuestas": [
+"Son una gran competencia de deportes entre países, cada 4 años. Nacieron en la antigua Grecia."
 ]
 }
 ]
