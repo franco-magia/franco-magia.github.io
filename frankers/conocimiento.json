@@ -1,6 +1,6 @@
 {
 "version": 1,
-"actualizado": "2026-11-06T23:34:43.528Z",
+"actualizado": "2026-11-06T23:35:48.051Z",
 "entradas": [
 {
 "id": "saludo",
@@ -10732,6 +10732,1117 @@
 ],
 "respuestas": [
 "La heladera mantiene la comida fría para que dure más sin echarse a perder."
+]
+},
+{
+"id": "qa-qa08txt-1",
+"tipo": "hecho",
+"preguntas": [
+"cuantos jugadores tiene un equipo de futbol",
+"cuantos jugadores hay en futbol"
+],
+"respuestas": [
+"Cada equipo de fútbol tiene 11 jugadores en la cancha, contando al arquero."
+]
+},
+{
+"id": "qa-qa08txt-2",
+"tipo": "hecho",
+"preguntas": [
+"cuanto dura un partido de futbol",
+"cuanto dura el futbol"
+],
+"respuestas": [
+"Un partido de fútbol dura 90 minutos, en dos tiempos de 45, más el tiempo agregado."
+]
+},
+{
+"id": "qa-qa08txt-3",
+"tipo": "hecho",
+"preguntas": [
+"que es un offside",
+"que es el fuera de juego"
+],
+"respuestas": [
+"Es cuando un jugador de ataque está más adelantado que el penúltimo defensor en el momento del pase."
+]
+},
+{
+"id": "qa-qa08txt-4",
+"tipo": "hecho",
+"preguntas": [
+"que es un penal",
+"cuando se cobra un penal"
+],
+"respuestas": [
+"Un penal es un tiro directo al arco desde 11 metros, que se cobra por una falta dentro del área."
+]
+},
+{
+"id": "qa-qa08txt-5",
+"tipo": "hecho",
+"preguntas": [
+"que es una tarjeta roja",
+"que es una tarjeta amarilla"
+],
+"respuestas": [
+"La amarilla es una advertencia; la roja expulsa al jugador del partido."
+]
+},
+{
+"id": "qa-qa08txt-6",
+"tipo": "hecho",
+"preguntas": [
+"cada cuanto es el mundial",
+"cada cuantos anos hay mundial"
+],
+"respuestas": [
+"El Mundial de fútbol se juega cada 4 años."
+]
+},
+{
+"id": "qa-qa08txt-7",
+"tipo": "hecho",
+"preguntas": [
+"quien gano el mundial 2022",
+"quien fue campeon en qatar 2022"
+],
+"respuestas": [
+"Argentina ganó el Mundial de Qatar 2022, en la final contra Francia, por penales."
+]
+},
+{
+"id": "qa-qa08txt-8",
+"tipo": "hecho",
+"preguntas": [
+"que pais gano mas mundiales",
+"quien tiene mas copas del mundo"
+],
+"respuestas": [
+"Brasil es el país con más Mundiales: ganó 5."
+]
+},
+{
+"id": "qa-qa08txt-9",
+"tipo": "hecho",
+"preguntas": [
+"cuantos jugadores tiene un equipo de basquet",
+"cuantos jugadores hay en basquet"
+],
+"respuestas": [
+"En el básquet juegan 5 jugadores por equipo en la cancha."
+]
+},
+{
+"id": "qa-qa08txt-10",
+"tipo": "hecho",
+"preguntas": [
+"cuantos jugadores tiene un equipo de voley",
+"cuantos jugadores hay en voley"
+],
+"respuestas": [
+"En el vóley juegan 6 jugadores por equipo."
+]
+},
+{
+"id": "qa-qa08txt-11",
+"tipo": "hecho",
+"preguntas": [
+"cuantos jugadores tiene un equipo de rugby",
+"cuantos jugadores hay en rugby"
+],
+"respuestas": [
+"En el rugby tradicional juegan 15 jugadores por equipo."
+]
+},
+{
+"id": "qa-qa08txt-12",
+"tipo": "hecho",
+"preguntas": [
+"como se llama la seleccion de rugby argentina",
+"quienes son los pumas"
+],
+"respuestas": [
+"La selección argentina de rugby se llama Los Pumas."
+]
+},
+{
+"id": "qa-qa08txt-13",
+"tipo": "hecho",
+"preguntas": [
+"como se llama la seleccion de hockey femenino",
+"quienes son las leonas"
+],
+"respuestas": [
+"Las Leonas son la selección argentina de hockey sobre césped femenino, muy ganadora."
+]
+},
+{
+"id": "qa-qa08txt-14",
+"tipo": "hecho",
+"preguntas": [
+"que es el tenis",
+"como se juega al tenis"
+],
+"respuestas": [
+"En el tenis, dos o cuatro jugadores se pasan una pelotita con raquetas por encima de una red."
+]
+},
+{
+"id": "qa-qa08txt-15",
+"tipo": "hecho",
+"preguntas": [
+"que es el ajedrez",
+"como se juega al ajedrez"
+],
+"respuestas": [
+"El ajedrez es un juego de estrategia de dos jugadores con 16 piezas cada uno; gana el que hace jaque mate al rey del otro."
+]
+},
+{
+"id": "qa-qa08txt-16",
+"tipo": "hecho",
+"preguntas": [
+"cuantas piezas tiene el ajedrez",
+"cuantas casillas tiene un tablero de ajedrez"
+],
+"respuestas": [
+"Cada jugador tiene 16 piezas y el tablero tiene 64 casillas."
+]
+},
+{
+"id": "qa-qa08txt-17",
+"tipo": "hecho",
+"preguntas": [
+"como se mueve el caballo en ajedrez",
+"como se mueve el caballo"
+],
+"respuestas": [
+"El caballo se mueve en forma de L: dos casillas en una dirección y una hacia el costado. Es la única pieza que puede saltar."
+]
+},
+{
+"id": "qa-qa08txt-18",
+"tipo": "hecho",
+"preguntas": [
+"que es la natacion",
+"cuales son los estilos de natacion"
+],
+"respuestas": [
+"La natación es nadar como deporte. Los estilos son crol, espalda, pecho y mariposa."
+]
+},
+{
+"id": "qa-qa08txt-19",
+"tipo": "hecho",
+"preguntas": [
+"que es el atletismo",
+"que deportes son atletismo"
+],
+"respuestas": [
+"El atletismo incluye correr, saltar y lanzar, como los 100 metros, el salto en largo o la jabalina."
+]
+},
+{
+"id": "qa-qa08txt-20",
+"tipo": "hecho",
+"preguntas": [
+"que es una maraton",
+"cuanto mide una maraton"
+],
+"respuestas": [
+"Una maratón es una carrera de 42,195 kilómetros."
+]
+},
+{
+"id": "qa-qa08txt-21",
+"tipo": "hecho",
+"preguntas": [
+"que es el skate",
+"que es andar en patineta"
+],
+"respuestas": [
+"El skate es andar sobre una tabla con ruedas haciendo trucos. Es deporte olímpico desde 2021."
+]
+},
+{
+"id": "qa-qa08txt-22",
+"tipo": "hecho",
+"preguntas": [
+"por que es bueno hacer deporte",
+"para que sirve el deporte"
+],
+"respuestas": [
+"El deporte fortalece el cuerpo, ayuda a dormir mejor, pone de buen humor y sirve para hacer amigos."
+]
+},
+{
+"id": "qa-qa08txt-23",
+"tipo": "hecho",
+"preguntas": [
+"que es el fair play",
+"que es el juego limpio"
+],
+"respuestas": [
+"Es jugar respetando las reglas, a los compañeros, a los rivales y al árbitro, ganes o pierdas."
+]
+},
+{
+"id": "qa-qa08txt-24",
+"tipo": "hecho",
+"preguntas": [
+"que es la musica",
+"que es el ritmo"
+],
+"respuestas": [
+"La música combina sonidos y silencios. El ritmo es el pulso que marca el paso de la música, como cuando aplaudís."
+]
+},
+{
+"id": "qa-qa08txt-25",
+"tipo": "hecho",
+"preguntas": [
+"cuales son las notas musicales",
+"como se llaman las notas"
+],
+"respuestas": [
+"Las notas son do, re, mi, fa, sol, la y si."
+]
+},
+{
+"id": "qa-qa08txt-26",
+"tipo": "hecho",
+"preguntas": [
+"que es una melodia",
+"que es la armonia"
+],
+"respuestas": [
+"La melodía es la parte que se puede cantar o silbar; la armonía son los sonidos que suenan juntos para acompañarla."
+]
+},
+{
+"id": "qa-qa08txt-27",
+"tipo": "hecho",
+"preguntas": [
+"que es un instrumento musical",
+"que tipos de instrumentos hay"
+],
+"respuestas": [
+"Es un objeto para hacer música. Hay de cuerda (guitarra), de viento (flauta), de percusión (tambor) y de teclado (piano)."
+]
+},
+{
+"id": "qa-qa08txt-28",
+"tipo": "hecho",
+"preguntas": [
+"cuantas cuerdas tiene una guitarra",
+"cuantas cuerdas tiene la guitarra"
+],
+"respuestas": [
+"Una guitarra común tiene 6 cuerdas."
+]
+},
+{
+"id": "qa-qa08txt-29",
+"tipo": "hecho",
+"preguntas": [
+"cuantas teclas tiene un piano",
+"cuantas teclas tiene el piano"
+],
+"respuestas": [
+"Un piano tiene 88 teclas: 52 blancas y 36 negras."
+]
+},
+{
+"id": "qa-qa08txt-30",
+"tipo": "hecho",
+"preguntas": [
+"que es el bandoneon",
+"que instrumento se usa en el tango"
+],
+"respuestas": [
+"El bandoneón es un instrumento de fuelle y botones, el alma del tango."
+]
+},
+{
+"id": "qa-qa08txt-31",
+"tipo": "hecho",
+"preguntas": [
+"que es el charango",
+"que es un bombo leguero"
+],
+"respuestas": [
+"El charango es una guitarrita de los Andes; el bombo legüero es el tambor grande del folclore argentino."
+]
+},
+{
+"id": "qa-qa08txt-32",
+"tipo": "hecho",
+"preguntas": [
+"que es una orquesta",
+"que es una banda"
+],
+"respuestas": [
+"Una orquesta es un grupo grande de músicos con muchos instrumentos; una banda suele ser un grupo más chico."
+]
+},
+{
+"id": "qa-qa08txt-33",
+"tipo": "hecho",
+"preguntas": [
+"que es un director de orquesta",
+"que hace el director de orquesta"
+],
+"respuestas": [
+"El director marca el ritmo y guía a todos los músicos con sus manos o una batuta."
+]
+},
+{
+"id": "qa-qa08txt-34",
+"tipo": "hecho",
+"preguntas": [
+"quien fue mozart",
+"quien fue beethoven"
+],
+"respuestas": [
+"Mozart y Beethoven fueron grandes compositores de música clásica. Beethoven siguió componiendo aunque se quedó sordo."
+]
+},
+{
+"id": "qa-qa08txt-35",
+"tipo": "hecho",
+"preguntas": [
+"que es el rock",
+"que es el rock nacional"
+],
+"respuestas": [
+"El rock es un estilo musical con guitarras eléctricas y batería. En Argentina hay mucho \"rock nacional\"."
+]
+},
+{
+"id": "qa-qa08txt-36",
+"tipo": "hecho",
+"preguntas": [
+"que es el cuarteto",
+"de donde es el cuarteto"
+],
+"respuestas": [
+"El cuarteto es un estilo de música bailable que nació en Córdoba."
+]
+},
+{
+"id": "qa-qa08txt-37",
+"tipo": "hecho",
+"preguntas": [
+"como se hace una cancion",
+"como compongo una cancion"
+],
+"respuestas": [
+"Podés empezar con una idea o un tema, inventar una melodía, escribir una letra que rime y repetir el estribillo."
+]
+},
+{
+"id": "qa-qa08txt-38",
+"tipo": "hecho",
+"preguntas": [
+"que es un estribillo",
+"que es el coro de una cancion"
+],
+"respuestas": [
+"El estribillo es la parte de la canción que se repite varias veces."
+]
+},
+{
+"id": "qa-qa08txt-39",
+"tipo": "hecho",
+"preguntas": [
+"que es una rima",
+"que palabras riman"
+],
+"respuestas": [
+"Dos palabras riman cuando terminan con el mismo sonido, como \"corazón\" y \"canción\"."
+]
+},
+{
+"id": "qa-qa08txt-40",
+"tipo": "hecho",
+"preguntas": [
+"que es un poema",
+"que es la poesia"
+],
+"respuestas": [
+"Un poema es un texto escrito con ritmo y a veces con rimas, para expresar sentimientos o ideas."
+]
+},
+{
+"id": "qa-qa08txt-41",
+"tipo": "hecho",
+"preguntas": [
+"que es un cuento",
+"que partes tiene un cuento"
+],
+"respuestas": [
+"Un cuento es una historia corta. Suele tener inicio, nudo (el problema) y desenlace (cómo termina)."
+]
+},
+{
+"id": "qa-qa08txt-42",
+"tipo": "hecho",
+"preguntas": [
+"que es una novela",
+"que diferencia hay entre cuento y novela"
+],
+"respuestas": [
+"La novela es una historia larga, con muchos personajes y capítulos; el cuento es más corto."
+]
+},
+{
+"id": "qa-qa08txt-43",
+"tipo": "hecho",
+"preguntas": [
+"que es una fabula",
+"que es una moraleja"
+],
+"respuestas": [
+"Una fábula es un cuento corto, muchas veces con animales, que deja una enseñanza llamada moraleja."
+]
+},
+{
+"id": "qa-qa08txt-44",
+"tipo": "hecho",
+"preguntas": [
+"que es una leyenda",
+"que es un mito"
+],
+"respuestas": [
+"Una leyenda es una historia tradicional que mezcla hechos reales con fantasía. Un mito explica el origen de algo con dioses o héroes."
+]
+},
+{
+"id": "qa-qa08txt-45",
+"tipo": "hecho",
+"preguntas": [
+"quien escribio don quijote",
+"que es el quijote"
+],
+"respuestas": [
+"\"Don Quijote de la Mancha\" lo escribió Miguel de Cervantes; es una de las novelas más famosas en español."
+]
+},
+{
+"id": "qa-qa08txt-46",
+"tipo": "hecho",
+"preguntas": [
+"quien fue borges",
+"quien fue jorge luis borges"
+],
+"respuestas": [
+"Jorge Luis Borges fue un escritor argentino muy famoso en todo el mundo por sus cuentos y poemas."
+]
+},
+{
+"id": "qa-qa08txt-47",
+"tipo": "hecho",
+"preguntas": [
+"quien fue julio cortazar",
+"que escribio cortazar"
+],
+"respuestas": [
+"Julio Cortázar fue un escritor argentino, autor de cuentos fantásticos y de la novela \"Rayuela\"."
+]
+},
+{
+"id": "qa-qa08txt-48",
+"tipo": "hecho",
+"preguntas": [
+"quien escribio el principito",
+"que es el principito"
+],
+"respuestas": [
+"\"El principito\" lo escribió Antoine de Saint-Exupéry, un aviador francés que vivió un tiempo en Argentina."
+]
+},
+{
+"id": "qa-qa08txt-49",
+"tipo": "hecho",
+"preguntas": [
+"que es un comic",
+"que es una historieta"
+],
+"respuestas": [
+"Una historieta o cómic cuenta una historia con dibujos en viñetas y globos de diálogo."
+]
+},
+{
+"id": "qa-qa08txt-50",
+"tipo": "hecho",
+"preguntas": [
+"que es el arte",
+"que tipos de arte hay"
+],
+"respuestas": [
+"El arte es una forma de expresar ideas y emociones. Hay pintura, escultura, música, danza, teatro, cine, literatura y más."
+]
+},
+{
+"id": "qa-qa08txt-51",
+"tipo": "hecho",
+"preguntas": [
+"cuales son los colores primarios",
+"que son los colores primarios"
+],
+"respuestas": [
+"En pintura, los primarios son el rojo, el amarillo y el azul: mezclándolos se hacen los demás."
+]
+},
+{
+"id": "qa-qa08txt-52",
+"tipo": "hecho",
+"preguntas": [
+"que color sale de mezclar azul y amarillo",
+"azul y amarillo que da"
+],
+"respuestas": [
+"Azul y amarillo dan verde."
+]
+},
+{
+"id": "qa-qa08txt-53",
+"tipo": "hecho",
+"preguntas": [
+"que color sale de mezclar rojo y amarillo",
+"rojo y amarillo que da"
+],
+"respuestas": [
+"Rojo y amarillo dan naranja."
+]
+},
+{
+"id": "qa-qa08txt-54",
+"tipo": "hecho",
+"preguntas": [
+"que color sale de mezclar rojo y azul",
+"rojo y azul que da"
+],
+"respuestas": [
+"Rojo y azul dan violeta."
+]
+},
+{
+"id": "qa-qa08txt-55",
+"tipo": "hecho",
+"preguntas": [
+"que color sale de mezclar blanco y negro",
+"blanco y negro que da"
+],
+"respuestas": [
+"Blanco y negro dan gris."
+]
+},
+{
+"id": "qa-qa08txt-56",
+"tipo": "hecho",
+"preguntas": [
+"que color sale de mezclar rojo y blanco",
+"rojo y blanco que da"
+],
+"respuestas": [
+"Rojo y blanco dan rosa."
+]
+},
+{
+"id": "qa-qa08txt-57",
+"tipo": "hecho",
+"preguntas": [
+"que son los colores calidos",
+"que son los colores frios"
+],
+"respuestas": [
+"Los cálidos son rojo, naranja y amarillo; los fríos, azul, verde y violeta."
+]
+},
+{
+"id": "qa-qa08txt-58",
+"tipo": "hecho",
+"preguntas": [
+"quien pinto la mona lisa",
+"que es la gioconda"
+],
+"respuestas": [
+"La Mona Lisa, o Gioconda, la pintó Leonardo da Vinci. Está en el museo del Louvre, en París."
+]
+},
+{
+"id": "qa-qa08txt-59",
+"tipo": "hecho",
+"preguntas": [
+"quien fue leonardo da vinci",
+"que hizo da vinci"
+],
+"respuestas": [
+"Leonardo da Vinci fue pintor, inventor y científico italiano del Renacimiento. Pintó la Mona Lisa y dibujó máquinas voladoras."
+]
+},
+{
+"id": "qa-qa08txt-60",
+"tipo": "hecho",
+"preguntas": [
+"quien fue van gogh",
+"que pinto van gogh"
+],
+"respuestas": [
+"Vincent van Gogh fue un pintor holandés famoso por \"La noche estrellada\" y sus girasoles."
+]
+},
+{
+"id": "qa-qa08txt-61",
+"tipo": "hecho",
+"preguntas": [
+"quien fue picasso",
+"que pinto picasso"
+],
+"respuestas": [
+"Pablo Picasso fue un pintor español que inventó el cubismo junto a otros artistas."
+]
+},
+{
+"id": "qa-qa08txt-62",
+"tipo": "hecho",
+"preguntas": [
+"quien fue quinquela martin",
+"que pinto quinquela"
+],
+"respuestas": [
+"Benito Quinquela Martín fue un pintor argentino que pintó el puerto de La Boca con colores fuertes."
+]
+},
+{
+"id": "qa-qa08txt-63",
+"tipo": "hecho",
+"preguntas": [
+"que es el teatro",
+"que es una obra de teatro"
+],
+"respuestas": [
+"El teatro es contar una historia en vivo con actores sobre un escenario."
+]
+},
+{
+"id": "qa-qa08txt-64",
+"tipo": "hecho",
+"preguntas": [
+"que es el cine",
+"quien invento el cine"
+],
+"respuestas": [
+"El cine son imágenes en movimiento que cuentan historias. Lo presentaron los hermanos Lumière en 1895."
+]
+},
+{
+"id": "qa-qa08txt-65",
+"tipo": "hecho",
+"preguntas": [
+"que es una pelicula animada",
+"como se hace un dibujo animado"
+],
+"respuestas": [
+"Una película animada se hace mostrando muchos dibujos o modelos seguidos, que cambian un poquito, para que parezcan moverse."
+]
+},
+{
+"id": "qa-qa08txt-66",
+"tipo": "hecho",
+"preguntas": [
+"que es la danza",
+"que es bailar"
+],
+"respuestas": [
+"La danza es expresar con el cuerpo siguiendo música o ritmo."
+]
+},
+{
+"id": "qa-qa08txt-67",
+"tipo": "hecho",
+"preguntas": [
+"que es una escultura",
+"que es esculpir"
+],
+"respuestas": [
+"Una escultura es una obra de arte en tres dimensiones, hecha con piedra, madera, metal o arcilla."
+]
+},
+{
+"id": "qa-qa08txt-68",
+"tipo": "hecho",
+"preguntas": [
+"que es la fotografia",
+"como funciona una camara de fotos"
+],
+"respuestas": [
+"La fotografía captura imágenes con luz. La cámara deja entrar luz por una lente hacia un sensor."
+]
+},
+{
+"id": "qa-qa08txt-69",
+"tipo": "hecho",
+"preguntas": [
+"que es un museo",
+"para que sirve un museo"
+],
+"respuestas": [
+"Un museo guarda y muestra objetos importantes, como obras de arte o fósiles, para que la gente aprenda."
+]
+},
+{
+"id": "qa-qa08txt-70",
+"tipo": "hecho",
+"preguntas": [
+"cuantas letras tiene el abecedario",
+"cuantas letras tiene el alfabeto"
+],
+"respuestas": [
+"El abecedario español tiene 27 letras, contando la ñ."
+]
+},
+{
+"id": "qa-qa08txt-71",
+"tipo": "hecho",
+"preguntas": [
+"cuales son las vocales",
+"cuantas vocales hay"
+],
+"respuestas": [
+"Las vocales son a, e, i, o, u."
+]
+},
+{
+"id": "qa-qa08txt-72",
+"tipo": "hecho",
+"preguntas": [
+"que es un sustantivo",
+"que son los sustantivos"
+],
+"respuestas": [
+"Un sustantivo es una palabra que nombra cosas, personas, animales o lugares, como \"perro\" o \"casa\"."
+]
+},
+{
+"id": "qa-qa08txt-73",
+"tipo": "hecho",
+"preguntas": [
+"que es un verbo",
+"que son los verbos"
+],
+"respuestas": [
+"Un verbo es una palabra que dice una acción o un estado, como \"correr\", \"comer\" o \"ser\"."
+]
+},
+{
+"id": "qa-qa08txt-74",
+"tipo": "hecho",
+"preguntas": [
+"que es un adjetivo",
+"que son los adjetivos"
+],
+"respuestas": [
+"Un adjetivo dice cómo es algo, como \"grande\", \"rojo\" o \"divertido\"."
+]
+},
+{
+"id": "qa-qa08txt-75",
+"tipo": "hecho",
+"preguntas": [
+"que es un sinonimo",
+"que son los sinonimos"
+],
+"respuestas": [
+"Los sinónimos son palabras que significan lo mismo o parecido, como \"contento\" y \"feliz\"."
+]
+},
+{
+"id": "qa-qa08txt-76",
+"tipo": "hecho",
+"preguntas": [
+"que es un antonimo",
+"que son los antonimos"
+],
+"respuestas": [
+"Los antónimos son palabras de significado opuesto, como \"grande\" y \"chico\"."
+]
+},
+{
+"id": "qa-qa08txt-77",
+"tipo": "hecho",
+"preguntas": [
+"que es una oracion",
+"que partes tiene una oracion"
+],
+"respuestas": [
+"Una oración es un grupo de palabras con sentido completo. Suele tener sujeto (quién) y predicado (qué hace)."
+]
+},
+{
+"id": "qa-qa08txt-78",
+"tipo": "hecho",
+"preguntas": [
+"que es el sujeto",
+"que es el predicado"
+],
+"respuestas": [
+"El sujeto es de quién se habla; el predicado es lo que se dice de él. En \"El perro ladra\", el sujeto es \"el perro\" y el predicado \"ladra\"."
+]
+},
+{
+"id": "qa-qa08txt-79",
+"tipo": "hecho",
+"preguntas": [
+"que es una silaba",
+"como se separan las silabas"
+],
+"respuestas": [
+"Una sílaba es cada golpe de voz de una palabra: \"ca-sa\" tiene dos sílabas."
+]
+},
+{
+"id": "qa-qa08txt-80",
+"tipo": "hecho",
+"preguntas": [
+"que es la tilde",
+"cuando lleva tilde una palabra"
+],
+"respuestas": [
+"La tilde es el acento escrito, como en \"canción\". Se usa según reglas que dependen de dónde suena más fuerte la palabra."
+]
+},
+{
+"id": "qa-qa08txt-81",
+"tipo": "hecho",
+"preguntas": [
+"que es una palabra aguda",
+"que es una palabra grave"
+],
+"respuestas": [
+"Las agudas suenan fuerte en la última sílaba (ca-fé); las graves en la penúltima (me-sa); las esdrújulas en la antepenúltima (mú-si-ca)."
+]
+},
+{
+"id": "qa-qa08txt-82",
+"tipo": "hecho",
+"preguntas": [
+"que es un punto",
+"para que sirve la coma"
+],
+"respuestas": [
+"El punto termina una oración; la coma marca una pausa corta o separa elementos de una lista."
+]
+},
+{
+"id": "qa-qa08txt-83",
+"tipo": "hecho",
+"preguntas": [
+"por que en espanol se usan dos signos de pregunta",
+"para que sirve el signo de apertura"
+],
+"respuestas": [
+"El español usa ¿ y ¡ al principio para saber desde el comienzo que es una pregunta o una exclamación."
+]
+},
+{
+"id": "qa-qa08txt-84",
+"tipo": "hecho",
+"preguntas": [
+"que es un trabalenguas",
+"decime un trabalenguas"
+],
+"respuestas": [
+"Un trabalenguas es una frase difícil de decir rápido, como \"Tres tristes tigres tragaban trigo en un trigal\"."
+]
+},
+{
+"id": "qa-qa08txt-85",
+"tipo": "hecho",
+"preguntas": [
+"que es una adivinanza",
+"decime una adivinanza"
+],
+"respuestas": [
+"Una adivinanza es un juego de palabras para adivinar algo. Por ejemplo: \"Blanco por dentro, verde por fuera; si querés que te lo diga, esperá\" (la pera)."
+]
+},
+{
+"id": "qa-qa08txt-86",
+"tipo": "hecho",
+"preguntas": [
+"que es un refran",
+"decime un refran"
+],
+"respuestas": [
+"Un refrán es un dicho popular con una enseñanza, como \"Más vale tarde que nunca\"."
+]
+},
+{
+"id": "qa-qa08txt-87",
+"tipo": "hecho",
+"preguntas": [
+"que significa mas vale tarde que nunca",
+"que quiere decir mas vale tarde que nunca"
+],
+"respuestas": [
+"Que es mejor hacer algo tarde que no hacerlo nunca."
+]
+},
+{
+"id": "qa-qa08txt-88",
+"tipo": "hecho",
+"preguntas": [
+"que es el lunfardo",
+"que palabras son lunfardo"
+],
+"respuestas": [
+"El lunfardo es un lenguaje popular nacido en Buenos Aires. Palabras como \"laburo\" (trabajo) o \"morfar\" (comer) vienen de ahí."
+]
+},
+{
+"id": "qa-qa08txt-89",
+"tipo": "hecho",
+"preguntas": [
+"que significa che",
+"por que los argentinos dicen che"
+],
+"respuestas": [
+"\"Che\" es una forma de llamar la atención o hablarle a alguien con confianza, muy argentina."
+]
+},
+{
+"id": "qa-qa08txt-90",
+"tipo": "hecho",
+"preguntas": [
+"que significa copado",
+"que es algo copado"
+],
+"respuestas": [
+"\"Copado\" quiere decir genial o buena onda. Por ejemplo: \"¡Qué copado tu juego!\""
+]
+},
+{
+"id": "qa-qa08txt-91",
+"tipo": "hecho",
+"preguntas": [
+"que significa laburo",
+"que es laburar"
+],
+"respuestas": [
+"\"Laburo\" es trabajo y \"laburar\" es trabajar, en lunfardo argentino."
+]
+},
+{
+"id": "qa-qa08txt-92",
+"tipo": "hecho",
+"preguntas": [
+"que significa bondi",
+"que es un bondi"
+],
+"respuestas": [
+"\"Bondi\" es como se le dice al colectivo en Argentina."
+]
+},
+{
+"id": "qa-qa08txt-93",
+"tipo": "hecho",
+"preguntas": [
+"que significa pibe",
+"que es un pibe"
+],
+"respuestas": [
+"\"Pibe\" quiere decir chico o muchacho; \"piba\", chica."
+]
+},
+{
+"id": "qa-qa08txt-94",
+"tipo": "hecho",
+"preguntas": [
+"que significa re",
+"por que decimos re"
+],
+"respuestas": [
+"\"Re\" se usa para decir \"muy\": \"re lindo\" es muy lindo."
+]
+},
+{
+"id": "qa-qa08txt-95",
+"tipo": "hecho",
+"preguntas": [
+"que significa fiaca",
+"que es tener fiaca"
+],
+"respuestas": [
+"\"Fiaca\" son ganas de no hacer nada, pereza. Por ejemplo: \"Me da fiaca levantarme\"."
+]
+},
+{
+"id": "qa-qa08txt-96",
+"tipo": "hecho",
+"preguntas": [
+"que significa chamuyo",
+"que es chamuyar"
+],
+"respuestas": [
+"\"Chamuyar\" es hablar mucho para convencer, a veces exagerando; \"chamuyo\" es esa charla."
+]
+},
+{
+"id": "qa-qa08txt-97",
+"tipo": "hecho",
+"preguntas": [
+"que significa chabon",
+"que es un chabon"
+],
+"respuestas": [
+"\"Chabón\" quiere decir tipo o persona, en lenguaje informal."
+]
+},
+{
+"id": "qa-qa08txt-98",
+"tipo": "hecho",
+"preguntas": [
+"que es el ingles",
+"por que es util aprender ingles"
+],
+"respuestas": [
+"El inglés es un idioma muy usado en el mundo, en internet y en la programación, así que aprenderlo abre muchas puertas."
+]
+},
+{
+"id": "qa-qa08txt-99",
+"tipo": "hecho",
+"preguntas": [
+"como se dice hola en ingles",
+"como se dice gracias en ingles"
+],
+"respuestas": [
+"\"Hola\" en inglés es \"hello\" y \"gracias\" es \"thank you\"."
+]
+},
+{
+"id": "qa-qa08txt-100",
+"tipo": "hecho",
+"preguntas": [
+"como se dice perro en ingles",
+"como se dice gato en ingles"
+],
+"respuestas": [
+"\"Perro\" es \"dog\" y \"gato\" es \"cat\"."
+]
+},
+{
+"id": "qa-qa08txt-101",
+"tipo": "hecho",
+"preguntas": [
+"como se dice computadora en ingles",
+"como se dice juego en ingles"
+],
+"respuestas": [
+"\"Computadora\" es \"computer\" y \"juego\" es \"game\"."
 ]
 }
 ]
