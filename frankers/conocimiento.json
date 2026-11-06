@@ -1,6 +1,6 @@
 {
 "version": 1,
-"actualizado": "2026-11-06T23:30:31.568Z",
+"actualizado": "2026-11-06T23:31:34.607Z",
 "entradas": [
 {
 "id": "saludo",
@@ -6287,6 +6287,1150 @@
 ],
 "respuestas": [
 "La electricidad de los enchufes puede dar una descarga muy peligrosa. Nunca metas dedos ni objetos."
+]
+},
+{
+"id": "qa-qa04txt-1",
+"tipo": "hecho",
+"preguntas": [
+"cuantas provincias tiene argentina",
+"cuantas provincias hay en argentina"
+],
+"respuestas": [
+"Argentina tiene 23 provincias y la Ciudad Autónoma de Buenos Aires."
+]
+},
+{
+"id": "qa-qa04txt-2",
+"tipo": "hecho",
+"preguntas": [
+"cual es la provincia mas grande de argentina",
+"que provincia es la mas grande"
+],
+"respuestas": [
+"La provincia más grande es Buenos Aires, seguida de Santa Cruz."
+]
+},
+{
+"id": "qa-qa04txt-3",
+"tipo": "hecho",
+"preguntas": [
+"cual es la capital de la provincia de buenos aires",
+"capital de buenos aires provincia"
+],
+"respuestas": [
+"La capital de la provincia de Buenos Aires es La Plata."
+]
+},
+{
+"id": "qa-qa04txt-4",
+"tipo": "hecho",
+"preguntas": [
+"cual es la capital de cordoba",
+"capital de cordoba"
+],
+"respuestas": [
+"La capital de Córdoba es la ciudad de Córdoba."
+]
+},
+{
+"id": "qa-qa04txt-5",
+"tipo": "hecho",
+"preguntas": [
+"cual es la capital de santa fe",
+"capital de santa fe"
+],
+"respuestas": [
+"La capital de Santa Fe es la ciudad de Santa Fe."
+]
+},
+{
+"id": "qa-qa04txt-6",
+"tipo": "hecho",
+"preguntas": [
+"cual es la capital de mendoza",
+"capital de mendoza"
+],
+"respuestas": [
+"La capital de Mendoza es la ciudad de Mendoza."
+]
+},
+{
+"id": "qa-qa04txt-7",
+"tipo": "hecho",
+"preguntas": [
+"cual es la capital de tucuman",
+"capital de tucuman"
+],
+"respuestas": [
+"La capital de Tucumán es San Miguel de Tucumán."
+]
+},
+{
+"id": "qa-qa04txt-8",
+"tipo": "hecho",
+"preguntas": [
+"cual es la capital de salta",
+"capital de salta"
+],
+"respuestas": [
+"La capital de Salta es la ciudad de Salta."
+]
+},
+{
+"id": "qa-qa04txt-9",
+"tipo": "hecho",
+"preguntas": [
+"cual es la capital de jujuy",
+"capital de jujuy"
+],
+"respuestas": [
+"La capital de Jujuy es San Salvador de Jujuy."
+]
+},
+{
+"id": "qa-qa04txt-10",
+"tipo": "hecho",
+"preguntas": [
+"cual es la capital de entre rios",
+"capital de entre rios"
+],
+"respuestas": [
+"La capital de Entre Ríos es Paraná."
+]
+},
+{
+"id": "qa-qa04txt-11",
+"tipo": "hecho",
+"preguntas": [
+"cual es la capital de corrientes",
+"capital de corrientes"
+],
+"respuestas": [
+"La capital de Corrientes es la ciudad de Corrientes."
+]
+},
+{
+"id": "qa-qa04txt-12",
+"tipo": "hecho",
+"preguntas": [
+"cual es la capital de misiones",
+"capital de misiones"
+],
+"respuestas": [
+"La capital de Misiones es Posadas."
+]
+},
+{
+"id": "qa-qa04txt-13",
+"tipo": "hecho",
+"preguntas": [
+"cual es la capital de chaco",
+"capital del chaco"
+],
+"respuestas": [
+"La capital de Chaco es Resistencia."
+]
+},
+{
+"id": "qa-qa04txt-14",
+"tipo": "hecho",
+"preguntas": [
+"cual es la capital de formosa",
+"capital de formosa"
+],
+"respuestas": [
+"La capital de Formosa es la ciudad de Formosa."
+]
+},
+{
+"id": "qa-qa04txt-15",
+"tipo": "hecho",
+"preguntas": [
+"cual es la capital de santiago del estero",
+"capital de santiago del estero"
+],
+"respuestas": [
+"La capital de Santiago del Estero es la ciudad de Santiago del Estero."
+]
+},
+{
+"id": "qa-qa04txt-16",
+"tipo": "hecho",
+"preguntas": [
+"cual es la capital de catamarca",
+"capital de catamarca"
+],
+"respuestas": [
+"La capital de Catamarca es San Fernando del Valle de Catamarca."
+]
+},
+{
+"id": "qa-qa04txt-17",
+"tipo": "hecho",
+"preguntas": [
+"cual es la capital de la rioja",
+"capital de la rioja"
+],
+"respuestas": [
+"La capital de La Rioja es la ciudad de La Rioja."
+]
+},
+{
+"id": "qa-qa04txt-18",
+"tipo": "hecho",
+"preguntas": [
+"cual es la capital de san juan",
+"capital de san juan"
+],
+"respuestas": [
+"La capital de San Juan es la ciudad de San Juan."
+]
+},
+{
+"id": "qa-qa04txt-19",
+"tipo": "hecho",
+"preguntas": [
+"cual es la capital de san luis",
+"capital de san luis"
+],
+"respuestas": [
+"La capital de San Luis es la ciudad de San Luis."
+]
+},
+{
+"id": "qa-qa04txt-20",
+"tipo": "hecho",
+"preguntas": [
+"cual es la capital de la pampa",
+"capital de la pampa"
+],
+"respuestas": [
+"La capital de La Pampa es Santa Rosa."
+]
+},
+{
+"id": "qa-qa04txt-21",
+"tipo": "hecho",
+"preguntas": [
+"cual es la capital de neuquen",
+"capital de neuquen"
+],
+"respuestas": [
+"La capital de Neuquén es la ciudad de Neuquén."
+]
+},
+{
+"id": "qa-qa04txt-22",
+"tipo": "hecho",
+"preguntas": [
+"cual es la capital de rio negro",
+"capital de rio negro"
+],
+"respuestas": [
+"La capital de Río Negro es Viedma."
+]
+},
+{
+"id": "qa-qa04txt-23",
+"tipo": "hecho",
+"preguntas": [
+"cual es la capital de chubut",
+"capital de chubut"
+],
+"respuestas": [
+"La capital de Chubut es Rawson."
+]
+},
+{
+"id": "qa-qa04txt-24",
+"tipo": "hecho",
+"preguntas": [
+"cual es la capital de santa cruz",
+"capital de santa cruz"
+],
+"respuestas": [
+"La capital de Santa Cruz es Río Gallegos."
+]
+},
+{
+"id": "qa-qa04txt-25",
+"tipo": "hecho",
+"preguntas": [
+"cual es la capital de tierra del fuego",
+"capital de tierra del fuego"
+],
+"respuestas": [
+"La capital de Tierra del Fuego es Ushuaia."
+]
+},
+{
+"id": "qa-qa04txt-26",
+"tipo": "hecho",
+"preguntas": [
+"cual es la ciudad mas austral del mundo",
+"que es ushuaia"
+],
+"respuestas": [
+"Ushuaia, en Tierra del Fuego, es conocida como la ciudad más austral del mundo."
+]
+},
+{
+"id": "qa-qa04txt-27",
+"tipo": "hecho",
+"preguntas": [
+"cuando es el dia de la independencia argentina",
+"cuando se independizo argentina"
+],
+"respuestas": [
+"La Independencia se declaró el 9 de julio de 1816, en Tucumán."
+]
+},
+{
+"id": "qa-qa04txt-28",
+"tipo": "hecho",
+"preguntas": [
+"donde se declaro la independencia",
+"que es la casa de tucuman"
+],
+"respuestas": [
+"Se declaró en la Casa Histórica de Tucumán, el 9 de julio de 1816."
+]
+},
+{
+"id": "qa-qa04txt-29",
+"tipo": "hecho",
+"preguntas": [
+"que paso el 25 de mayo de 1810",
+"que es la revolucion de mayo"
+],
+"respuestas": [
+"El 25 de mayo de 1810 se formó el Primer Gobierno Patrio en Buenos Aires: fue el comienzo del camino hacia la independencia."
+]
+},
+{
+"id": "qa-qa04txt-30",
+"tipo": "hecho",
+"preguntas": [
+"quien creo la bandera argentina",
+"quien hizo la bandera"
+],
+"respuestas": [
+"Manuel Belgrano creó la bandera argentina en 1812, a orillas del río Paraná, en Rosario."
+]
+},
+{
+"id": "qa-qa04txt-31",
+"tipo": "hecho",
+"preguntas": [
+"cuando es el dia de la bandera",
+"que se festeja el 20 de junio"
+],
+"respuestas": [
+"El Día de la Bandera es el 20 de junio, cuando se recuerda a Manuel Belgrano."
+]
+},
+{
+"id": "qa-qa04txt-32",
+"tipo": "hecho",
+"preguntas": [
+"de que colores es la bandera argentina",
+"como es la bandera argentina"
+],
+"respuestas": [
+"La bandera argentina es celeste y blanca, con un sol en el centro."
+]
+},
+{
+"id": "qa-qa04txt-33",
+"tipo": "hecho",
+"preguntas": [
+"quien fue san martin",
+"quien fue jose de san martin"
+],
+"respuestas": [
+"José de San Martín fue un general que lideró la independencia de Argentina, Chile y Perú. Se lo llama el Padre de la Patria."
+]
+},
+{
+"id": "qa-qa04txt-34",
+"tipo": "hecho",
+"preguntas": [
+"que hizo san martin",
+"por que es importante san martin"
+],
+"respuestas": [
+"Cruzó la cordillera de los Andes con su ejército y ayudó a liberar Argentina, Chile y Perú."
+]
+},
+{
+"id": "qa-qa04txt-35",
+"tipo": "hecho",
+"preguntas": [
+"quien fue belgrano",
+"quien fue manuel belgrano"
+],
+"respuestas": [
+"Manuel Belgrano fue abogado, economista y militar. Creó la bandera argentina y le dio mucha importancia a la educación."
+]
+},
+{
+"id": "qa-qa04txt-36",
+"tipo": "hecho",
+"preguntas": [
+"quien fue sarmiento",
+"quien fue domingo sarmiento"
+],
+"respuestas": [
+"Domingo Faustino Sarmiento fue escritor, maestro y presidente. Impulsó mucho las escuelas; por eso el 11 de septiembre es el Día del Maestro."
+]
+},
+{
+"id": "qa-qa04txt-37",
+"tipo": "hecho",
+"preguntas": [
+"cuando es el dia del maestro",
+"que se festeja el 11 de septiembre"
+],
+"respuestas": [
+"El Día del Maestro es el 11 de septiembre, en homenaje a Sarmiento."
+]
+},
+{
+"id": "qa-qa04txt-38",
+"tipo": "hecho",
+"preguntas": [
+"cuando es el dia del estudiante",
+"que se festeja el 21 de septiembre"
+],
+"respuestas": [
+"El Día del Estudiante es el 21 de septiembre, que además coincide con el comienzo de la primavera."
+]
+},
+{
+"id": "qa-qa04txt-39",
+"tipo": "hecho",
+"preguntas": [
+"quien fue juana azurduy",
+"quien fue juana azurduy de padilla"
+],
+"respuestas": [
+"Juana Azurduy fue una líder militar que luchó por la independencia en el Alto Perú, la actual Bolivia."
+]
+},
+{
+"id": "qa-qa04txt-40",
+"tipo": "hecho",
+"preguntas": [
+"quien escribio el himno nacional argentino",
+"quien hizo el himno argentino"
+],
+"respuestas": [
+"La letra del Himno Nacional Argentino la escribió Vicente López y Planes, y la música Blas Parera, en 1813."
+]
+},
+{
+"id": "qa-qa04txt-41",
+"tipo": "hecho",
+"preguntas": [
+"cual es el escudo argentino",
+"como es el escudo argentino"
+],
+"respuestas": [
+"El escudo tiene dos manos que se dan la mano y sostienen un gorro frigio, rodeados de laureles y con un sol arriba."
+]
+},
+{
+"id": "qa-qa04txt-42",
+"tipo": "hecho",
+"preguntas": [
+"que es la escarapela",
+"cuando se usa la escarapela"
+],
+"respuestas": [
+"La escarapela es un distintivo celeste y blanco que se usa en las fechas patrias. Su día es el 18 de mayo."
+]
+},
+{
+"id": "qa-qa04txt-43",
+"tipo": "hecho",
+"preguntas": [
+"cual es la flor nacional argentina",
+"que es el ceibo"
+],
+"respuestas": [
+"La flor nacional es la flor del ceibo, de color rojo."
+]
+},
+{
+"id": "qa-qa04txt-44",
+"tipo": "hecho",
+"preguntas": [
+"cual es el arbol nacional argentino",
+"que es el quebracho colorado"
+],
+"respuestas": [
+"El árbol forestal nacional es el quebracho colorado."
+]
+},
+{
+"id": "qa-qa04txt-45",
+"tipo": "hecho",
+"preguntas": [
+"cual es la bebida nacional argentina",
+"cual es la infusion nacional"
+],
+"respuestas": [
+"El mate es la infusión nacional argentina."
+]
+},
+{
+"id": "qa-qa04txt-46",
+"tipo": "hecho",
+"preguntas": [
+"cual es el baile nacional argentino",
+"que es el pato"
+],
+"respuestas": [
+"El pato es el deporte nacional. Entre los bailes típicos están el tango, la chacarera, la zamba y el malambo."
+]
+},
+{
+"id": "qa-qa04txt-47",
+"tipo": "hecho",
+"preguntas": [
+"cual es el deporte nacional argentino",
+"que deporte es el pato"
+],
+"respuestas": [
+"El pato es el deporte nacional de Argentina, un juego a caballo. El fútbol es el más popular."
+]
+},
+{
+"id": "qa-qa04txt-48",
+"tipo": "hecho",
+"preguntas": [
+"que es el tango",
+"de donde es el tango"
+],
+"respuestas": [
+"El tango es una música y un baile que nació en el Río de la Plata, entre Buenos Aires y Montevideo."
+]
+},
+{
+"id": "qa-qa04txt-49",
+"tipo": "hecho",
+"preguntas": [
+"que es la chacarera",
+"que es una zamba"
+],
+"respuestas": [
+"La chacarera y la zamba son músicas y bailes folclóricos del norte argentino."
+]
+},
+{
+"id": "qa-qa04txt-50",
+"tipo": "hecho",
+"preguntas": [
+"que es el folclore",
+"que significa folclore"
+],
+"respuestas": [
+"El folclore son las costumbres, músicas, bailes y cuentos tradicionales de un pueblo."
+]
+},
+{
+"id": "qa-qa04txt-51",
+"tipo": "hecho",
+"preguntas": [
+"que es un gaucho",
+"como eran los gauchos"
+],
+"respuestas": [
+"El gaucho es el hombre de campo de las llanuras argentinas, gran jinete, con poncho, bombacha y sombrero."
+]
+},
+{
+"id": "qa-qa04txt-52",
+"tipo": "hecho",
+"preguntas": [
+"quien escribio el martin fierro",
+"que es el martin fierro"
+],
+"respuestas": [
+"\"El gaucho Martín Fierro\" es un poema de José Hernández sobre la vida de un gaucho."
+]
+},
+{
+"id": "qa-qa04txt-53",
+"tipo": "hecho",
+"preguntas": [
+"cual es el rio mas largo de argentina",
+"que rio es el mas largo de argentina"
+],
+"respuestas": [
+"El Paraná es el río más largo e importante de Argentina."
+]
+},
+{
+"id": "qa-qa04txt-54",
+"tipo": "hecho",
+"preguntas": [
+"que es el rio de la plata",
+"el rio de la plata es un rio"
+],
+"respuestas": [
+"El Río de la Plata es un estuario enorme donde desembocan el Paraná y el Uruguay. Separa Argentina de Uruguay."
+]
+},
+{
+"id": "qa-qa04txt-55",
+"tipo": "hecho",
+"preguntas": [
+"que son las cataratas del iguazu",
+"donde estan las cataratas"
+],
+"respuestas": [
+"Las Cataratas del Iguazú están en Misiones, en la frontera con Brasil. Son unas de las más impresionantes del mundo."
+]
+},
+{
+"id": "qa-qa04txt-56",
+"tipo": "hecho",
+"preguntas": [
+"que es el perito moreno",
+"donde esta el glaciar perito moreno"
+],
+"respuestas": [
+"El Perito Moreno es un glaciar enorme en Santa Cruz, dentro del Parque Nacional Los Glaciares."
+]
+},
+{
+"id": "qa-qa04txt-57",
+"tipo": "hecho",
+"preguntas": [
+"que es la quebrada de humahuaca",
+"donde esta el cerro de siete colores"
+],
+"respuestas": [
+"La Quebrada de Humahuaca está en Jujuy; allí, en Purmamarca, está el Cerro de los Siete Colores."
+]
+},
+{
+"id": "qa-qa04txt-58",
+"tipo": "hecho",
+"preguntas": [
+"que es la patagonia",
+"donde queda la patagonia"
+],
+"respuestas": [
+"La Patagonia es la región del sur de Argentina y Chile, con montañas, lagos, mesetas y glaciares."
+]
+},
+{
+"id": "qa-qa04txt-59",
+"tipo": "hecho",
+"preguntas": [
+"que es la pampa",
+"que es la region pampeana"
+],
+"respuestas": [
+"La pampa es una llanura enorme y muy fértil del centro de Argentina, ideal para cultivos y ganado."
+]
+},
+{
+"id": "qa-qa04txt-60",
+"tipo": "hecho",
+"preguntas": [
+"que es la puna",
+"que es el altiplano"
+],
+"respuestas": [
+"La puna es una meseta muy alta y seca del noroeste argentino."
+]
+},
+{
+"id": "qa-qa04txt-61",
+"tipo": "hecho",
+"preguntas": [
+"que es la cordillera de los andes",
+"donde esta la cordillera"
+],
+"respuestas": [
+"Los Andes son una cadena de montañas que recorre todo el oeste de Sudamérica. Separa Argentina de Chile."
+]
+},
+{
+"id": "qa-qa04txt-62",
+"tipo": "hecho",
+"preguntas": [
+"con que paises limita argentina",
+"que paises son vecinos de argentina"
+],
+"respuestas": [
+"Argentina limita con Chile, Bolivia, Paraguay, Brasil y Uruguay."
+]
+},
+{
+"id": "qa-qa04txt-63",
+"tipo": "hecho",
+"preguntas": [
+"cual es la capital de argentina",
+"capital de argentina"
+],
+"respuestas": [
+"La capital de Argentina es la Ciudad Autónoma de Buenos Aires."
+]
+},
+{
+"id": "qa-qa04txt-64",
+"tipo": "hecho",
+"preguntas": [
+"que idioma se habla en argentina",
+"que se habla en argentina"
+],
+"respuestas": [
+"En Argentina se habla español, con su forma rioplatense, que usa el \"vos\". También se hablan lenguas originarias como el guaraní o el quechua."
+]
+},
+{
+"id": "qa-qa04txt-65",
+"tipo": "hecho",
+"preguntas": [
+"que es el voseo",
+"por que en argentina decimos vos"
+],
+"respuestas": [
+"El voseo es usar \"vos\" en vez de \"tú\": \"vos tenés\" en lugar de \"tú tienes\". Es típico de Argentina."
+]
+},
+{
+"id": "qa-qa04txt-66",
+"tipo": "hecho",
+"preguntas": [
+"cual es la moneda de argentina",
+"como se llama la plata argentina"
+],
+"respuestas": [
+"La moneda de Argentina es el peso argentino."
+]
+},
+{
+"id": "qa-qa04txt-67",
+"tipo": "hecho",
+"preguntas": [
+"que es el obelisco",
+"donde esta el obelisco"
+],
+"respuestas": [
+"El Obelisco es un monumento de Buenos Aires, sobre la avenida 9 de Julio, construido en 1936."
+]
+},
+{
+"id": "qa-qa04txt-68",
+"tipo": "hecho",
+"preguntas": [
+"que es la casa rosada",
+"donde esta la casa rosada"
+],
+"respuestas": [
+"La Casa Rosada es la sede del gobierno nacional, frente a la Plaza de Mayo, en Buenos Aires."
+]
+},
+{
+"id": "qa-qa04txt-69",
+"tipo": "hecho",
+"preguntas": [
+"que es el cabildo",
+"que es el cabildo de buenos aires"
+],
+"respuestas": [
+"El Cabildo era el edificio del gobierno de la ciudad en la época colonial. Allí se vivió la Revolución de Mayo."
+]
+},
+{
+"id": "qa-qa04txt-70",
+"tipo": "hecho",
+"preguntas": [
+"cual es la avenida mas ancha",
+"que es la avenida 9 de julio"
+],
+"respuestas": [
+"La avenida 9 de Julio, en Buenos Aires, es una de las más anchas del mundo."
+]
+},
+{
+"id": "qa-qa04txt-71",
+"tipo": "hecho",
+"preguntas": [
+"que es la bombilla",
+"para que sirve la bombilla"
+],
+"respuestas": [
+"La bombilla es el caño de metal con filtro que se usa para tomar mate."
+]
+},
+{
+"id": "qa-qa04txt-72",
+"tipo": "hecho",
+"preguntas": [
+"que es la yerba mate",
+"de donde sale la yerba"
+],
+"respuestas": [
+"La yerba mate es una planta que crece sobre todo en Misiones y Corrientes; con sus hojas secas se prepara el mate."
+]
+},
+{
+"id": "qa-qa04txt-73",
+"tipo": "hecho",
+"preguntas": [
+"que es el alfajor",
+"de que esta hecho un alfajor"
+],
+"respuestas": [
+"El alfajor son dos galletitas unidas con dulce de leche, muchas veces bañadas en chocolate."
+]
+},
+{
+"id": "qa-qa04txt-74",
+"tipo": "hecho",
+"preguntas": [
+"que es el locro",
+"cuando se come locro"
+],
+"respuestas": [
+"El locro es un guiso de maíz, porotos, zapallo y carne. Se come mucho el 25 de mayo y el 9 de julio."
+]
+},
+{
+"id": "qa-qa04txt-75",
+"tipo": "hecho",
+"preguntas": [
+"que es el chimichurri",
+"que es la salsa chimichurri"
+],
+"respuestas": [
+"El chimichurri es una salsa con perejil, ajo, orégano, ají, aceite y vinagre, ideal para el asado."
+]
+},
+{
+"id": "qa-qa04txt-76",
+"tipo": "hecho",
+"preguntas": [
+"que son las facturas",
+"que es una medialuna"
+],
+"respuestas": [
+"Las facturas son masas dulces de panadería, como las medialunas, que se comen en el desayuno o la merienda."
+]
+},
+{
+"id": "qa-qa04txt-77",
+"tipo": "hecho",
+"preguntas": [
+"que es el choripan",
+"que es un chori"
+],
+"respuestas": [
+"El choripán es un sándwich de pan con chorizo a la parrilla."
+]
+},
+{
+"id": "qa-qa04txt-78",
+"tipo": "hecho",
+"preguntas": [
+"que es la provoleta",
+"que es un provolone a la parrilla"
+],
+"respuestas": [
+"La provoleta es queso provolone hecho a la parrilla con orégano."
+]
+},
+{
+"id": "qa-qa04txt-79",
+"tipo": "hecho",
+"preguntas": [
+"que es un pastelito",
+"cuando se comen pastelitos"
+],
+"respuestas": [
+"Los pastelitos son masas fritas rellenas de membrillo o batata, típicas de las fechas patrias."
+]
+},
+{
+"id": "qa-qa04txt-80",
+"tipo": "hecho",
+"preguntas": [
+"que es el dulce de batata",
+"que es el postre vigilante"
+],
+"respuestas": [
+"El dulce de batata es un dulce argentino. Con queso forma el postre llamado \"vigilante\"."
+]
+},
+{
+"id": "qa-qa04txt-81",
+"tipo": "hecho",
+"preguntas": [
+"cuando se festeja la navidad en argentina",
+"hace calor en navidad en argentina"
+],
+"respuestas": [
+"En Argentina la Navidad es el 25 de diciembre y cae en verano, así que hace calor."
+]
+},
+{
+"id": "qa-qa04txt-82",
+"tipo": "hecho",
+"preguntas": [
+"que es el dia de la tradicion",
+"que se festeja el 10 de noviembre"
+],
+"respuestas": [
+"El 10 de noviembre es el Día de la Tradición, en honor a José Hernández, autor del Martín Fierro."
+]
+},
+{
+"id": "qa-qa04txt-83",
+"tipo": "hecho",
+"preguntas": [
+"cuando es el dia de la soberania",
+"que se recuerda el 20 de noviembre"
+],
+"respuestas": [
+"El 20 de noviembre es el Día de la Soberanía Nacional, que recuerda la Vuelta de Obligado de 1845."
+]
+},
+{
+"id": "qa-qa04txt-84",
+"tipo": "hecho",
+"preguntas": [
+"que son las islas malvinas",
+"donde estan las malvinas"
+],
+"respuestas": [
+"Las Islas Malvinas están en el Atlántico Sur. Argentina reclama su soberanía; el 2 de abril se recuerda a los veteranos y caídos de la guerra de 1982."
+]
+},
+{
+"id": "qa-qa04txt-85",
+"tipo": "hecho",
+"preguntas": [
+"que es el dia de la memoria",
+"que se recuerda el 24 de marzo"
+],
+"respuestas": [
+"El 24 de marzo es el Día Nacional de la Memoria por la Verdad y la Justicia, que recuerda a las víctimas de la última dictadura."
+]
+},
+{
+"id": "qa-qa04txt-86",
+"tipo": "hecho",
+"preguntas": [
+"que es mar del plata",
+"donde queda mar del plata"
+],
+"respuestas": [
+"Mar del Plata es una ciudad de la costa de la provincia de Buenos Aires, muy visitada en verano."
+]
+},
+{
+"id": "qa-qa04txt-87",
+"tipo": "hecho",
+"preguntas": [
+"que es bariloche",
+"donde queda bariloche"
+],
+"respuestas": [
+"San Carlos de Bariloche está en Río Negro, junto al lago Nahuel Huapi. Es famosa por sus montañas y su chocolate."
+]
+},
+{
+"id": "qa-qa04txt-88",
+"tipo": "hecho",
+"preguntas": [
+"que es rosario",
+"donde queda rosario"
+],
+"respuestas": [
+"Rosario es una ciudad grande de Santa Fe, a orillas del río Paraná, donde está el Monumento a la Bandera."
+]
+},
+{
+"id": "qa-qa04txt-89",
+"tipo": "hecho",
+"preguntas": [
+"que es el monumento a la bandera",
+"donde esta el monumento a la bandera"
+],
+"respuestas": [
+"El Monumento Nacional a la Bandera está en Rosario, donde Belgrano izó la bandera por primera vez."
+]
+},
+{
+"id": "qa-qa04txt-90",
+"tipo": "hecho",
+"preguntas": [
+"que son las sierras de cordoba",
+"como es cordoba"
+],
+"respuestas": [
+"Córdoba tiene sierras, ríos y valles, muy elegidos para vacaciones."
+]
+},
+{
+"id": "qa-qa04txt-91",
+"tipo": "hecho",
+"preguntas": [
+"que es la ruta 40",
+"que es la ruta nacional 40"
+],
+"respuestas": [
+"La Ruta 40 recorre Argentina de norte a sur, junto a la cordillera, por más de 5.000 kilómetros."
+]
+},
+{
+"id": "qa-qa04txt-92",
+"tipo": "hecho",
+"preguntas": [
+"que es talampaya",
+"que es el valle de la luna"
+],
+"respuestas": [
+"Talampaya, en La Rioja, e Ischigualasto, en San Juan, son parques con paisajes increíbles y restos de dinosaurios."
+]
+},
+{
+"id": "qa-qa04txt-93",
+"tipo": "hecho",
+"preguntas": [
+"argentina tiene dinosaurios",
+"que dinosaurios se encontraron en argentina"
+],
+"respuestas": [
+"Sí, en Argentina se encontraron dinosaurios famosos, como el Argentinosaurus y el Giganotosaurus."
+]
+},
+{
+"id": "qa-qa04txt-94",
+"tipo": "hecho",
+"preguntas": [
+"que es el giganotosaurus",
+"que era el giganotosaurio"
+],
+"respuestas": [
+"El Giganotosaurus fue un dinosaurio carnívoro gigante encontrado en Neuquén, tan grande o más que el tiranosaurio."
+]
+},
+{
+"id": "qa-qa04txt-95",
+"tipo": "hecho",
+"preguntas": [
+"cuantos habitantes tiene argentina",
+"cuanta gente vive en argentina"
+],
+"respuestas": [
+"Según el censo de 2022, Argentina tiene unos 46 millones de habitantes."
+]
+},
+{
+"id": "qa-qa04txt-96",
+"tipo": "hecho",
+"preguntas": [
+"quien es lionel messi",
+"quien es messi"
+],
+"respuestas": [
+"Lionel Messi es un futbolista argentino, de Rosario, considerado uno de los mejores de la historia."
+]
+},
+{
+"id": "qa-qa04txt-97",
+"tipo": "hecho",
+"preguntas": [
+"cuantos mundiales gano argentina",
+"cuantas copas del mundo tiene argentina"
+],
+"respuestas": [
+"La selección argentina de fútbol ganó 3 Mundiales: en 1978, 1986 y 2022."
+]
+},
+{
+"id": "qa-qa04txt-98",
+"tipo": "hecho",
+"preguntas": [
+"quien fue diego maradona",
+"quien es maradona"
+],
+"respuestas": [
+"Diego Maradona fue un futbolista argentino legendario, campeón del Mundial 1986."
+]
+},
+{
+"id": "qa-qa04txt-99",
+"tipo": "hecho",
+"preguntas": [
+"quien fue quino",
+"quien creo a mafalda"
+],
+"respuestas": [
+"Quino fue un dibujante argentino que creó a Mafalda, una nena muy preguntona que opina sobre el mundo."
+]
+},
+{
+"id": "qa-qa04txt-100",
+"tipo": "hecho",
+"preguntas": [
+"quien fue maria elena walsh",
+"que escribio maria elena walsh"
+],
+"respuestas": [
+"María Elena Walsh fue una escritora y cantante argentina que hizo canciones y libros para chicos."
+]
+},
+{
+"id": "qa-qa04txt-101",
+"tipo": "hecho",
+"preguntas": [
+"que premios nobel tiene argentina",
+"que argentinos ganaron el nobel"
+],
+"respuestas": [
+"Argentina tiene cinco premios Nobel, entre ellos Bernardo Houssay, Luis Federico Leloir y César Milstein en ciencias."
+]
+},
+{
+"id": "qa-qa04txt-102",
+"tipo": "hecho",
+"preguntas": [
+"quien fue rene favaloro",
+"que hizo favaloro"
+],
+"respuestas": [
+"René Favaloro fue un médico argentino que desarrolló la cirugía de bypass coronario, que salvó muchísimas vidas."
+]
+},
+{
+"id": "qa-qa04txt-103",
+"tipo": "hecho",
+"preguntas": [
+"quien invento el colectivo",
+"que inventos son argentinos"
+],
+"respuestas": [
+"Se dice que el colectivo, el dulce de leche, la birome y el sistema de huellas dactilares tienen origen o desarrollo argentino."
+]
+},
+{
+"id": "qa-qa04txt-104",
+"tipo": "hecho",
+"preguntas": [
+"que es la birome",
+"quien invento la birome"
+],
+"respuestas": [
+"La birome es el bolígrafo. Lo desarrolló en Argentina Ladislao Biro, que vivía en el país."
 ]
 }
 ]
