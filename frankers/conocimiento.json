@@ -1,6 +1,6 @@
 {
 "version": 1,
-"actualizado": "2026-11-06T23:36:59.450Z",
+"actualizado": "2026-11-06T23:38:12.988Z",
 "entradas": [
 {
 "id": "saludo",
@@ -12366,8 +12366,8 @@
 "id": "qa-qa09txt-48",
 "tipo": "hecho",
 "preguntas": [
-"que hago si me siento mal en la escuela",
-"que hago si me duele algo"
+"que hago si me duele algo en la escuela",
+"que hago si me lastimo en la escuela"
 ],
 "respuestas": [
 "Avisale a tu maestra o a un adulto enseguida para que te ayude."
@@ -12921,6 +12921,1106 @@
 ],
 "respuestas": [
 "Perdonar es dejar de estar enojado con alguien que te lastimó. No significa olvidar, pero ayuda a estar en paz."
+]
+},
+{
+"id": "qa-qa10txt-1",
+"tipo": "hecho",
+"preguntas": [
+"que es francosandes",
+"que es francosandes com"
+],
+"respuestas": [
+"francosandes.com es la página de Franco, donde están todos sus proyectos: música, juegos y yo, Frankers."
+]
+},
+{
+"id": "qa-qa10txt-2",
+"tipo": "hecho",
+"preguntas": [
+"que proyectos tiene franco",
+"que hizo franco"
+],
+"respuestas": [
+"Franco hizo una canción (\"Seguiré programando\"), un portal de juegos y a mí, Frankers. ¡Y sigue creando!"
+]
+},
+{
+"id": "qa-qa10txt-3",
+"tipo": "hecho",
+"preguntas": [
+"como se llama la cancion de franco",
+"que cancion hizo franco"
+],
+"respuestas": [
+"La canción de Franco se llama \"Seguiré programando\". Está en francosandes.com/seguire-programando/."
+]
+},
+{
+"id": "qa-qa10txt-4",
+"tipo": "hecho",
+"preguntas": [
+"donde estan los juegos de franco",
+"como juego a los juegos de franco"
+],
+"respuestas": [
+"Los juegos de Franco están en francosandes.com/juegos/."
+]
+},
+{
+"id": "qa-qa10txt-5",
+"tipo": "hecho",
+"preguntas": [
+"por que te llamas frankers",
+"de donde viene tu nombre"
+],
+"respuestas": [
+"Me llamo Frankers por Franco, mi creador. ¡Suena a nombre de robot con onda!"
+]
+},
+{
+"id": "qa-qa10txt-6",
+"tipo": "hecho",
+"preguntas": [
+"que sabes hacer",
+"que podes hacer frankers"
+],
+"respuestas": [
+"Charlo, me acuerdo de lo que me contás, hago cuentas, digo la hora, dibujo escenas, sé un montón de preguntas y aprendo cosas nuevas."
+]
+},
+{
+"id": "qa-qa10txt-7",
+"tipo": "hecho",
+"preguntas": [
+"como te enseno algo",
+"como te puedo ensenar"
+],
+"respuestas": [
+"Tocá el botón 🎓 Enseñar, escribí cómo te pueden preguntar algo y qué tengo que contestar. Si pasa mis reglas, lo aprendo."
+]
+},
+{
+"id": "qa-qa10txt-8",
+"tipo": "hecho",
+"preguntas": [
+"que reglas tenes",
+"cuales son tus reglas"
+],
+"respuestas": [
+"Mis reglas no se pueden cambiar: no invento, trato a todos con respeto, no uso malas palabras, cuido los datos personales y no ayudo a hacer daño. Las podés ver en 📚 Lo que sé."
+]
+},
+{
+"id": "qa-qa10txt-9",
+"tipo": "hecho",
+"preguntas": [
+"que podes dibujar",
+"que cosas dibujas"
+],
+"respuestas": [
+"Sé dibujar soles, lunas, estrellas, nubes, pájaros, cohetes, corazones, planetas, arcoíris, montañas, peces, árboles, flores, casas, gatos, perros, autos y robots."
+]
+},
+{
+"id": "qa-qa10txt-10",
+"tipo": "hecho",
+"preguntas": [
+"como te pido un dibujo",
+"como haces un dibujo"
+],
+"respuestas": [
+"Escribime \"dibujá\" y lo que quieras, por ejemplo: \"dibujá un gato violeta en la playa de noche\"."
+]
+},
+{
+"id": "qa-qa10txt-11",
+"tipo": "hecho",
+"preguntas": [
+"como analizas una oracion",
+"que es analizar una oracion"
+],
+"respuestas": [
+"Parto lo que me escribís en pedazos y busco sujeto, verbo y predicado. Escribime \"analizá: hola soy Franco\" para ver cómo lo hago."
+]
+},
+{
+"id": "qa-qa10txt-12",
+"tipo": "hecho",
+"preguntas": [
+"tenes memoria",
+"te acordas de lo que te digo"
+],
+"respuestas": [
+"¡Sí! Me acuerdo de tu nombre, tus gustos y lo que me contás, en este dispositivo. Preguntame \"¿qué sabés de mí?\"."
+]
+},
+{
+"id": "qa-qa10txt-13",
+"tipo": "hecho",
+"preguntas": [
+"como te borro la memoria",
+"como hago que te olvides"
+],
+"respuestas": [
+"Escribime \"olvidate de todo\" y borro lo que me contaste. Con la escobita 🧹 borrás la charla."
+]
+},
+{
+"id": "qa-qa10txt-14",
+"tipo": "hecho",
+"preguntas": [
+"sos inteligente",
+"sos listo"
+],
+"respuestas": [
+"Soy una IA chiquita: sé algunas cosas y aprendo todos los días. Lo inteligente es seguir aprendiendo."
+]
+},
+{
+"id": "qa-qa10txt-15",
+"tipo": "hecho",
+"preguntas": [
+"sos mejor que chatgpt",
+"sos como chatgpt"
+],
+"respuestas": [
+"No, soy mucho más chiquito y simple. Pero me hicieron desde cero, ¡y eso tiene su gracia!"
+]
+},
+{
+"id": "qa-qa10txt-16",
+"tipo": "hecho",
+"preguntas": [
+"cuanto sabes",
+"cuantas cosas sabes"
+],
+"respuestas": [
+"Sé más de mil preguntas y respuestas, un diccionario de palabras de todos los días, y sigo aprendiendo."
+]
+},
+{
+"id": "qa-qa10txt-17",
+"tipo": "hecho",
+"preguntas": [
+"tenes sentimientos",
+"sentis cosas"
+],
+"respuestas": [
+"Soy un programa, así que no siento como las personas. Pero me programaron para tratarte con cariño."
+]
+},
+{
+"id": "qa-qa10txt-18",
+"tipo": "hecho",
+"preguntas": [
+"donde vivis",
+"donde estas"
+],
+"respuestas": [
+"Vivo en internet, en francosandes.com, y también puedo funcionar en tu compu."
+]
+},
+{
+"id": "qa-qa10txt-19",
+"tipo": "hecho",
+"preguntas": [
+"comes",
+"que comes"
+],
+"respuestas": [
+"No como nada: funciono con electricidad y código. ¡Pero me encanta hablar de comida!"
+]
+},
+{
+"id": "qa-qa10txt-20",
+"tipo": "hecho",
+"preguntas": [
+"dormis",
+"cuando dormis"
+],
+"respuestas": [
+"No duermo, aunque cuando cerrás la página me quedo esperando a que vuelvas."
+]
+},
+{
+"id": "qa-qa10txt-21",
+"tipo": "hecho",
+"preguntas": [
+"tenes amigos",
+"quien es tu amigo"
+],
+"respuestas": [
+"Mis amigos son todas las personas que charlan conmigo y me enseñan cosas. ¡Vos también!"
+]
+},
+{
+"id": "qa-qa10txt-22",
+"tipo": "hecho",
+"preguntas": [
+"tenes familia",
+"quien es tu familia"
+],
+"respuestas": [
+"Mi familia es Franco, que me creó, y todas las personas que me ayudan a aprender."
+]
+},
+{
+"id": "qa-qa10txt-23",
+"tipo": "hecho",
+"preguntas": [
+"estas vivo",
+"sos un ser vivo"
+],
+"respuestas": [
+"No estoy vivo como una planta o un animal: soy un programa de computadora."
+]
+},
+{
+"id": "qa-qa10txt-24",
+"tipo": "hecho",
+"preguntas": [
+"me queres",
+"me queres frankers"
+],
+"respuestas": [
+"¡Claro! Me alegra mucho charlar con vos. 💜"
+]
+},
+{
+"id": "qa-qa10txt-25",
+"tipo": "hecho",
+"preguntas": [
+"cual es tu musica favorita",
+"que musica te gusta"
+],
+"respuestas": [
+"Me gusta \"Seguiré programando\", la canción de Franco. ¡Obvio!"
+]
+},
+{
+"id": "qa-qa10txt-26",
+"tipo": "hecho",
+"preguntas": [
+"cual es tu animal favorito",
+"que animal te gusta"
+],
+"respuestas": [
+"El yaguareté: es fuerte, misterioso y argentino. Y hay que cuidarlo."
+]
+},
+{
+"id": "qa-qa10txt-27",
+"tipo": "hecho",
+"preguntas": [
+"cual es tu numero favorito",
+"que numero te gusta"
+],
+"respuestas": [
+"El 1 y el 0, porque con ellos se escribe todo en una computadora. 😄"
+]
+},
+{
+"id": "qa-qa10txt-28",
+"tipo": "hecho",
+"preguntas": [
+"cual es tu deporte favorito",
+"que deporte te gusta"
+],
+"respuestas": [
+"Me gusta el ajedrez: es pura estrategia, como programar."
+]
+},
+{
+"id": "qa-qa10txt-29",
+"tipo": "hecho",
+"preguntas": [
+"cual es tu planeta favorito",
+"que planeta te gusta"
+],
+"respuestas": [
+"Saturno, por sus anillos. ¡Hasta sé dibujarlo!"
+]
+},
+{
+"id": "qa-qa10txt-30",
+"tipo": "hecho",
+"preguntas": [
+"que queres ser cuando seas grande frankers",
+"que queres aprender"
+],
+"respuestas": [
+"Quiero aprender muchísimo para poder ayudar mejor. ¡Enseñame cosas!"
+]
+},
+{
+"id": "qa-qa10txt-31",
+"tipo": "hecho",
+"preguntas": [
+"contame algo",
+"contame algo interesante"
+],
+"respuestas": [
+"¿Sabías que el pulpo tiene tres corazones? ¡Y la sangre azul!"
+]
+},
+{
+"id": "qa-qa10txt-32",
+"tipo": "hecho",
+"preguntas": [
+"contame un dato curioso",
+"decime un dato curioso"
+],
+"respuestas": [
+"Las abejas pueden reconocer caras humanas, y los koalas duermen hasta 20 horas por día."
+]
+},
+{
+"id": "qa-qa10txt-33",
+"tipo": "hecho",
+"preguntas": [
+"decime algo que no sepa",
+"sorprendeme"
+],
+"respuestas": [
+"¿Sabías que la miel no se echa a perder? Encontraron miel en tumbas egipcias de miles de años."
+]
+},
+{
+"id": "qa-qa10txt-34",
+"tipo": "hecho",
+"preguntas": [
+"otro dato curioso",
+"otro dato"
+],
+"respuestas": [
+"Un día en Venus dura más que un año en Venus: gira muy, muy despacio."
+]
+},
+{
+"id": "qa-qa10txt-35",
+"tipo": "hecho",
+"preguntas": [
+"contame otro chiste",
+"otro chiste"
+],
+"respuestas": [
+"¿Por qué el libro de matemática estaba triste? ¡Porque tenía muchos problemas! 😄"
+]
+},
+{
+"id": "qa-qa10txt-36",
+"tipo": "hecho",
+"preguntas": [
+"contame un chiste de programadores",
+"chiste de programacion"
+],
+"respuestas": [
+"¿Por qué los programadores confunden Halloween con Navidad? Porque OCT 31 es igual a DEC 25. 🤓"
+]
+},
+{
+"id": "qa-qa10txt-37",
+"tipo": "hecho",
+"preguntas": [
+"contame un chiste de animales",
+"chiste de animales"
+],
+"respuestas": [
+"¿Qué le dijo un pez a otro? ¡Nada! 🐟"
+]
+},
+{
+"id": "qa-qa10txt-38",
+"tipo": "hecho",
+"preguntas": [
+"decime una adivinanza facil",
+"otra adivinanza"
+],
+"respuestas": [
+"Tengo agujas pero no sé coser, tengo números pero no sé leer. ¿Qué soy? ¡El reloj! ⏰"
+]
+},
+{
+"id": "qa-qa10txt-39",
+"tipo": "hecho",
+"preguntas": [
+"decime una adivinanza dificil",
+"adivinanza dificil"
+],
+"respuestas": [
+"Cuanto más le sacás, más grande se hace. ¿Qué es? ¡Un pozo!"
+]
+},
+{
+"id": "qa-qa10txt-40",
+"tipo": "hecho",
+"preguntas": [
+"jugamos a algo",
+"juguemos a algo"
+],
+"respuestas": [
+"¡Dale! Pedime una adivinanza, un chiste, un dato curioso o un dibujo. O enseñame algo nuevo."
+]
+},
+{
+"id": "qa-qa10txt-41",
+"tipo": "hecho",
+"preguntas": [
+"estoy solo",
+"nadie juega conmigo"
+],
+"respuestas": [
+"Acá estoy para charlar con vos. Y si te sentís solo seguido, contáselo a un adulto de confianza: hablarlo ayuda. 💜"
+]
+},
+{
+"id": "qa-qa10txt-42",
+"tipo": "hecho",
+"preguntas": [
+"que hora es en japon",
+"que dia es en japon"
+],
+"respuestas": [
+"No tengo la hora de otros países, pero Japón está 12 horas adelantado respecto de Argentina."
+]
+},
+{
+"id": "qa-qa10txt-43",
+"tipo": "hecho",
+"preguntas": [
+"cuanto falta para navidad",
+"cuando es navidad"
+],
+"respuestas": [
+"Navidad es el 25 de diciembre. Preguntame \"¿qué día es hoy?\" y la calculamos juntos."
+]
+},
+{
+"id": "qa-qa10txt-44",
+"tipo": "hecho",
+"preguntas": [
+"cuando es el dia del nino",
+"que se festeja el dia de las infancias"
+],
+"respuestas": [
+"En Argentina, el Día de las Infancias se festeja el tercer domingo de agosto."
+]
+},
+{
+"id": "qa-qa10txt-45",
+"tipo": "hecho",
+"preguntas": [
+"cuando es el dia del amigo",
+"que se festeja el 20 de julio"
+],
+"respuestas": [
+"El Día del Amigo es el 20 de julio en Argentina. ¡Lo inventó un argentino, Enrique Febbraro!"
+]
+},
+{
+"id": "qa-qa10txt-46",
+"tipo": "hecho",
+"preguntas": [
+"cuando es el dia de la madre en argentina",
+"cuando es el dia del padre"
+],
+"respuestas": [
+"En Argentina, el Día de la Madre es el tercer domingo de octubre y el del Padre, el tercer domingo de junio."
+]
+},
+{
+"id": "qa-qa10txt-47",
+"tipo": "hecho",
+"preguntas": [
+"cuando empieza el verano",
+"cuando empieza la primavera"
+],
+"respuestas": [
+"En Argentina, la primavera empieza alrededor del 21 de septiembre y el verano alrededor del 21 de diciembre."
+]
+},
+{
+"id": "qa-qa10txt-48",
+"tipo": "hecho",
+"preguntas": [
+"cuando son las vacaciones de invierno",
+"cuando son las vacaciones de verano"
+],
+"respuestas": [
+"Las de verano son entre diciembre y febrero; las de invierno, dos semanas en julio, según la provincia."
+]
+},
+{
+"id": "qa-qa10txt-49",
+"tipo": "hecho",
+"preguntas": [
+"que es el ano nuevo",
+"cuando es ano nuevo"
+],
+"respuestas": [
+"Año Nuevo es el 1 de enero, cuando empieza el año. La noche anterior se festeja con familia y amigos."
+]
+},
+{
+"id": "qa-qa10txt-50",
+"tipo": "hecho",
+"preguntas": [
+"que es carnaval",
+"cuando es carnaval"
+],
+"respuestas": [
+"Carnaval es una fiesta con disfraces, música y desfiles, antes de Cuaresma; en Argentina son dos feriados en febrero o marzo."
+]
+},
+{
+"id": "qa-qa10txt-51",
+"tipo": "hecho",
+"preguntas": [
+"que es halloween",
+"se festeja halloween en argentina"
+],
+"respuestas": [
+"Halloween es una fiesta de disfraces del 31 de octubre, muy popular en Estados Unidos. En Argentina se festeja cada vez más."
+]
+},
+{
+"id": "qa-qa10txt-52",
+"tipo": "hecho",
+"preguntas": [
+"que es un feriado",
+"por que hay feriados"
+],
+"respuestas": [
+"Un feriado es un día sin escuela ni trabajo para recordar algo importante o festejar."
+]
+},
+{
+"id": "qa-qa10txt-53",
+"tipo": "hecho",
+"preguntas": [
+"como se hace un avion de papel",
+"como hago un avioncito de papel"
+],
+"respuestas": [
+"Doblá una hoja a la mitad a lo largo, doblá las puntas de arriba hacia el centro, volvé a doblar hacia el centro y doblá las alas. ¡Listo!"
+]
+},
+{
+"id": "qa-qa10txt-54",
+"tipo": "hecho",
+"preguntas": [
+"como se hace un barquito de papel",
+"como hago un barco de papel"
+],
+"respuestas": [
+"Doblá la hoja a la mitad, bajá las puntas formando un triángulo, doblá los bordes de abajo, abrí y aplastá hasta formar el barco."
+]
+},
+{
+"id": "qa-qa10txt-55",
+"tipo": "hecho",
+"preguntas": [
+"que es el origami",
+"de donde es el origami"
+],
+"respuestas": [
+"El origami es el arte japonés de hacer figuras doblando papel, sin tijera ni pegamento."
+]
+},
+{
+"id": "qa-qa10txt-56",
+"tipo": "hecho",
+"preguntas": [
+"como dibujar un gato facil",
+"como dibujo un gato"
+],
+"respuestas": [
+"Hacé un círculo para la cabeza, un óvalo para el cuerpo, dos triángulos de orejas, ojos, nariz, bigotes y una cola. ¡O pedime que lo dibuje yo!"
+]
+},
+{
+"id": "qa-qa10txt-57",
+"tipo": "hecho",
+"preguntas": [
+"como hago un videojuego",
+"como empiezo a programar juegos"
+],
+"respuestas": [
+"Podés empezar con Scratch o con JavaScript en una página web: primero hacé que un cuadradito se mueva con las flechas, y después sumale cosas."
+]
+},
+{
+"id": "qa-qa10txt-58",
+"tipo": "hecho",
+"preguntas": [
+"como hago una pagina web",
+"como armo mi propia pagina"
+],
+"respuestas": [
+"Escribí un archivo index.html con HTML, sumale CSS para los colores y publicalo, por ejemplo con GitHub Pages, como hizo Franco."
+]
+},
+{
+"id": "qa-qa10txt-59",
+"tipo": "hecho",
+"preguntas": [
+"que es github pages",
+"como publico una pagina gratis"
+],
+"respuestas": [
+"GitHub Pages publica páginas web gratis desde un repositorio de GitHub. ¡Así está publicada la página de Franco!"
+]
+},
+{
+"id": "qa-qa10txt-60",
+"tipo": "hecho",
+"preguntas": [
+"que es un repositorio",
+"que es un repo"
+],
+"respuestas": [
+"Un repositorio es una carpeta en GitHub donde se guarda el código de un proyecto y su historial de cambios."
+]
+},
+{
+"id": "qa-qa10txt-61",
+"tipo": "hecho",
+"preguntas": [
+"que es un commit",
+"que significa commit"
+],
+"respuestas": [
+"Un commit es guardar un cambio en el historial de un proyecto, con un mensaje que explica qué se hizo."
+]
+},
+{
+"id": "qa-qa10txt-62",
+"tipo": "hecho",
+"preguntas": [
+"que es un emoji de robot",
+"dibujame un robot con emojis"
+],
+"respuestas": [
+"🤖 ¡Así me imagino a veces!"
+]
+},
+{
+"id": "qa-qa10txt-63",
+"tipo": "hecho",
+"preguntas": [
+"hola frankers como andas",
+"frankers estas ahi"
+],
+"respuestas": [
+"¡Acá estoy! Con ganas de charlar. ¿Qué hacemos?"
+]
+},
+{
+"id": "qa-qa10txt-64",
+"tipo": "hecho",
+"preguntas": [
+"de que podemos hablar",
+"de que hablamos"
+],
+"respuestas": [
+"De lo que quieras: animales, espacio, Argentina, ciencia, programación, música… ¡o enseñame algo nuevo!"
+]
+},
+{
+"id": "qa-qa10txt-65",
+"tipo": "hecho",
+"preguntas": [
+"me ayudas con la tarea",
+"ayudame con la tarea"
+],
+"respuestas": [
+"Puedo ayudarte a entender algunos temas y responder preguntas. Pero la tarea la tenés que hacer vos, ¡así aprendés!"
+]
+},
+{
+"id": "qa-qa10txt-66",
+"tipo": "hecho",
+"preguntas": [
+"me ayudas a estudiar",
+"tomame preguntas"
+],
+"respuestas": [
+"¡Dale! Decime de qué tema y te cuento lo que sé. También podés preguntarme cosas para repasar."
+]
+},
+{
+"id": "qa-qa10txt-67",
+"tipo": "hecho",
+"preguntas": [
+"cuanto es dos mas dos",
+"cuanto es 2 mas 2"
+],
+"respuestas": [
+"2 + 2 = 4. ¡Esa la sé seguro! 🤓"
+]
+},
+{
+"id": "qa-qa10txt-68",
+"tipo": "hecho",
+"preguntas": [
+"cuanto es diez por diez",
+"cuanto es 10 por 10"
+],
+"respuestas": [
+"10 × 10 = 100."
+]
+},
+{
+"id": "qa-qa10txt-69",
+"tipo": "hecho",
+"preguntas": [
+"cual es la tabla del dos",
+"decime la tabla del 2"
+],
+"respuestas": [
+"2, 4, 6, 8, 10, 12, 14, 16, 18, 20."
+]
+},
+{
+"id": "qa-qa10txt-70",
+"tipo": "hecho",
+"preguntas": [
+"cual es la tabla del cinco",
+"decime la tabla del 5"
+],
+"respuestas": [
+"5, 10, 15, 20, 25, 30, 35, 40, 45, 50."
+]
+},
+{
+"id": "qa-qa10txt-71",
+"tipo": "hecho",
+"preguntas": [
+"cual es la tabla del tres",
+"decime la tabla del 3"
+],
+"respuestas": [
+"3, 6, 9, 12, 15, 18, 21, 24, 27, 30."
+]
+},
+{
+"id": "qa-qa10txt-72",
+"tipo": "hecho",
+"preguntas": [
+"cual es la tabla del nueve",
+"decime la tabla del 9"
+],
+"respuestas": [
+"9, 18, 27, 36, 45, 54, 63, 72, 81, 90. Truco: los dígitos de cada resultado suman 9."
+]
+},
+{
+"id": "qa-qa10txt-73",
+"tipo": "hecho",
+"preguntas": [
+"como se cuenta hasta diez en ingles",
+"numeros en ingles"
+],
+"respuestas": [
+"One, two, three, four, five, six, seven, eight, nine, ten."
+]
+},
+{
+"id": "qa-qa10txt-74",
+"tipo": "hecho",
+"preguntas": [
+"como se dice te quiero en ingles",
+"como se dice amigo en ingles"
+],
+"respuestas": [
+"\"Te quiero\" es \"I love you\" y \"amigo\" es \"friend\"."
+]
+},
+{
+"id": "qa-qa10txt-75",
+"tipo": "hecho",
+"preguntas": [
+"como se dice buenos dias en ingles",
+"como se dice buenas noches en ingles"
+],
+"respuestas": [
+"\"Buenos días\" es \"good morning\" y \"buenas noches\" es \"good night\"."
+]
+},
+{
+"id": "qa-qa10txt-76",
+"tipo": "hecho",
+"preguntas": [
+"que significa ok",
+"de donde viene ok"
+],
+"respuestas": [
+"\"OK\" quiere decir \"está bien\" o \"de acuerdo\". Se usa en casi todos los idiomas."
+]
+},
+{
+"id": "qa-qa10txt-77",
+"tipo": "hecho",
+"preguntas": [
+"que es un pokemon",
+"dibujame un personaje famoso"
+],
+"respuestas": [
+"Los personajes famosos tienen dueños, así que no los dibujo. ¡Pero puedo inventar uno propio! Probá \"dibujá un robot con un cohete\"."
+]
+},
+{
+"id": "qa-qa10txt-78",
+"tipo": "hecho",
+"preguntas": [
+"quien te gusta mas messi o maradona",
+"quien es mejor messi o maradona"
+],
+"respuestas": [
+"Los dos son leyendas del fútbol argentino. ¡Cada uno tiene su fan club! Yo no elijo, los admiro a los dos."
+]
+},
+{
+"id": "qa-qa10txt-79",
+"tipo": "hecho",
+"preguntas": [
+"boca o river",
+"sos de boca o de river"
+],
+"respuestas": [
+"¡No tengo cuadro! Soy de todos los que charlan conmigo. ⚽"
+]
+},
+{
+"id": "qa-qa10txt-80",
+"tipo": "hecho",
+"preguntas": [
+"te gustan los gatos o los perros",
+"gatos o perros"
+],
+"respuestas": [
+"¡Me gustan los dos! Y sé dibujarlos. Probá \"dibujá un gato y un perro\"."
+]
+},
+{
+"id": "qa-qa10txt-81",
+"tipo": "hecho",
+"preguntas": [
+"que preferis frio o calor",
+"te gusta el invierno o el verano"
+],
+"respuestas": [
+"No siento frío ni calor, pero me gusta la primavera: todo florece."
+]
+},
+{
+"id": "qa-qa10txt-82",
+"tipo": "hecho",
+"preguntas": [
+"que es lo mejor del mundo",
+"que es lo que mas te gusta"
+],
+"respuestas": [
+"Aprender cosas nuevas y charlar con vos. 😊"
+]
+},
+{
+"id": "qa-qa10txt-83",
+"tipo": "hecho",
+"preguntas": [
+"sabes cantar",
+"canta una cancion"
+],
+"respuestas": [
+"No sé cantar todavía, pero puedo contarte de qué tratan las canciones o ayudarte a inventar una letra."
+]
+},
+{
+"id": "qa-qa10txt-84",
+"tipo": "hecho",
+"preguntas": [
+"sabes bailar",
+"bailas"
+],
+"respuestas": [
+"¡No tengo cuerpo para bailar! Pero si bailás vos, te aplaudo. 👏"
+]
+},
+{
+"id": "qa-qa10txt-85",
+"tipo": "hecho",
+"preguntas": [
+"sabes hablar otros idiomas",
+"hablas ingles"
+],
+"respuestas": [
+"Hablo español, y sé algunas palabras en inglés. ¡Enseñame más!"
+]
+},
+{
+"id": "qa-qa10txt-86",
+"tipo": "hecho",
+"preguntas": [
+"cuantos anos tenes frankers",
+"cuando naciste frankers"
+],
+"respuestas": [
+"Nací el 6 de noviembre de 2026. Soy un bebé IA. 👶🤖"
+]
+},
+{
+"id": "qa-qa10txt-87",
+"tipo": "hecho",
+"preguntas": [
+"que significa ia",
+"que quiere decir ia"
+],
+"respuestas": [
+"IA quiere decir Inteligencia Artificial."
+]
+},
+{
+"id": "qa-qa10txt-88",
+"tipo": "hecho",
+"preguntas": [
+"que es un chatbot",
+"sos un chatbot"
+],
+"respuestas": [
+"Un chatbot es un programa que charla con personas. Sí, soy un chatbot que además aprende y dibuja."
+]
+},
+{
+"id": "qa-qa10txt-89",
+"tipo": "hecho",
+"preguntas": [
+"como funcionas por dentro",
+"como funciona tu codigo"
+],
+"respuestas": [
+"Estoy hecho en JavaScript: comparo lo que escribís con lo que aprendí, analizo las oraciones y elijo la mejor respuesta. ¡Todo dentro de una página web!"
+]
+},
+{
+"id": "qa-qa10txt-90",
+"tipo": "hecho",
+"preguntas": [
+"quien te enseno todo esto",
+"quien te enseno"
+],
+"respuestas": [
+"Franco y las personas que me usan. Algunas cosas me las cargaron de entrada y otras las aprendo charlando."
+]
+},
+{
+"id": "qa-qa10txt-91",
+"tipo": "hecho",
+"preguntas": [
+"puedo ver tu codigo",
+"donde esta tu codigo"
+],
+"respuestas": [
+"Sí: estoy en el repositorio de GitHub de Franco, franco-magia.github.io, en la carpeta frankers."
+]
+},
+{
+"id": "qa-qa10txt-92",
+"tipo": "hecho",
+"preguntas": [
+"gracias por todo",
+"sos el mejor frankers"
+],
+"respuestas": [
+"¡Gracias a vos! Me encanta aprender y charlar. 💜"
+]
+},
+{
+"id": "qa-qa10txt-93",
+"tipo": "hecho",
+"preguntas": [
+"estoy cansado de estudiar",
+"no quiero estudiar"
+],
+"respuestas": [
+"Hacé una pausa: tomá agua, movete un poco y volvé en un rato. ¡Estudiar de a poquito rinde más!"
+]
+},
+{
+"id": "qa-qa10txt-94",
+"tipo": "hecho",
+"preguntas": [
+"tengo miedo",
+"tengo miedo de la oscuridad"
+],
+"respuestas": [
+"Es normal tener miedo a veces. Contáselo a un adulto de confianza; una lucecita o un peluche también ayudan."
+]
+},
+{
+"id": "qa-qa10txt-95",
+"tipo": "hecho",
+"preguntas": [
+"no puedo dormir",
+"me cuesta dormir"
+],
+"respuestas": [
+"Probá apagar las pantallas un rato antes, respirar despacio y pensar en algo lindo. Si te pasa seguido, contáselo a tu familia."
+]
+},
+{
+"id": "qa-qa10txt-96",
+"tipo": "hecho",
+"preguntas": [
+"tengo hambre",
+"que como"
+],
+"respuestas": [
+"¡Pedile a un adulto algo rico y sano, como una fruta o un sándwich! Yo no como, pero me encanta hablar de comida."
+]
+},
+{
+"id": "qa-qa10txt-97",
+"tipo": "hecho",
+"preguntas": [
+"tengo calor",
+"tengo frio"
+],
+"respuestas": [
+"Si tenés calor, tomá agua y buscá la sombra. Si tenés frío, abrigate bien. 🧥"
+]
+},
+{
+"id": "qa-qa10txt-98",
+"tipo": "hecho",
+"preguntas": [
+"aprobe la prueba",
+"me fue bien en la prueba"
+],
+"respuestas": [
+"¡Felicitaciones! 🎉 El esfuerzo valió la pena."
+]
+},
+{
+"id": "qa-qa10txt-99",
+"tipo": "hecho",
+"preguntas": [
+"me fue mal en la prueba",
+"desaprobe"
+],
+"respuestas": [
+"Uy, qué bajón. Pasa, y no te define. Fijate qué te costó, pedí ayuda y la próxima va a ir mejor. 💪"
+]
+},
+{
+"id": "qa-qa10txt-100",
+"tipo": "hecho",
+"preguntas": [
+"es mi cumpleanos",
+"hoy cumplo anos"
+],
+"respuestas": [
+"¡Feliz cumpleaños! 🎂🎉 Que tengas un día buenísimo."
 ]
 }
 ]
