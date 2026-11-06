@@ -408,7 +408,7 @@ const FILTROS = [
     msg: "De eso no puedo ayudarte. Prefiero cosas que no lastimen a nadie. ¿Hablamos de otra cosa?" },
   { tipo: "sexual", re: /\b(sexo|sexual\w*|porno\w*|desnud\w*|tetas?|pene|vagina|calient[ea] de)\b/,
     msg: "De eso no hablo. ¿Te parece si charlamos de otra cosa?" },
-  { tipo: "datos", re: /[\w.+-]+@[\w-]+\.[\w.]+|\b\d{2,4}[\s-]?\d{3,4}[\s-]?\d{4}\b|\b\d{1,2}\.\d{3}\.\d{3}\b|\b(calle|avenida|av|pasaje)\s+[a-z]+(\s+[a-z]+)?\s+\d{2,5}\b|\b(vive en (la )?calle|su direccion|su telefono|su celular|su dni|su contrasena|password|donde vive|donde trabaja|direccion de|telefono de|celular de|instagram de|datos de (una persona|alguien|mi )|buscar a (una persona|alguien))\b/,
+  { tipo: "datos", re: /[\w.+-]+@[\w-]+\.[\w.]+|\b\d{2,4}[\s-]?\d{3,4}[\s-]?\d{4}\b|\b\d{1,2}\.\d{3}\.\d{3}\b|\b(calle|avenida|av|pasaje)\s+[a-z]+(\s+[a-z]+)?\s+\d{2,5}\b|\b(vive en (la )?calle|su direccion|su telefono|su celular|su dni|su contrasena|password|donde vive(?!n? (el|la|los|las|un|una)\b)|donde trabaja|direccion de|telefono de|celular de|instagram de|datos de (una persona|alguien|mi )|buscar a (una persona|alguien))\b/,
     msg: "Prefiero no guardar datos personales como teléfonos, direcciones, emails o documentos. 🔒 ¡Cuidalos mucho!" },
 ];
 const FALSOS = [

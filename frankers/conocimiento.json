@@ -1,6 +1,6 @@
 {
 "version": 1,
-"actualizado": "2026-11-06T23:24:11.093Z",
+"actualizado": "2026-11-06T23:27:57.849Z",
 "entradas": [
 {
 "id": "saludo",
@@ -2965,6 +2965,1128 @@
 ],
 "respuestas": [
 "Idioma: Lengua que habla un pueblo o un país, como el español o el inglés. Por ejemplo: \"Estoy aprendiendo otro idioma.\""
+]
+},
+{
+"id": "qa-qa01txt-1",
+"tipo": "hecho",
+"preguntas": [
+"cual es el animal mas grande del mundo",
+"que animal es el mas grande"
+],
+"respuestas": [
+"La ballena azul es el animal más grande que existe: puede medir unos 30 metros."
+]
+},
+{
+"id": "qa-qa01txt-2",
+"tipo": "hecho",
+"preguntas": [
+"cual es el animal terrestre mas grande",
+"cual es el animal mas grande de la tierra"
+],
+"respuestas": [
+"El elefante africano es el animal terrestre más grande."
+]
+},
+{
+"id": "qa-qa01txt-3",
+"tipo": "hecho",
+"preguntas": [
+"cual es el animal mas rapido",
+"que animal corre mas rapido"
+],
+"respuestas": [
+"El guepardo es el animal terrestre más rápido: puede correr a unos 100 km/h por poco tiempo."
+]
+},
+{
+"id": "qa-qa01txt-4",
+"tipo": "hecho",
+"preguntas": [
+"cual es el ave mas rapida",
+"que pajaro es el mas rapido"
+],
+"respuestas": [
+"El halcón peregrino es el ave más rápida: en picada supera los 300 km/h."
+]
+},
+{
+"id": "qa-qa01txt-5",
+"tipo": "hecho",
+"preguntas": [
+"cual es el animal mas alto",
+"que animal es el mas alto"
+],
+"respuestas": [
+"La jirafa es el animal más alto: puede medir más de 5 metros."
+]
+},
+{
+"id": "qa-qa01txt-6",
+"tipo": "hecho",
+"preguntas": [
+"cuantas patas tiene una arana",
+"cuantas patas tienen las aranas"
+],
+"respuestas": [
+"Las arañas tienen 8 patas."
+]
+},
+{
+"id": "qa-qa01txt-7",
+"tipo": "hecho",
+"preguntas": [
+"cuantas patas tiene un insecto",
+"cuantas patas tienen los insectos"
+],
+"respuestas": [
+"Los insectos tienen 6 patas."
+]
+},
+{
+"id": "qa-qa01txt-8",
+"tipo": "hecho",
+"preguntas": [
+"cuantas patas tiene un pulpo",
+"cuantos brazos tiene un pulpo"
+],
+"respuestas": [
+"El pulpo tiene 8 brazos (tentáculos)."
+]
+},
+{
+"id": "qa-qa01txt-9",
+"tipo": "hecho",
+"preguntas": [
+"cuantos corazones tiene un pulpo",
+"el pulpo tiene tres corazones"
+],
+"respuestas": [
+"El pulpo tiene 3 corazones."
+]
+},
+{
+"id": "qa-qa01txt-10",
+"tipo": "hecho",
+"preguntas": [
+"la arana es un insecto",
+"las aranas son insectos"
+],
+"respuestas": [
+"No, la araña no es un insecto: es un arácnido, porque tiene 8 patas."
+]
+},
+{
+"id": "qa-qa01txt-11",
+"tipo": "hecho",
+"preguntas": [
+"la ballena es un pez",
+"las ballenas son peces"
+],
+"respuestas": [
+"No, la ballena es un mamífero: respira aire y alimenta a sus crías con leche."
+]
+},
+{
+"id": "qa-qa01txt-12",
+"tipo": "hecho",
+"preguntas": [
+"el delfin es un pez",
+"los delfines son peces"
+],
+"respuestas": [
+"No, el delfín es un mamífero que vive en el agua y respira aire."
+]
+},
+{
+"id": "qa-qa01txt-13",
+"tipo": "hecho",
+"preguntas": [
+"que es un mamifero",
+"que son los mamiferos"
+],
+"respuestas": [
+"Un mamífero es un animal que alimenta a sus crías con leche, como el perro, la vaca, la ballena o las personas."
+]
+},
+{
+"id": "qa-qa01txt-14",
+"tipo": "hecho",
+"preguntas": [
+"que es un reptil",
+"que son los reptiles"
+],
+"respuestas": [
+"Un reptil es un animal de piel con escamas que pone huevos casi siempre, como la tortuga, el cocodrilo o la lagartija."
+]
+},
+{
+"id": "qa-qa01txt-15",
+"tipo": "hecho",
+"preguntas": [
+"que es un anfibio",
+"que son los anfibios"
+],
+"respuestas": [
+"Un anfibio es un animal que nace en el agua y de grande puede vivir en la tierra, como la rana o el sapo."
+]
+},
+{
+"id": "qa-qa01txt-16",
+"tipo": "hecho",
+"preguntas": [
+"que es un ave",
+"que son las aves"
+],
+"respuestas": [
+"Un ave es un animal con plumas, pico y alas, que pone huevos, como la paloma o el loro."
+]
+},
+{
+"id": "qa-qa01txt-17",
+"tipo": "hecho",
+"preguntas": [
+"que es un insecto",
+"que son los insectos"
+],
+"respuestas": [
+"Un insecto es un animal chiquito de 6 patas y cuerpo dividido en tres partes, como la hormiga o la mariposa."
+]
+},
+{
+"id": "qa-qa01txt-18",
+"tipo": "hecho",
+"preguntas": [
+"que es un animal herbivoro",
+"que significa herbivoro"
+],
+"respuestas": [
+"Un animal herbívoro come solo plantas, como la vaca, el caballo o el conejo."
+]
+},
+{
+"id": "qa-qa01txt-19",
+"tipo": "hecho",
+"preguntas": [
+"que es un animal carnivoro",
+"que significa carnivoro"
+],
+"respuestas": [
+"Un animal carnívoro come carne, como el león, el tigre o el lobo."
+]
+},
+{
+"id": "qa-qa01txt-20",
+"tipo": "hecho",
+"preguntas": [
+"que es un animal omnivoro",
+"que significa omnivoro"
+],
+"respuestas": [
+"Un animal omnívoro come plantas y carne, como el oso, el cerdo o las personas."
+]
+},
+{
+"id": "qa-qa01txt-21",
+"tipo": "hecho",
+"preguntas": [
+"que come el leon",
+"de que se alimenta el leon"
+],
+"respuestas": [
+"El león es carnívoro: come cebras, ñus y otros animales grandes."
+]
+},
+{
+"id": "qa-qa01txt-22",
+"tipo": "hecho",
+"preguntas": [
+"que come la vaca",
+"de que se alimenta la vaca"
+],
+"respuestas": [
+"La vaca come pasto y otras plantas."
+]
+},
+{
+"id": "qa-qa01txt-23",
+"tipo": "hecho",
+"preguntas": [
+"que come el panda",
+"de que se alimenta el panda"
+],
+"respuestas": [
+"El panda come casi solo bambú."
+]
+},
+{
+"id": "qa-qa01txt-24",
+"tipo": "hecho",
+"preguntas": [
+"que come el koala",
+"de que se alimenta el koala"
+],
+"respuestas": [
+"El koala come hojas de eucalipto."
+]
+},
+{
+"id": "qa-qa01txt-25",
+"tipo": "hecho",
+"preguntas": [
+"que comen las abejas",
+"de que se alimentan las abejas"
+],
+"respuestas": [
+"Las abejas se alimentan del néctar y el polen de las flores."
+]
+},
+{
+"id": "qa-qa01txt-26",
+"tipo": "hecho",
+"preguntas": [
+"que hacen las abejas",
+"para que sirven las abejas"
+],
+"respuestas": [
+"Las abejas hacen miel y polinizan las flores, lo que ayuda a que crezcan frutas y semillas."
+]
+},
+{
+"id": "qa-qa01txt-27",
+"tipo": "hecho",
+"preguntas": [
+"donde vive el pinguino",
+"donde viven los pinguinos"
+],
+"respuestas": [
+"Los pingüinos viven en el hemisferio sur, sobre todo en la Antártida y en costas frías como la Patagonia."
+]
+},
+{
+"id": "qa-qa01txt-28",
+"tipo": "hecho",
+"preguntas": [
+"el pinguino puede volar",
+"los pinguinos vuelan"
+],
+"respuestas": [
+"No, los pingüinos no vuelan, pero son excelentes nadadores."
+]
+},
+{
+"id": "qa-qa01txt-29",
+"tipo": "hecho",
+"preguntas": [
+"donde vive el oso polar",
+"donde viven los osos polares"
+],
+"respuestas": [
+"El oso polar vive en el Ártico, cerca del Polo Norte."
+]
+},
+{
+"id": "qa-qa01txt-30",
+"tipo": "hecho",
+"preguntas": [
+"donde vive el canguro",
+"de donde es el canguro"
+],
+"respuestas": [
+"El canguro vive en Australia."
+]
+},
+{
+"id": "qa-qa01txt-31",
+"tipo": "hecho",
+"preguntas": [
+"donde vive el koala",
+"de donde es el koala"
+],
+"respuestas": [
+"El koala vive en Australia."
+]
+},
+{
+"id": "qa-qa01txt-32",
+"tipo": "hecho",
+"preguntas": [
+"donde vive el panda",
+"de donde es el panda"
+],
+"respuestas": [
+"El panda vive en los bosques de bambú de China."
+]
+},
+{
+"id": "qa-qa01txt-33",
+"tipo": "hecho",
+"preguntas": [
+"donde vive el leon",
+"donde viven los leones"
+],
+"respuestas": [
+"Los leones viven sobre todo en las sabanas de África."
+]
+},
+{
+"id": "qa-qa01txt-34",
+"tipo": "hecho",
+"preguntas": [
+"donde vive el tigre",
+"de donde es el tigre"
+],
+"respuestas": [
+"El tigre vive en Asia, en selvas y bosques."
+]
+},
+{
+"id": "qa-qa01txt-35",
+"tipo": "hecho",
+"preguntas": [
+"cual es el animal nacional de argentina",
+"cual es el ave nacional de argentina"
+],
+"respuestas": [
+"El ave nacional de Argentina es el hornero, que construye su nido de barro."
+]
+},
+{
+"id": "qa-qa01txt-36",
+"tipo": "hecho",
+"preguntas": [
+"que es el hornero",
+"por que se llama hornero"
+],
+"respuestas": [
+"El hornero es un pájaro argentino que hace su nido de barro con forma de horno."
+]
+},
+{
+"id": "qa-qa01txt-37",
+"tipo": "hecho",
+"preguntas": [
+"que es el yaguarete",
+"que es un yaguarete"
+],
+"respuestas": [
+"El yaguareté es el felino más grande de América. En Argentina vive en el norte y está en peligro de extinción."
+]
+},
+{
+"id": "qa-qa01txt-38",
+"tipo": "hecho",
+"preguntas": [
+"que es el carpincho",
+"que es un carpincho"
+],
+"respuestas": [
+"El carpincho es el roedor más grande del mundo. Vive cerca de ríos y lagunas, y en Argentina es muy común."
+]
+},
+{
+"id": "qa-qa01txt-39",
+"tipo": "hecho",
+"preguntas": [
+"que es el condor",
+"que es un condor"
+],
+"respuestas": [
+"El cóndor andino es una de las aves voladoras más grandes del mundo. Vive en la cordillera de los Andes."
+]
+},
+{
+"id": "qa-qa01txt-40",
+"tipo": "hecho",
+"preguntas": [
+"que es el nandu",
+"que es un nandu"
+],
+"respuestas": [
+"El ñandú es un ave grande de Sudamérica que no vuela, pero corre muy rápido."
+]
+},
+{
+"id": "qa-qa01txt-41",
+"tipo": "hecho",
+"preguntas": [
+"que es la vicuna",
+"que es una vicuna"
+],
+"respuestas": [
+"La vicuña es un animal parecido a la llama, más chico, que vive en la puna. Tiene una lana muy fina."
+]
+},
+{
+"id": "qa-qa01txt-42",
+"tipo": "hecho",
+"preguntas": [
+"que es la llama",
+"que es una llama animal"
+],
+"respuestas": [
+"La llama es un animal de los Andes, pariente del camello, que se usa para llevar carga y por su lana."
+]
+},
+{
+"id": "qa-qa01txt-43",
+"tipo": "hecho",
+"preguntas": [
+"que es un dinosaurio",
+"que eran los dinosaurios"
+],
+"respuestas": [
+"Los dinosaurios fueron reptiles que vivieron hace millones de años y se extinguieron hace unos 66 millones de años."
+]
+},
+{
+"id": "qa-qa01txt-44",
+"tipo": "hecho",
+"preguntas": [
+"cuando se extinguieron los dinosaurios",
+"por que desaparecieron los dinosaurios"
+],
+"respuestas": [
+"Se extinguieron hace unos 66 millones de años, probablemente por el choque de un asteroide gigante."
+]
+},
+{
+"id": "qa-qa01txt-45",
+"tipo": "hecho",
+"preguntas": [
+"cual es el dinosaurio mas grande",
+"que dinosaurio era el mas grande"
+],
+"respuestas": [
+"Algunos de los más grandes fueron saurópodos como el Argentinosaurus, que se encontró en Argentina y medía unos 30 metros."
+]
+},
+{
+"id": "qa-qa01txt-46",
+"tipo": "hecho",
+"preguntas": [
+"que es el tiranosaurio",
+"que era el t rex"
+],
+"respuestas": [
+"El tiranosaurio rex fue un dinosaurio carnívoro enorme, con dientes grandes y brazos muy cortos."
+]
+},
+{
+"id": "qa-qa01txt-47",
+"tipo": "hecho",
+"preguntas": [
+"cuanto vive un perro",
+"cuantos anos vive un perro"
+],
+"respuestas": [
+"Un perro vive en general entre 10 y 15 años, según la raza."
+]
+},
+{
+"id": "qa-qa01txt-48",
+"tipo": "hecho",
+"preguntas": [
+"cuanto vive un gato",
+"cuantos anos vive un gato"
+],
+"respuestas": [
+"Un gato vive en general entre 12 y 18 años."
+]
+},
+{
+"id": "qa-qa01txt-49",
+"tipo": "hecho",
+"preguntas": [
+"cuanto vive una tortuga",
+"cuantos anos viven las tortugas"
+],
+"respuestas": [
+"Algunas tortugas gigantes pueden vivir más de 100 años."
+]
+},
+{
+"id": "qa-qa01txt-50",
+"tipo": "hecho",
+"preguntas": [
+"por que los gatos ronronean",
+"por que ronronea el gato"
+],
+"respuestas": [
+"Los gatos ronronean casi siempre cuando están tranquilos y contentos, aunque a veces también lo hacen para calmarse."
+]
+},
+{
+"id": "qa-qa01txt-51",
+"tipo": "hecho",
+"preguntas": [
+"por que los perros mueven la cola",
+"que significa que el perro mueva la cola"
+],
+"respuestas": [
+"Los perros mueven la cola para comunicarse; muchas veces significa que están contentos o con ganas de jugar."
+]
+},
+{
+"id": "qa-qa01txt-52",
+"tipo": "hecho",
+"preguntas": [
+"como respiran los peces",
+"los peces respiran"
+],
+"respuestas": [
+"Los peces respiran con branquias, que sacan el oxígeno del agua."
+]
+},
+{
+"id": "qa-qa01txt-53",
+"tipo": "hecho",
+"preguntas": [
+"que es un renacuajo",
+"que es la cria de la rana"
+],
+"respuestas": [
+"El renacuajo es la cría de la rana: nace en el agua, tiene cola y después le crecen las patas."
+]
+},
+{
+"id": "qa-qa01txt-54",
+"tipo": "hecho",
+"preguntas": [
+"de donde sale la mariposa",
+"como nace una mariposa"
+],
+"respuestas": [
+"La mariposa nace de una oruga que se encierra en una crisálida y se transforma. Eso se llama metamorfosis."
+]
+},
+{
+"id": "qa-qa01txt-55",
+"tipo": "hecho",
+"preguntas": [
+"que es la metamorfosis",
+"que significa metamorfosis"
+],
+"respuestas": [
+"Es el gran cambio de forma que hacen algunos animales al crecer, como la oruga que se convierte en mariposa."
+]
+},
+{
+"id": "qa-qa01txt-56",
+"tipo": "hecho",
+"preguntas": [
+"que es un camaleon",
+"por que cambia de color el camaleon"
+],
+"respuestas": [
+"El camaleón es un reptil que puede cambiar de color para comunicarse y controlar su temperatura."
+]
+},
+{
+"id": "qa-qa01txt-57",
+"tipo": "hecho",
+"preguntas": [
+"que es una medusa",
+"las medusas pican"
+],
+"respuestas": [
+"La medusa es un animal marino gelatinoso. Algunas pican con sus tentáculos, así que mejor no tocarlas."
+]
+},
+{
+"id": "qa-qa01txt-58",
+"tipo": "hecho",
+"preguntas": [
+"que es un tiburon",
+"los tiburones son peces"
+],
+"respuestas": [
+"Sí, el tiburón es un pez. Su esqueleto es de cartílago, no de hueso."
+]
+},
+{
+"id": "qa-qa01txt-59",
+"tipo": "hecho",
+"preguntas": [
+"que es una estrella de mar",
+"la estrella de mar es un pez"
+],
+"respuestas": [
+"La estrella de mar no es un pez: es un animal marino con forma de estrella que puede regenerar sus brazos."
+]
+},
+{
+"id": "qa-qa01txt-60",
+"tipo": "hecho",
+"preguntas": [
+"que es un murcielago",
+"el murcielago es un pajaro"
+],
+"respuestas": [
+"El murciélago no es un pájaro: es el único mamífero que puede volar."
+]
+},
+{
+"id": "qa-qa01txt-61",
+"tipo": "hecho",
+"preguntas": [
+"que es un ornitorrinco",
+"que tiene de raro el ornitorrinco"
+],
+"respuestas": [
+"El ornitorrinco es un mamífero de Australia que pone huevos y tiene pico parecido al de un pato."
+]
+},
+{
+"id": "qa-qa01txt-62",
+"tipo": "hecho",
+"preguntas": [
+"que es un hipopotamo",
+"donde vive el hipopotamo"
+],
+"respuestas": [
+"El hipopótamo es un mamífero enorme de África que pasa mucho tiempo en el agua."
+]
+},
+{
+"id": "qa-qa01txt-63",
+"tipo": "hecho",
+"preguntas": [
+"que es un rinoceronte",
+"cuantos cuernos tiene un rinoceronte"
+],
+"respuestas": [
+"El rinoceronte es un mamífero grande con uno o dos cuernos en la nariz."
+]
+},
+{
+"id": "qa-qa01txt-64",
+"tipo": "hecho",
+"preguntas": [
+"que es una cebra",
+"por que la cebra tiene rayas"
+],
+"respuestas": [
+"La cebra es un animal africano parecido al caballo, con rayas blancas y negras. Cada cebra tiene rayas distintas."
+]
+},
+{
+"id": "qa-qa01txt-65",
+"tipo": "hecho",
+"preguntas": [
+"que es un loro",
+"los loros hablan"
+],
+"respuestas": [
+"El loro es un ave de colores que puede imitar sonidos, incluso palabras."
+]
+},
+{
+"id": "qa-qa01txt-66",
+"tipo": "hecho",
+"preguntas": [
+"que es un buho",
+"el buho duerme de dia"
+],
+"respuestas": [
+"El búho es un ave que caza de noche y duerme de día. Puede girar mucho la cabeza."
+]
+},
+{
+"id": "qa-qa01txt-67",
+"tipo": "hecho",
+"preguntas": [
+"que es un animal nocturno",
+"que significa nocturno"
+],
+"respuestas": [
+"Un animal nocturno es el que está activo de noche y duerme de día, como el búho o el murciélago."
+]
+},
+{
+"id": "qa-qa01txt-68",
+"tipo": "hecho",
+"preguntas": [
+"que es la hibernacion",
+"que animales hibernan"
+],
+"respuestas": [
+"La hibernación es cuando un animal duerme durante el invierno para ahorrar energía, como algunos osos y marmotas."
+]
+},
+{
+"id": "qa-qa01txt-69",
+"tipo": "hecho",
+"preguntas": [
+"que es un animal en peligro de extincion",
+"que significa en peligro de extincion"
+],
+"respuestas": [
+"Es un animal del que quedan tan pocos que podría desaparecer, como el yaguareté."
+]
+},
+{
+"id": "qa-qa01txt-70",
+"tipo": "hecho",
+"preguntas": [
+"que es un animal domestico",
+"que animales son domesticos"
+],
+"respuestas": [
+"Un animal doméstico vive con las personas y depende de ellas, como el perro, el gato o la vaca."
+]
+},
+{
+"id": "qa-qa01txt-71",
+"tipo": "hecho",
+"preguntas": [
+"que es un animal salvaje",
+"que significa animal salvaje"
+],
+"respuestas": [
+"Un animal salvaje vive libre en la naturaleza, sin depender de las personas, como el león o el zorro."
+]
+},
+{
+"id": "qa-qa01txt-72",
+"tipo": "hecho",
+"preguntas": [
+"cuantos huesos tiene un perro",
+"el perro tiene huesos"
+],
+"respuestas": [
+"Un perro adulto tiene alrededor de 320 huesos."
+]
+},
+{
+"id": "qa-qa01txt-73",
+"tipo": "hecho",
+"preguntas": [
+"los gatos ven en la oscuridad",
+"el gato ve de noche"
+],
+"respuestas": [
+"Los gatos ven mucho mejor que nosotros con poca luz, pero en oscuridad total no ven."
+]
+},
+{
+"id": "qa-qa01txt-74",
+"tipo": "hecho",
+"preguntas": [
+"cual es el animal mas lento",
+"que animal es el mas lento"
+],
+"respuestas": [
+"El perezoso es uno de los animales más lentos: se mueve muy despacito por los árboles."
+]
+},
+{
+"id": "qa-qa01txt-75",
+"tipo": "hecho",
+"preguntas": [
+"cual es el animal mas inteligente",
+"que animales son inteligentes"
+],
+"respuestas": [
+"Hay animales muy inteligentes, como los delfines, los chimpancés, los elefantes, los cuervos y los pulpos."
+]
+},
+{
+"id": "qa-qa01txt-76",
+"tipo": "hecho",
+"preguntas": [
+"que es un chimpance",
+"el chimpance se parece a nosotros"
+],
+"respuestas": [
+"El chimpancé es un primo cercano de las personas: es muy inteligente y usa herramientas simples."
+]
+},
+{
+"id": "qa-qa01txt-77",
+"tipo": "hecho",
+"preguntas": [
+"que es un primate",
+"que son los primates"
+],
+"respuestas": [
+"Los primates son un grupo de mamíferos con manos que agarran, como los monos, los gorilas y las personas."
+]
+},
+{
+"id": "qa-qa01txt-78",
+"tipo": "hecho",
+"preguntas": [
+"que es un gorila",
+"donde vive el gorila"
+],
+"respuestas": [
+"El gorila es el primate más grande. Vive en las selvas de África y es tranquilo y vegetariano."
+]
+},
+{
+"id": "qa-qa01txt-79",
+"tipo": "hecho",
+"preguntas": [
+"que animal pone huevos",
+"que animales ponen huevos"
+],
+"respuestas": [
+"Las aves, la mayoría de los reptiles, los peces y los anfibios ponen huevos, y también algunos mamíferos como el ornitorrinco."
+]
+},
+{
+"id": "qa-qa01txt-80",
+"tipo": "hecho",
+"preguntas": [
+"que es un caracol",
+"por que el caracol tiene caparazon"
+],
+"respuestas": [
+"El caracol es un animal blando que lleva un caparazón en espiral para protegerse."
+]
+},
+{
+"id": "qa-qa01txt-81",
+"tipo": "hecho",
+"preguntas": [
+"que es una hormiga",
+"las hormigas son fuertes"
+],
+"respuestas": [
+"La hormiga es un insecto que vive en grupos enormes. Puede cargar muchas veces su propio peso."
+]
+},
+{
+"id": "qa-qa01txt-82",
+"tipo": "hecho",
+"preguntas": [
+"que es un hormiguero",
+"como es un hormiguero"
+],
+"respuestas": [
+"Es la casa de las hormigas: túneles y cuartitos bajo tierra donde viven miles de ellas."
+]
+},
+{
+"id": "qa-qa01txt-83",
+"tipo": "hecho",
+"preguntas": [
+"que es una colmena",
+"donde viven las abejas"
+],
+"respuestas": [
+"La colmena es la casa de las abejas, donde hacen la miel en celdas de cera de seis lados."
+]
+},
+{
+"id": "qa-qa01txt-84",
+"tipo": "hecho",
+"preguntas": [
+"quien es la reina de las abejas",
+"que hace la abeja reina"
+],
+"respuestas": [
+"La abeja reina es la que pone todos los huevos de la colmena."
+]
+},
+{
+"id": "qa-qa01txt-85",
+"tipo": "hecho",
+"preguntas": [
+"que es un tiburon ballena",
+"cual es el pez mas grande"
+],
+"respuestas": [
+"El tiburón ballena es el pez más grande del mundo, y come plancton."
+]
+},
+{
+"id": "qa-qa01txt-86",
+"tipo": "hecho",
+"preguntas": [
+"que es el plancton",
+"que significa plancton"
+],
+"respuestas": [
+"El plancton son seres vivos chiquititos que flotan en el agua y sirven de alimento a muchos animales del mar."
+]
+},
+{
+"id": "qa-qa01txt-87",
+"tipo": "hecho",
+"preguntas": [
+"cuanto pesa un elefante",
+"cuanto pesa el elefante"
+],
+"respuestas": [
+"Un elefante africano adulto puede pesar más de 6.000 kilos."
+]
+},
+{
+"id": "qa-qa01txt-88",
+"tipo": "hecho",
+"preguntas": [
+"para que sirve la trompa del elefante",
+"que hace el elefante con la trompa"
+],
+"respuestas": [
+"Con la trompa el elefante respira, huele, toma agua, agarra comida y hasta saluda."
+]
+},
+{
+"id": "qa-qa01txt-89",
+"tipo": "hecho",
+"preguntas": [
+"por que la jirafa tiene el cuello largo",
+"para que le sirve el cuello a la jirafa"
+],
+"respuestas": [
+"Su cuello largo le sirve para comer las hojas más altas de los árboles."
+]
+},
+{
+"id": "qa-qa01txt-90",
+"tipo": "hecho",
+"preguntas": [
+"que es un zorro",
+"donde vive el zorro"
+],
+"respuestas": [
+"El zorro es un mamífero parecido a un perro chico, de cola peluda. En Argentina hay zorros grises y colorados."
+]
+},
+{
+"id": "qa-qa01txt-91",
+"tipo": "hecho",
+"preguntas": [
+"que es una lechuza",
+"la lechuza es un buho"
+],
+"respuestas": [
+"La lechuza es un ave nocturna pariente del búho, con cara redonda y blanca."
+]
+},
+{
+"id": "qa-qa01txt-92",
+"tipo": "hecho",
+"preguntas": [
+"que es un aguila",
+"que comen las aguilas"
+],
+"respuestas": [
+"El águila es un ave grande que caza con sus garras y ve muy, muy lejos."
+]
+},
+{
+"id": "qa-qa01txt-93",
+"tipo": "hecho",
+"preguntas": [
+"que es un flamenco",
+"por que el flamenco es rosado"
+],
+"respuestas": [
+"El flamenco es un ave de patas largas. Es rosado por los colores de lo que come."
+]
+},
+{
+"id": "qa-qa01txt-94",
+"tipo": "hecho",
+"preguntas": [
+"que es una ballena franca",
+"donde se ven ballenas en argentina"
+],
+"respuestas": [
+"La ballena franca austral visita Península Valdés, en Chubut, entre junio y diciembre."
+]
+},
+{
+"id": "qa-qa01txt-95",
+"tipo": "hecho",
+"preguntas": [
+"que es un lobo marino",
+"donde hay lobos marinos"
+],
+"respuestas": [
+"El lobo marino es un mamífero que vive en el mar y descansa en las costas, por ejemplo en la Patagonia argentina."
+]
+},
+{
+"id": "qa-qa01txt-96",
+"tipo": "hecho",
+"preguntas": [
+"que es un pinguino de magallanes",
+"donde hay pinguinos en argentina"
+],
+"respuestas": [
+"Es el pingüino que llega a las costas de la Patagonia argentina, por ejemplo a Punta Tombo, en Chubut."
+]
+},
+{
+"id": "qa-qa01txt-97",
+"tipo": "hecho",
+"preguntas": [
+"que es el puma",
+"donde vive el puma"
+],
+"respuestas": [
+"El puma es un felino grande de América. En Argentina vive en montañas, bosques y estepas."
+]
+},
+{
+"id": "qa-qa01txt-98",
+"tipo": "hecho",
+"preguntas": [
+"que es el oso hormiguero",
+"que come el oso hormiguero"
+],
+"respuestas": [
+"El oso hormiguero tiene un hocico largo y una lengua finita para comer hormigas y termitas."
+]
+},
+{
+"id": "qa-qa01txt-99",
+"tipo": "hecho",
+"preguntas": [
+"que es el tatu",
+"que es un tatu"
+],
+"respuestas": [
+"El tatú, también llamado mulita o armadillo, es un mamífero con caparazón que vive en Argentina."
+]
+},
+{
+"id": "qa-qa01txt-100",
+"tipo": "hecho",
+"preguntas": [
+"que es la mulita",
+"que es un armadillo"
+],
+"respuestas": [
+"La mulita es un armadillo: un mamífero con caparazón que cava cuevas."
+]
+},
+{
+"id": "qa-qa01txt-101",
+"tipo": "hecho",
+"preguntas": [
+"que es un yacare",
+"que es el yacare"
+],
+"respuestas": [
+"El yacaré es un reptil parecido al cocodrilo que vive en ríos y esteros del norte de Argentina."
+]
+},
+{
+"id": "qa-qa01txt-102",
+"tipo": "hecho",
+"preguntas": [
+"que es un tucan",
+"como es el tucan"
+],
+"respuestas": [
+"El tucán es un ave de selva con un pico enorme y colorido. En Argentina vive en Misiones."
 ]
 }
 ]
