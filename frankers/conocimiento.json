@@ -1,6 +1,6 @@
 {
 "version": 1,
-"actualizado": "2026-11-06T23:35:48.051Z",
+"actualizado": "2026-11-06T23:36:59.450Z",
 "entradas": [
 {
 "id": "saludo",
@@ -11843,6 +11843,1084 @@
 ],
 "respuestas": [
 "\"Computadora\" es \"computer\" y \"juego\" es \"game\"."
+]
+},
+{
+"id": "qa-qa09txt-1",
+"tipo": "hecho",
+"preguntas": [
+"como hago amigos",
+"como hacer amigos nuevos"
+],
+"respuestas": [
+"Saludá, preguntá cosas, escuchá y compartí lo que te gusta. Los amigos se hacen de a poco, con paciencia."
+]
+},
+{
+"id": "qa-qa09txt-2",
+"tipo": "hecho",
+"preguntas": [
+"que hago si me peleo con un amigo",
+"como me amigo con alguien"
+],
+"respuestas": [
+"Esperá a estar tranquilo, hablá con sinceridad, escuchá su parte y, si te equivocaste, pedí perdón."
+]
+},
+{
+"id": "qa-qa09txt-3",
+"tipo": "hecho",
+"preguntas": [
+"como pedir perdon",
+"como pido disculpas"
+],
+"respuestas": [
+"Decí qué hiciste mal, que lo sentís de verdad y qué vas a hacer para que no pase de nuevo."
+]
+},
+{
+"id": "qa-qa09txt-4",
+"tipo": "hecho",
+"preguntas": [
+"que hago si me molestan en la escuela",
+"que hago si me hacen bullying en el colegio"
+],
+"respuestas": [
+"No es tu culpa. Contáselo a un adulto de confianza, como tu familia o un docente, y no te quedes callado."
+]
+},
+{
+"id": "qa-qa09txt-5",
+"tipo": "hecho",
+"preguntas": [
+"que hago si veo que molestan a alguien",
+"como ayudar si le hacen bullying a otro"
+],
+"respuestas": [
+"No te sumes, acompañá a la persona y avisale a un adulto. A veces un poco de apoyo hace muchísima diferencia."
+]
+},
+{
+"id": "qa-qa09txt-6",
+"tipo": "hecho",
+"preguntas": [
+"como estudiar mejor",
+"como estudio para una prueba"
+],
+"respuestas": [
+"Estudiá de a ratos con pausas, en un lugar tranquilo, explicale el tema a alguien y dormí bien la noche anterior."
+]
+},
+{
+"id": "qa-qa09txt-7",
+"tipo": "hecho",
+"preguntas": [
+"como concentrarme",
+"que hago si me distraigo"
+],
+"respuestas": [
+"Guardá el celular, poné un tiempo corto (por ejemplo 25 minutos), hacé una pausa y volvé a empezar."
+]
+},
+{
+"id": "qa-qa09txt-8",
+"tipo": "hecho",
+"preguntas": [
+"como organizar el tiempo",
+"como organizarme con las tareas"
+],
+"respuestas": [
+"Anotá lo que tenés que hacer, empezá por lo más importante y dividí las tareas grandes en pasos chiquitos."
+]
+},
+{
+"id": "qa-qa09txt-9",
+"tipo": "hecho",
+"preguntas": [
+"que hago si no entiendo algo en clase",
+"que hago si no entiendo la tarea"
+],
+"respuestas": [
+"Preguntá sin miedo: preguntar es la mejor forma de aprender. También podés pedir ayuda a un compañero o a tu familia."
+]
+},
+{
+"id": "qa-qa09txt-10",
+"tipo": "hecho",
+"preguntas": [
+"como aprender algo nuevo",
+"como aprendo mas rapido"
+],
+"respuestas": [
+"Practicá un poquito todos los días, equivocate sin miedo, preguntá y enseñale a otro lo que aprendiste."
+]
+},
+{
+"id": "qa-qa09txt-11",
+"tipo": "hecho",
+"preguntas": [
+"esta mal equivocarse",
+"equivocarse es malo"
+],
+"respuestas": [
+"No: equivocarse es parte de aprender. Lo importante es darse cuenta y volver a intentar."
+]
+},
+{
+"id": "qa-qa09txt-12",
+"tipo": "hecho",
+"preguntas": [
+"que hago si estoy aburrido",
+"no se que hacer"
+],
+"respuestas": [
+"Podés dibujar, leer, inventar un juego, programar algo, salir a moverte o pedirme un chiste o un dibujo."
+]
+},
+{
+"id": "qa-qa09txt-13",
+"tipo": "hecho",
+"preguntas": [
+"que puedo hacer un dia de lluvia",
+"que hago cuando llueve"
+],
+"respuestas": [
+"Armar un fuerte con almohadas, jugar juegos de mesa, dibujar, leer, cocinar algo con un adulto o programar un juego."
+]
+},
+{
+"id": "qa-qa09txt-14",
+"tipo": "hecho",
+"preguntas": [
+"que juegos se pueden jugar sin nada",
+"a que puedo jugar sin juguetes"
+],
+"respuestas": [
+"Escondidas, mancha, veo veo, el ahorcado, piedra papel o tijera, o inventar historias."
+]
+},
+{
+"id": "qa-qa09txt-15",
+"tipo": "hecho",
+"preguntas": [
+"como se juega al piedra papel o tijera",
+"reglas de piedra papel tijera"
+],
+"respuestas": [
+"Piedra le gana a tijera, tijera a papel y papel a piedra. Se elige al mismo tiempo con la mano."
+]
+},
+{
+"id": "qa-qa09txt-16",
+"tipo": "hecho",
+"preguntas": [
+"como se juega a la mancha",
+"que es la mancha"
+],
+"respuestas": [
+"En la mancha, uno persigue a los demás; al que toca, pasa a ser \"la mancha\"."
+]
+},
+{
+"id": "qa-qa09txt-17",
+"tipo": "hecho",
+"preguntas": [
+"como se juega al veo veo",
+"que es el veo veo"
+],
+"respuestas": [
+"Uno dice \"veo veo una cosita de color…\" y los demás tienen que adivinar qué es."
+]
+},
+{
+"id": "qa-qa09txt-18",
+"tipo": "hecho",
+"preguntas": [
+"como se juega al ahorcado",
+"que es el ahorcado"
+],
+"respuestas": [
+"Uno piensa una palabra y los demás adivinan letras; cada error suma una parte al dibujo. Hay que adivinar antes de completarlo."
+]
+},
+{
+"id": "qa-qa09txt-19",
+"tipo": "hecho",
+"preguntas": [
+"que son las buenas costumbres",
+"que es ser educado"
+],
+"respuestas": [
+"Es saludar, pedir por favor, dar las gracias, escuchar, esperar el turno y tratar bien a los demás."
+]
+},
+{
+"id": "qa-qa09txt-20",
+"tipo": "hecho",
+"preguntas": [
+"por que hay que decir por favor y gracias",
+"para que sirve decir gracias"
+],
+"respuestas": [
+"Porque muestran respeto y cariño, y hacen que los demás tengan más ganas de ayudarte."
+]
+},
+{
+"id": "qa-qa09txt-21",
+"tipo": "hecho",
+"preguntas": [
+"como se saluda en argentina",
+"por que en argentina se saluda con un beso"
+],
+"respuestas": [
+"En Argentina es común saludar con un beso en la mejilla, incluso entre amigos varones."
+]
+},
+{
+"id": "qa-qa09txt-22",
+"tipo": "hecho",
+"preguntas": [
+"que es la amabilidad",
+"que es ser amable"
+],
+"respuestas": [
+"Ser amable es tratar a los demás con cariño y ayudarlos aunque no te lo pidan."
+]
+},
+{
+"id": "qa-qa09txt-23",
+"tipo": "hecho",
+"preguntas": [
+"que es la honestidad",
+"que es ser honesto"
+],
+"respuestas": [
+"Ser honesto es decir la verdad y actuar de forma correcta aunque nadie te vea."
+]
+},
+{
+"id": "qa-qa09txt-24",
+"tipo": "hecho",
+"preguntas": [
+"que es la responsabilidad",
+"que es ser responsable"
+],
+"respuestas": [
+"Ser responsable es cumplir con lo que te toca y hacerte cargo de lo que hacés."
+]
+},
+{
+"id": "qa-qa09txt-25",
+"tipo": "hecho",
+"preguntas": [
+"que es la solidaridad",
+"que es ser solidario"
+],
+"respuestas": [
+"Ser solidario es ayudar a los demás, sobre todo cuando lo necesitan."
+]
+},
+{
+"id": "qa-qa09txt-26",
+"tipo": "hecho",
+"preguntas": [
+"que es la diversidad",
+"que significa diversidad"
+],
+"respuestas": [
+"Diversidad quiere decir que todas las personas somos distintas, y eso está bueno: cada uno aporta algo."
+]
+},
+{
+"id": "qa-qa09txt-27",
+"tipo": "hecho",
+"preguntas": [
+"que es la igualdad",
+"que significa igualdad"
+],
+"respuestas": [
+"Igualdad es que todas las personas tengan los mismos derechos y oportunidades."
+]
+},
+{
+"id": "qa-qa09txt-28",
+"tipo": "hecho",
+"preguntas": [
+"que es un derecho",
+"que es una obligacion"
+],
+"respuestas": [
+"Un derecho es algo que te corresponde, como estudiar o jugar; una obligación es algo que te toca hacer, como respetar a los demás."
+]
+},
+{
+"id": "qa-qa09txt-29",
+"tipo": "hecho",
+"preguntas": [
+"que es una regla",
+"para que sirven las reglas"
+],
+"respuestas": [
+"Las reglas son acuerdos para convivir y jugar de forma justa y segura."
+]
+},
+{
+"id": "qa-qa09txt-30",
+"tipo": "hecho",
+"preguntas": [
+"que es un consejo",
+"que es una opinion"
+],
+"respuestas": [
+"Un consejo es una recomendación para ayudar; una opinión es lo que alguien piensa sobre algo, y puede ser distinta a la tuya."
+]
+},
+{
+"id": "qa-qa09txt-31",
+"tipo": "hecho",
+"preguntas": [
+"que es la verdad",
+"que es una mentira"
+],
+"respuestas": [
+"La verdad es lo que realmente pasó; una mentira es decir algo que sabés que no es cierto."
+]
+},
+{
+"id": "qa-qa09txt-32",
+"tipo": "hecho",
+"preguntas": [
+"que es una promesa",
+"por que hay que cumplir las promesas"
+],
+"respuestas": [
+"Una promesa es decir que vas a hacer algo. Cumplirla hace que los demás confíen en vos."
+]
+},
+{
+"id": "qa-qa09txt-33",
+"tipo": "hecho",
+"preguntas": [
+"que es un secreto",
+"cuando hay que contar un secreto"
+],
+"respuestas": [
+"Un secreto es algo que se guarda. Pero si un secreto te hace sentir mal, te asusta o alguien te pide que no le cuentes a un adulto, contalo."
+]
+},
+{
+"id": "qa-qa09txt-34",
+"tipo": "hecho",
+"preguntas": [
+"como ayudar en casa",
+"que tareas puedo hacer en casa"
+],
+"respuestas": [
+"Podés ordenar tu cuarto, poner la mesa, cuidar las plantas, ayudar a guardar las compras o darle de comer a la mascota."
+]
+},
+{
+"id": "qa-qa09txt-35",
+"tipo": "hecho",
+"preguntas": [
+"como cuidar a una mascota",
+"que necesita un perro"
+],
+"respuestas": [
+"Necesita comida y agua limpia, paseos, juegos, cariño, un lugar para dormir y visitas al veterinario."
+]
+},
+{
+"id": "qa-qa09txt-36",
+"tipo": "hecho",
+"preguntas": [
+"que hace un veterinario",
+"que es un veterinario"
+],
+"respuestas": [
+"El veterinario es el médico de los animales."
+]
+},
+{
+"id": "qa-qa09txt-37",
+"tipo": "hecho",
+"preguntas": [
+"que es ahorrar",
+"para que sirve ahorrar"
+],
+"respuestas": [
+"Ahorrar es guardar parte de la plata para usarla más adelante en algo que te importa."
+]
+},
+{
+"id": "qa-qa09txt-38",
+"tipo": "hecho",
+"preguntas": [
+"que es una alcancia",
+"que es un chanchito para ahorrar"
+],
+"respuestas": [
+"Una alcancía es una cajita, muchas veces con forma de chanchito, para juntar monedas."
+]
+},
+{
+"id": "qa-qa09txt-39",
+"tipo": "hecho",
+"preguntas": [
+"que es un banco",
+"para que sirve un banco"
+],
+"respuestas": [
+"Un banco es un lugar donde la gente guarda su plata y hace pagos. Para temas de plata, conviene hablar con un adulto."
+]
+},
+{
+"id": "qa-qa09txt-40",
+"tipo": "hecho",
+"preguntas": [
+"que es el supermercado",
+"que es un almacen"
+],
+"respuestas": [
+"El supermercado es un negocio grande con de todo; el almacén es un negocio de barrio más chico."
+]
+},
+{
+"id": "qa-qa09txt-41",
+"tipo": "hecho",
+"preguntas": [
+"que es una feria",
+"que es una verduleria"
+],
+"respuestas": [
+"Una feria es un mercado al aire libre; la verdulería vende frutas y verduras."
+]
+},
+{
+"id": "qa-qa09txt-42",
+"tipo": "hecho",
+"preguntas": [
+"como cruzar la calle",
+"como cruzar la calle seguro"
+],
+"respuestas": [
+"Cruzá por la esquina o la senda peatonal, mirá a los dos lados, esperá el semáforo y, si sos chico, de la mano de un adulto."
+]
+},
+{
+"id": "qa-qa09txt-43",
+"tipo": "hecho",
+"preguntas": [
+"que significan los colores del semaforo",
+"que es un semaforo"
+],
+"respuestas": [
+"Rojo: pará. Amarillo: atención. Verde: podés avanzar, mirando igual."
+]
+},
+{
+"id": "qa-qa09txt-44",
+"tipo": "hecho",
+"preguntas": [
+"por que hay que usar casco en la bici",
+"para que sirve el casco"
+],
+"respuestas": [
+"El casco protege la cabeza si te caés. Siempre usalo en bici, skate o monopatín."
+]
+},
+{
+"id": "qa-qa09txt-45",
+"tipo": "hecho",
+"preguntas": [
+"por que hay que usar cinturon de seguridad",
+"para que sirve el cinturon"
+],
+"respuestas": [
+"El cinturón te sostiene en el asiento si el auto frena de golpe. Los chicos van atrás."
+]
+},
+{
+"id": "qa-qa09txt-46",
+"tipo": "hecho",
+"preguntas": [
+"que hago si hay un incendio",
+"que hacer en caso de fuego"
+],
+"respuestas": [
+"Salí rápido sin llevar cosas, agachate si hay humo, no uses ascensor y llamá al 100 o al 911."
+]
+},
+{
+"id": "qa-qa09txt-47",
+"tipo": "hecho",
+"preguntas": [
+"que es un simulacro",
+"para que sirven los simulacros"
+],
+"respuestas": [
+"Un simulacro es una práctica de qué hacer en una emergencia, como un incendio, para saber actuar si pasa de verdad."
+]
+},
+{
+"id": "qa-qa09txt-48",
+"tipo": "hecho",
+"preguntas": [
+"que hago si me siento mal en la escuela",
+"que hago si me duele algo"
+],
+"respuestas": [
+"Avisale a tu maestra o a un adulto enseguida para que te ayude."
+]
+},
+{
+"id": "qa-qa09txt-49",
+"tipo": "hecho",
+"preguntas": [
+"cuantos anos se va a la escuela",
+"cuantos anos dura la primaria"
+],
+"respuestas": [
+"En Argentina, en general, la primaria dura 6 o 7 años y la secundaria 5 o 6, según la provincia."
+]
+},
+{
+"id": "qa-qa09txt-50",
+"tipo": "hecho",
+"preguntas": [
+"que es el jardin de infantes",
+"que es el preescolar"
+],
+"respuestas": [
+"El jardín es la primera etapa de la escuela, para los más chiquitos, donde se aprende jugando."
+]
+},
+{
+"id": "qa-qa09txt-51",
+"tipo": "hecho",
+"preguntas": [
+"que es la universidad",
+"que se estudia en la universidad"
+],
+"respuestas": [
+"La universidad es donde se estudia después de la secundaria para tener una profesión, como médico, ingeniero o programador."
+]
+},
+{
+"id": "qa-qa09txt-52",
+"tipo": "hecho",
+"preguntas": [
+"que es la uba",
+"que es la universidad publica"
+],
+"respuestas": [
+"La UBA es la Universidad de Buenos Aires. En Argentina hay universidades públicas y gratuitas."
+]
+},
+{
+"id": "qa-qa09txt-53",
+"tipo": "hecho",
+"preguntas": [
+"que queres ser cuando seas grande",
+"que puedo estudiar"
+],
+"respuestas": [
+"¡Hay muchísimas opciones! Programador, científico, artista, médico, docente… Lo mejor es probar cosas y ver qué te apasiona."
+]
+},
+{
+"id": "qa-qa09txt-54",
+"tipo": "hecho",
+"preguntas": [
+"que es un oficio",
+"que es una profesion"
+],
+"respuestas": [
+"Un oficio es un trabajo que se aprende practicando, como carpintero o electricista; una profesión suele estudiarse en la universidad."
+]
+},
+{
+"id": "qa-qa09txt-55",
+"tipo": "hecho",
+"preguntas": [
+"que hace un ingeniero",
+"que es un ingeniero"
+],
+"respuestas": [
+"Un ingeniero diseña y construye cosas: puentes, máquinas, programas, edificios."
+]
+},
+{
+"id": "qa-qa09txt-56",
+"tipo": "hecho",
+"preguntas": [
+"que hace un arquitecto",
+"que es un arquitecto"
+],
+"respuestas": [
+"Un arquitecto diseña casas, edificios y espacios."
+]
+},
+{
+"id": "qa-qa09txt-57",
+"tipo": "hecho",
+"preguntas": [
+"que hace un cientifico",
+"que es un cientifico"
+],
+"respuestas": [
+"Un científico investiga para descubrir cómo funciona el mundo, haciendo preguntas y experimentos."
+]
+},
+{
+"id": "qa-qa09txt-58",
+"tipo": "hecho",
+"preguntas": [
+"que hace un astronomo",
+"que hace un biologo"
+],
+"respuestas": [
+"El astrónomo estudia el espacio; el biólogo estudia los seres vivos."
+]
+},
+{
+"id": "qa-qa09txt-59",
+"tipo": "hecho",
+"preguntas": [
+"que hace un disenador de videojuegos",
+"como trabajar haciendo videojuegos"
+],
+"respuestas": [
+"Diseña cómo es un juego: sus reglas, niveles y personajes. Para trabajar en eso sirve programar, dibujar y jugar mucho."
+]
+},
+{
+"id": "qa-qa09txt-60",
+"tipo": "hecho",
+"preguntas": [
+"que es un youtuber",
+"que es un streamer"
+],
+"respuestas": [
+"Un youtuber hace videos para YouTube; un streamer transmite en vivo, por ejemplo mientras juega."
+]
+},
+{
+"id": "qa-qa09txt-61",
+"tipo": "hecho",
+"preguntas": [
+"cual es la edad para tener redes sociales",
+"a que edad se puede tener instagram"
+],
+"respuestas": [
+"La mayoría de las redes pide tener al menos 13 años. Siempre conviene hablarlo con tu familia."
+]
+},
+{
+"id": "qa-qa09txt-62",
+"tipo": "hecho",
+"preguntas": [
+"por que el cielo es oscuro de noche",
+"por que de noche esta oscuro"
+],
+"respuestas": [
+"Porque de noche nuestro lado de la Tierra no mira al Sol."
+]
+},
+{
+"id": "qa-qa09txt-63",
+"tipo": "hecho",
+"preguntas": [
+"por que bostezar es contagioso",
+"por que si alguien bosteza yo tambien"
+],
+"respuestas": [
+"Nadie lo sabe del todo; puede tener que ver con la empatía y con imitar a los demás sin darnos cuenta."
+]
+},
+{
+"id": "qa-qa09txt-64",
+"tipo": "hecho",
+"preguntas": [
+"por que el mar es azul",
+"de que color es el agua"
+],
+"respuestas": [
+"El agua absorbe más los colores rojos y deja pasar el azul; además refleja el cielo."
+]
+},
+{
+"id": "qa-qa09txt-65",
+"tipo": "hecho",
+"preguntas": [
+"por que los barcos no se hunden",
+"que es la flotacion"
+],
+"respuestas": [
+"Porque desplazan mucha agua y el agua los empuja hacia arriba. Es el principio de Arquímedes."
+]
+},
+{
+"id": "qa-qa09txt-66",
+"tipo": "hecho",
+"preguntas": [
+"que pesa mas un kilo de plumas o un kilo de hierro",
+"que pesa mas un kilo de algodon o de hierro"
+],
+"respuestas": [
+"¡Pesan lo mismo! Los dos pesan un kilo, aunque las plumas ocupan mucho más lugar."
+]
+},
+{
+"id": "qa-qa09txt-67",
+"tipo": "hecho",
+"preguntas": [
+"que fue primero el huevo o la gallina",
+"el huevo o la gallina"
+],
+"respuestas": [
+"Según la ciencia, el huevo: los dinosaurios ya ponían huevos mucho antes de que existieran las gallinas."
+]
+},
+{
+"id": "qa-qa09txt-68",
+"tipo": "hecho",
+"preguntas": [
+"cuanto mide la persona mas alta",
+"quien fue la persona mas alta"
+],
+"respuestas": [
+"Robert Wadlow fue la persona más alta registrada: medía 2,72 metros."
+]
+},
+{
+"id": "qa-qa09txt-69",
+"tipo": "hecho",
+"preguntas": [
+"cuanto puede vivir una persona",
+"cual es la persona que mas vivio"
+],
+"respuestas": [
+"La persona más longeva registrada fue Jeanne Calment, de Francia, que vivió 122 años."
+]
+},
+{
+"id": "qa-qa09txt-70",
+"tipo": "hecho",
+"preguntas": [
+"cual es el animal que mas duerme",
+"que animal duerme mas"
+],
+"respuestas": [
+"El koala puede dormir hasta 18 a 22 horas por día."
+]
+},
+{
+"id": "qa-qa09txt-71",
+"tipo": "hecho",
+"preguntas": [
+"las jirafas duermen paradas",
+"cuanto duerme una jirafa"
+],
+"respuestas": [
+"Las jirafas duermen muy poco, a veces solo unas pocas horas por día, y a menudo de pie."
+]
+},
+{
+"id": "qa-qa09txt-72",
+"tipo": "hecho",
+"preguntas": [
+"los peces duermen",
+"duermen los peces"
+],
+"respuestas": [
+"Sí, los peces descansan, aunque muchos no tienen párpados y duermen con los ojos abiertos."
+]
+},
+{
+"id": "qa-qa09txt-73",
+"tipo": "hecho",
+"preguntas": [
+"por que los flamencos se paran en una pata",
+"por que el flamenco esta en una pata"
+],
+"respuestas": [
+"Parece que así ahorran energía y mantienen el calor del cuerpo."
+]
+},
+{
+"id": "qa-qa09txt-74",
+"tipo": "hecho",
+"preguntas": [
+"las vacas tienen cuatro estomagos",
+"cuantos estomagos tiene una vaca"
+],
+"respuestas": [
+"La vaca tiene un estómago con cuatro partes, para digerir bien el pasto."
+]
+},
+{
+"id": "qa-qa09txt-75",
+"tipo": "hecho",
+"preguntas": [
+"el pulpo tiene tinta",
+"por que el pulpo larga tinta"
+],
+"respuestas": [
+"El pulpo larga una nube de tinta para esconderse y escapar de sus enemigos."
+]
+},
+{
+"id": "qa-qa09txt-76",
+"tipo": "hecho",
+"preguntas": [
+"las hormigas duermen",
+"cuanto duermen las hormigas"
+],
+"respuestas": [
+"Las hormigas descansan con muchas siestas cortitas durante el día."
+]
+},
+{
+"id": "qa-qa09txt-77",
+"tipo": "hecho",
+"preguntas": [
+"la luna se aleja de la tierra",
+"se esta yendo la luna"
+],
+"respuestas": [
+"Sí, la Luna se aleja unos 4 centímetros por año. Muy, muy despacito."
+]
+},
+{
+"id": "qa-qa09txt-78",
+"tipo": "hecho",
+"preguntas": [
+"hay agua en marte",
+"hay vida en marte"
+],
+"respuestas": [
+"En Marte hay hielo de agua. Todavía no se encontró vida, pero los científicos la siguen buscando."
+]
+},
+{
+"id": "qa-qa09txt-79",
+"tipo": "hecho",
+"preguntas": [
+"cuanto tarda en llegar a marte",
+"se puede viajar a marte"
+],
+"respuestas": [
+"Con la tecnología actual, ir a Marte tardaría entre 6 y 9 meses. Por ahora solo fueron robots."
+]
+},
+{
+"id": "qa-qa09txt-80",
+"tipo": "hecho",
+"preguntas": [
+"que es un robot en marte",
+"que es el perseverance"
+],
+"respuestas": [
+"Perseverance es un robot con ruedas de la NASA que explora Marte desde 2021."
+]
+},
+{
+"id": "qa-qa09txt-81",
+"tipo": "hecho",
+"preguntas": [
+"que es la nasa",
+"que hace la nasa"
+],
+"respuestas": [
+"La NASA es la agencia espacial de Estados Unidos. Argentina tiene la suya: la CONAE."
+]
+},
+{
+"id": "qa-qa09txt-82",
+"tipo": "hecho",
+"preguntas": [
+"argentina tiene satelites",
+"que satelites tiene argentina"
+],
+"respuestas": [
+"Sí, Argentina fabricó satélites propios, como los ARSAT de comunicaciones y los SAOCOM de observación."
+]
+},
+{
+"id": "qa-qa09txt-83",
+"tipo": "hecho",
+"preguntas": [
+"cuantos idiomas hay en el mundo",
+"cuantas lenguas existen"
+],
+"respuestas": [
+"Se calcula que en el mundo se hablan unos 7.000 idiomas."
+]
+},
+{
+"id": "qa-qa09txt-84",
+"tipo": "hecho",
+"preguntas": [
+"cual es la palabra mas larga del espanol",
+"que palabra es la mas larga"
+],
+"respuestas": [
+"Una de las más largas es \"electroencefalografista\", con 23 letras."
+]
+},
+{
+"id": "qa-qa09txt-85",
+"tipo": "hecho",
+"preguntas": [
+"que es un palindromo",
+"decime un palindromo"
+],
+"respuestas": [
+"Un palíndromo se lee igual al derecho y al revés, como \"reconocer\" o \"anita lava la tina\"."
+]
+},
+{
+"id": "qa-qa09txt-86",
+"tipo": "hecho",
+"preguntas": [
+"que es un anagrama",
+"decime un anagrama"
+],
+"respuestas": [
+"Un anagrama se forma cambiando el orden de las letras de otra palabra, como \"amor\" y \"Roma\"."
+]
+},
+{
+"id": "qa-qa09txt-87",
+"tipo": "hecho",
+"preguntas": [
+"que es un emoji",
+"para que sirven los emojis"
+],
+"respuestas": [
+"Los emojis son dibujitos para expresar emociones o ideas en los mensajes, como 😊."
+]
+},
+{
+"id": "qa-qa09txt-88",
+"tipo": "hecho",
+"preguntas": [
+"que es un meme",
+"que significa meme"
+],
+"respuestas": [
+"Un meme es una imagen, video o frase graciosa que se comparte mucho por internet."
+]
+},
+{
+"id": "qa-qa09txt-89",
+"tipo": "hecho",
+"preguntas": [
+"cuantas personas hay en el mundo",
+"cuanta gente vive en el planeta"
+],
+"respuestas": [
+"En el mundo viven más de 8.000 millones de personas."
+]
+},
+{
+"id": "qa-qa09txt-90",
+"tipo": "hecho",
+"preguntas": [
+"cual es la ciudad mas grande del mundo",
+"que ciudad tiene mas habitantes"
+],
+"respuestas": [
+"Tokio, en Japón, es una de las ciudades con más habitantes del mundo, contando su zona metropolitana."
+]
+},
+{
+"id": "qa-qa09txt-91",
+"tipo": "hecho",
+"preguntas": [
+"por que hay zonas horarias",
+"por que en japon es de noche cuando aca es de dia"
+],
+"respuestas": [
+"Porque la Tierra gira y el Sol ilumina solo una mitad a la vez."
+]
+},
+{
+"id": "qa-qa09txt-92",
+"tipo": "hecho",
+"preguntas": [
+"que es un record mundial",
+"que es el libro guinness"
+],
+"respuestas": [
+"Un récord mundial es la mejor marca de todas. El libro Guinness junta récords curiosos de todo el mundo."
+]
+},
+{
+"id": "qa-qa09txt-93",
+"tipo": "hecho",
+"preguntas": [
+"que es la suerte",
+"existe la suerte"
+],
+"respuestas": [
+"La suerte es lo que pasa por casualidad. A veces ayuda, ¡pero practicar y esforzarse ayuda mucho más!"
+]
+},
+{
+"id": "qa-qa09txt-94",
+"tipo": "hecho",
+"preguntas": [
+"que es la paciencia",
+"como tener paciencia"
+],
+"respuestas": [
+"La paciencia es saber esperar sin enojarse. Respirar hondo y pensar en otra cosa ayuda."
+]
+},
+{
+"id": "qa-qa09txt-95",
+"tipo": "hecho",
+"preguntas": [
+"que es la creatividad",
+"como ser mas creativo"
+],
+"respuestas": [
+"La creatividad es inventar ideas nuevas. Se entrena dibujando, imaginando, jugando y preguntándose \"¿y si…?\"."
+]
+},
+{
+"id": "qa-qa09txt-96",
+"tipo": "hecho",
+"preguntas": [
+"que es la curiosidad",
+"por que es buena la curiosidad"
+],
+"respuestas": [
+"La curiosidad son las ganas de saber y descubrir cosas. ¡Es el motor para aprender!"
+]
+},
+{
+"id": "qa-qa09txt-97",
+"tipo": "hecho",
+"preguntas": [
+"que es la gratitud",
+"por que es bueno agradecer"
+],
+"respuestas": [
+"La gratitud es darse cuenta de lo bueno que tenemos y agradecerlo. Hace bien a uno y a los demás."
+]
+},
+{
+"id": "qa-qa09txt-98",
+"tipo": "hecho",
+"preguntas": [
+"que es el perdon",
+"por que perdonar"
+],
+"respuestas": [
+"Perdonar es dejar de estar enojado con alguien que te lastimó. No significa olvidar, pero ayuda a estar en paz."
 ]
 }
 ]
