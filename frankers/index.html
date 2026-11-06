@@ -180,7 +180,7 @@
   <dialog id="dlgEnsenar">
     <div id="formEnsenar">
       <h2>🎓 Enseñarle a Frankers</h2>
-      <p>Escribí cómo le pueden preguntar algo y qué tiene que contestar. Lo que le enseñes lo aprende para todos los que lo usen.</p>
+      <p>Escribí cómo le pueden preguntar algo y qué tiene que contestar. Si pasa mis reglas, lo aprendo para todos los que me usen. 🌎</p>
       <label for="ensPreguntas">Cuando alguien escriba… <small>(una forma por línea)</small></label>
       <textarea id="ensPreguntas" rows="3" required placeholder="cuál es tu comida favorita&#10;qué te gusta comer"></textarea>
       <label for="ensRespuestas">Frankers responde… <small>(si ponés varias líneas, elige una al azar)</small></label>
@@ -214,6 +214,7 @@
     <h3>🛡️ Mis reglas (nadie las puede cambiar)</h3>
     <ul class="reglas" id="listaReglas"></ul>
     <h3>🧠 Lo que me enseñaron</h3>
+    <input id="saberBuscar" placeholder="Buscar en lo que sé…" style="margin-bottom:10px">
     <ul class="lista-saber" id="listaSaber"></ul>
     <div class="estado" id="saberEstado"></div>
     <div class="fila-botones"><button class="boton" id="saberCerrar">Cerrar</button></div>
@@ -233,6 +234,8 @@
       </ol>
       <label for="creadorToken">Token <small>(queda guardado solo en esta compu, nunca lo compartas)</small></label>
       <input id="creadorToken" type="password" placeholder="github_pat_…" autocomplete="off">
+      <label for="creadorClave">Clave del servidor <small>(opcional: para borrar lo que enseña la gente)</small></label>
+      <input id="creadorClave" type="password" autocomplete="off">
     </div>
     <div id="creadorPrendido" hidden>
       <p>✅ El modo creador está activado en esta compu. Lo que le enseñes a Frankers se publica para todos.</p>
@@ -259,6 +262,9 @@
    ========================================================= */
 
 const REPO = "franco-magia/franco-magia.github.io";
+// SERVIDOR: dirección del servidor de Frankers en Cloudflare (ver servidor-frankers/LEEME.md).
+// Mientras esté vacío, lo que enseña cada persona queda solo en su dispositivo.
+const SERVIDOR = "";
 const RUTA = "frankers/conocimiento.json";
 const $ = (s) => document.querySelector(s);
 
@@ -272,6 +278,8 @@ let memoria = { nombre: null, datos: {}, gustos: [], hechos: [], aprendido: {}, 
 let historial = guardado.leer("frankers-historial", []);
 let token = guardado.leer("frankers-token", null);
 let conocimiento = { version: 1, actualizado: "", entradas: [] };
+let comunidad = []; // lo que enseñó cualquier persona (viene del servidor)
+let ensenadoAca = guardado.leer("frankers-ensenado", []); // lo enseñado en este dispositivo
 const guardarMemoria = () => guardado.escribir("frankers-memoria", memoria);
 const guardarHistorial = () => { historial = historial.slice(-80); guardado.escribir("frankers-historial", historial); };
 
@@ -304,7 +312,7 @@ const largo = (v) => Math.sqrt([...v.values()].reduce((s, x) => s + x * x, 0));
 function construirIndice() {
   frecuencia = new Map();
   const frases = [];
-  for (const e of conocimiento.entradas) {
+  for (const e of [...conocimiento.entradas, ...comunidad, ...ensenadoAca]) {
     // Regla: nunca repetir algo prohibido, aunque haya llegado a guardarse
     if (revisar([...e.preguntas, ...e.respuestas, e.autor || ""].join(" ")).problema) continue;
     for (const q of e.preguntas) {
@@ -645,7 +653,7 @@ function responder(original) {
   if (/\b(eso (esta|es) mal|esta mal|te equivocaste|te confundiste|incorrecto|eso es falso|eso no es (asi|cierto|verdad)|no es asi)\b/.test(t)) {
     if (!ultimaRespuesta) return { texto: "¿Qué cosa dije mal? Contame y lo reviso." };
     if (token) return { texto: `${alAzar(["¡Tenés razón, me equivoqué! Gracias por corregirme.", "Uy, perdón. Ya lo arreglo.", "Gracias, así voy aprendiendo."])} ¿Cuál es la respuesta correcta para "${ultimaRespuesta.pregunta}"?`, ensenar: { pregunta: ultimaRespuesta.pregunta, reemplazar: ultimaRespuesta.entradaId } };
-    return { texto: alAzar(["¡Gracias por avisarme! Así voy aprendiendo.", "Uy, perdón. Puede ser que me haya equivocado: todavía estoy aprendiendo."]) + " Franco revisa todo lo que sé para corregirlo." };
+    return { texto: alAzar(["¡Gracias por avisarme! ¿Cuál es la respuesta correcta?", "Uy, perdón. Puede ser que me haya equivocado. ¿Me enseñás cuál es la correcta?"]), ensenar: { pregunta: ultimaRespuesta.pregunta } };
   }
 
   const verAnalisis = original.match(/^\s*analiz[aá](?:me)?(?:\s+(?:la|esta))?(?:\s+(?:oraci[oó]n|frase))?\s*:?\s+(.+)$/i);
@@ -699,13 +707,7 @@ function responder(original) {
 
 function noSabe(pregunta) {
   ultimaRespuesta = null;
-  if (token) return { texto: alAzar(["Todavía no lo sé. ¿Me lo enseñás?", "Uy, eso no lo aprendí aún. ¿Me lo enseñás?", "No tengo idea, pero me encantaría saberlo. 🤔", "Esa me la ganaste. ¿Cuál es la respuesta?"]), ensenar: { pregunta } };
-  return { texto: alAzar([
-    "Todavía no lo sé. 🤔 Prefiero decírtelo antes que inventar.",
-    "Uy, eso no lo aprendí aún. Franco me enseña cosas nuevas seguido.",
-    "No tengo idea, pero me encantaría saberlo. Todavía estoy aprendiendo. 👶",
-    "Esa me la ganaste: todavía no lo sé. Probá preguntarme otra cosa o pedime un dibujo.",
-  ]) };
+  return { texto: alAzar(["Todavía no lo sé. ¿Me lo enseñás?", "Uy, eso no lo aprendí aún. ¿Me lo enseñás?", "No tengo idea, pero me encantaría saberlo. 🤔", "Esa me la ganaste. ¿Cuál es la respuesta?"]), ensenar: { pregunta } };
 }
 // Busca en lo aprendido. Devuelve el texto de la respuesta o null.
 function conocimientoPara(texto, umbral) {
@@ -812,7 +814,7 @@ function responderPedazo(a, nombreNuevo, extras) {
       if (sabido) return sabido;
       const local = memoria.aprendido[clave];
       if (local) return rellenar(alAzar(RESP.seQueEs), { cosa: local.cosa || cosa, valor: local.valor || local });
-      if (token && !extras.ensenar) extras.ensenar = { pregunta: a.texto };
+      if (!extras.ensenar) extras.ensenar = { pregunta: a.texto };
       return rellenar(alAzar(RESP.noSeQueEs), { cosa });
     }
     // Enseñar algo: "el sol es una estrella"
@@ -846,7 +848,7 @@ function responderPorPartes(original) {
   if (nombreNuevo && !partes.some(r => r.includes(memoria.nombre))) partes.unshift(rellenar(alAzar(RESP.nombre)));
   if (!partes.length) return noSabe(original);
   for (const t of raras) partes.push(rellenar(alAzar(RESP.parteRara), { frase: t }));
-  if (raras.length && token && !extras.ensenar) extras.ensenar = { pregunta: raras[0] };
+  if (raras.length && !extras.ensenar) extras.ensenar = { pregunta: raras[0] };
   return { texto: arreglarMayusculas([...new Set(partes)].join(" ")), ...extras };
 }
 
@@ -1141,6 +1143,44 @@ function agregarEntrada(preguntas, respuestas, extra = {}, reemplazar = null) {
 }
 const borrarEntrada = (id) => (kb) => { kb.entradas = kb.entradas.filter(e => e.id !== id); };
 
+/* ---------- 5b. ENSEÑAR PARA TODOS (comunidad) ----------
+   Cualquier persona puede enseñarle. Lo que pasa las reglas se guarda en el
+   servidor de Frankers y le llega a todos, desde cualquier celu o compu. */
+let claveServidor = guardado.leer("frankers-clave", null);
+async function cargarComunidad() {
+  if (!SERVIDOR) return;
+  try {
+    const r = await fetch(SERVIDOR + "/aprendido", { cache: "no-store" });
+    if (r.ok) { const lista = await r.json(); if (Array.isArray(lista)) { comunidad = lista; construirIndice(); } }
+  } catch {}
+}
+async function ensenarComunidad(entrada) {
+  const nueva = { id: "c" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6), ...entrada, fecha: new Date().toISOString() };
+  if (!SERVIDOR) { // todavía no hay servidor: queda en este dispositivo
+    ensenadoAca = ensenadoAca.filter(e => !e.preguntas.some(q => nueva.preguntas.some(n => normalizar(n) === normalizar(q))));
+    ensenadoAca.push(nueva); ensenadoAca = ensenadoAca.slice(-300); guardado.escribir("frankers-ensenado", ensenadoAca); construirIndice();
+    return { ok: true, soloAca: true };
+  }
+  try {
+    const r = await fetch(SERVIDOR + "/ensenar", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(nueva) });
+    const j = await r.json().catch(() => ({}));
+    if (!r.ok || !j.ok) return { ok: false, motivo: j.motivo || "No pude guardarlo. Probá de nuevo en un rato." };
+    comunidad = comunidad.filter(e => e.id !== j.entrada.id && !e.preguntas.some(q => j.entrada.preguntas.some(n => normalizar(n) === normalizar(q))));
+    comunidad.push(j.entrada); construirIndice();
+    return { ok: true };
+  } catch { return { ok: false, motivo: "No me pude conectar con el servidor. Probá de nuevo en un rato." }; }
+}
+async function olvidarComunidad(e) {
+  if (e.origen === "aca") {
+    ensenadoAca = ensenadoAca.filter(x => x.id !== e.id); guardado.escribir("frankers-ensenado", ensenadoAca); construirIndice(); return { ok: true };
+  }
+  try {
+    const r = await fetch(SERVIDOR + "/olvidar", { method: "POST", headers: { "Content-Type": "application/json", "X-Clave": claveServidor || "" }, body: JSON.stringify({ id: e.id }) });
+    if (!r.ok) return { ok: false, motivo: "El servidor no aceptó la clave." };
+    comunidad = comunidad.filter(x => x.id !== e.id); construirIndice(); return { ok: true };
+  } catch { return { ok: false, motivo: "No me pude conectar con el servidor." }; }
+}
+
 /* ---------- 6. PANTALLA ---------- */
 const chat = $("#chat"), cara = $("#cara");
 function escaparHTML(s) { return s.replace(/[&<>"']/g, ch => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[ch])); }
@@ -1160,7 +1200,7 @@ function mostrar(m) {
     otra.onclick = () => { ultimoDibujo = m.dibujo.prompt; enviar("otra"); };
     extra.append(bajar, otra); div.appendChild(extra);
   }
-  if (m.ensenar && token) {
+  if (m.ensenar) {
     const extra = document.createElement("div"); extra.className = "extra";
     const b = document.createElement("button"); b.className = "boton principal"; b.textContent = m.ensenar.reemplazar ? "✏️ Corregirme" : "🎓 Enseñarme";
     b.onclick = () => typeof m.ensenar === "string" ? abrirEnsenar(m.ensenar) : abrirEnsenar(m.ensenar.pregunta, m.ensenar.reemplazar, m.ensenar.respuesta || "");
@@ -1283,7 +1323,8 @@ $("#ensGuardar").addEventListener("click", async () => {
 
   boton.disabled = true; estado.className = "estado"; estado.textContent = "Aprendiendo… 🧠";
   const reemplazo = ensReemplazar || ensConflicto;
-  const r = await publicar(agregarEntrada(preguntas, respuestas, { tipo, autor, fuente }, reemplazo));
+  const r = token ? await publicar(agregarEntrada(preguntas, respuestas, { tipo, autor, fuente }, reemplazo))
+    : await ensenarComunidad({ preguntas, respuestas, tipo, autor: tipo === "opinion" ? (autor || "alguien") : undefined, fuente });
   boton.disabled = false;
   if (r.ok) {
     dlgEnsenar.close();
@@ -1292,7 +1333,7 @@ $("#ensGuardar").addEventListener("click", async () => {
     const texto = reemplazo
       ? alAzar([`¡Tenés razón, me equivoqué! Gracias por corregirme. Ahora ${resumen}.`, `Uy, perdón. Ya lo arreglé: ${resumen}.`, `¡Bien ahí! Ahora lo sé mejor: ${resumen}.`, `Gracias, así voy aprendiendo. Desde ahora ${resumen}.`])
       : alAzar([`¡Gracias! Lo anoto: ${resumen}. 🎓`, `¡No lo sabía! Entonces ${resumen}, ¿es así?`, `¡Qué interesante! Ya lo aprendí: ${resumen}.`, `¡Buenísimo, uno más para mi memoria! Ahora ${resumen}. 🧠`]);
-    agregar({ de: "frankers", texto });
+    agregar({ de: "frankers", texto: texto + (r.soloAca ? " (Por ahora lo aprendí solo en este dispositivo.)" : " Ya lo sabe todo el mundo. 🌎") });
     ultimaRespuesta = null;
   } else mal(r.motivo);
 });
@@ -1301,18 +1342,25 @@ $("#ensGuardar").addEventListener("click", async () => {
 const dlgSaber = $("#dlgSaber");
 function dibujarListaSaber() {
   const lista = $("#listaSaber"); lista.innerHTML = "";
-  $("#saberResumen").textContent = `Aprendí ${conocimiento.entradas.length} cosas, y además sé recordar tu nombre y datos, hacer cuentas, decir la hora y dibujar ${Object.values(OBJETOS).map(o => o.nombre).join(", ")}.`;
+  const todas = [...conocimiento.entradas.map(e => ({ ...e, origen: "franco" })), ...comunidad.map(e => ({ ...e, origen: "comunidad" })), ...ensenadoAca.map(e => ({ ...e, origen: "aca" }))];
+  const filtro = normalizar($("#saberBuscar").value || "");
+  $("#saberResumen").textContent = `Aprendí ${todas.length} cosas (${comunidad.length} me las enseñó la gente), y además sé recordar tu nombre y datos, hacer cuentas, decir la hora y dibujar ${Object.values(OBJETOS).map(o => o.nombre).join(", ")}.`;
   $("#listaReglas").innerHTML = REGLAS.map(r => `<li>${escaparHTML(r)}</li>`).join("");
   const nombresTipo = { hecho: "Hecho", gusto: "Gusto mío", opinion: "Opinión" };
-  for (const e of [...conocimiento.entradas].reverse()) {
+  let mostradas = 0;
+  for (const e of todas.reverse()) {
+    if (filtro && !normalizar(e.preguntas.join(" ") + " " + e.respuestas.join(" ")).includes(filtro)) continue;
+    if (++mostradas > 150) break;
     const li = document.createElement("li"), tipo = e.tipo || "hecho";
     const etiqueta = `<span class="etiqueta-tipo ${tipo}">${nombresTipo[tipo] || "Hecho"}${tipo === "opinion" ? " de " + escaparHTML(e.autor || "alguien") : ""}</span>`;
-    li.innerHTML = `<div class="texto"><b>${etiqueta}${escaparHTML(e.preguntas.join(" · "))}</b><span>→ ${escaparHTML(e.respuestas.join(" / "))}</span>${e.fuente ? `<br><span>📎 ${escaparHTML(e.fuente)}</span>` : ""}</div>`;
-    if (token) {
+    const quien = e.origen === "comunidad" ? `<span class="etiqueta-tipo">🌎 Comunidad</span>` : e.origen === "aca" ? `<span class="etiqueta-tipo">📱 Este dispositivo</span>` : "";
+    li.innerHTML = `<div class="texto"><b>${quien}${etiqueta}${escaparHTML(e.preguntas.join(" · "))}</b><span>→ ${escaparHTML(e.respuestas.join(" / "))}</span>${e.fuente ? `<br><span>📎 ${escaparHTML(e.fuente)}</span>` : ""}</div>`;
+    const puedeBorrar = e.origen === "aca" || (e.origen === "franco" && token) || (e.origen === "comunidad" && claveServidor);
+    if (puedeBorrar) {
       const b = document.createElement("button"); b.className = "boton"; b.textContent = "Olvidar";
       b.onclick = async () => {
         b.disabled = true; $("#saberEstado").className = "estado"; $("#saberEstado").textContent = "Olvidando…";
-        const r = await publicar(borrarEntrada(e.id));
+        const r = e.origen === "franco" ? await publicar(borrarEntrada(e.id)) : await olvidarComunidad(e);
         $("#saberEstado").className = "estado " + (r.ok ? "ok" : "mal"); $("#saberEstado").textContent = r.ok ? "Listo, ya no lo sé." : r.motivo;
         dibujarListaSaber();
       };
@@ -1321,20 +1369,21 @@ function dibujarListaSaber() {
     lista.appendChild(li);
   }
 }
-$("#btnSaber").onclick = () => { $("#saberEstado").textContent = ""; dibujarListaSaber(); dlgSaber.showModal(); };
+$("#btnSaber").onclick = () => { $("#saberEstado").textContent = ""; $("#saberBuscar").value = ""; dibujarListaSaber(); dlgSaber.showModal(); };
+$("#saberBuscar").oninput = () => dibujarListaSaber();
 $("#saberCerrar").onclick = () => dlgSaber.close();
 
 // Modo creador
 const dlgCreador = $("#dlgCreador");
 function actualizarModo() {
-  $("#btnEnsenar").hidden = !token;
+  $("#btnEnsenar").hidden = false;
   $("#creadorApagado").hidden = !!token; $("#creadorPrendido").hidden = !token;
   $("#creadorActivar").hidden = !!token; $("#creadorSalir").hidden = !token;
   $("#subtitulo").textContent = token ? "Modo creador 🔑 · podés enseñarle" : "IA hecha desde cero por Franco";
 }
 $("#btnCreador").onclick = () => { $("#creadorEstado").textContent = ""; $("#creadorToken").value = ""; dlgCreador.showModal(); };
 $("#creadorCerrar").onclick = () => dlgCreador.close();
-$("#creadorSalir").onclick = () => { token = null; guardado.borrar("frankers-token"); actualizarModo(); dlgCreador.close(); };
+$("#creadorSalir").onclick = () => { token = null; guardado.borrar("frankers-token"); claveServidor = null; guardado.borrar("frankers-clave"); actualizarModo(); dlgCreador.close(); };
 $("#creadorActivar").onclick = async () => {
   const t = $("#creadorToken").value.trim(), estado = $("#creadorEstado");
   if (!t) { estado.className = "estado mal"; estado.textContent = "Pegá el token primero."; return; }
@@ -1342,7 +1391,9 @@ $("#creadorActivar").onclick = async () => {
   try {
     const r = await fetch(`https://api.github.com/repos/${REPO}`, { headers: { Authorization: "Bearer " + t, Accept: "application/vnd.github+json" } });
     if (!r.ok) throw new Error(r.status === 401 ? "El token no es válido." : "GitHub respondió " + r.status + ". Revisá que el token tenga acceso al repo.");
-    token = t; guardado.escribir("frankers-token", t); actualizarModo();
+    token = t; guardado.escribir("frankers-token", t);
+    const clave = $("#creadorClave").value.trim(); if (clave) { claveServidor = clave; guardado.escribir("frankers-clave", clave); }
+    actualizarModo();
     estado.className = "estado ok"; estado.textContent = "¡Listo! Ya podés enseñarle a Frankers.";
     cargarConocimiento();
   } catch (e) { estado.className = "estado mal"; estado.textContent = e.message || "No pude conectarme con GitHub."; }
@@ -1351,7 +1402,8 @@ $("#creadorActivar").onclick = async () => {
 // Arranque
 actualizarModo();
 if (historial.length) historial.forEach(mostrar); else bienvenida();
-cargarConocimiento();
+cargarConocimiento().then(cargarComunidad);
+setInterval(cargarComunidad, 60000); // cada minuto trae lo nuevo que enseñó la gente
 $("#entrada").focus();
 </script>
 </body>
