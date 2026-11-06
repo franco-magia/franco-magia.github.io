@@ -1,6 +1,6 @@
 {
 "version": 1,
-"actualizado": "2026-11-06T23:33:24.569Z",
+"actualizado": "2026-11-06T23:33:37.817Z",
 "entradas": [
 {
 "id": "saludo",
@@ -8768,8 +8768,9 @@
 "id": "qa-qa06txt-23",
 "tipo": "hecho",
 "preguntas": [
-"que es la nube",
-"que significa la nube"
+"que es la nube en internet",
+"que significa la nube en la computadora",
+"que es guardar en la nube"
 ],
 "respuestas": [
 "\"La nube\" son servidores en internet donde se guardan archivos y programas, en vez de en tu propia compu."
@@ -9289,7 +9290,7 @@
 "que es el metodo cientifico"
 ],
 "respuestas": [
-"Un experimento es una prueba para descubrir algo. El método científico es preguntar, suponer, probar y sacar conclusiones."
+"Un experimento sirve para comprobar si una idea es cierta. El método científico es preguntar, suponer, comprobar y sacar conclusiones."
 ]
 },
 {
@@ -9619,7 +9620,7 @@
 "cuantos ceros tiene un millon"
 ],
 "respuestas": [
-"Un millón es mil veces mil: 1.000.000, con seis ceros."
+"Un millón es mil veces mil: un 1 seguido de seis ceros."
 ]
 },
 {
