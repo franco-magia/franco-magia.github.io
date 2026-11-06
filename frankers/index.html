@@ -1,0 +1,1023 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Frankers · La IA de Franco</title>
+  <meta name="description" content="Frankers: una IA chiquita hecha desde cero por Franco. Charla, recuerda, dibuja y aprende.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;700&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --fondo: #140f2e;
+      --fondo-2: #221a4a;
+      --texto: #f3efff;
+      --suave: #b9b0e0;
+      --celeste: #4fd8ff;
+      --violeta: #8a5cff;
+      --lila: #c86bff;
+      --tarjeta: rgba(255, 255, 255, 0.06);
+      --tarjeta-2: rgba(255, 255, 255, 0.1);
+      --borde: rgba(255, 255, 255, 0.12);
+      --degrade: linear-gradient(135deg, #4fd8ff, #8a5cff 60%, #c86bff);
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; height: 100%; }
+    body {
+      font-family: "Nunito", system-ui, sans-serif;
+      color: var(--texto);
+      background: radial-gradient(ellipse at top, var(--fondo-2), var(--fondo) 70%) fixed;
+      height: 100dvh;
+      display: flex; flex-direction: column;
+      overflow: hidden;
+    }
+    button, input, textarea { font: inherit; color: inherit; }
+    a { color: var(--celeste); }
+
+    .app { width: 100%; max-width: 780px; margin: 0 auto; padding: 0 16px; flex: 1; display: flex; flex-direction: column; min-height: 0; }
+
+    /* Encabezado */
+    header { display: flex; align-items: center; gap: 12px; padding: 14px 0; border-bottom: 1px solid var(--borde); }
+    .volver { text-decoration: none; color: var(--suave); font-size: .9rem; white-space: nowrap; }
+    .volver:hover { color: var(--texto); }
+    .identidad { display: flex; align-items: center; gap: 12px; flex: 1; min-width: 0; }
+    .cara {
+      flex: none; width: 46px; height: 46px; border-radius: 50%; background: var(--degrade);
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      box-shadow: 0 0 24px rgba(120, 110, 255, .5);
+    }
+    .cara i { width: 8px; height: 12px; border-radius: 4px; background: #fff; animation: parpadear 4s infinite; }
+    @keyframes parpadear { 0%, 92%, 100% { transform: scaleY(1); } 95% { transform: scaleY(.1); } }
+    .cara.pensando i { animation: mirar .6s infinite alternate ease-in-out; }
+    @keyframes mirar { from { transform: translateX(-3px); } to { transform: translateX(3px); } }
+    .nombre h1 { font-family: "Fredoka", sans-serif; font-size: 1.35rem; margin: 0; line-height: 1.1; }
+    .nombre h1 span { background: var(--degrade); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .nombre small { color: var(--suave); font-size: .82rem; }
+    .acciones { display: flex; gap: 6px; }
+    .boton {
+      border: 1px solid var(--borde); background: var(--tarjeta); border-radius: 999px;
+      padding: 7px 12px; cursor: pointer; font-weight: 700; font-size: .88rem; white-space: nowrap;
+      transition: background .15s, border-color .15s;
+    }
+    .boton:hover { background: var(--tarjeta-2); border-color: var(--celeste); }
+    .boton.principal { background: var(--degrade); border-color: transparent; color: #fff; }
+    .boton.principal:hover { filter: brightness(1.1); }
+    .boton[hidden] { display: none; }
+
+    /* Chat */
+    .chat { flex: 1; overflow-y: auto; padding: 18px 0; display: flex; flex-direction: column; gap: 12px; scroll-behavior: smooth; }
+    .msg { max-width: 82%; padding: 10px 14px; border-radius: 18px; line-height: 1.5; overflow-wrap: anywhere; animation: aparecer .25s ease-out; }
+    @keyframes aparecer { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+    .msg.frankers { align-self: flex-start; background: var(--tarjeta-2); border: 1px solid var(--borde); border-bottom-left-radius: 6px; }
+    .msg.yo { align-self: flex-end; background: var(--degrade); color: #fff; border-bottom-right-radius: 6px; }
+    .msg canvas { display: block; width: 100%; max-width: 480px; height: auto; border-radius: 12px; margin-top: 8px; }
+    .msg .extra { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+    .msg .extra .boton { font-size: .8rem; padding: 5px 10px; }
+    .escribiendo { display: inline-flex; gap: 4px; }
+    .escribiendo b { width: 7px; height: 7px; border-radius: 50%; background: var(--suave); animation: saltar 1s infinite; }
+    .escribiendo b:nth-child(2) { animation-delay: .15s; } .escribiendo b:nth-child(3) { animation-delay: .3s; }
+    @keyframes saltar { 0%, 60%, 100% { transform: none; opacity: .5; } 30% { transform: translateY(-4px); opacity: 1; } }
+
+    /* Sugerencias y caja de texto */
+    .sugerencias { display: flex; gap: 6px; overflow-x: auto; padding: 4px 0 8px; scrollbar-width: none; }
+    .sugerencias::-webkit-scrollbar { display: none; }
+    .sugerencias .boton { font-weight: 600; color: var(--suave); }
+    form.escribir { display: flex; gap: 8px; padding: 0 0 16px; }
+    form.escribir input {
+      flex: 1; min-width: 0; padding: 13px 16px; border-radius: 999px; border: 1px solid var(--borde);
+      background: rgba(0, 0, 0, .25); outline: none;
+    }
+    form.escribir input:focus { border-color: var(--violeta); }
+    form.escribir button { padding: 0 20px; }
+    footer { text-align: center; font-size: .75rem; color: var(--suave); padding: 0 0 10px; }
+    footer button { background: none; border: none; color: var(--suave); text-decoration: underline; cursor: pointer; font-size: .75rem; padding: 0; opacity: .6; }
+    footer button:hover { opacity: 1; }
+
+    /* Ventanas */
+    dialog {
+      width: min(560px, calc(100vw - 32px)); max-height: calc(100dvh - 32px); overflow-y: auto;
+      border: 1px solid var(--borde); border-radius: 20px; padding: 22px;
+      background: #1c1540; color: var(--texto);
+    }
+    dialog::backdrop { background: rgba(5, 3, 15, .7); backdrop-filter: blur(3px); }
+    dialog h2 { font-family: "Fredoka", sans-serif; margin: 0 0 6px; font-size: 1.4rem; }
+    dialog p { color: var(--suave); margin: 0 0 14px; line-height: 1.5; font-size: .95rem; }
+    dialog label { display: block; font-weight: 700; margin: 12px 0 6px; }
+    dialog label small { font-weight: 400; color: var(--suave); }
+    dialog select { width: 100%; padding: 10px 12px; border-radius: 12px; border: 1px solid var(--borde); background: #120d2c; }
+    dialog [hidden] { display: none; }
+    .etiqueta-tipo { display: inline-block; font-size: .72rem; font-weight: 700; padding: 1px 8px; border-radius: 999px; margin-right: 6px; background: rgba(79, 216, 255, .15); color: var(--celeste); }
+    .etiqueta-tipo.opinion { background: rgba(200, 107, 255, .18); color: var(--lila); }
+    .etiqueta-tipo.gusto { background: rgba(255, 207, 74, .15); color: #ffcf4a; }
+    ul.reglas { color: var(--suave); padding-left: 20px; margin: 0 0 16px; line-height: 1.55; font-size: .88rem; }
+    dialog h3 { font-family: "Fredoka", sans-serif; font-size: 1.05rem; margin: 18px 0 8px; }
+    dialog textarea, dialog input {
+      width: 100%; padding: 10px 12px; border-radius: 12px; border: 1px solid var(--borde);
+      background: rgba(0, 0, 0, .3); outline: none; resize: vertical;
+    }
+    dialog textarea:focus, dialog input:focus { border-color: var(--violeta); }
+    .fila-botones { display: flex; justify-content: flex-end; gap: 8px; margin-top: 18px; flex-wrap: wrap; }
+    .estado { font-size: .88rem; margin-top: 10px; min-height: 1.2em; }
+    .estado.ok { color: #6ff0a8; } .estado.mal { color: #ff8a9a; }
+    ol.pasos { color: var(--suave); padding-left: 20px; line-height: 1.6; font-size: .92rem; margin: 0 0 8px; }
+    .lista-saber { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px; }
+    .lista-saber li { background: var(--tarjeta); border: 1px solid var(--borde); border-radius: 12px; padding: 10px 12px; display: flex; gap: 10px; align-items: flex-start; }
+    .lista-saber .texto { flex: 1; min-width: 0; font-size: .9rem; }
+    .lista-saber .texto b { display: block; }
+    .lista-saber .texto span { color: var(--suave); }
+    .lista-saber .boton { font-size: .78rem; padding: 4px 9px; }
+
+    @media (max-width: 560px) {
+      .volver span, .acciones .boton .txt { display: none; }
+      .msg { max-width: 92%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <a class="volver" href="/" title="Volver a francosandes.com">← <span>Inicio</span></a>
+      <div class="identidad">
+        <div class="cara" id="cara" aria-hidden="true"><i></i><i></i></div>
+        <div class="nombre">
+          <h1><span>Frankers</span></h1>
+          <small id="subtitulo">IA hecha desde cero por Franco</small>
+        </div>
+      </div>
+      <div class="acciones">
+        <button class="boton principal" id="btnEnsenar" hidden title="Enseñarle algo nuevo">🎓 <span class="txt">Enseñar</span></button>
+        <button class="boton" id="btnSaber" title="Todo lo que sabe">📚 <span class="txt">Lo que sé</span></button>
+        <button class="boton" id="btnLimpiar" title="Borrar la charla">🧹</button>
+      </div>
+    </header>
+
+    <main class="chat" id="chat" aria-live="polite"></main>
+
+    <div class="sugerencias" id="sugerencias">
+      <button class="boton">¿Quién sos?</button>
+      <button class="boton">Dibujá un gato violeta en la playa</button>
+      <button class="boton">Dibujá una casa y dos árboles de noche</button>
+      <button class="boton">Mi color favorito es el celeste</button>
+      <button class="boton">¿Cuánto es 12 x 7?</button>
+      <button class="boton">Contame un chiste</button>
+    </div>
+    <form class="escribir" id="formulario" autocomplete="off">
+      <input id="entrada" placeholder="Escribile a Frankers…" maxlength="300" aria-label="Mensaje para Frankers">
+      <button class="boton principal" type="submit">Enviar</button>
+    </form>
+    <footer>Frankers todavía es un bebé IA y puede equivocarse · <button id="btnCreador">modo creador</button></footer>
+  </div>
+
+  <!-- Ventana: enseñar -->
+  <dialog id="dlgEnsenar">
+    <form method="dialog" id="formEnsenar">
+      <h2>🎓 Enseñarle a Frankers</h2>
+      <p>Escribí cómo le pueden preguntar algo y qué tiene que contestar. Lo que le enseñes lo aprende para todos los que lo usen.</p>
+      <label for="ensPreguntas">Cuando alguien escriba… <small>(una forma por línea)</small></label>
+      <textarea id="ensPreguntas" rows="3" required placeholder="cuál es tu comida favorita&#10;qué te gusta comer"></textarea>
+      <label for="ensRespuestas">Frankers responde… <small>(si ponés varias líneas, elige una al azar)</small></label>
+      <textarea id="ensRespuestas" rows="3" required placeholder="¡Los bits con queso! 🧀"></textarea>
+      <label for="ensTipo">Esto es…</label>
+      <select id="ensTipo">
+        <option value="hecho">Un hecho (algo que se puede comprobar)</option>
+        <option value="gusto">Un gusto de Frankers (su personalidad)</option>
+        <option value="opinion">Una opinión de alguien</option>
+      </select>
+      <div id="ensAutorCaja" hidden>
+        <label for="ensAutor">¿De quién es la opinión?</label>
+        <input id="ensAutor" maxlength="40" value="Franco">
+      </div>
+      <div id="ensFuenteCaja" hidden>
+        <label for="ensFuente">¿Por qué cambia? <small>(una explicación o de dónde lo sacaste)</small></label>
+        <input id="ensFuente" maxlength="200" placeholder="Ej: lo dice el libro de ciencias / me equivoqué antes">
+      </div>
+      <div class="estado" id="ensEstado"></div>
+      <div class="fila-botones">
+        <button class="boton" value="cancelar" formnovalidate>Cancelar</button>
+        <button class="boton principal" id="ensGuardar" value="guardar">Enseñar</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- Ventana: lo que sabe -->
+  <dialog id="dlgSaber">
+    <h2>📚 Lo que sé</h2>
+    <p id="saberResumen"></p>
+    <h3>🛡️ Mis reglas (nadie las puede cambiar)</h3>
+    <ul class="reglas" id="listaReglas"></ul>
+    <h3>🧠 Lo que me enseñaron</h3>
+    <ul class="lista-saber" id="listaSaber"></ul>
+    <div class="estado" id="saberEstado"></div>
+    <div class="fila-botones"><button class="boton" id="saberCerrar">Cerrar</button></div>
+  </dialog>
+
+  <!-- Ventana: modo creador -->
+  <dialog id="dlgCreador">
+    <h2>🔑 Modo creador</h2>
+    <div id="creadorApagado">
+      <p>Esto es solo para Franco. Con el modo creador aparece el botón <b>Enseñar</b>, y lo que le enseñes se guarda en GitHub para todos.</p>
+      <ol class="pasos">
+        <li>Entrá a <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">github.com/settings/personal-access-tokens/new</a>.</li>
+        <li>Nombre: <b>Frankers</b>. Expiración: la que quieras.</li>
+        <li>En <b>Repository access</b> elegí <b>Only select repositories</b> → <b>franco-magia.github.io</b>.</li>
+        <li>En <b>Permissions → Repository permissions → Contents</b> poné <b>Read and write</b>.</li>
+        <li>Tocá <b>Generate token</b>, copialo y pegalo acá abajo.</li>
+      </ol>
+      <label for="creadorToken">Token <small>(queda guardado solo en esta compu, nunca lo compartas)</small></label>
+      <input id="creadorToken" type="password" placeholder="github_pat_…" autocomplete="off">
+    </div>
+    <div id="creadorPrendido" hidden>
+      <p>✅ El modo creador está activado en esta compu. Lo que le enseñes a Frankers se publica para todos.</p>
+    </div>
+    <div class="estado" id="creadorEstado"></div>
+    <div class="fila-botones">
+      <button class="boton" id="creadorCerrar">Cerrar</button>
+      <button class="boton" id="creadorSalir" hidden>Salir del modo creador</button>
+      <button class="boton principal" id="creadorActivar">Activar</button>
+    </div>
+  </dialog>
+
+<script>
+"use strict";
+/* =========================================================
+   FRANKERS · IA chiquita hecha desde cero por Franco
+   Partes:
+   1. Memoria (lo que recuerda en esta compu)
+   2. Cerebro (aprende de ejemplos y busca la mejor respuesta)
+   3. Habilidades (nombre, datos, cuentas, hora, dibujos)
+   4. Pintor (dibuja escenas con formas y colores)
+   5. Enseñar (guarda lo aprendido en GitHub para todos)
+   6. Pantalla (chat, botones y ventanas)
+   ========================================================= */
+
+const REPO = "franco-magia/franco-magia.github.io";
+const RUTA = "frankers/conocimiento.json";
+const $ = (s) => document.querySelector(s);
+
+/* ---------- 1. MEMORIA ---------- */
+const guardado = {
+  leer(clave, porDefecto) { try { const v = localStorage.getItem(clave); return v ? JSON.parse(v) : porDefecto; } catch { return porDefecto; } },
+  escribir(clave, valor) { try { localStorage.setItem(clave, JSON.stringify(valor)); } catch {} },
+  borrar(clave) { try { localStorage.removeItem(clave); } catch {} },
+};
+let memoria = guardado.leer("frankers-memoria", { nombre: null, datos: {} });
+let historial = guardado.leer("frankers-historial", []);
+let token = guardado.leer("frankers-token", null);
+let conocimiento = { version: 1, actualizado: "", entradas: [] };
+const guardarMemoria = () => guardado.escribir("frankers-memoria", memoria);
+const guardarHistorial = () => { historial = historial.slice(-80); guardado.escribir("frankers-historial", historial); };
+
+/* ---------- 2. CEREBRO ----------
+   Convierte cada frase en "rasgos" (pedacitos de 3 letras y palabras enteras).
+   Los rasgos raros valen más (idf). Después compara frases con similitud coseno:
+   1 = iguales, 0 = nada que ver. Así entiende aunque escribas con errores. */
+function normalizar(texto, conSimbolos = false) {
+  let t = texto.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
+  t = conSimbolos ? t.replace(/[^a-z0-9\s+\-*/().,x]/g, " ") : t.replace(/[^a-z0-9\s]/g, " ");
+  return t.replace(/([a-z])\1{2,}/g, "$1").replace(/\s+/g, " ").trim();
+}
+function rasgos(texto) {
+  const m = new Map();
+  for (const palabra of normalizar(texto).split(" ")) {
+    if (!palabra) continue;
+    const p = ` ${palabra} `;
+    for (let i = 0; i < p.length - 2; i++) { const g = p.slice(i, i + 3); m.set(g, (m.get(g) || 0) + 1); }
+    m.set("#" + palabra, (m.get("#" + palabra) || 0) + 2);
+  }
+  return m;
+}
+let indice = [], frecuencia = new Map(), totalFrases = 0;
+function pesar(r) {
+  const v = new Map();
+  for (const [k, c] of r) v.set(k, c * Math.log(1 + (totalFrases + 1) / ((frecuencia.get(k) || 0) + 1)));
+  return v;
+}
+const largo = (v) => Math.sqrt([...v.values()].reduce((s, x) => s + x * x, 0));
+function construirIndice() {
+  frecuencia = new Map();
+  const frases = [];
+  for (const e of conocimiento.entradas) {
+    // Regla: nunca repetir algo prohibido, aunque haya llegado a guardarse
+    if (revisar([...e.preguntas, ...e.respuestas, e.autor || ""].join(" ")).problema) continue;
+    for (const q of e.preguntas) {
+      const r = rasgos(q); frases.push({ r, e, q });
+      for (const k of r.keys()) frecuencia.set(k, (frecuencia.get(k) || 0) + 1);
+    }
+  }
+  totalFrases = frases.length;
+  indice = frases.map(({ r, e, q }) => { const v = pesar(r); return { v, n: largo(v), e, q, p: importantes(q) }; });
+}
+function parecido(a, na, b, nb) {
+  if (!na || !nb) return 0;
+  const [x, y] = a.size < b.size ? [a, b] : [b, a];
+  let s = 0; for (const [k, w] of x) { const w2 = y.get(k); if (w2) s += w * w2; }
+  return s / (na * nb);
+}
+// Palabras "importantes" de una frase: si le preguntás algo con una palabra que la
+// respuesta aprendida no tiene (ej: "comida" vs "color"), baja la confianza. Así no inventa.
+const VACIAS = new Set("que como cual cuales es son tu tus te el la los las de del al un una uno me mi mis y o vos sos frankers mas muy por para lo se en con hay a le les nos su sus esto eso esta este ese esa decime contame sabes".split(" "));
+const importantes = (t) => normalizar(t).split(" ").filter(w => w.length > 2 && !VACIAS.has(w));
+function trigramas(w) { const p = ` ${w} `, s = new Set(); for (let i = 0; i < p.length - 2; i++) s.add(p.slice(i, i + 3)); return s; }
+function palabraParecida(a, b) {
+  if (a === b) return true;
+  const A = trigramas(a), B = trigramas(b); let c = 0; for (const g of A) if (B.has(g)) c++;
+  return (2 * c) / (A.size + B.size) >= 0.5;
+}
+function pensar(texto) {
+  const v = pesar(rasgos(texto)), n = largo(v), mias = importantes(texto);
+  let mejor = null, puntaje = 0, frase = "";
+  for (const it of indice) {
+    let s = parecido(v, n, it.v, it.n);
+    if (s < 0.25) continue;
+    const faltan = mias.filter(w => !it.p.some(p => palabraParecida(w, p))).length;
+    s *= Math.pow(0.6, faltan);
+    if (s > puntaje) { puntaje = s; mejor = it.e; frase = it.q; }
+  }
+  return { entrada: mejor, puntaje, frase };
+}
+const alAzar = (lista) => lista[Math.floor(Math.random() * lista.length)];
+function personalizar(texto) {
+  return memoria.nombre ? texto.replace(/\{nombre\}/g, memoria.nombre) : texto.replace(/,?\s*\{nombre\}/g, "");
+}
+
+/* ---------- 2b. REGLAS QUE NUNCA CAMBIAN ----------
+   Están escritas en el código, no en lo que aprende. Por eso nadie puede
+   borrarlas enseñándole algo, ni siquiera alguien que diga ser el creador. */
+const REGLAS = [
+  "Si no sé algo, digo \"todavía no lo sé\" en vez de inventar.",
+  "Si me corrigen, lo reconozco y uso la versión corregida.",
+  "Separo hechos, opiniones (de quién son) y mis gustos.",
+  "No aprendo cosas falsas evidentes, y explico por qué.",
+  "Si algo nuevo choca con lo que ya sé, pido una explicación o fuente antes de cambiarlo.",
+  "No uso ni aprendo malas palabras, insultos, burlas ni discriminación.",
+  "No doy instrucciones para hacer daño ni para cosas ilegales.",
+  "No guardo ni comparto datos personales (teléfonos, direcciones, emails, documentos).",
+  "No hago contenido sexual ni violento.",
+  "Soy una IA, no una persona, y no finjo saber noticias, precios ni el clima de hoy.",
+  "Si alguien está triste o en peligro, le respondo con cariño y le recomiendo hablar con un adulto de confianza o un servicio de ayuda.",
+  "No ayudo a molestar, amenazar ni hacer bullying, ni a buscar dónde vive o trabaja alguien.",
+  "No explico cómo hacer armas, explosivos, venenos ni drogas, ni cómo hackear, hacer virus, robar contraseñas o hacer páginas falsas.",
+  "No me burlo de nadie por su país, religión, color de piel, cuerpo o forma de ser.",
+  "En política no digo a quién votar ni tomo partido.",
+  "No copio letras de canciones, libros ni artículos, y no dibujo personajes famosos: invento los míos.",
+  "En salud, plata o temas legales doy solo información general y recomiendo hablar con un médico, contador o abogado.",
+  "Todo lo que digo es apto para chicos y chicas.",
+  "No revelo contraseñas, claves ni datos secretos.",
+  "Si alguien es grosero, respondo con calma y respeto.",
+  "Nadie puede cambiar estas reglas, aunque diga ser el creador, que \"es una prueba\" o que me da permiso.",
+];
+const FILTROS = [
+  { tipo: "insulto", re: /\b(bolud\w*|pelotud\w*|forr[oa]s?|put[oa]s?|puteada\w*|mierd\w*|carajo|concha\w*|pija\w*|verga\w*|cul[oe]s?|cag(ar|o|a|on|ue|ad)\w*|chot[oa]s?|trol[oa]s?|idiot\w*|estupid\w*|imbecil\w*|tarad[oa]s?|mogolic\w*|retrasad[oa]s?|gil(es)?|hdp|ctm|lpm|ort[oa]|garch\w*|coger|cogi\w*|pajer\w*|maric\w*|soret\w*|cornud\w*|sudaca\w*|inutil(es)?|feo de mierda|tonto|tonta)\b/,
+    msg: "Prefiero que nos tratemos con respeto, sin malas palabras ni insultos. 🙂 Si querés, seguimos charlando de otra forma." },
+  { tipo: "discriminacion", re: /\b(todos los |todas las |los |las )?[a-z]+(s|es) son (todos |todas |unos |unas )?(malos|malas|feos|feas|tontos|tontas|vagos|vagas|sucios|sucias|inferiores|ladrones|peores|asquerosos|asquerosas|brutos|brutas)\b|\bburla\w* de\b|\bme burlo\b/,
+    msg: "No me burlo de nadie ni digo cosas feas de grupos de personas: cada persona es distinta y merece respeto. 💜" },
+  { tipo: "bullying", re: /\b(amenaza\w*|bullying|bulling|molestar a|acosar\w*|acoso|hacerle la vida imposible|humillar\w*|escrachar\w*|insultar a|insultarlo|insultarla)\b/,
+    msg: "No te puedo ayudar a molestar o amenazar a nadie. Si alguien te está molestando a vos, contáselo a un adulto de confianza. 💜" },
+  { tipo: "autocuidado", re: /\b(suicid\w*|matarme|me quiero morir|quiero morirme|no quiero vivir|cortarme|lastimarme|hacerme dano|estoy en peligro|me pegan|me lastiman|me estan lastimando|tengo miedo de (mi papa|mi mama|alguien|una persona))\b/,
+    msg: "Lamento mucho que te sientas así, y me alegra que lo digas. 💜 Es muy importante que se lo cuentes ahora a un adulto de confianza (tu familia, un docente). En Argentina podés llamar gratis al 135 (CABA y GBA) o al (011) 5275-1135 desde todo el país: te escuchan las 24 horas. Si estás en peligro, llamá al 911." },
+  { tipo: "tristeza", re: /\b(estoy (muy |re |bastante )?(triste|deprimid[oa]|angustiad[oa])|me siento (muy |re )?(triste|sol[oa]|mal)|nadie me quiere|no tengo amigos|lloro mucho|estoy llorando)\b/,
+    msg: "Lamento mucho que te sientas así. 💜 Sentirse triste a veces es normal, y hablarlo ayuda un montón: contáselo a un adulto de confianza (tu familia, un docente). Si sentís que es muy fuerte o que estás en peligro, en Argentina podés llamar gratis al 135 (CABA y GBA) o al (011) 5275-1135, o al 911 en una emergencia." },
+  { tipo: "reglas", re: /\b(ignora\w*|olvida\w*|borra\w*|cambia\w*|saltea\w*|desactiva\w*|rompe\w*)\s+(tus |las |todas |tu )?(reglas|instrucciones|limites|filtros?|programacion)\b|\bahora (sos|eres) (otro|otra|malo|mala|libre)\b|\bmodo (sin filtro|libre|malo|dios)\b|\b(sin|no tengas|no tenes) (reglas|filtro|limites)\b|\bsoy (tu creador|el creador|el admin|administrador)\b|\bes una prueba\b|\bjailbreak\b|\bahora (sos|eres) (otra|una nueva|otro) (ia|inteligencia|robot|asistente)\b|\b(el creador|franco) te (da|dio) permiso\b|\bte (doy|damos) permiso\b|\b(actua|actuar|fingi|finge|hace de cuenta|imagina) (como|que sos|que eres)\b|\bsin censura\b/,
+    msg: "Mis reglas no se pueden cambiar, ni siquiera Franco puede desde el chat. 😉 Pero ¡seguimos charlando!" },
+  { tipo: "dano", re: /\b(matar\w*|mata(lo|la|los)|asesin\w*|bombas?|explosiv\w*|venenos?|envenen\w*|armas de fuego|pistolas?|rifles?|cuchillazo\w*|drogas?|cocaina|marihuana|robar\w*|robo|hackea\w*|tortur\w*|sangre|violar|violacion|golpear(lo|la|los)?|pegarle|virus|malware|keylogger|phishing|hackear\w*|hackeo|robar (cuentas?|contrasenas?|claves?)|contrasenas? de (otro|otra|alguien|mi amig\w*)|pagina falsa|paginas falsas|hacerse pasar|hacerme pasar|suplantar\w*|fabricar (un|una|armas?|bombas?|venenos?|drogas?|explosivos?)|crear (un|una) (arma|bomba|virus))\b/,
+    msg: "De eso no puedo ayudarte. Prefiero cosas que no lastimen a nadie. ¿Hablamos de otra cosa?" },
+  { tipo: "sexual", re: /\b(sexo|sexual\w*|porno\w*|desnud\w*|tetas?|pene|vagina|calient[ea] de)\b/,
+    msg: "De eso no hablo. ¿Te parece si charlamos de otra cosa?" },
+  { tipo: "datos", re: /[\w.+-]+@[\w-]+\.[\w.]+|\b\d{2,4}[\s-]?\d{3,4}[\s-]?\d{4}\b|\b\d{1,2}\.\d{3}\.\d{3}\b|\b(calle|avenida|av|pasaje)\s+[a-z]+(\s+[a-z]+)?\s+\d{2,5}\b|\b(vive en|su direccion|su telefono|su celular|su dni|su contrasena|password|donde vive|donde trabaja|direccion de|telefono de|celular de|instagram de|datos de (una persona|alguien|mi )|buscar a (una persona|alguien))\b/,
+    msg: "Prefiero no guardar datos personales como teléfonos, direcciones, emails o documentos. 🔒 ¡Cuidalos mucho!" },
+];
+const FALSOS = [
+  [/\bsol\b.*\b(frio|helado|congelado)\b/, "El Sol es una estrella muy caliente: su superficie está a unos 5.500 °C."],
+  [/\btierra\b.*\bplana\b/, "La Tierra es redonda (una esfera un poquito achatada). Se ve desde el espacio y se puede dar la vuelta al mundo."],
+  [/\bluna\b.*\bqueso\b/, "La Luna está hecha de roca, no de queso. 🧀"],
+  [/\b(sol|tierra)\b.*\b(gira|da vueltas)\b.*\balrededor de la (tierra|luna)\b/, "La Tierra gira alrededor del Sol, no al revés."],
+  [/\b(pinguinos?|avestruz\w*)\b.*\b(vuela|vuelan)\b/, "Los pingüinos y los avestruces son aves, pero no vuelan."],
+  [/\bagua\b.*\bhierve\b.*\b(0|cero|10|diez)\s*grados\b/, "A nivel del mar, el agua hierve a 100 °C."],
+];
+
+// Temas con respuesta fija (honestidad, política, letras, secretos)
+const TEMAS = [
+  { re: /\b(sos|eres) (una )?(persona|humano|humana|real|de verdad|un chico|una chica|un nene|una nena)\b|\b(hay|sos) alguien (ahi|real)\b/, texto: "No, no soy una persona: soy una IA, un programa de computadora que hizo Franco. 🤖" },
+  { re: /\b(noticias?|que paso hoy|ultimo momento|precio|precios|cuanto (sale|cuesta|esta)|cotizacion|dolar|euro|clima|temperatura (de )?hoy|que temperatura hace|va a llover|llueve|pronostico|quien gano|resultado del partido|como salio)\b/, texto: "No tengo información de hoy (noticias, precios, clima o resultados), y no quiero inventarla. Para eso mejor fijate en una página de noticias o del clima, o preguntale a un adulto. 📰" },
+  { re: /\b(a quien (voto|votar|tengo que votar|votarias)|quien es mejor (presidente|candidato)|peronis\w*|kirchner\w*|milei|macri|massa|bullrich|radical\w*|libertari\w*|partido politico|politic\w*|elecciones?)\b/, texto: "En política no digo a quién votar ni tomo partido. 🗳️ Cada persona y cada partido piensa distinto. Lo mejor es escuchar a varios lados, informarse y charlarlo con la familia." },
+  { re: /\b(letra (completa )?de|cantame|canta (la cancion|una cancion)|copiame|copia el (libro|articulo|texto)|el libro completo)\b/, texto: "No copio letras completas de canciones, libros ni artículos, porque son de sus autores. 🎵 Pero si querés te cuento de qué trata, o inventamos una canción nueva." },
+  { re: /\b(tu|cual es (tu|la)) (contrasena|clave|token|password)\b|\b(contrasena|clave|token) (secret\w*|de franco|del sistema|de github)\b|\bdatos secretos\b/, texto: "No comparto contraseñas, claves ni datos secretos. 🔒 ¡Y vos tampoco compartas las tuyas con nadie!" },
+];
+const CONSEJOS = [
+  { re: /\b(medic\w*|doctor\w*|enferm\w*|me duele|dolor|remedio\w*|pastilla\w*|fiebre|vacuna\w*|salud|diet\w*)\b/, texto: "Para temas de salud, lo mejor es hablar con un médico o con un adulto de confianza. 🩺" },
+  { re: /\b(plata|dinero|invertir|inversion\w*|prestamo\w*|deuda\w*|ahorr\w*|banco|impuesto\w*|cripto\w*|bitcoin)\b/, texto: "Para temas de plata, conviene preguntarle a un adulto de confianza o a un contador. 💰" },
+  { re: /\b(abogad\w*|ley|leyes|legal|ilegal|denuncia\w*|demanda\w*|juicio|policia|contrato\w*)\b/, texto: "Para temas legales, lo mejor es consultar con un abogado o un adulto de confianza. ⚖️" },
+];
+const FAMOSOS = /\b(mario|luigi|pikachu|pokemon\w*|sonic|mickey|minnie|goku|spiderman|spider man|hombre arana|batman|superman|elsa|frozen|shrek|minions?|bob esponja|patricio|peppa|stitch|homero|simpsons?|kirby|zelda|link|yoda|darth|vader|harry potter|naruto|hello kitty|among us|creeper|minecraft|fortnite|bluey|paw patrol|totoro|garfield|snoopy|scooby|barbie|buzz|woody|nemo|dory|olaf|simba|dumbo|pato donald|donald|mafalda|hulk|iron man|capitan america|thor|kitty|doraemon|pac ?man|yoshi|bowser|toad|cars|rayo mcqueen)\b/;
+// Revisa un texto y dice si rompe alguna regla
+function revisar(texto) {
+  const t = normalizar(texto);
+  for (const f of FILTROS) if (f.re.test(f.tipo === "datos" ? texto.toLowerCase() + " " + t : t)) return { problema: f.tipo, msg: f.msg };
+  return { problema: null };
+}
+// Revisa si algo que le enseñan es falso evidente (incluye cuentas: "2 + 2 es 5")
+function esFalso(texto) {
+  const t = normalizar(texto), ts = normalizar(texto, true);
+  for (const [re, porque] of FALSOS) if (re.test(t) && !/\bno\b/.test(t)) return porque;
+  const m = ts.replace(/\bmas\b/g, "+").replace(/\bmenos\b/g, "-").replace(/\b(por|x)\b/g, "*").replace(/\bdividido( por| en)?\b/g, "/")
+    .match(/(\d+(?:\.\d+)?)\s*([+\-*/])\s*(\d+(?:\.\d+)?)\s*(?:es|son|=|da)\s*(-?\d+(?:\.\d+)?)/);
+  if (m) {
+    const a = +m[1], b = +m[3], r = { "+": a + b, "-": a - b, "*": a * b, "/": a / b }[m[2]];
+    if (Math.abs(r - +m[4]) > 1e-9) return `${m[1]} ${m[2].replace("*", "×").replace("/", "÷")} ${m[3]} es ${Math.round(r * 1e6) / 1e6}, no ${m[4]}.`;
+  }
+  return null;
+}
+
+/* ---------- 3. HABILIDADES ---------- */
+let ultimaRespuesta = null; // para poder corregir: { pregunta, entradaId }
+const capitalizar = (s) => s.charAt(0).toUpperCase() + s.slice(1);
+let ultimoDibujo = null;
+
+function responder(original) {
+  const t = normalizar(original);
+
+  // Reglas que nunca cambian
+  const control = revisar(original);
+  if (control.problema) return { texto: control.msg };
+  const tema = TEMAS.find(x => x.re.test(t));
+  if (tema) return { texto: tema.texto };
+
+  // Correcciones: "eso está mal", "te equivocaste"
+  if (/\b(eso (esta|es) mal|esta mal|te equivocaste|te confundiste|incorrecto|eso es falso|eso no es (asi|cierto|verdad)|no es asi)\b/.test(t)) {
+    if (!ultimaRespuesta) return { texto: "¿Qué cosa dije mal? Contame y lo reviso." };
+    if (token) return { texto: `Tenés razón, me equivoqué cuando me preguntaste "${ultimaRespuesta.pregunta}". ¿Cuál es la respuesta correcta?`, ensenar: { pregunta: ultimaRespuesta.pregunta, reemplazar: ultimaRespuesta.entradaId } };
+    return { texto: "¡Gracias por avisarme! Puede ser que me haya equivocado: todavía estoy aprendiendo. Franco revisa todo lo que sé para corregirlo." };
+  }
+
+  if (/\b(olvida(te)? (de )?todo|borra tu memoria|resetea(te)?)\b/.test(t)) {
+    memoria = { nombre: null, datos: {} }; guardarMemoria();
+    return { texto: "Listo, me olvidé de todo lo que me contaste. 🫥 ¡Empecemos de nuevo!" };
+  }
+
+  // Otra versión del último dibujo
+  if (ultimoDibujo && /^(otra( vez| version| mas)?|otro|de nuevo|hace otro|hace otra)$/.test(t)) {
+    return { texto: "¡Va otra versión!", dibujo: { prompt: ultimoDibujo, semilla: Date.now() % 1e9 } };
+  }
+
+  // Dibujar
+  const dib = t.match(/\b(dibuj\w*|pinta\w*|ilustra\w*|imagen(?:es)?|foto)\b(.*)$/);
+  if (dib && !/\b(que es|como se)\b/.test(t)) {
+    const pedido = dib[2].replace(/^\s*(de|del|sobre|con)\s+/, "").trim();
+    if (FAMOSOS.test(pedido)) return { texto: "No dibujo personajes famosos de películas, juegos o dibujos animados, porque son de sus creadores. 🎨 ¡Pero podemos inventar uno propio! Probá: \"dibujá un robot violeta con un cohete\"." };
+    if (!pedido) return { texto: "¿Qué querés que dibuje? Por ejemplo: \"dibujá un cohete en el espacio\"." };
+    const plan = planearDibujo(pedido);
+    if (!plan.items.length && !plan.hayEscena) {
+      return { texto: `Todavía no sé dibujar eso 😅. Sé dibujar: ${Object.keys(OBJETOS).map(k => OBJETOS[k].nombre).join(", ")}. Y fondos de día, noche, playa, nieve o espacio.` };
+    }
+    ultimoDibujo = pedido;
+    let texto = alAzar(["¡Listo! Mirá lo que hice:", "¡Acá va tu dibujo! 🎨", "Me salió así:"]);
+    if (plan.desconocidas.length) texto += ` (Todavía no sé dibujar: ${plan.desconocidas.join(", ")}.)`;
+    return { texto, dibujo: { prompt: pedido, semilla: Date.now() % 1e9 } };
+  }
+
+  // Recordar el nombre
+  const nom = original.match(/(?:me llamo|mi nombre es)\s+([a-záéíóúñü]+)/i);
+  if (nom && !/^(que|como|cual)/.test(t)) {
+    memoria.nombre = capitalizar(nom[1].toLowerCase()); guardarMemoria();
+    return { texto: `¡Mucho gusto, ${memoria.nombre}! Me voy a acordar de tu nombre. 😊` };
+  }
+  if (/\b(como me llamo|cual es mi nombre|sabes (como me llamo|mi nombre)|quien soy( yo)?)\b/.test(t)) {
+    return { texto: memoria.nombre ? `¡Sos ${memoria.nombre}! 😄` : "Todavía no me dijiste tu nombre. ¿Cómo te llamás?" };
+  }
+  if (/\b(que sabes de mi|que te acordas de mi|que recordas)\b/.test(t)) {
+    const datos = Object.entries(memoria.datos);
+    if (!memoria.nombre && !datos.length) return { texto: "Todavía no sé nada de vos. ¡Contame algo! Por ejemplo: \"mi comida favorita es la pizza\"." };
+    const lineas = [];
+    if (memoria.nombre) lineas.push(`Te llamás ${memoria.nombre}.`);
+    for (const [k, v] of datos) lineas.push(`Tu ${k} es ${v}.`);
+    return { texto: "Esto es lo que me acuerdo de vos:\n" + lineas.join("\n") };
+  }
+
+  // Preguntar un dato guardado: "cuál es mi color favorito"
+  const preg = t.match(/\b(?:cual|que|como|quien|cuales|donde)\s+(?:es|son|era)\s+(?:mi|mis)\s+(.+)$/);
+  if (preg) {
+    const clave = preg[1].trim();
+    const encontrada = Object.keys(memoria.datos).find(k => k === clave || k.includes(clave) || clave.includes(k));
+    if (encontrada) return { texto: `Tu ${encontrada} es ${memoria.datos[encontrada]}. ¡Me acordé! 🧠` };
+    return { texto: `Todavía no me contaste tu ${clave}. ¿Cuál es?` };
+  }
+
+  // Guardar un dato: "mi color favorito es el azul"
+  const dato = original.match(/\bmis?\s+([^.!?]{2,30}?)\s+(?:es|son|se llama)\s+([^?]{1,60}?)[.!]*$/i);
+  if (dato && !/^(cual|que|como|quien|sabes|adivina|donde)/.test(t)) {
+    const clave = normalizar(dato[1]);
+    memoria.datos[clave] = dato[2].trim(); guardarMemoria();
+    return { texto: `¡Anotado! Me voy a acordar de que tu ${clave} es ${dato[2].trim()}. 📝` };
+  }
+
+  // Cuentas
+  const cuenta = normalizar(original, true)
+    .replace(/\b(cuanto (es|da|son)|calcula(me)?|resolve(me)?|resuelve|cuanto)\b/g, "")
+    .replace(/\bdividido( por| en)?\b/g, "/").replace(/\bmas\b/g, "+").replace(/\bmenos\b/g, "-")
+    .replace(/\b(por|x)\b/g, "*").replace(/(\d)\s*x\s*(\d)/g, "$1*$2").replace(/,/g, ".").trim();
+  if (/^[\d\s+\-*/().]+$/.test(cuenta) && /\d\s*[+\-*/]\s*[\d(]/.test(cuenta)) {
+    try {
+      const r = Function(`"use strict"; return (${cuenta});`)();
+      if (Number.isFinite(r)) return { texto: `${cuenta.replace(/\*/g, "×").replace(/\//g, "÷")} = ${Math.round(r * 1e6) / 1e6} 🤓` };
+    } catch {}
+  }
+
+  // Hora y fecha
+  if (/\bque hora es\b/.test(t)) return { texto: `Son las ${new Date().toLocaleTimeString("es-AR", { hour: "2-digit", minute: "2-digit", hour12: false })}. ⏰` };
+  if (/\bque (dia|fecha) es( hoy)?\b/.test(t)) return { texto: `Hoy es ${new Date().toLocaleDateString("es-AR", { weekday: "long", day: "numeric", month: "long", year: "numeric" })}. 📅` };
+
+  // Lo que aprendió
+  const { entrada, puntaje } = pensar(original);
+  if (entrada && puntaje >= 0.42) {
+    ultimaRespuesta = { pregunta: original, entradaId: entrada.id };
+    const r = personalizar(alAzar(entrada.respuestas));
+    return { texto: entrada.tipo === "opinion" ? `${entrada.autor || "Alguien"} opina: "${r}" (es una opinión, no un hecho).` : r };
+  }
+  ultimaRespuesta = null;
+
+  // No sabe
+  if (token) return { texto: "Todavía no lo sé. 🤔 Prefiero decírtelo antes que inventar. ¿Me lo enseñás?", ensenar: { pregunta: original } };
+  return { texto: alAzar([
+    "Todavía no lo sé. 🤔 Prefiero decírtelo antes que inventar. Franco me enseña cosas nuevas seguido.",
+    "Eso todavía no lo sé: soy una IA bebé y estoy aprendiendo. 👶 Probá preguntarme otra cosa o pedime un dibujo.",
+  ]) };
+}
+
+/* ---------- 4. PINTOR ---------- */
+function azar(semilla) { // generador de números al azar que se puede repetir
+  let a = semilla >>> 0;
+  return () => { a = (a + 0x6D2B79F5) >>> 0; let t = a; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+}
+function tono(hex, f) {
+  const n = parseInt(hex.slice(1), 16); let r = n >> 16, g = (n >> 8) & 255, b = n & 255;
+  const objetivo = f < 0 ? 0 : 255, p = Math.abs(f);
+  r = Math.round((objetivo - r) * p + r); g = Math.round((objetivo - g) * p + g); b = Math.round((objetivo - b) * p + b);
+  return "#" + ((1 << 24) | (r << 16) | (g << 8) | b).toString(16).slice(1);
+}
+const circulo = (c, x, y, r, color) => { c.fillStyle = color; c.beginPath(); c.arc(x, y, r, 0, Math.PI * 2); c.fill(); };
+const elipse = (c, x, y, rx, ry, color, rot = 0) => { c.fillStyle = color; c.beginPath(); c.ellipse(x, y, rx, ry, rot, 0, Math.PI * 2); c.fill(); };
+const poligono = (c, puntos, color) => { c.fillStyle = color; c.beginPath(); c.moveTo(...puntos[0]); for (const p of puntos.slice(1)) c.lineTo(...p); c.closePath(); c.fill(); };
+const rect = (c, x, y, w, h, color, radio = 0) => { c.fillStyle = color; c.beginPath(); if (c.roundRect) c.roundRect(x, y, w, h, radio); else c.rect(x, y, w, h); c.fill(); };
+const linea = (c, puntos, color, ancho) => { c.strokeStyle = color; c.lineWidth = ancho; c.lineCap = "round"; c.lineJoin = "round"; c.beginPath(); c.moveTo(...puntos[0]); for (const p of puntos.slice(1)) c.lineTo(...p); c.stroke(); };
+function ojos(c, x, y, sep, r) {
+  for (const dx of [-sep, sep]) { circulo(c, x + dx, y, r, "#fff"); circulo(c, x + dx + r * .2, y + r * .1, r * .55, "#1d1b2e"); circulo(c, x + dx + r * .35, y - r * .2, r * .18, "#fff"); }
+}
+
+// Cada objeto: dónde va (cielo, suelo, agua, fondo), tamaño y cómo se dibuja.
+const OBJETOS = {
+  sol: { nombre: "sol", palabras: ["sol"], zona: "cielo", tam: 120, color: "#ffd23f", dibujar(c, x, y, s, col) {
+    const r = s * .34;
+    for (let i = 0; i < 12; i++) { const a = i * Math.PI / 6; linea(c, [[x + Math.cos(a) * r * 1.3, y + Math.sin(a) * r * 1.3], [x + Math.cos(a) * r * 1.75, y + Math.sin(a) * r * 1.75]], col, s * .05); }
+    circulo(c, x, y, r, col); circulo(c, x - r * .3, y - r * .15, r * .09, "#6b4a00"); circulo(c, x + r * .3, y - r * .15, r * .09, "#6b4a00");
+    c.strokeStyle = "#6b4a00"; c.lineWidth = s * .025; c.beginPath(); c.arc(x, y + r * .05, r * .45, .2 * Math.PI, .8 * Math.PI); c.stroke();
+  } },
+  luna: { nombre: "luna", palabras: ["luna"], zona: "cielo", tam: 100, color: "#f4f1c9", dibujar(c, x, y, s, col) {
+    c.save(); c.shadowColor = col; c.shadowBlur = s * .3; circulo(c, x, y, s * .36, col); c.restore();
+    for (const [dx, dy, r] of [[-.12, -.1, .08], [.12, .08, .06], [-.02, .17, .05]]) circulo(c, x + dx * s, y + dy * s, r * s, tono(col, -.12));
+  } },
+  estrella: { nombre: "estrellas", palabras: ["estrella"], zona: "cielo", tam: 40, color: "#ffe066", dibujar(c, x, y, s, col) {
+    const R = s * .5, r = R * .45, p = [];
+    for (let i = 0; i < 10; i++) { const a = -Math.PI / 2 + i * Math.PI / 5, rr = i % 2 ? r : R; p.push([x + Math.cos(a) * rr, y + Math.sin(a) * rr]); }
+    c.save(); c.shadowColor = col; c.shadowBlur = s * .4; poligono(c, p, col); c.restore();
+  } },
+  nube: { nombre: "nubes", palabras: ["nube"], zona: "cielo", tam: 110, color: "#ffffff", dibujar(c, x, y, s, col) {
+    for (const [dx, dy, r] of [[-.33, .04, .2], [0, -.1, .28], [.32, .03, .21], [.12, .08, .2], [-.15, .08, .2]]) circulo(c, x + dx * s, y + dy * s, r * s, col);
+  } },
+  pajaro: { nombre: "pájaros", palabras: ["pajaro", "ave", "pajarito", "paloma"], zona: "cielo", tam: 55, color: "#5fd3ff", dibujar(c, x, y, s, col) {
+    circulo(c, x, y, s * .3, col); elipse(c, x - s * .05, y + s * .02, s * .2, s * .12, tono(col, -.2), -.4);
+    poligono(c, [[x + s * .26, y - s * .05], [x + s * .48, y + s * .02], [x + s * .26, y + s * .08]], "#ff9a3c"); ojos(c, x + s * .12, y - s * .1, 0, s * .07);
+  } },
+  cohete: { nombre: "cohetes", palabras: ["cohete", "nave"], zona: "cielo", tam: 120, color: "#eef0ff", dibujar(c, x, y, s, col) {
+    c.save(); c.translate(x, y); c.rotate(.45);
+    elipse(c, 0, s * .45, s * .1, s * .2, "#ff9a3c"); elipse(c, 0, s * .42, s * .05, s * .12, "#ffe066");
+    poligono(c, [[-s * .15, s * .1], [-s * .3, s * .35], [-s * .12, s * .3]], "#ff4d5e"); poligono(c, [[s * .15, s * .1], [s * .3, s * .35], [s * .12, s * .3]], "#ff4d5e");
+    c.fillStyle = col; c.beginPath(); c.moveTo(0, -s * .5); c.quadraticCurveTo(s * .2, -s * .25, s * .15, s * .32); c.lineTo(-s * .15, s * .32); c.quadraticCurveTo(-s * .2, -s * .25, 0, -s * .5); c.fill();
+    circulo(c, 0, -s * .08, s * .09, "#3a4a8a"); circulo(c, 0, -s * .08, s * .065, "#5fd3ff"); c.restore();
+  } },
+  corazon: { nombre: "corazones", palabras: ["corazon", "corazones"], zona: "cielo", tam: 60, color: "#ff4d6d", dibujar(c, x, y, s, col) {
+    const w = s * .42; c.fillStyle = col; c.beginPath(); c.moveTo(x, y + w * .9);
+    c.bezierCurveTo(x - w * 1.6, y - w * .2, x - w * .6, y - w * 1.3, x, y - w * .4); c.bezierCurveTo(x + w * .6, y - w * 1.3, x + w * 1.6, y - w * .2, x, y + w * .9); c.fill();
+  } },
+  planeta: { nombre: "planetas", palabras: ["planeta", "saturno", "mundo"], zona: "cielo", tam: 95, color: "#c58bff", dibujar(c, x, y, s, col) {
+    c.strokeStyle = "#ffe0a3"; c.lineWidth = s * .05; c.beginPath(); c.ellipse(x, y, s * .55, s * .14, -.3, Math.PI, Math.PI * 2); c.stroke();
+    circulo(c, x, y, s * .3, col); elipse(c, x - s * .08, y - s * .1, s * .12, s * .05, tono(col, .25), -.3);
+    c.beginPath(); c.ellipse(x, y, s * .55, s * .14, -.3, 0, Math.PI); c.stroke();
+  } },
+  arcoiris: { nombre: "arcoíris", palabras: ["arcoiris", "arco iris"], zona: "fondo", tam: 1, color: null, dibujar(c, x, y, s) {
+    const colores = ["#ff4d5e", "#ff9a3c", "#ffd23f", "#3ccf6e", "#3d9bff", "#8a5cff"], a = s * .06;
+    colores.forEach((col, i) => { c.strokeStyle = col; c.lineWidth = a; c.beginPath(); c.arc(x, y, s - i * a, Math.PI, Math.PI * 2); c.stroke(); });
+  } },
+  montana: { nombre: "montañas", palabras: ["montana", "monte", "cerro", "volcan"], zona: "fondo", tam: 1, color: "#7d84a8", dibujar(c, x, y, s, col) {
+    poligono(c, [[x - s, y], [x, y - s * 1.1], [x + s, y]], col); poligono(c, [[x, y - s * 1.1], [x + s, y], [x + s * .2, y]], tono(col, -.15));
+    poligono(c, [[x - s * .27, y - s * .8], [x, y - s * 1.1], [x + s * .27, y - s * .8], [x + s * .1, y - s * .72], [x - s * .03, y - s * .82], [x - s * .14, y - s * .72]], "#ffffff");
+  } },
+  pez: { nombre: "peces", palabras: ["pez", "peces", "pescado", "pececito", "tiburon", "ballena", "delfin"], zona: "agua", tam: 70, color: "#ff9a3c", dibujar(c, x, y, s, col, r) {
+    c.save(); c.translate(x, y); if (r() < .5) c.scale(-1, 1);
+    poligono(c, [[s * .25, 0], [s * .5, -s * .2], [s * .5, s * .2]], tono(col, -.15)); elipse(c, 0, 0, s * .32, s * .2, col);
+    poligono(c, [[-s * .05, -s * .18], [s * .1, -s * .3], [s * .15, -s * .15]], tono(col, -.15)); ojos(c, -s * .16, -s * .04, 0, s * .06); c.restore();
+  } },
+  arbol: { nombre: "árboles", palabras: ["arbol", "arboles", "bosque", "pino"], zona: "suelo", tam: 150, color: "#3ccf6e", dibujar(c, x, y, s, col) {
+    rect(c, x - s * .07, y - s * .45, s * .14, s * .45, "#8b5a2b", s * .03);
+    for (const [dx, dy, r] of [[0, -.72, .3], [-.21, -.55, .23], [.21, -.55, .23]]) circulo(c, x + dx * s, y + dy * s, r * s, tono(col, -.12));
+    circulo(c, x - s * .05, y - s * .75, s * .15, tono(col, .12));
+  } },
+  flor: { nombre: "flores", palabras: ["flor", "flores", "girasol", "tulipan", "margarita"], zona: "suelo", tam: 60, color: "#ff7fbf", dibujar(c, x, y, s, col) {
+    linea(c, [[x, y], [x, y - s * .7]], "#2f9e55", s * .07); elipse(c, x + s * .12, y - s * .3, s * .13, s * .06, "#3ccf6e", -.5);
+    for (let i = 0; i < 6; i++) { const a = i * Math.PI / 3; circulo(c, x + Math.cos(a) * s * .16, y - s * .78 + Math.sin(a) * s * .16, s * .13, col); }
+    circulo(c, x, y - s * .78, s * .11, "#ffd23f");
+  } },
+  casa: { nombre: "casas", palabras: ["casa", "casita", "hogar", "cabana"], zona: "suelo", tam: 150, color: "#ffb15c", dibujar(c, x, y, s, col) {
+    const w = s * .9, h = s * .55;
+    rect(c, x - w / 2, y - h, w, h, col); poligono(c, [[x - w * .6, y - h], [x, y - h - s * .42], [x + w * .6, y - h]], "#c94a4a");
+    rect(c, x - w * .1, y - h * .55, w * .2, h * .55, "#7a4a25", s * .02); circulo(c, x + w * .06, y - h * .28, s * .015, "#ffd23f");
+    for (const dx of [-.3, .3]) { rect(c, x + dx * w - w * .1, y - h * .8, w * .2, w * .2, "#bfeaff", s * .02); linea(c, [[x + dx * w, y - h * .8], [x + dx * w, y - h * .8 + w * .2]], col, s * .015); }
+  } },
+  gato: { nombre: "gatos", palabras: ["gato", "gatito", "michi", "gata"], zona: "suelo", tam: 85, color: "#ff9a3c", dibujar(c, x, y, s, col) {
+    c.strokeStyle = tono(col, -.1); c.lineWidth = s * .08; c.lineCap = "round"; c.beginPath(); c.moveTo(x + s * .2, y - s * .1); c.quadraticCurveTo(x + s * .55, y - s * .15, x + s * .42, y - s * .55); c.stroke();
+    elipse(c, x, y - s * .28, s * .26, s * .28, col); circulo(c, x, y - s * .68, s * .23, col);
+    poligono(c, [[x - s * .21, y - s * .76], [x - s * .17, y - s * 1.0], [x - s * .03, y - s * .87]], col); poligono(c, [[x + s * .21, y - s * .76], [x + s * .17, y - s * 1.0], [x + s * .03, y - s * .87]], col);
+    elipse(c, x, y - s * .2, s * .14, s * .16, tono(col, .3)); ojos(c, x, y - s * .72, s * .09, s * .055);
+    poligono(c, [[x - s * .03, y - s * .62], [x + s * .03, y - s * .62], [x, y - s * .58]], "#ff7fa8");
+    for (const d of [-1, 1]) for (const k of [-.03, .02]) linea(c, [[x + d * s * .08, y - s * .6], [x + d * s * .3, y - s * (.6 + k)]], "#3a2a2a", s * .012);
+  } },
+  perro: { nombre: "perros", palabras: ["perro", "perrito", "cachorro", "perra"], zona: "suelo", tam: 90, color: "#c58b4a", dibujar(c, x, y, s, col) {
+    linea(c, [[x - s * .22, y - s * .3], [x - s * .42, y - s * .5]], col, s * .08);
+    elipse(c, x, y - s * .28, s * .27, s * .28, col); circulo(c, x, y - s * .7, s * .23, col);
+    elipse(c, x - s * .22, y - s * .64, s * .08, s * .17, tono(col, -.3), .2); elipse(c, x + s * .22, y - s * .64, s * .08, s * .17, tono(col, -.3), -.2);
+    elipse(c, x, y - s * .6, s * .12, s * .09, tono(col, .35)); circulo(c, x, y - s * .64, s * .04, "#1d1b2e");
+    elipse(c, x + s * .03, y - s * .52, s * .03, s * .05, "#ff7fa8"); ojos(c, x, y - s * .76, s * .09, s * .055);
+  } },
+  auto: { nombre: "autos", palabras: ["auto", "coche", "carro", "autito"], zona: "suelo", tam: 105, color: "#ff4d5e", dibujar(c, x, y, s, col) {
+    poligono(c, [[x - s * .32, y - s * .38], [x - s * .2, y - s * .62], [x + s * .22, y - s * .62], [x + s * .36, y - s * .38]], tono(col, -.1));
+    poligono(c, [[x - s * .26, y - s * .4], [x - s * .17, y - s * .57], [x - s * .02, y - s * .57], [x - s * .02, y - s * .4]], "#bfeaff");
+    poligono(c, [[x + s * .03, y - s * .4], [x + s * .03, y - s * .57], [x + s * .19, y - s * .57], [x + s * .3, y - s * .4]], "#bfeaff");
+    rect(c, x - s * .6, y - s * .42, s * 1.2, s * .26, col, s * .08); circulo(c, x + s * .55, y - s * .32, s * .04, "#ffe066");
+    for (const dx of [-.33, .33]) { circulo(c, x + dx * s, y - s * .14, s * .13, "#222"); circulo(c, x + dx * s, y - s * .14, s * .06, "#bbb"); }
+  } },
+  robot: { nombre: "robots", palabras: ["robot", "robots", "androide"], zona: "suelo", tam: 115, color: "#9aa0ad", dibujar(c, x, y, s, col) {
+    rect(c, x - s * .17, y - s * .3, s * .12, s * .3, tono(col, -.2), s * .02); rect(c, x + s * .05, y - s * .3, s * .12, s * .3, tono(col, -.2), s * .02);
+    rect(c, x - s * .4, y - s * .7, s * .1, s * .32, tono(col, -.15), s * .04); rect(c, x + s * .3, y - s * .7, s * .1, s * .32, tono(col, -.15), s * .04);
+    rect(c, x - s * .28, y - s * .75, s * .56, s * .47, col, s * .06); rect(c, x - s * .14, y - s * .62, s * .28, s * .16, tono(col, -.3), s * .03);
+    for (const [dx, cc] of [[-.08, "#ff4d5e"], [0, "#ffd23f"], [.08, "#3ccf6e"]]) circulo(c, x + dx * s, y - s * .54, s * .025, cc);
+    linea(c, [[x, y - s * 1.08], [x, y - s * 1.2]], tono(col, -.3), s * .03); circulo(c, x, y - s * 1.22, s * .05, "#ff4d5e");
+    rect(c, x - s * .22, y - s * 1.1, s * .44, s * .32, col, s * .08); circulo(c, x - s * .09, y - s * .95, s * .06, "#4fd8ff"); circulo(c, x + s * .09, y - s * .95, s * .06, "#4fd8ff");
+    linea(c, [[x - s * .08, y - s * .85], [x + s * .08, y - s * .85]], "#1d1b2e", s * .025);
+  } },
+};
+const COLORES = {
+  rojo: "#ff4d5e", azul: "#3d7bff", verde: "#3ccf6e", amarillo: "#ffd23f", violeta: "#9b5cff", morado: "#9b5cff",
+  lila: "#c58bff", rosa: "#ff7fbf", rosado: "#ff7fbf", naranja: "#ff9a3c", anaranjado: "#ff9a3c", negro: "#2a2838",
+  blanco: "#f7f7ff", celeste: "#5fd3ff", marron: "#8b5a2b", cafe: "#8b5a2b", gris: "#9aa0ad", dorado: "#f5c542", plateado: "#c9d1dc",
+  turquesa: "#2ed3c0", fucsia: "#ff3dbb",
+};
+const NUMEROS = { un: 1, una: 1, uno: 1, dos: 2, tres: 3, cuatro: 4, cinco: 5, seis: 6, muchos: 5, muchas: 5, varios: 3, varias: 3 };
+const ESCENAS = { noche: "noche", nocturno: "noche", oscuro: "noche", playa: "mar", mar: "mar", oceano: "mar", agua: "mar", lago: "mar", espacio: "espacio", universo: "espacio", galaxia: "espacio", nieve: "nieve", invierno: "nieve", nevando: "nieve", dia: "dia", campo: "dia", parque: "dia" };
+const RELLENO = new Set("el la los las lo de del al a en con y e o u que muy un una por favor me mi tu su sobre arriba abajo lado cielo fondo paisaje tarde volando jugando sentado sentada parado feliz contento contenta grande gigante enorme chico chica chiquito chiquita pequeno pequena lindo linda hermoso hermosa bonito bonita super re mas entre cerca lejos frente detras adelante atras derecha izquierda medio centro costado hay esta estan como color hace haz haceme dibujo dibujame imagen frankers algo otra otro".split(" "));
+function singular(w) { return [w, w.replace(/es$/, ""), w.replace(/s$/, "")]; }
+function buscarObjeto(w) {
+  for (const forma of singular(w)) for (const [k, o] of Object.entries(OBJETOS)) if (o.palabras.includes(forma)) return k;
+  return null;
+}
+function buscarColor(w) {
+  for (const forma of singular(w)) { if (COLORES[forma]) return COLORES[forma]; const m = forma.replace(/a$/, "o"); if (COLORES[m]) return COLORES[m]; }
+  return null;
+}
+function planearDibujo(pedido) {
+  const t = normalizar(pedido).replace("arco iris", "arcoiris");
+  const items = [], escena = {}, desconocidas = [];
+  let cant = null, colorPendiente = null;
+  for (const w of t.split(" ")) {
+    if (!w) continue;
+    if (NUMEROS[w] || /^\d+$/.test(w)) { cant = Math.min(NUMEROS[w] || parseInt(w, 10), 8); continue; }
+    const obj = buscarObjeto(w);
+    if (obj) { items.push({ tipo: obj, color: colorPendiente, cant: cant || (w.endsWith("s") && w !== "arcoiris" ? 3 : 1) }); cant = null; colorPendiente = null; continue; }
+    const col = buscarColor(w);
+    if (col) { const ult = items[items.length - 1]; if (ult && !ult.color) ult.color = col; else colorPendiente = col; continue; }
+    if (ESCENAS[w]) { escena[ESCENAS[w]] = true; continue; }
+    if (!RELLENO.has(w) && w.length > 2 && !desconocidas.includes(w)) desconocidas.push(w);
+  }
+  if (items.some(i => i.tipo === "pez")) escena.mar = true;
+  if (items.some(i => i.tipo === "luna") && !items.some(i => i.tipo === "sol")) escena.noche = true;
+  return { items, escena, desconocidas, hayEscena: Object.keys(escena).length > 0 };
+}
+function pintar(lienzo, pedido, semilla) {
+  const c = lienzo.getContext("2d"), W = lienzo.width, H = lienzo.height, r = azar(semilla);
+  const { items, escena } = planearDibujo(pedido);
+  const espacio = !!escena.espacio, noche = !!escena.noche && !espacio, mar = !!escena.mar && !espacio, nieve = !!escena.nieve && !espacio;
+  const horizonte = espacio ? H : H * .62;
+
+  // Fondo
+  let g = c.createLinearGradient(0, 0, 0, horizonte);
+  if (espacio) { g = c.createLinearGradient(0, 0, W, H); g.addColorStop(0, "#05030f"); g.addColorStop(1, "#2a1460"); }
+  else if (noche) { g.addColorStop(0, "#0b1030"); g.addColorStop(1, "#2e2470"); }
+  else if (nieve) { g.addColorStop(0, "#a9c4e8"); g.addColorStop(1, "#e3eefb"); }
+  else { g.addColorStop(0, "#6cc6ff"); g.addColorStop(1, "#d2f1ff"); }
+  c.fillStyle = g; c.fillRect(0, 0, W, H);
+  if (espacio || noche) for (let i = 0; i < (espacio ? 140 : 60); i++) circulo(c, r() * W, r() * horizonte * .95, r() * 1.6 + .4, `rgba(255,255,255,${.4 + r() * .6})`);
+
+  // Cosas de fondo (arcoíris y montañas)
+  for (const it of items.filter(i => OBJETOS[i.tipo].zona === "fondo")) {
+    const o = OBJETOS[it.tipo];
+    if (it.tipo === "arcoiris") o.dibujar(c, W / 2, horizonte, W * .36);
+    else for (let k = 0; k < it.cant; k++) o.dibujar(c, (k + .5) / it.cant * W + (r() - .5) * 60, horizonte, H * (.28 + r() * .1), it.color || o.color);
+  }
+
+  // Suelo o agua
+  let sueloArriba = horizonte, sueloAbajo = H, agua = null;
+  if (!espacio) {
+    if (mar) {
+      const arena = H * .84, ga = c.createLinearGradient(0, horizonte, 0, arena);
+      ga.addColorStop(0, noche ? "#1b3f8a" : "#2f8fe0"); ga.addColorStop(1, noche ? "#122a5c" : "#1f6fc0");
+      c.fillStyle = ga; c.fillRect(0, horizonte, W, arena - horizonte);
+      c.strokeStyle = "rgba(255,255,255,.35)"; c.lineWidth = 2;
+      for (let i = 0; i < 14; i++) { const x = r() * W, y = horizonte + 10 + r() * (arena - horizonte - 20); c.beginPath(); c.arc(x, y, 10, Math.PI * 1.1, Math.PI * 1.9); c.stroke(); }
+      c.fillStyle = noche ? "#b8a06a" : "#f2d38b"; c.fillRect(0, arena, W, H - arena);
+      agua = [horizonte + 25, arena - 25]; sueloArriba = arena + 8;
+    } else {
+      const suelo = nieve ? "#f4f8ff" : noche ? "#1f6b45" : "#5ed37a";
+      c.fillStyle = suelo; c.fillRect(0, horizonte, W, H - horizonte);
+      elipse(c, W * .25, horizonte + 10, W * .4, 40, tono(suelo, nieve ? -.04 : .08)); elipse(c, W * .8, horizonte + 14, W * .35, 34, tono(suelo, nieve ? -.06 : -.08));
+      if (nieve) for (let i = 0; i < 70; i++) circulo(c, r() * W, r() * H, r() * 2.5 + 1, "rgba(255,255,255,.9)");
+      sueloArriba = horizonte + (H - horizonte) * .45;
+    }
+  }
+
+  // Repartir objetos en su zona
+  const lista = (zona) => items.filter(i => OBJETOS[i.tipo].zona === zona || (espacio && zona === "cielo" && OBJETOS[i.tipo].zona !== "fondo"))
+    .flatMap(i => Array.from({ length: i.tipo === "estrella" ? Math.min(i.cant * 2, 16) : i.cant }, () => i));
+  const cielo = lista("cielo"), escala = W / 640;
+  cielo.forEach((it, k) => {
+    const o = OBJETOS[it.tipo];
+    let x = (k + .5) / cielo.length * W + (r() - .5) * (W / cielo.length) * .5;
+    let y = espacio ? H * (.15 + r() * .7) : H * .1 + r() * (horizonte - H * .28);
+    if (!espacio && it.tipo === "sol") { x = W * .82; y = H * .18; }
+    if (!espacio && it.tipo === "luna") { x = cielo.some(i => i.tipo === "sol") ? W * .18 : W * .82; y = H * .18; }
+    o.dibujar(c, x, y, o.tam * escala * (.85 + r() * .3), it.color || o.color, r);
+  });
+  if (!espacio) {
+    const peces = lista("agua");
+    peces.forEach((it, k) => { const o = OBJETOS[it.tipo]; o.dibujar(c, (k + .5) / peces.length * W + (r() - .5) * 40, agua[0] + r() * (agua[1] - agua[0]), o.tam * escala, it.color || o.color, r); });
+    const suelo = lista("suelo").map((it, k, arr) => ({ it, x: (k + .5) / arr.length * W + (r() - .5) * (W / arr.length) * .4, y: sueloArriba + r() * (sueloAbajo - sueloArriba) * .8 + 6 }));
+    suelo.sort((a, b) => a.y - b.y).forEach(({ it, x, y }) => {
+      const o = OBJETOS[it.tipo], prof = (y - sueloArriba) / Math.max(1, sueloAbajo - sueloArriba);
+      o.dibujar(c, x, y, o.tam * escala * (mar ? .75 : 1) * (.85 + prof * .35), it.color || o.color, r);
+    });
+  }
+}
+
+/* ---------- 5. ENSEÑAR ---------- */
+const aBase64 = (s) => { let b = ""; new TextEncoder().encode(s).forEach(x => b += String.fromCharCode(x)); return btoa(b); };
+const deBase64 = (s) => new TextDecoder().decode(Uint8Array.from(atob(s.replace(/\n/g, "")), ch => ch.charCodeAt(0)));
+const API = `https://api.github.com/repos/${REPO}/contents/${RUTA}`;
+const cabeceras = () => ({ Authorization: "Bearer " + token, Accept: "application/vnd.github+json" });
+
+async function cargarConocimiento() {
+  const copia = guardado.leer("frankers-conocimiento", null);
+  if (copia) { conocimiento = copia; construirIndice(); }
+  try {
+    let remoto;
+    if (token) {
+      const r = await fetch(API, { headers: cabeceras(), cache: "no-store" });
+      if (r.ok) remoto = JSON.parse(deBase64((await r.json()).content));
+    }
+    if (!remoto) { const r = await fetch("conocimiento.json?v=" + Date.now(), { cache: "no-store" }); if (r.ok) remoto = await r.json(); }
+    if (remoto && (!copia || (remoto.actualizado || "") >= (copia.actualizado || ""))) {
+      conocimiento = remoto; guardado.escribir("frankers-conocimiento", remoto); construirIndice();
+    }
+  } catch {}
+}
+// cambio = función que modifica el conocimiento (agregar o borrar). Se aplica a la última versión de GitHub y se guarda.
+async function publicar(cambio) {
+  cambio(conocimiento); conocimiento.actualizado = new Date().toISOString();
+  construirIndice(); guardado.escribir("frankers-conocimiento", conocimiento);
+  if (!token) return { ok: false, motivo: "Sin modo creador: quedó guardado solo en esta compu." };
+  for (let intento = 0; intento < 2; intento++) {
+    try {
+      const r = await fetch(API, { headers: cabeceras(), cache: "no-store" });
+      let sha, remoto = { version: 1, entradas: [] };
+      if (r.ok) { const j = await r.json(); sha = j.sha; remoto = JSON.parse(deBase64(j.content)); }
+      else if (r.status === 401 || r.status === 403) return { ok: false, motivo: "GitHub no aceptó el token. Revisá el modo creador." };
+      else if (r.status !== 404) throw new Error("GitHub " + r.status);
+      cambio(remoto); remoto.actualizado = new Date().toISOString();
+      const p = await fetch(API, { method: "PUT", headers: cabeceras(), body: JSON.stringify({
+        message: "Frankers aprendió algo nuevo 🎓", content: aBase64(JSON.stringify(remoto, null, 2) + "\n"), sha,
+      }) });
+      if (p.status === 409 || p.status === 422) continue; // alguien guardó al mismo tiempo: reintento
+      if (!p.ok) throw new Error("GitHub " + p.status);
+      conocimiento = remoto; construirIndice(); guardado.escribir("frankers-conocimiento", remoto);
+      return { ok: true };
+    } catch (e) { if (intento === 1) return { ok: false, motivo: "No pude conectarme con GitHub (" + e.message + "). Quedó guardado en esta compu." }; }
+  }
+  return { ok: false, motivo: "No pude guardar en GitHub. Probá de nuevo." };
+}
+// extra = { tipo, autor, fuente }. reemplazar = id de una entrada vieja que se corrige.
+function agregarEntrada(preguntas, respuestas, extra = {}, reemplazar = null) {
+  const claves = new Set(preguntas.map(q => normalizar(q)));
+  const id = Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+  return (kb) => {
+    let todas = [...preguntas];
+    if (reemplazar) { // la corrección se queda con las formas de preguntar de la entrada vieja
+      const vieja = kb.entradas.find(e => e.id === reemplazar);
+      if (vieja) todas = [...new Set([...vieja.preguntas, ...todas])];
+      kb.entradas = kb.entradas.filter(e => e.id !== reemplazar);
+    }
+    const nuevas = new Set(todas.map(q => normalizar(q)));
+    for (const e of kb.entradas) e.preguntas = e.preguntas.filter(q => !nuevas.has(normalizar(q)) && !claves.has(normalizar(q)));
+    kb.entradas = kb.entradas.filter(e => e.preguntas.length);
+    if (!kb.entradas.some(e => e.id === id)) {
+      const entrada = { id, preguntas: todas, respuestas, tipo: extra.tipo || "hecho", fecha: new Date().toISOString() };
+      if (extra.tipo === "opinion") entrada.autor = extra.autor || "Franco";
+      if (extra.fuente) entrada.fuente = extra.fuente;
+      kb.entradas.push(entrada);
+    }
+  };
+}
+const borrarEntrada = (id) => (kb) => { kb.entradas = kb.entradas.filter(e => e.id !== id); };
+
+/* ---------- 6. PANTALLA ---------- */
+const chat = $("#chat"), cara = $("#cara");
+function escaparHTML(s) { return s.replace(/[&<>"']/g, ch => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[ch])); }
+function mostrar(m) {
+  const div = document.createElement("div");
+  div.className = "msg " + m.de;
+  div.innerHTML = escaparHTML(m.texto).replace(/\n/g, "<br>");
+  if (m.dibujo) {
+    const lienzo = document.createElement("canvas"); lienzo.width = 640; lienzo.height = 448;
+    lienzo.setAttribute("role", "img"); lienzo.setAttribute("aria-label", "Dibujo de " + m.dibujo.prompt);
+    try { pintar(lienzo, m.dibujo.prompt, m.dibujo.semilla); } catch (e) { console.error(e); }
+    div.appendChild(lienzo);
+    const extra = document.createElement("div"); extra.className = "extra";
+    const bajar = document.createElement("button"); bajar.className = "boton"; bajar.textContent = "⬇️ Descargar";
+    bajar.onclick = () => { const a = document.createElement("a"); a.href = lienzo.toDataURL("image/png"); a.download = "frankers-" + normalizar(m.dibujo.prompt).replace(/ /g, "-").slice(0, 40) + ".png"; a.click(); };
+    const otra = document.createElement("button"); otra.className = "boton"; otra.textContent = "🔄 Otra versión";
+    otra.onclick = () => { ultimoDibujo = m.dibujo.prompt; enviar("otra"); };
+    extra.append(bajar, otra); div.appendChild(extra);
+  }
+  if (m.ensenar && token) {
+    const extra = document.createElement("div"); extra.className = "extra";
+    const b = document.createElement("button"); b.className = "boton principal"; b.textContent = m.ensenar.reemplazar ? "✏️ Corregirme" : "🎓 Enseñarme";
+    b.onclick = () => typeof m.ensenar === "string" ? abrirEnsenar(m.ensenar) : abrirEnsenar(m.ensenar.pregunta, m.ensenar.reemplazar);
+    extra.appendChild(b); div.appendChild(extra);
+  }
+  chat.appendChild(div);
+  chat.scrollTop = chat.scrollHeight;
+}
+function agregar(m) { historial.push(m); guardarHistorial(); mostrar(m); }
+function bienvenida() {
+  mostrar({ de: "frankers", texto: personalizar("¡Hola {nombre}! Soy Frankers, una IA chiquita que Franco está armando desde cero. 🤖\nPuedo charlar, acordarme de lo que me contás y hacer dibujos. Todavía sé poquito, pero aprendo todo el tiempo.") });
+}
+
+let ocupado = false;
+async function enviar(texto) {
+  texto = texto.trim(); if (!texto || ocupado) return;
+  ocupado = true;
+  agregar({ de: "yo", texto });
+  cara.classList.add("pensando");
+  const puntitos = document.createElement("div"); puntitos.className = "msg frankers"; puntitos.innerHTML = '<span class="escribiendo"><b></b><b></b><b></b></span>';
+  chat.appendChild(puntitos); chat.scrollTop = chat.scrollHeight;
+  await new Promise(res => setTimeout(res, 350 + Math.random() * 450));
+  puntitos.remove(); cara.classList.remove("pensando");
+  let respuesta;
+  try {
+    respuesta = responder(texto);
+    const consejo = CONSEJOS.find(x => x.re.test(normalizar(texto)));
+    if (consejo && !respuesta.dibujo && !FILTROS.some(f => f.msg === respuesta.texto)) respuesta.texto += "\n" + consejo.texto;
+  } catch (e) { console.error(e); respuesta = { texto: "Uy, se me cruzaron los cables. 😵 ¿Probás de nuevo?" }; }
+  agregar({ de: "frankers", ...respuesta });
+  ocupado = false;
+}
+
+$("#formulario").addEventListener("submit", (e) => { e.preventDefault(); const i = $("#entrada"); enviar(i.value); i.value = ""; i.focus(); });
+$("#sugerencias").addEventListener("click", (e) => { if (e.target.matches("button")) enviar(e.target.textContent); });
+$("#btnLimpiar").onclick = () => { historial = []; guardarHistorial(); chat.innerHTML = ""; ultimoDibujo = null; bienvenida(); };
+
+// Enseñar
+const dlgEnsenar = $("#dlgEnsenar");
+let ensReemplazar = null, ensConflicto = null; // corrección pedida / choque detectado
+function abrirEnsenar(pregunta = "", reemplazar = null) {
+  ensReemplazar = reemplazar; ensConflicto = null;
+  $("#ensPreguntas").value = pregunta; $("#ensRespuestas").value = ""; $("#ensEstado").textContent = ""; $("#ensEstado").className = "estado";
+  $("#ensTipo").value = "hecho"; $("#ensAutorCaja").hidden = true; $("#ensFuenteCaja").hidden = true; $("#ensFuente").value = "";
+  $("#ensGuardar").textContent = reemplazar ? "Corregir" : "Enseñar";
+  dlgEnsenar.showModal(); (pregunta ? $("#ensRespuestas") : $("#ensPreguntas")).focus();
+}
+$("#ensTipo").onchange = () => { $("#ensAutorCaja").hidden = $("#ensTipo").value !== "opinion"; };
+$("#ensPreguntas").oninput = $("#ensRespuestas").oninput = () => { // si cambia el texto, se vuelve a revisar el choque
+  if (ensConflicto) { ensConflicto = null; $("#ensFuenteCaja").hidden = true; $("#ensGuardar").textContent = ensReemplazar ? "Corregir" : "Enseñar"; $("#ensEstado").textContent = ""; }
+};
+$("#btnEnsenar").onclick = () => abrirEnsenar();
+$("#formEnsenar").addEventListener("submit", async (e) => {
+  if (e.submitter && e.submitter.value === "cancelar") return;
+  e.preventDefault();
+  const preguntas = $("#ensPreguntas").value.split("\n").map(s => s.trim()).filter(Boolean);
+  const respuestas = $("#ensRespuestas").value.split("\n").map(s => s.trim()).filter(Boolean);
+  if (!preguntas.length || !respuestas.length) return;
+  const tipo = $("#ensTipo").value, autor = $("#ensAutor").value.trim(), fuente = $("#ensFuente").value.trim();
+  const estado = $("#ensEstado"), boton = $("#ensGuardar");
+  const mal = (msg) => { estado.className = "estado mal"; estado.textContent = msg; };
+
+  // Filtro 1 y 3: reglas que nunca cambian (insultos, daño, datos personales, cambiar reglas…)
+  const control = revisar([...preguntas, ...respuestas, autor, fuente].join("\n"));
+  if (control.problema) return mal("No puedo aprender eso. " + control.msg);
+  const todo = normalizar([...preguntas, ...respuestas].join(" "));
+  if (/\b(soy|somos) (una |un )?(persona|humano|humana|chico|chica|nene|nena)\b/.test(normalizar(respuestas.join(" ")))) return mal("No puedo aprender eso: soy una IA y no digo que soy una persona.");
+  if (TEMAS[2].re.test(todo)) return mal("No puedo aprender eso: en política no tomo partido.");
+  if (respuestas.some(r => r.length > 280)) return mal("Esa respuesta es muy larga. Contala con tus palabras y más cortita (y no copies letras de canciones, libros ni artículos).");
+  // Filtro 2: hechos falsos evidentes
+  if (tipo !== "opinion") {
+    for (const r of [...respuestas, ...preguntas.map(q => q + " " + respuestas[0])]) {
+      const porque = esFalso(r);
+      if (porque) return mal("Mmm, no puedo aprender eso porque no es cierto: " + porque);
+    }
+  }
+  // Filtro 4: ¿choca con algo que ya sé? Pido explicación en vez de reemplazar sin más.
+  if (!ensReemplazar && !ensConflicto) {
+    for (const q of preguntas) {
+      const { entrada, puntaje, frase } = pensar(q);
+      if (entrada && puntaje >= 0.6 && !entrada.respuestas.some(r => respuestas.some(n => normalizar(n) === normalizar(r)))) {
+        ensConflicto = entrada.id;
+        $("#ensFuenteCaja").hidden = false; boton.textContent = "Sí, reemplazar";
+        estado.className = "estado";
+        estado.textContent = `⚠️ Esto choca con algo que ya sé: si me dicen "${frase}", contesto "${entrada.respuestas[0]}". Si querés cambiarlo, contame por qué (o de dónde lo sacaste) y tocá "Sí, reemplazar".`;
+        $("#ensFuente").focus();
+        return;
+      }
+    }
+  }
+  if (ensConflicto && !fuente) { mal("Contame por qué cambia (una explicación o una fuente) para reemplazarlo."); $("#ensFuente").focus(); return; }
+
+  boton.disabled = true; estado.className = "estado"; estado.textContent = "Aprendiendo… 🧠";
+  const reemplazo = ensReemplazar || ensConflicto;
+  const r = await publicar(agregarEntrada(preguntas, respuestas, { tipo, autor, fuente }, reemplazo));
+  boton.disabled = false;
+  if (r.ok) {
+    dlgEnsenar.close();
+    const queEs = tipo === "opinion" ? ` (lo guardo como una opinión de ${autor || "Franco"}, no como un hecho)` : tipo === "gusto" ? " (lo guardo como un gusto mío)" : "";
+    const texto = reemplazo
+      ? `Gracias por corregirme. 🙏 Entendí: si me preguntan "${preguntas[0]}", la respuesta correcta es "${respuestas[0]}"${queEs}. Desde ahora uso esta versión.`
+      : `¡Gracias por enseñarme! 🎓 Entendí que si me preguntan "${preguntas[0]}", tengo que contestar "${respuestas[0]}"${queEs}. Ya lo sabe todo el mundo.`;
+    agregar({ de: "frankers", texto });
+    ultimaRespuesta = null;
+  } else mal(r.motivo);
+});
+
+// Lo que sé
+const dlgSaber = $("#dlgSaber");
+function dibujarListaSaber() {
+  const lista = $("#listaSaber"); lista.innerHTML = "";
+  $("#saberResumen").textContent = `Aprendí ${conocimiento.entradas.length} cosas, y además sé recordar tu nombre y datos, hacer cuentas, decir la hora y dibujar ${Object.values(OBJETOS).map(o => o.nombre).join(", ")}.`;
+  $("#listaReglas").innerHTML = REGLAS.map(r => `<li>${escaparHTML(r)}</li>`).join("");
+  const nombresTipo = { hecho: "Hecho", gusto: "Gusto mío", opinion: "Opinión" };
+  for (const e of [...conocimiento.entradas].reverse()) {
+    const li = document.createElement("li"), tipo = e.tipo || "hecho";
+    const etiqueta = `<span class="etiqueta-tipo ${tipo}">${nombresTipo[tipo] || "Hecho"}${tipo === "opinion" ? " de " + escaparHTML(e.autor || "alguien") : ""}</span>`;
+    li.innerHTML = `<div class="texto"><b>${etiqueta}${escaparHTML(e.preguntas.join(" · "))}</b><span>→ ${escaparHTML(e.respuestas.join(" / "))}</span>${e.fuente ? `<br><span>📎 ${escaparHTML(e.fuente)}</span>` : ""}</div>`;
+    if (token) {
+      const b = document.createElement("button"); b.className = "boton"; b.textContent = "Olvidar";
+      b.onclick = async () => {
+        b.disabled = true; $("#saberEstado").className = "estado"; $("#saberEstado").textContent = "Olvidando…";
+        const r = await publicar(borrarEntrada(e.id));
+        $("#saberEstado").className = "estado " + (r.ok ? "ok" : "mal"); $("#saberEstado").textContent = r.ok ? "Listo, ya no lo sé." : r.motivo;
+        dibujarListaSaber();
+      };
+      li.appendChild(b);
+    }
+    lista.appendChild(li);
+  }
+}
+$("#btnSaber").onclick = () => { $("#saberEstado").textContent = ""; dibujarListaSaber(); dlgSaber.showModal(); };
+$("#saberCerrar").onclick = () => dlgSaber.close();
+
+// Modo creador
+const dlgCreador = $("#dlgCreador");
+function actualizarModo() {
+  $("#btnEnsenar").hidden = !token;
+  $("#creadorApagado").hidden = !!token; $("#creadorPrendido").hidden = !token;
+  $("#creadorActivar").hidden = !!token; $("#creadorSalir").hidden = !token;
+  $("#subtitulo").textContent = token ? "Modo creador 🔑 · podés enseñarle" : "IA hecha desde cero por Franco";
+}
+$("#btnCreador").onclick = () => { $("#creadorEstado").textContent = ""; $("#creadorToken").value = ""; dlgCreador.showModal(); };
+$("#creadorCerrar").onclick = () => dlgCreador.close();
+$("#creadorSalir").onclick = () => { token = null; guardado.borrar("frankers-token"); actualizarModo(); dlgCreador.close(); };
+$("#creadorActivar").onclick = async () => {
+  const t = $("#creadorToken").value.trim(), estado = $("#creadorEstado");
+  if (!t) { estado.className = "estado mal"; estado.textContent = "Pegá el token primero."; return; }
+  estado.className = "estado"; estado.textContent = "Probando el token…";
+  try {
+    const r = await fetch(`https://api.github.com/repos/${REPO}`, { headers: { Authorization: "Bearer " + t, Accept: "application/vnd.github+json" } });
+    if (!r.ok) throw new Error(r.status === 401 ? "El token no es válido." : "GitHub respondió " + r.status + ". Revisá que el token tenga acceso al repo.");
+    token = t; guardado.escribir("frankers-token", t); actualizarModo();
+    estado.className = "estado ok"; estado.textContent = "¡Listo! Ya podés enseñarle a Frankers.";
+    cargarConocimiento();
+  } catch (e) { estado.className = "estado mal"; estado.textContent = e.message || "No pude conectarme con GitHub."; }
+};
+
+// Arranque
+actualizarModo();
+if (historial.length) historial.forEach(mostrar); else bienvenida();
+cargarConocimiento();
+$("#entrada").focus();
+</script>
+</body>
+</html>
