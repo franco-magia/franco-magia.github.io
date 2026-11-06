@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "actualizado": "2026-11-06T23:00:00.000Z",
+  "actualizado": "2026-11-06T23:10:00.000Z",
   "entradas": [
     {
       "id": "saludo",
@@ -300,6 +300,588 @@
         "¡Buenísimo! Contame más.",
         "¡Genial! Esa energía me encanta.",
         "¡Qué lindo! ¿Qué pasó?"
+      ]
+    },
+    {
+      "id": "dic-papa",
+      "tipo": "hecho",
+      "preguntas": [
+        "que es el papa",
+        "que significa papa",
+        "que quiere decir papa",
+        "definicion de papa",
+        "ejemplo de papa",
+        "explicame que es papa",
+        "que es la mama",
+        "que significa mama",
+        "que quiere decir mama",
+        "definicion de mama",
+        "ejemplo de mama",
+        "explicame que es mama",
+        "que es los padres",
+        "que significa padres",
+        "que quiere decir padres",
+        "definicion de padres",
+        "ejemplo de padres",
+        "que son padres",
+        "padres",
+        "quienes son los padres"
+      ],
+      "respuestas": [
+        "Papá y mamá son los padres de una persona. Por ejemplo: \"Mi papá me ayuda con la página.\""
+      ]
+    },
+    {
+      "id": "dic-hermano",
+      "tipo": "hecho",
+      "preguntas": [
+        "que es un hermano",
+        "que significa hermano",
+        "que quiere decir hermano",
+        "definicion de hermano",
+        "ejemplo de hermano",
+        "explicame que es hermano",
+        "hermano",
+        "que es una hermana",
+        "que significa hermana",
+        "que quiere decir hermana",
+        "definicion de hermana",
+        "ejemplo de hermana",
+        "explicame que es hermana",
+        "hermana",
+        "que es los hermanos",
+        "que significa hermanos",
+        "que quiere decir hermanos",
+        "definicion de hermanos",
+        "ejemplo de hermanos",
+        "que son hermanos",
+        "hermanos"
+      ],
+      "respuestas": [
+        "Un hermano o una hermana es el hijo o la hija de los mismos padres. Por ejemplo: \"Mi hermana es más grande que yo.\""
+      ]
+    },
+    {
+      "id": "dic-abuelo",
+      "tipo": "hecho",
+      "preguntas": [
+        "que es un abuelo",
+        "que significa abuelo",
+        "que quiere decir abuelo",
+        "definicion de abuelo",
+        "ejemplo de abuelo",
+        "explicame que es abuelo",
+        "abuelo",
+        "que es una abuela",
+        "que significa abuela",
+        "que quiere decir abuela",
+        "definicion de abuela",
+        "ejemplo de abuela",
+        "explicame que es abuela",
+        "abuela",
+        "que es los abuelos",
+        "que significa abuelos",
+        "que quiere decir abuelos",
+        "definicion de abuelos",
+        "ejemplo de abuelos",
+        "que son abuelos",
+        "abuelos",
+        "quienes son los abuelos"
+      ],
+      "respuestas": [
+        "El abuelo y la abuela son los padres de tus padres. Por ejemplo: \"Los domingos comemos en lo de la abuela.\""
+      ]
+    },
+    {
+      "id": "dic-amigo",
+      "tipo": "hecho",
+      "preguntas": [
+        "que es un amigo",
+        "que significa amigo",
+        "que quiere decir amigo",
+        "definicion de amigo",
+        "ejemplo de amigo",
+        "explicame que es amigo",
+        "amigo",
+        "que es una amiga",
+        "que significa amiga",
+        "que quiere decir amiga",
+        "definicion de amiga",
+        "ejemplo de amiga",
+        "explicame que es amiga",
+        "amiga",
+        "que es la amistad",
+        "que significa amistad",
+        "que quiere decir amistad",
+        "definicion de amistad",
+        "ejemplo de amistad",
+        "explicame que es amistad",
+        "amistad"
+      ],
+      "respuestas": [
+        "Un amigo o una amiga es una persona que te cae bien y con quien compartís cosas. Por ejemplo: \"Mi mejor amigo vive cerca.\""
+      ]
+    },
+    {
+      "id": "dic-adulto-de-confianza",
+      "tipo": "hecho",
+      "preguntas": [
+        "que es un adulto de confianza",
+        "que significa adulto de confianza",
+        "que quiere decir adulto de confianza",
+        "definicion de adulto de confianza",
+        "ejemplo de adulto de confianza",
+        "explicame que es adulto de confianza",
+        "adulto de confianza",
+        "a quien le cuento un problema",
+        "con quien hablo si tengo un problema"
+      ],
+      "respuestas": [
+        "Un adulto de confianza es una persona grande que te cuida y a quien le podés contar tus problemas. Por ejemplo: \"Si algo te preocupa, contale a un adulto de confianza.\""
+      ]
+    },
+    {
+      "id": "dic-casa",
+      "tipo": "hecho",
+      "preguntas": [
+        "que es una casa",
+        "que significa casa",
+        "que quiere decir casa",
+        "definicion de casa",
+        "ejemplo de casa",
+        "explicame que es casa",
+        "que es el hogar",
+        "que significa hogar",
+        "que quiere decir hogar",
+        "definicion de hogar",
+        "ejemplo de hogar",
+        "explicame que es hogar",
+        "hogar"
+      ],
+      "respuestas": [
+        "La casa es el lugar en el que vive una persona. Por ejemplo: \"Estoy en casa.\""
+      ]
+    },
+    {
+      "id": "dic-escuela",
+      "tipo": "hecho",
+      "preguntas": [
+        "que es la escuela",
+        "que significa escuela",
+        "que quiere decir escuela",
+        "definicion de escuela",
+        "ejemplo de escuela",
+        "explicame que es escuela",
+        "escuela",
+        "que es el colegio",
+        "que significa colegio",
+        "que quiere decir colegio",
+        "definicion de colegio",
+        "ejemplo de colegio",
+        "explicame que es colegio",
+        "colegio"
+      ],
+      "respuestas": [
+        "La escuela es el lugar donde se va a aprender. Por ejemplo: \"Mañana tengo escuela.\""
+      ]
+    },
+    {
+      "id": "dic-plaza",
+      "tipo": "hecho",
+      "preguntas": [
+        "que es una plaza",
+        "que significa plaza",
+        "que quiere decir plaza",
+        "definicion de plaza",
+        "ejemplo de plaza",
+        "explicame que es plaza",
+        "plaza"
+      ],
+      "respuestas": [
+        "Una plaza es un espacio al aire libre con juegos y árboles. Por ejemplo: \"Vamos a la plaza a jugar.\""
+      ]
+    },
+    {
+      "id": "dic-argentina",
+      "tipo": "hecho",
+      "preguntas": [
+        "que es argentina",
+        "que significa argentina",
+        "que quiere decir argentina",
+        "definicion de argentina",
+        "ejemplo de argentina",
+        "explicame que es argentina",
+        "argentina",
+        "cual es la capital de argentina",
+        "capital de argentina",
+        "donde queda argentina"
+      ],
+      "respuestas": [
+        "Argentina es un país de América del Sur. Su capital es Buenos Aires. Por ejemplo: \"Vivo en Argentina.\""
+      ]
+    },
+    {
+      "id": "dic-hoy",
+      "tipo": "hecho",
+      "preguntas": [
+        "que es hoy",
+        "que significa hoy",
+        "que quiere decir hoy",
+        "definicion de hoy",
+        "ejemplo de hoy",
+        "explicame que es hoy"
+      ],
+      "respuestas": [
+        "Hoy es el día de ahora. Por ejemplo: \"Hoy hace calor.\""
+      ]
+    },
+    {
+      "id": "dic-ayer",
+      "tipo": "hecho",
+      "preguntas": [
+        "que es ayer",
+        "que significa ayer",
+        "que quiere decir ayer",
+        "definicion de ayer",
+        "ejemplo de ayer",
+        "explicame que es ayer"
+      ],
+      "respuestas": [
+        "Ayer es el día anterior a hoy. Por ejemplo: \"Ayer fui al cine.\""
+      ]
+    },
+    {
+      "id": "dic-manana",
+      "tipo": "hecho",
+      "preguntas": [
+        "que es mañana",
+        "que significa mañana",
+        "que quiere decir mañana",
+        "definicion de mañana",
+        "ejemplo de mañana",
+        "explicame que es mañana",
+        "mañana"
+      ],
+      "respuestas": [
+        "Mañana es el día siguiente a hoy. También es la primera parte del día. Por ejemplo: \"Mañana es sábado.\" / \"Me levanto a la mañana.\""
+      ]
+    },
+    {
+      "id": "dic-semana",
+      "tipo": "hecho",
+      "preguntas": [
+        "que es una semana",
+        "que significa semana",
+        "que quiere decir semana",
+        "definicion de semana",
+        "ejemplo de semana",
+        "explicame que es semana",
+        "semana",
+        "cuantos dias tiene una semana"
+      ],
+      "respuestas": [
+        "Una semana son siete días. Por ejemplo: \"La semana que viene empiezan las vacaciones.\""
+      ]
+    },
+    {
+      "id": "dic-fin-de-semana",
+      "tipo": "hecho",
+      "preguntas": [
+        "que es el fin de semana",
+        "que significa fin de semana",
+        "que quiere decir fin de semana",
+        "definicion de fin de semana",
+        "ejemplo de fin de semana",
+        "explicame que es fin de semana",
+        "fin de semana",
+        "que es el finde",
+        "que significa finde",
+        "que quiere decir finde",
+        "definicion de finde",
+        "ejemplo de finde",
+        "explicame que es finde",
+        "finde",
+        "que dias son el fin de semana"
+      ],
+      "respuestas": [
+        "El fin de semana es el sábado y el domingo. Por ejemplo: \"El fin de semana voy a programar.\""
+      ]
+    },
+    {
+      "id": "dic-asado",
+      "tipo": "hecho",
+      "preguntas": [
+        "que es un asado",
+        "que significa asado",
+        "que quiere decir asado",
+        "definicion de asado",
+        "ejemplo de asado",
+        "explicame que es asado",
+        "asado"
+      ],
+      "respuestas": [
+        "El asado es carne a la parrilla, muy típica de Argentina. Por ejemplo: \"El domingo hacemos asado.\""
+      ]
+    },
+    {
+      "id": "dic-mate",
+      "tipo": "hecho",
+      "preguntas": [
+        "que es el mate",
+        "que significa mate",
+        "que quiere decir mate",
+        "definicion de mate",
+        "ejemplo de mate",
+        "explicame que es mate"
+      ],
+      "respuestas": [
+        "El mate es una bebida caliente argentina que se toma con bombilla. Por ejemplo: \"Mi mamá toma mate a la mañana.\""
+      ]
+    },
+    {
+      "id": "dic-empanada",
+      "tipo": "hecho",
+      "preguntas": [
+        "que es una empanada",
+        "que significa empanada",
+        "que quiere decir empanada",
+        "definicion de empanada",
+        "ejemplo de empanada",
+        "explicame que es empanada",
+        "empanada",
+        "que es las empanadas",
+        "que significa empanadas",
+        "que quiere decir empanadas",
+        "definicion de empanadas",
+        "ejemplo de empanadas",
+        "que son empanadas",
+        "empanadas"
+      ],
+      "respuestas": [
+        "Una empanada es una masa rellena, al horno o frita. Por ejemplo: \"Pedimos empanadas de carne.\""
+      ]
+    },
+    {
+      "id": "dic-dulce-de-leche",
+      "tipo": "hecho",
+      "preguntas": [
+        "que es el dulce de leche",
+        "que significa dulce de leche",
+        "que quiere decir dulce de leche",
+        "definicion de dulce de leche",
+        "ejemplo de dulce de leche",
+        "explicame que es dulce de leche",
+        "dulce de leche"
+      ],
+      "respuestas": [
+        "El dulce de leche es un dulce típico argentino hecho con leche y azúcar. Por ejemplo: \"Me encantan los panqueques con dulce de leche.\""
+      ]
+    },
+    {
+      "id": "dic-milanesa",
+      "tipo": "hecho",
+      "preguntas": [
+        "que es una milanesa",
+        "que significa milanesa",
+        "que quiere decir milanesa",
+        "definicion de milanesa",
+        "ejemplo de milanesa",
+        "explicame que es milanesa",
+        "milanesa",
+        "que es las milanesas",
+        "que significa milanesas",
+        "que quiere decir milanesas",
+        "definicion de milanesas",
+        "ejemplo de milanesas",
+        "que son milanesas",
+        "milanesas"
+      ],
+      "respuestas": [
+        "Una milanesa es carne empanada, frita o al horno. Por ejemplo: \"Hoy hay milanesas con puré.\""
+      ]
+    },
+    {
+      "id": "dic-jugar",
+      "tipo": "hecho",
+      "preguntas": [
+        "que es jugar",
+        "que significa jugar",
+        "que quiere decir jugar",
+        "definicion de jugar",
+        "ejemplo de jugar",
+        "explicame que es jugar",
+        "jugar"
+      ],
+      "respuestas": [
+        "Jugar es hacer algo para divertirse. Por ejemplo: \"Quiero jugar al fútbol.\""
+      ]
+    },
+    {
+      "id": "dic-escuchar",
+      "tipo": "hecho",
+      "preguntas": [
+        "que es escuchar",
+        "que significa escuchar",
+        "que quiere decir escuchar",
+        "definicion de escuchar",
+        "ejemplo de escuchar",
+        "explicame que es escuchar",
+        "escuchar"
+      ],
+      "respuestas": [
+        "Escuchar es prestar atención a un sonido. Por ejemplo: \"Escuchá mi canción.\""
+      ]
+    },
+    {
+      "id": "dic-ayudar",
+      "tipo": "hecho",
+      "preguntas": [
+        "que es ayudar",
+        "que significa ayudar",
+        "que quiere decir ayudar",
+        "definicion de ayudar",
+        "ejemplo de ayudar",
+        "explicame que es ayudar",
+        "ayudar"
+      ],
+      "respuestas": [
+        "Ayudar es hacer algo para que a otro le vaya mejor. Por ejemplo: \"¿Me ayudás con esto?\""
+      ]
+    },
+    {
+      "id": "dic-equivocarse",
+      "tipo": "hecho",
+      "preguntas": [
+        "que es equivocarse",
+        "que significa equivocarse",
+        "que quiere decir equivocarse",
+        "definicion de equivocarse",
+        "ejemplo de equivocarse",
+        "explicame que es equivocarse",
+        "equivocarse",
+        "que es un error"
+      ],
+      "respuestas": [
+        "Equivocarse es hacer algo mal sin querer. Por ejemplo: \"Me equivoqué en la cuenta.\""
+      ]
+    },
+    {
+      "id": "dic-corregir",
+      "tipo": "hecho",
+      "preguntas": [
+        "que es corregir",
+        "que significa corregir",
+        "que quiere decir corregir",
+        "definicion de corregir",
+        "ejemplo de corregir",
+        "explicame que es corregir",
+        "corregir"
+      ],
+      "respuestas": [
+        "Corregir es arreglar un error. Por ejemplo: \"Gracias por corregirme.\""
+      ]
+    },
+    {
+      "id": "dic-crear",
+      "tipo": "hecho",
+      "preguntas": [
+        "que es crear",
+        "que significa crear",
+        "que quiere decir crear",
+        "definicion de crear",
+        "ejemplo de crear",
+        "explicame que es crear",
+        "crear"
+      ],
+      "respuestas": [
+        "Crear es hacer algo nuevo. Por ejemplo: \"Voy a crear mi propia IA.\""
+      ]
+    },
+    {
+      "id": "dic-respeto",
+      "tipo": "hecho",
+      "preguntas": [
+        "que es el respeto",
+        "que significa respeto",
+        "que quiere decir respeto",
+        "definicion de respeto",
+        "ejemplo de respeto",
+        "explicame que es respeto",
+        "respeto"
+      ],
+      "respuestas": [
+        "El respeto es tratar bien a los demás, aunque piensen distinto. Por ejemplo: \"Hablemos con respeto.\""
+      ]
+    },
+    {
+      "id": "dic-insulto",
+      "tipo": "hecho",
+      "preguntas": [
+        "que es un insulto",
+        "que significa insulto",
+        "que quiere decir insulto",
+        "definicion de insulto",
+        "ejemplo de insulto",
+        "explicame que es insulto",
+        "insulto",
+        "que es los insultos",
+        "que significa insultos",
+        "que quiere decir insultos",
+        "definicion de insultos",
+        "ejemplo de insultos",
+        "que son insultos",
+        "insultos"
+      ],
+      "respuestas": [
+        "Un insulto es una palabra que se dice para lastimar u ofender. Yo nunca los uso. Por ejemplo: \"Eso es un insulto, prefiero no repetirlo.\""
+      ]
+    },
+    {
+      "id": "dic-mala-palabra",
+      "tipo": "hecho",
+      "preguntas": [
+        "que es una mala palabra",
+        "que significa mala palabra",
+        "que quiere decir mala palabra",
+        "definicion de mala palabra",
+        "ejemplo de mala palabra",
+        "explicame que es mala palabra",
+        "mala palabra",
+        "que es las malas palabras",
+        "que significa malas palabras",
+        "que quiere decir malas palabras",
+        "definicion de malas palabras",
+        "ejemplo de malas palabras",
+        "que son malas palabras",
+        "malas palabras"
+      ],
+      "respuestas": [
+        "Una mala palabra es una palabra grosera o vulgar. Yo las reconozco, pero no las digo. Por ejemplo: \"Prefiero hablar sin malas palabras.\""
+      ]
+    },
+    {
+      "id": "dic-bullying",
+      "tipo": "hecho",
+      "preguntas": [
+        "que es el bullying",
+        "que significa bullying",
+        "que quiere decir bullying",
+        "definicion de bullying",
+        "ejemplo de bullying",
+        "explicame que es bullying",
+        "bullying",
+        "que es el bulling",
+        "que significa bulling",
+        "que quiere decir bulling",
+        "definicion de bulling",
+        "ejemplo de bulling",
+        "explicame que es bulling",
+        "bulling",
+        "que hago si me hacen bullying",
+        "me hacen bullying"
+      ],
+      "respuestas": [
+        "El bullying es cuando alguien molesta o lastima a otro una y otra vez. No está bien. Por ejemplo: \"El bullying no está bien; si te pasa, contale a un adulto.\""
       ]
     }
   ]
