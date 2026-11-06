@@ -1,6 +1,6 @@
 {
 "version": 1,
-"actualizado": "2026-11-06T23:32:26.143Z",
+"actualizado": "2026-11-06T23:33:24.569Z",
 "entradas": [
 {
 "id": "saludo",
@@ -8520,6 +8520,1117 @@
 ],
 "respuestas": [
 "Son una gran competencia de deportes entre países, cada 4 años. Nacieron en la antigua Grecia."
+]
+},
+{
+"id": "qa-qa06txt-1",
+"tipo": "hecho",
+"preguntas": [
+"que es programar",
+"que significa programar"
+],
+"respuestas": [
+"Programar es escribir instrucciones para que una computadora haga algo, como un juego, una página o una app."
+]
+},
+{
+"id": "qa-qa06txt-2",
+"tipo": "hecho",
+"preguntas": [
+"que es un lenguaje de programacion",
+"que lenguajes de programacion hay"
+],
+"respuestas": [
+"Es un idioma para darle órdenes a la computadora. Algunos son JavaScript, Python, Java, C y Scratch."
+]
+},
+{
+"id": "qa-qa06txt-3",
+"tipo": "hecho",
+"preguntas": [
+"que es javascript",
+"para que sirve javascript"
+],
+"respuestas": [
+"JavaScript es el lenguaje que hace que las páginas web se muevan y respondan, como Frankers."
+]
+},
+{
+"id": "qa-qa06txt-4",
+"tipo": "hecho",
+"preguntas": [
+"que es html",
+"para que sirve html"
+],
+"respuestas": [
+"HTML es el lenguaje con el que se arma la estructura de una página web: títulos, textos, botones e imágenes."
+]
+},
+{
+"id": "qa-qa06txt-5",
+"tipo": "hecho",
+"preguntas": [
+"que es css",
+"para que sirve css"
+],
+"respuestas": [
+"CSS es el lenguaje que le da estilo a una página web: colores, letras, tamaños y posiciones."
+]
+},
+{
+"id": "qa-qa06txt-6",
+"tipo": "hecho",
+"preguntas": [
+"que es python",
+"para que sirve python"
+],
+"respuestas": [
+"Python es un lenguaje de programación fácil de leer, muy usado para aprender, para ciencia de datos y para inteligencia artificial."
+]
+},
+{
+"id": "qa-qa06txt-7",
+"tipo": "hecho",
+"preguntas": [
+"que es scratch",
+"que es el programa scratch"
+],
+"respuestas": [
+"Scratch es una forma de programar encastrando bloques de colores, ideal para empezar a hacer juegos y animaciones."
+]
+},
+{
+"id": "qa-qa06txt-8",
+"tipo": "hecho",
+"preguntas": [
+"que es un algoritmo",
+"que significa algoritmo"
+],
+"respuestas": [
+"Un algoritmo es una lista de pasos ordenados para resolver un problema, como una receta."
+]
+},
+{
+"id": "qa-qa06txt-9",
+"tipo": "hecho",
+"preguntas": [
+"que es una variable",
+"que es una variable en programacion"
+],
+"respuestas": [
+"Una variable es como una cajita con nombre donde el programa guarda un dato, por ejemplo puntos = 10."
+]
+},
+{
+"id": "qa-qa06txt-10",
+"tipo": "hecho",
+"preguntas": [
+"que es un bucle",
+"que es un loop"
+],
+"respuestas": [
+"Un bucle es una parte del programa que se repite varias veces, por ejemplo para mover un personaje paso a paso."
+]
+},
+{
+"id": "qa-qa06txt-11",
+"tipo": "hecho",
+"preguntas": [
+"que es un if",
+"que es una condicion en programacion"
+],
+"respuestas": [
+"Un \"if\" es una condición: si pasa algo, el programa hace una cosa; si no, hace otra."
+]
+},
+{
+"id": "qa-qa06txt-12",
+"tipo": "hecho",
+"preguntas": [
+"que es una funcion en programacion",
+"que es una funcion"
+],
+"respuestas": [
+"Una función es un pedazo de código con nombre que hace una tarea y se puede usar muchas veces."
+]
+},
+{
+"id": "qa-qa06txt-13",
+"tipo": "hecho",
+"preguntas": [
+"que es un bug",
+"que es un error de programacion"
+],
+"respuestas": [
+"Un bug es un error en un programa que hace que funcione mal. Arreglarlo se llama \"debuggear\"."
+]
+},
+{
+"id": "qa-qa06txt-14",
+"tipo": "hecho",
+"preguntas": [
+"por que se llama bug a los errores",
+"de donde viene la palabra bug"
+],
+"respuestas": [
+"\"Bug\" quiere decir bicho en inglés. Hay una historia famosa de una polilla que se metió en una computadora en 1947."
+]
+},
+{
+"id": "qa-qa06txt-15",
+"tipo": "hecho",
+"preguntas": [
+"que es el codigo",
+"que es el codigo fuente"
+],
+"respuestas": [
+"El código es el texto con las instrucciones que escribe un programador."
+]
+},
+{
+"id": "qa-qa06txt-16",
+"tipo": "hecho",
+"preguntas": [
+"que es un programador",
+"que hace un programador"
+],
+"respuestas": [
+"Un programador escribe código para crear programas, juegos, páginas web y apps."
+]
+},
+{
+"id": "qa-qa06txt-17",
+"tipo": "hecho",
+"preguntas": [
+"que es una app",
+"que es una aplicacion"
+],
+"respuestas": [
+"Una app o aplicación es un programa que se usa en el celular o la computadora para hacer algo, como jugar o chatear."
+]
+},
+{
+"id": "qa-qa06txt-18",
+"tipo": "hecho",
+"preguntas": [
+"que es una pagina web",
+"que es un sitio web"
+],
+"respuestas": [
+"Una página web es un documento que se ve en el navegador de internet. Un sitio web es un conjunto de páginas, como francosandes.com."
+]
+},
+{
+"id": "qa-qa06txt-19",
+"tipo": "hecho",
+"preguntas": [
+"que es un navegador",
+"que es un navegador de internet"
+],
+"respuestas": [
+"El navegador es el programa para ver páginas web, como Chrome, Firefox, Edge o Brave."
+]
+},
+{
+"id": "qa-qa06txt-20",
+"tipo": "hecho",
+"preguntas": [
+"que es un dominio",
+"que es un dominio de internet"
+],
+"respuestas": [
+"El dominio es el nombre de una página web, como francosandes.com."
+]
+},
+{
+"id": "qa-qa06txt-21",
+"tipo": "hecho",
+"preguntas": [
+"que es github",
+"para que sirve github"
+],
+"respuestas": [
+"GitHub es un sitio donde los programadores guardan y comparten su código. La página de Franco está publicada ahí."
+]
+},
+{
+"id": "qa-qa06txt-22",
+"tipo": "hecho",
+"preguntas": [
+"que es un servidor",
+"para que sirve un servidor"
+],
+"respuestas": [
+"Un servidor es una computadora que siempre está prendida y le manda páginas o datos a otras computadoras por internet."
+]
+},
+{
+"id": "qa-qa06txt-23",
+"tipo": "hecho",
+"preguntas": [
+"que es la nube",
+"que significa la nube"
+],
+"respuestas": [
+"\"La nube\" son servidores en internet donde se guardan archivos y programas, en vez de en tu propia compu."
+]
+},
+{
+"id": "qa-qa06txt-24",
+"tipo": "hecho",
+"preguntas": [
+"que es internet",
+"como funciona internet"
+],
+"respuestas": [
+"Internet es una red gigante que conecta millones de computadoras en todo el mundo para compartir información."
+]
+},
+{
+"id": "qa-qa06txt-25",
+"tipo": "hecho",
+"preguntas": [
+"quien invento internet",
+"cuando se invento internet"
+],
+"respuestas": [
+"Internet nació de proyectos de los años 60 y 70; Vint Cerf y Bob Kahn crearon sus reglas básicas. La web la inventó Tim Berners-Lee en 1989."
+]
+},
+{
+"id": "qa-qa06txt-26",
+"tipo": "hecho",
+"preguntas": [
+"que es el wifi",
+"como funciona el wifi"
+],
+"respuestas": [
+"El wifi conecta aparatos a internet sin cables, usando ondas de radio."
+]
+},
+{
+"id": "qa-qa06txt-27",
+"tipo": "hecho",
+"preguntas": [
+"que es una contrasena segura",
+"como hago una buena contrasena"
+],
+"respuestas": [
+"Una contraseña segura es larga, mezcla letras, números y símbolos, y no es fácil de adivinar. ¡Y no se comparte con nadie!"
+]
+},
+{
+"id": "qa-qa06txt-28",
+"tipo": "hecho",
+"preguntas": [
+"como cuidarme en internet",
+"que es la seguridad en internet"
+],
+"respuestas": [
+"No compartas tus datos personales ni contraseñas, no hables con desconocidos y avisale a un adulto si algo te incomoda."
+]
+},
+{
+"id": "qa-qa06txt-29",
+"tipo": "hecho",
+"preguntas": [
+"que hago si un desconocido me escribe",
+"que hago si alguien me molesta en internet"
+],
+"respuestas": [
+"No le contestes ni le mandes fotos o datos, bloquealo y contale enseguida a un adulto de confianza."
+]
+},
+{
+"id": "qa-qa06txt-30",
+"tipo": "hecho",
+"preguntas": [
+"que es el ciberacoso",
+"que es el ciberbullying"
+],
+"respuestas": [
+"Es cuando alguien molesta o lastima a otra persona una y otra vez por internet. Si te pasa, guardá las pruebas y contale a un adulto."
+]
+},
+{
+"id": "qa-qa06txt-31",
+"tipo": "hecho",
+"preguntas": [
+"que es la inteligencia artificial",
+"que es una ia"
+],
+"respuestas": [
+"La inteligencia artificial son programas que aprenden de ejemplos para hacer cosas que parecen inteligentes, como charlar o reconocer imágenes."
+]
+},
+{
+"id": "qa-qa06txt-32",
+"tipo": "hecho",
+"preguntas": [
+"como aprende una ia",
+"como aprenden las ias"
+],
+"respuestas": [
+"Una IA aprende viendo muchos ejemplos y encontrando patrones. Yo aprendo de lo que me enseñan y comparo las frases que me escriben."
+]
+},
+{
+"id": "qa-qa06txt-33",
+"tipo": "hecho",
+"preguntas": [
+"que es un robot",
+"que son los robots"
+],
+"respuestas": [
+"Un robot es una máquina que puede hacer tareas sola, siguiendo un programa."
+]
+},
+{
+"id": "qa-qa06txt-34",
+"tipo": "hecho",
+"preguntas": [
+"que es una computadora",
+"como funciona una computadora"
+],
+"respuestas": [
+"Una computadora es una máquina que recibe datos, los procesa con un programa y muestra resultados."
+]
+},
+{
+"id": "qa-qa06txt-35",
+"tipo": "hecho",
+"preguntas": [
+"que es el procesador",
+"que es la cpu"
+],
+"respuestas": [
+"El procesador o CPU es el cerebro de la computadora: hace todos los cálculos."
+]
+},
+{
+"id": "qa-qa06txt-36",
+"tipo": "hecho",
+"preguntas": [
+"que es la memoria ram",
+"para que sirve la ram"
+],
+"respuestas": [
+"La RAM es la memoria rápida que usa la computadora mientras trabaja. Cuando se apaga, se borra."
+]
+},
+{
+"id": "qa-qa06txt-37",
+"tipo": "hecho",
+"preguntas": [
+"que es un disco duro",
+"para que sirve el disco"
+],
+"respuestas": [
+"El disco guarda los archivos aunque apagues la compu."
+]
+},
+{
+"id": "qa-qa06txt-38",
+"tipo": "hecho",
+"preguntas": [
+"que es un bit",
+"que es un byte"
+],
+"respuestas": [
+"Un bit es la información más chiquita: un 0 o un 1. Un byte son 8 bits."
+]
+},
+{
+"id": "qa-qa06txt-39",
+"tipo": "hecho",
+"preguntas": [
+"que es el codigo binario",
+"que es el binario"
+],
+"respuestas": [
+"Es un sistema que usa solo 0 y 1. Las computadoras guardan todo así."
+]
+},
+{
+"id": "qa-qa06txt-40",
+"tipo": "hecho",
+"preguntas": [
+"que es un pixel",
+"que significa pixel"
+],
+"respuestas": [
+"Un píxel es cada puntito de color que forma una imagen en una pantalla."
+]
+},
+{
+"id": "qa-qa06txt-41",
+"tipo": "hecho",
+"preguntas": [
+"que es un archivo",
+"que es una carpeta en la compu"
+],
+"respuestas": [
+"Un archivo guarda información, como un texto o una foto. Una carpeta sirve para ordenar archivos."
+]
+},
+{
+"id": "qa-qa06txt-42",
+"tipo": "hecho",
+"preguntas": [
+"que es un videojuego",
+"como se hace un videojuego"
+],
+"respuestas": [
+"Un videojuego es un juego en una pantalla. Para hacerlo se programa, se dibuja, se hace música y se prueba mucho."
+]
+},
+{
+"id": "qa-qa06txt-43",
+"tipo": "hecho",
+"preguntas": [
+"que es un motor de videojuegos",
+"que es unity"
+],
+"respuestas": [
+"Un motor de videojuegos es un programa que ayuda a crear juegos, como Unity, Godot o Unreal."
+]
+},
+{
+"id": "qa-qa06txt-44",
+"tipo": "hecho",
+"preguntas": [
+"quien invento la computadora",
+"quien fue alan turing"
+],
+"respuestas": [
+"Muchas personas crearon la computadora. Alan Turing imaginó sus ideas básicas y Ada Lovelace escribió el primer programa en el siglo XIX."
+]
+},
+{
+"id": "qa-qa06txt-45",
+"tipo": "hecho",
+"preguntas": [
+"quien fue ada lovelace",
+"quien fue la primera programadora"
+],
+"respuestas": [
+"Ada Lovelace es considerada la primera programadora: en 1843 escribió un algoritmo para una máquina de calcular."
+]
+},
+{
+"id": "qa-qa06txt-46",
+"tipo": "hecho",
+"preguntas": [
+"que es la electricidad",
+"como funciona la electricidad"
+],
+"respuestas": [
+"La electricidad es energía que viaja por cables y hace funcionar luces, computadoras y heladeras."
+]
+},
+{
+"id": "qa-qa06txt-47",
+"tipo": "hecho",
+"preguntas": [
+"que es la energia",
+"que tipos de energia hay"
+],
+"respuestas": [
+"La energía es lo que permite que las cosas se muevan, calienten o funcionen. Hay energía eléctrica, solar, eólica y muchas más."
+]
+},
+{
+"id": "qa-qa06txt-48",
+"tipo": "hecho",
+"preguntas": [
+"que es la energia solar",
+"como funciona un panel solar"
+],
+"respuestas": [
+"La energía solar viene del Sol; los paneles solares la transforman en electricidad."
+]
+},
+{
+"id": "qa-qa06txt-49",
+"tipo": "hecho",
+"preguntas": [
+"que es la energia eolica",
+"como funcionan los molinos de viento"
+],
+"respuestas": [
+"La energía eólica se saca del viento, con molinos que giran y generan electricidad."
+]
+},
+{
+"id": "qa-qa06txt-50",
+"tipo": "hecho",
+"preguntas": [
+"que es un iman",
+"como funciona un iman"
+],
+"respuestas": [
+"Un imán atrae algunos metales, como el hierro, por una fuerza llamada magnetismo."
+]
+},
+{
+"id": "qa-qa06txt-51",
+"tipo": "hecho",
+"preguntas": [
+"que es la luz",
+"que tan rapido va la luz"
+],
+"respuestas": [
+"La luz es energía que nos deja ver. Viaja a unos 300.000 kilómetros por segundo, lo más rápido que existe."
+]
+},
+{
+"id": "qa-qa06txt-52",
+"tipo": "hecho",
+"preguntas": [
+"que es el sonido",
+"como viaja el sonido"
+],
+"respuestas": [
+"El sonido son vibraciones que viajan por el aire hasta nuestros oídos. En el espacio no hay sonido porque no hay aire."
+]
+},
+{
+"id": "qa-qa06txt-53",
+"tipo": "hecho",
+"preguntas": [
+"que es un atomo",
+"de que estan hechas las cosas"
+],
+"respuestas": [
+"Todo está hecho de átomos, partecitas chiquitísimas que no se ven ni con un microscopio común."
+]
+},
+{
+"id": "qa-qa06txt-54",
+"tipo": "hecho",
+"preguntas": [
+"que es una molecula",
+"que es h2o"
+],
+"respuestas": [
+"Una molécula es un grupo de átomos unidos. H2O es la molécula del agua: dos átomos de hidrógeno y uno de oxígeno."
+]
+},
+{
+"id": "qa-qa06txt-55",
+"tipo": "hecho",
+"preguntas": [
+"cuales son los estados del agua",
+"que estados tiene la materia"
+],
+"respuestas": [
+"El agua puede ser sólida (hielo), líquida (agua) o gaseosa (vapor)."
+]
+},
+{
+"id": "qa-qa06txt-56",
+"tipo": "hecho",
+"preguntas": [
+"a que temperatura hierve el agua",
+"cuando hierve el agua"
+],
+"respuestas": [
+"A nivel del mar, el agua hierve a 100 grados Celsius."
+]
+},
+{
+"id": "qa-qa06txt-57",
+"tipo": "hecho",
+"preguntas": [
+"a que temperatura se congela el agua",
+"cuando se congela el agua"
+],
+"respuestas": [
+"El agua se congela a 0 grados Celsius."
+]
+},
+{
+"id": "qa-qa06txt-58",
+"tipo": "hecho",
+"preguntas": [
+"por que flotan los barcos",
+"por que algunas cosas flotan"
+],
+"respuestas": [
+"Un barco flota porque empuja mucha agua hacia los costados, y el agua lo empuja hacia arriba con la misma fuerza."
+]
+},
+{
+"id": "qa-qa06txt-59",
+"tipo": "hecho",
+"preguntas": [
+"por que vuelan los aviones",
+"como vuela un avion"
+],
+"respuestas": [
+"Las alas del avión tienen una forma que hace que el aire lo empuje hacia arriba cuando va rápido."
+]
+},
+{
+"id": "qa-qa06txt-60",
+"tipo": "hecho",
+"preguntas": [
+"que es la friccion",
+"que es el rozamiento"
+],
+"respuestas": [
+"La fricción es la fuerza que frena las cosas cuando se rozan, como cuando frenás la bici."
+]
+},
+{
+"id": "qa-qa06txt-61",
+"tipo": "hecho",
+"preguntas": [
+"quien fue isaac newton",
+"que descubrio newton"
+],
+"respuestas": [
+"Isaac Newton fue un científico que explicó la gravedad y las leyes del movimiento."
+]
+},
+{
+"id": "qa-qa06txt-62",
+"tipo": "hecho",
+"preguntas": [
+"quien fue albert einstein",
+"que hizo einstein"
+],
+"respuestas": [
+"Albert Einstein fue un físico famoso por la teoría de la relatividad, que explica el tiempo, el espacio y la luz."
+]
+},
+{
+"id": "qa-qa06txt-63",
+"tipo": "hecho",
+"preguntas": [
+"quien fue marie curie",
+"que descubrio marie curie"
+],
+"respuestas": [
+"Marie Curie fue una científica que estudió la radiactividad. Ganó dos premios Nobel."
+]
+},
+{
+"id": "qa-qa06txt-64",
+"tipo": "hecho",
+"preguntas": [
+"quien fue galileo",
+"que hizo galileo galilei"
+],
+"respuestas": [
+"Galileo Galilei usó el telescopio para estudiar el cielo y descubrió lunas de Júpiter."
+]
+},
+{
+"id": "qa-qa06txt-65",
+"tipo": "hecho",
+"preguntas": [
+"quien fue charles darwin",
+"que es la evolucion"
+],
+"respuestas": [
+"Darwin explicó la evolución: los seres vivos cambian muy despacio a lo largo de muchísimas generaciones."
+]
+},
+{
+"id": "qa-qa06txt-66",
+"tipo": "hecho",
+"preguntas": [
+"quien invento la lamparita",
+"quien fue thomas edison"
+],
+"respuestas": [
+"Thomas Edison mejoró la lamparita eléctrica para que dure mucho, en 1879."
+]
+},
+{
+"id": "qa-qa06txt-67",
+"tipo": "hecho",
+"preguntas": [
+"quien invento el telefono",
+"cuando se invento el telefono"
+],
+"respuestas": [
+"El teléfono se le atribuye a Alexander Graham Bell, en 1876."
+]
+},
+{
+"id": "qa-qa06txt-68",
+"tipo": "hecho",
+"preguntas": [
+"quien invento la imprenta",
+"que es la imprenta"
+],
+"respuestas": [
+"Johannes Gutenberg inventó la imprenta moderna alrededor de 1450. Permitió hacer muchos libros rápido."
+]
+},
+{
+"id": "qa-qa06txt-69",
+"tipo": "hecho",
+"preguntas": [
+"quien invento el avion",
+"quienes fueron los hermanos wright"
+],
+"respuestas": [
+"Los hermanos Wright hicieron volar el primer avión con motor en 1903."
+]
+},
+{
+"id": "qa-qa06txt-70",
+"tipo": "hecho",
+"preguntas": [
+"que es un experimento",
+"que es el metodo cientifico"
+],
+"respuestas": [
+"Un experimento es una prueba para descubrir algo. El método científico es preguntar, suponer, probar y sacar conclusiones."
+]
+},
+{
+"id": "qa-qa06txt-71",
+"tipo": "hecho",
+"preguntas": [
+"que es un microscopio",
+"para que sirve un microscopio"
+],
+"respuestas": [
+"El microscopio sirve para ver cosas chiquititas, como células o bacterias."
+]
+},
+{
+"id": "qa-qa06txt-72",
+"tipo": "hecho",
+"preguntas": [
+"que es la quimica",
+"que es la fisica"
+],
+"respuestas": [
+"La química estudia de qué están hechas las cosas y cómo cambian. La física estudia la energía, el movimiento y las fuerzas."
+]
+},
+{
+"id": "qa-qa06txt-73",
+"tipo": "hecho",
+"preguntas": [
+"que es la biologia",
+"que estudia la biologia"
+],
+"respuestas": [
+"La biología estudia los seres vivos: plantas, animales, personas y microbios."
+]
+},
+{
+"id": "qa-qa06txt-74",
+"tipo": "hecho",
+"preguntas": [
+"que es la astronomia",
+"que estudia la astronomia"
+],
+"respuestas": [
+"La astronomía estudia el espacio: estrellas, planetas, galaxias y todo el universo."
+]
+},
+{
+"id": "qa-qa06txt-75",
+"tipo": "hecho",
+"preguntas": [
+"que es la geografia",
+"que estudia la geografia"
+],
+"respuestas": [
+"La geografía estudia la Tierra: sus lugares, paisajes, climas y la gente que vive en ellos."
+]
+},
+{
+"id": "qa-qa06txt-76",
+"tipo": "hecho",
+"preguntas": [
+"que es la historia",
+"que estudia la historia"
+],
+"respuestas": [
+"La historia estudia lo que pasó en el pasado para entender el presente."
+]
+},
+{
+"id": "qa-qa06txt-77",
+"tipo": "hecho",
+"preguntas": [
+"que es la matematica",
+"para que sirve la matematica"
+],
+"respuestas": [
+"La matemática estudia los números, las formas y los patrones. Sirve para contar, medir, programar y mucho más."
+]
+},
+{
+"id": "qa-qa06txt-78",
+"tipo": "hecho",
+"preguntas": [
+"que es una suma",
+"que es sumar"
+],
+"respuestas": [
+"Sumar es juntar cantidades: 2 + 3 = 5."
+]
+},
+{
+"id": "qa-qa06txt-79",
+"tipo": "hecho",
+"preguntas": [
+"que es una resta",
+"que es restar"
+],
+"respuestas": [
+"Restar es sacar una cantidad de otra: 5 − 2 = 3."
+]
+},
+{
+"id": "qa-qa06txt-80",
+"tipo": "hecho",
+"preguntas": [
+"que es una multiplicacion",
+"que es multiplicar"
+],
+"respuestas": [
+"Multiplicar es sumar el mismo número varias veces: 3 × 4 = 12, porque es 3 + 3 + 3 + 3."
+]
+},
+{
+"id": "qa-qa06txt-81",
+"tipo": "hecho",
+"preguntas": [
+"que es una division",
+"que es dividir"
+],
+"respuestas": [
+"Dividir es repartir en partes iguales: 12 ÷ 3 = 4."
+]
+},
+{
+"id": "qa-qa06txt-82",
+"tipo": "hecho",
+"preguntas": [
+"que es una fraccion",
+"que significa un medio"
+],
+"respuestas": [
+"Una fracción es una parte de un entero. Un medio (1/2) es la mitad; un cuarto (1/4) es una de cuatro partes iguales."
+]
+},
+{
+"id": "qa-qa06txt-83",
+"tipo": "hecho",
+"preguntas": [
+"que es un numero par",
+"que es un numero impar"
+],
+"respuestas": [
+"Un número par se puede dividir en 2 sin que sobre nada (2, 4, 6). Uno impar no (1, 3, 5)."
+]
+},
+{
+"id": "qa-qa06txt-84",
+"tipo": "hecho",
+"preguntas": [
+"que es un numero primo",
+"cuales son los numeros primos"
+],
+"respuestas": [
+"Un número primo solo se puede dividir por 1 y por sí mismo: 2, 3, 5, 7, 11, 13…"
+]
+},
+{
+"id": "qa-qa06txt-85",
+"tipo": "hecho",
+"preguntas": [
+"que es el cero",
+"quien invento el cero"
+],
+"respuestas": [
+"El cero representa \"nada\". Lo desarrollaron matemáticos de la India hace unos 1.500 años."
+]
+},
+{
+"id": "qa-qa06txt-86",
+"tipo": "hecho",
+"preguntas": [
+"que es pi",
+"cuanto vale pi"
+],
+"respuestas": [
+"Pi es la relación entre la vuelta de un círculo y su ancho. Vale más o menos 3,14."
+]
+},
+{
+"id": "qa-qa06txt-87",
+"tipo": "hecho",
+"preguntas": [
+"cuantos lados tiene un triangulo",
+"que es un triangulo"
+],
+"respuestas": [
+"Un triángulo tiene 3 lados y 3 ángulos."
+]
+},
+{
+"id": "qa-qa06txt-88",
+"tipo": "hecho",
+"preguntas": [
+"cuantos lados tiene un cuadrado",
+"que es un cuadrado"
+],
+"respuestas": [
+"Un cuadrado tiene 4 lados iguales y 4 ángulos rectos."
+]
+},
+{
+"id": "qa-qa06txt-89",
+"tipo": "hecho",
+"preguntas": [
+"cuantos lados tiene un hexagono",
+"que es un hexagono"
+],
+"respuestas": [
+"Un hexágono tiene 6 lados, como las celdas de las colmenas."
+]
+},
+{
+"id": "qa-qa06txt-90",
+"tipo": "hecho",
+"preguntas": [
+"que es un circulo",
+"que es una circunferencia"
+],
+"respuestas": [
+"El círculo es una figura redonda; la circunferencia es su borde."
+]
+},
+{
+"id": "qa-qa06txt-91",
+"tipo": "hecho",
+"preguntas": [
+"cuantos grados tiene un angulo recto",
+"que es un angulo recto"
+],
+"respuestas": [
+"Un ángulo recto mide 90 grados, como la esquina de una hoja."
+]
+},
+{
+"id": "qa-qa06txt-92",
+"tipo": "hecho",
+"preguntas": [
+"cuantos centimetros tiene un metro",
+"cuanto es un metro"
+],
+"respuestas": [
+"Un metro tiene 100 centímetros."
+]
+},
+{
+"id": "qa-qa06txt-93",
+"tipo": "hecho",
+"preguntas": [
+"cuantos metros tiene un kilometro",
+"cuanto es un kilometro"
+],
+"respuestas": [
+"Un kilómetro tiene 1.000 metros."
+]
+},
+{
+"id": "qa-qa06txt-94",
+"tipo": "hecho",
+"preguntas": [
+"cuantos gramos tiene un kilo",
+"cuanto es un kilo"
+],
+"respuestas": [
+"Un kilo tiene 1.000 gramos."
+]
+},
+{
+"id": "qa-qa06txt-95",
+"tipo": "hecho",
+"preguntas": [
+"cuantos minutos tiene una hora",
+"cuantos segundos tiene un minuto"
+],
+"respuestas": [
+"Una hora tiene 60 minutos y un minuto tiene 60 segundos."
+]
+},
+{
+"id": "qa-qa06txt-96",
+"tipo": "hecho",
+"preguntas": [
+"cuantas horas tiene un dia",
+"cuantas horas tiene el dia"
+],
+"respuestas": [
+"Un día tiene 24 horas."
+]
+},
+{
+"id": "qa-qa06txt-97",
+"tipo": "hecho",
+"preguntas": [
+"cuantos dias tiene un ano",
+"cuantos dias tiene el ano"
+],
+"respuestas": [
+"Un año tiene 365 días, y 366 si es bisiesto."
+]
+},
+{
+"id": "qa-qa06txt-98",
+"tipo": "hecho",
+"preguntas": [
+"cuantos meses tiene un ano",
+"cuales son los meses del ano"
+],
+"respuestas": [
+"Un año tiene 12 meses: enero, febrero, marzo, abril, mayo, junio, julio, agosto, septiembre, octubre, noviembre y diciembre."
+]
+},
+{
+"id": "qa-qa06txt-99",
+"tipo": "hecho",
+"preguntas": [
+"cuales son los dias de la semana",
+"como se llaman los dias"
+],
+"respuestas": [
+"Lunes, martes, miércoles, jueves, viernes, sábado y domingo."
+]
+},
+{
+"id": "qa-qa06txt-100",
+"tipo": "hecho",
+"preguntas": [
+"que es un millon",
+"cuantos ceros tiene un millon"
+],
+"respuestas": [
+"Un millón es mil veces mil: 1.000.000, con seis ceros."
+]
+},
+{
+"id": "qa-qa06txt-101",
+"tipo": "hecho",
+"preguntas": [
+"que es el infinito",
+"cual es el numero mas grande"
+],
+"respuestas": [
+"No existe un número más grande que todos: siempre se le puede sumar uno. A esa idea se le dice infinito."
 ]
 }
 ]
