@@ -1,6 +1,6 @@
 {
 "version": 1,
-"actualizado": "2026-11-06T23:33:37.817Z",
+"actualizado": "2026-11-06T23:34:43.528Z",
 "entradas": [
 {
 "id": "saludo",
@@ -9632,6 +9632,1106 @@
 ],
 "respuestas": [
 "No existe un número más grande que todos: siempre se le puede sumar uno. A esa idea se le dice infinito."
+]
+},
+{
+"id": "qa-qa07txt-1",
+"tipo": "hecho",
+"preguntas": [
+"de donde sale la leche",
+"de donde viene la leche"
+],
+"respuestas": [
+"La leche que tomamos sale sobre todo de las vacas, aunque también hay de cabra y de oveja."
+]
+},
+{
+"id": "qa-qa07txt-2",
+"tipo": "hecho",
+"preguntas": [
+"de donde sale el queso",
+"como se hace el queso"
+],
+"respuestas": [
+"El queso se hace cuajando la leche, separando el suero y dejando madurar la parte sólida."
+]
+},
+{
+"id": "qa-qa07txt-3",
+"tipo": "hecho",
+"preguntas": [
+"de donde sale la manteca",
+"como se hace la manteca"
+],
+"respuestas": [
+"La manteca se hace batiendo la crema de la leche."
+]
+},
+{
+"id": "qa-qa07txt-4",
+"tipo": "hecho",
+"preguntas": [
+"como se hace el dulce de leche",
+"de que esta hecho el dulce de leche"
+],
+"respuestas": [
+"Se hace cocinando leche con azúcar a fuego lento durante horas, revolviendo hasta que espesa."
+]
+},
+{
+"id": "qa-qa07txt-5",
+"tipo": "hecho",
+"preguntas": [
+"de donde sale el chocolate",
+"como se hace el chocolate"
+],
+"respuestas": [
+"El chocolate se hace con las semillas del cacao, un árbol de zonas cálidas, mezcladas con azúcar."
+]
+},
+{
+"id": "qa-qa07txt-6",
+"tipo": "hecho",
+"preguntas": [
+"de donde sale el azucar",
+"como se hace el azucar"
+],
+"respuestas": [
+"El azúcar sale de la caña de azúcar o de la remolacha. En Argentina, Tucumán produce mucha caña."
+]
+},
+{
+"id": "qa-qa07txt-7",
+"tipo": "hecho",
+"preguntas": [
+"de donde sale el pan",
+"como se hace el pan"
+],
+"respuestas": [
+"El pan se hace con harina, agua, sal y levadura; se amasa, se deja leudar y se hornea."
+]
+},
+{
+"id": "qa-qa07txt-8",
+"tipo": "hecho",
+"preguntas": [
+"de donde sale la harina",
+"como se hace la harina"
+],
+"respuestas": [
+"La harina se hace moliendo granos, sobre todo de trigo."
+]
+},
+{
+"id": "qa-qa07txt-9",
+"tipo": "hecho",
+"preguntas": [
+"de donde sale el arroz",
+"como crece el arroz"
+],
+"respuestas": [
+"El arroz es la semilla de una planta que crece en campos inundados."
+]
+},
+{
+"id": "qa-qa07txt-10",
+"tipo": "hecho",
+"preguntas": [
+"de donde sale la miel",
+"como se hace la miel"
+],
+"respuestas": [
+"La miel la hacen las abejas con el néctar de las flores."
+]
+},
+{
+"id": "qa-qa07txt-11",
+"tipo": "hecho",
+"preguntas": [
+"de donde salen los huevos",
+"de donde vienen los huevos"
+],
+"respuestas": [
+"Los huevos que comemos los ponen las gallinas."
+]
+},
+{
+"id": "qa-qa07txt-12",
+"tipo": "hecho",
+"preguntas": [
+"de donde sale el jugo de naranja",
+"como se hace el jugo de naranja"
+],
+"respuestas": [
+"Se hace exprimiendo naranjas. ¡El recién exprimido tiene mucha vitamina C!"
+]
+},
+{
+"id": "qa-qa07txt-13",
+"tipo": "hecho",
+"preguntas": [
+"la papa es una verdura",
+"que es la papa"
+],
+"respuestas": [
+"La papa es un tubérculo: la parte de la planta que crece bajo tierra y guarda alimento. Es originaria de los Andes."
+]
+},
+{
+"id": "qa-qa07txt-14",
+"tipo": "hecho",
+"preguntas": [
+"el tomate es una fruta",
+"el tomate es fruta o verdura"
+],
+"respuestas": [
+"Para la botánica, el tomate es un fruto porque tiene semillas, pero en la cocina lo usamos como verdura."
+]
+},
+{
+"id": "qa-qa07txt-15",
+"tipo": "hecho",
+"preguntas": [
+"la palta es una fruta",
+"que es la palta"
+],
+"respuestas": [
+"La palta es un fruto con un gran carozo, muy rico en grasas buenas. En otros países le dicen aguacate."
+]
+},
+{
+"id": "qa-qa07txt-16",
+"tipo": "hecho",
+"preguntas": [
+"que es una legumbre",
+"que son las legumbres"
+],
+"respuestas": [
+"Las legumbres son semillas que crecen en vainas, como lentejas, porotos, garbanzos y arvejas."
+]
+},
+{
+"id": "qa-qa07txt-17",
+"tipo": "hecho",
+"preguntas": [
+"que es un cereal",
+"que son los cereales"
+],
+"respuestas": [
+"Los cereales son granos de plantas como el trigo, el maíz, el arroz y la avena."
+]
+},
+{
+"id": "qa-qa07txt-18",
+"tipo": "hecho",
+"preguntas": [
+"que es el gluten",
+"que es la celiaquia"
+],
+"respuestas": [
+"El gluten es una proteína del trigo, la avena, la cebada y el centeno. Las personas celíacas no pueden comerlo."
+]
+},
+{
+"id": "qa-qa07txt-19",
+"tipo": "hecho",
+"preguntas": [
+"que es ser vegetariano",
+"que es ser vegano"
+],
+"respuestas": [
+"Un vegetariano no come carne. Un vegano no come nada de origen animal, ni huevos ni lácteos."
+]
+},
+{
+"id": "qa-qa07txt-20",
+"tipo": "hecho",
+"preguntas": [
+"que fruta tiene mas vitamina c",
+"que tiene vitamina c"
+],
+"respuestas": [
+"Los cítricos, como la naranja y la mandarina, el kiwi y el morrón tienen mucha vitamina C."
+]
+},
+{
+"id": "qa-qa07txt-21",
+"tipo": "hecho",
+"preguntas": [
+"por que la cebolla hace llorar",
+"por que lloramos al cortar cebolla"
+],
+"respuestas": [
+"Al cortarla, la cebolla larga un gas que irrita los ojos, y los ojos lloran para limpiarse."
+]
+},
+{
+"id": "qa-qa07txt-22",
+"tipo": "hecho",
+"preguntas": [
+"por que el pochoclo explota",
+"como se hace el pochoclo"
+],
+"respuestas": [
+"El maíz tiene agüita adentro; al calentarse se convierte en vapor y hace explotar el grano."
+]
+},
+{
+"id": "qa-qa07txt-23",
+"tipo": "hecho",
+"preguntas": [
+"por que la manzana se pone marron",
+"por que se oscurece la manzana cortada"
+],
+"respuestas": [
+"Al cortarla, el aire hace que se oxide y se ponga marrón. Un poco de limón lo evita."
+]
+},
+{
+"id": "qa-qa07txt-24",
+"tipo": "hecho",
+"preguntas": [
+"que es la pizza",
+"de donde es la pizza"
+],
+"respuestas": [
+"La pizza nació en Nápoles, Italia. En Argentina hay muchísimas pizzerías por los inmigrantes italianos."
+]
+},
+{
+"id": "qa-qa07txt-25",
+"tipo": "hecho",
+"preguntas": [
+"que es la fugazzeta",
+"que es una fugazzeta"
+],
+"respuestas": [
+"La fugazzeta es una pizza argentina rellena de queso y cubierta de cebolla."
+]
+},
+{
+"id": "qa-qa07txt-26",
+"tipo": "hecho",
+"preguntas": [
+"que es la milanesa napolitana",
+"por que se llama napolitana"
+],
+"respuestas": [
+"Es una milanesa con salsa de tomate, jamón y queso gratinado. Se inventó en Buenos Aires, en un restaurante llamado Nápoli."
+]
+},
+{
+"id": "qa-qa07txt-27",
+"tipo": "hecho",
+"preguntas": [
+"que son los noquis del 29",
+"por que se comen noquis el 29"
+],
+"respuestas": [
+"En Argentina se comen ñoquis el 29 de cada mes, una costumbre de los inmigrantes italianos; algunos ponen plata bajo el plato para la suerte."
+]
+},
+{
+"id": "qa-qa07txt-28",
+"tipo": "hecho",
+"preguntas": [
+"que es una receta",
+"para que sirve una receta"
+],
+"respuestas": [
+"Una receta es la lista de ingredientes y pasos para preparar una comida."
+]
+},
+{
+"id": "qa-qa07txt-29",
+"tipo": "hecho",
+"preguntas": [
+"como se hace un huevo duro",
+"cuanto tarda un huevo duro"
+],
+"respuestas": [
+"Se pone el huevo en agua hirviendo unos 10 minutos. Siempre con ayuda de un adulto."
+]
+},
+{
+"id": "qa-qa07txt-30",
+"tipo": "hecho",
+"preguntas": [
+"como se hace una ensalada",
+"que lleva una ensalada"
+],
+"respuestas": [
+"Se lavan y cortan verduras, como lechuga y tomate, y se condimentan. ¡Pedile ayuda a un adulto con el cuchillo!"
+]
+},
+{
+"id": "qa-qa07txt-31",
+"tipo": "hecho",
+"preguntas": [
+"como se hacen panqueques",
+"que llevan los panqueques"
+],
+"respuestas": [
+"Los panqueques llevan leche, huevo y harina; la mezcla se cocina en una sartén finita. ¡Con dulce de leche quedan geniales!"
+]
+},
+{
+"id": "qa-qa07txt-32",
+"tipo": "hecho",
+"preguntas": [
+"como se planta una semilla",
+"como hacer crecer una planta"
+],
+"respuestas": [
+"Poné la semilla en tierra, a poca profundidad, regala sin ahogarla y dejala donde le dé luz."
+]
+},
+{
+"id": "qa-qa07txt-33",
+"tipo": "hecho",
+"preguntas": [
+"que necesitan las plantas para vivir",
+"que necesita una planta"
+],
+"respuestas": [
+"Las plantas necesitan luz, agua, aire y nutrientes de la tierra."
+]
+},
+{
+"id": "qa-qa07txt-34",
+"tipo": "hecho",
+"preguntas": [
+"por que las plantas necesitan sol",
+"para que les sirve la luz a las plantas"
+],
+"respuestas": [
+"Con la luz del sol hacen la fotosíntesis, que es como fabrican su alimento."
+]
+},
+{
+"id": "qa-qa07txt-35",
+"tipo": "hecho",
+"preguntas": [
+"que es una semilla",
+"para que sirven las semillas"
+],
+"respuestas": [
+"La semilla tiene adentro una plantita chiquita y alimento para que empiece a crecer."
+]
+},
+{
+"id": "qa-qa07txt-36",
+"tipo": "hecho",
+"preguntas": [
+"que es la raiz",
+"para que sirve la raiz"
+],
+"respuestas": [
+"La raíz sostiene la planta en la tierra y toma agua y nutrientes."
+]
+},
+{
+"id": "qa-qa07txt-37",
+"tipo": "hecho",
+"preguntas": [
+"que es el tallo",
+"para que sirve el tallo"
+],
+"respuestas": [
+"El tallo sostiene la planta y lleva el agua y el alimento a las hojas y flores."
+]
+},
+{
+"id": "qa-qa07txt-38",
+"tipo": "hecho",
+"preguntas": [
+"que es el polen",
+"para que sirve el polen"
+],
+"respuestas": [
+"El polen es un polvito de las flores que, cuando llega a otra flor, permite que se formen frutos y semillas."
+]
+},
+{
+"id": "qa-qa07txt-39",
+"tipo": "hecho",
+"preguntas": [
+"que es la polinizacion",
+"quien poliniza las flores"
+],
+"respuestas": [
+"Es cuando el polen viaja de una flor a otra, llevado por abejas, mariposas, pájaros o el viento."
+]
+},
+{
+"id": "qa-qa07txt-40",
+"tipo": "hecho",
+"preguntas": [
+"que es un cactus",
+"por que los cactus tienen espinas"
+],
+"respuestas": [
+"El cactus es una planta del desierto que guarda agua. Sus espinas lo protegen y lo ayudan a no perder agua."
+]
+},
+{
+"id": "qa-qa07txt-41",
+"tipo": "hecho",
+"preguntas": [
+"que es un hongo",
+"los hongos son plantas"
+],
+"respuestas": [
+"Los hongos no son plantas ni animales: son un grupo aparte. Algunos se comen y otros son muy tóxicos, así que nunca hay que probar uno del campo."
+]
+},
+{
+"id": "qa-qa07txt-42",
+"tipo": "hecho",
+"preguntas": [
+"que es el compost",
+"como se hace compost"
+],
+"respuestas": [
+"El compost es abono que se hace dejando que se descompongan restos de frutas, verduras y hojas."
+]
+},
+{
+"id": "qa-qa07txt-43",
+"tipo": "hecho",
+"preguntas": [
+"que es la huerta",
+"como hacer una huerta"
+],
+"respuestas": [
+"Una huerta es un lugar donde se cultivan verduras y hierbas. Se puede hacer hasta en macetas."
+]
+},
+{
+"id": "qa-qa07txt-44",
+"tipo": "hecho",
+"preguntas": [
+"que es la agricultura",
+"que es la ganaderia"
+],
+"respuestas": [
+"La agricultura es cultivar plantas para comer; la ganadería es criar animales como vacas y ovejas."
+]
+},
+{
+"id": "qa-qa07txt-45",
+"tipo": "hecho",
+"preguntas": [
+"que es la soja",
+"para que sirve la soja"
+],
+"respuestas": [
+"La soja es una legumbre muy cultivada en Argentina; se usa para hacer aceite, alimento para animales y comidas."
+]
+},
+{
+"id": "qa-qa07txt-46",
+"tipo": "hecho",
+"preguntas": [
+"que es el trigo",
+"para que sirve el trigo"
+],
+"respuestas": [
+"El trigo es un cereal; con sus granos se hace la harina para el pan y las pastas."
+]
+},
+{
+"id": "qa-qa07txt-47",
+"tipo": "hecho",
+"preguntas": [
+"que es el maiz",
+"para que sirve el maiz"
+],
+"respuestas": [
+"El maíz es un cereal originario de América. Se come como choclo, en harina, polenta, pochoclo y mucho más."
+]
+},
+{
+"id": "qa-qa07txt-48",
+"tipo": "hecho",
+"preguntas": [
+"que es el choclo",
+"el choclo es maiz"
+],
+"respuestas": [
+"El choclo es la mazorca del maíz cuando todavía está tierna."
+]
+},
+{
+"id": "qa-qa07txt-49",
+"tipo": "hecho",
+"preguntas": [
+"que es la vid",
+"de donde sale el vino"
+],
+"respuestas": [
+"La vid es la planta que da las uvas. Mendoza es famosa por sus viñedos."
+]
+},
+{
+"id": "qa-qa07txt-50",
+"tipo": "hecho",
+"preguntas": [
+"que es un ecosistema",
+"que significa ecosistema"
+],
+"respuestas": [
+"Un ecosistema es un lugar con seres vivos que dependen unos de otros y de su ambiente, como un bosque o un lago."
+]
+},
+{
+"id": "qa-qa07txt-51",
+"tipo": "hecho",
+"preguntas": [
+"que es la cadena alimentaria",
+"que es la cadena trofica"
+],
+"respuestas": [
+"Es quién come a quién: las plantas son comidas por herbívoros, y estos por carnívoros."
+]
+},
+{
+"id": "qa-qa07txt-52",
+"tipo": "hecho",
+"preguntas": [
+"que es la biodiversidad",
+"que significa biodiversidad"
+],
+"respuestas": [
+"La biodiversidad es la variedad de seres vivos que hay en un lugar o en todo el planeta."
+]
+},
+{
+"id": "qa-qa07txt-53",
+"tipo": "hecho",
+"preguntas": [
+"que es un parque nacional",
+"cuantos parques nacionales tiene argentina"
+],
+"respuestas": [
+"Es un área protegida para cuidar la naturaleza. Argentina tiene más de 30 parques nacionales."
+]
+},
+{
+"id": "qa-qa07txt-54",
+"tipo": "hecho",
+"preguntas": [
+"que es la contaminacion",
+"que es contaminar"
+],
+"respuestas": [
+"Contaminar es ensuciar el aire, el agua o la tierra con basura o sustancias que hacen daño."
+]
+},
+{
+"id": "qa-qa07txt-55",
+"tipo": "hecho",
+"preguntas": [
+"por que hay que cuidar el agua",
+"como ahorrar agua"
+],
+"respuestas": [
+"El agua dulce es poca y la necesitamos todos. Cerrá la canilla al lavarte los dientes y no la dejes correr."
+]
+},
+{
+"id": "qa-qa07txt-56",
+"tipo": "hecho",
+"preguntas": [
+"que es el plastico",
+"por que el plastico contamina"
+],
+"respuestas": [
+"El plástico se hace con petróleo y tarda cientos de años en desaparecer, por eso contamina mares y ríos."
+]
+},
+{
+"id": "qa-qa07txt-57",
+"tipo": "hecho",
+"preguntas": [
+"cuanto tarda en degradarse una botella de plastico",
+"cuanto tarda el plastico en desaparecer"
+],
+"respuestas": [
+"Una botella de plástico puede tardar cientos de años en degradarse."
+]
+},
+{
+"id": "qa-qa07txt-58",
+"tipo": "hecho",
+"preguntas": [
+"que es la basura organica",
+"que se puede reciclar"
+],
+"respuestas": [
+"La basura orgánica son restos de comida y plantas. Se pueden reciclar papel, cartón, vidrio, latas y muchos plásticos."
+]
+},
+{
+"id": "qa-qa07txt-59",
+"tipo": "hecho",
+"preguntas": [
+"que significan los colores de los tachos de reciclaje",
+"como separar la basura"
+],
+"respuestas": [
+"Depende de la ciudad, pero en general se separan los reciclables (papel, plástico, vidrio, metal) de la basura húmeda."
+]
+},
+{
+"id": "qa-qa07txt-60",
+"tipo": "hecho",
+"preguntas": [
+"que son las tres r",
+"que significa reducir reutilizar reciclar"
+],
+"respuestas": [
+"Reducir lo que compramos y tiramos, reutilizar las cosas y reciclar lo que se pueda."
+]
+},
+{
+"id": "qa-qa07txt-61",
+"tipo": "hecho",
+"preguntas": [
+"que es la deforestacion",
+"por que se talan los bosques"
+],
+"respuestas": [
+"La deforestación es cortar muchos árboles de un bosque; eso deja sin casa a los animales y empeora el clima."
+]
+},
+{
+"id": "qa-qa07txt-62",
+"tipo": "hecho",
+"preguntas": [
+"que es el clima",
+"que diferencia hay entre clima y tiempo"
+],
+"respuestas": [
+"El tiempo es cómo está el día hoy; el clima es cómo suele ser el tiempo en un lugar durante muchos años."
+]
+},
+{
+"id": "qa-qa07txt-63",
+"tipo": "hecho",
+"preguntas": [
+"que es un termometro",
+"para que sirve el termometro"
+],
+"respuestas": [
+"El termómetro sirve para medir la temperatura del aire, del agua o del cuerpo."
+]
+},
+{
+"id": "qa-qa07txt-64",
+"tipo": "hecho",
+"preguntas": [
+"que es la humedad",
+"por que se siente humedo"
+],
+"respuestas": [
+"La humedad es la cantidad de vapor de agua en el aire. Con mucha humedad, el calor se siente más pegajoso."
+]
+},
+{
+"id": "qa-qa07txt-65",
+"tipo": "hecho",
+"preguntas": [
+"que es la niebla",
+"como se forma la niebla"
+],
+"respuestas": [
+"La niebla es una nube que se forma pegada al suelo."
+]
+},
+{
+"id": "qa-qa07txt-66",
+"tipo": "hecho",
+"preguntas": [
+"que es el rocio",
+"por que el pasto esta mojado a la manana"
+],
+"respuestas": [
+"El rocío son gotitas que se forman a la noche cuando el aire húmedo se enfría sobre el pasto."
+]
+},
+{
+"id": "qa-qa07txt-67",
+"tipo": "hecho",
+"preguntas": [
+"que es la escarcha",
+"que es la helada"
+],
+"respuestas": [
+"La escarcha es hielo finito que se forma sobre el pasto o los autos en noches muy frías."
+]
+},
+{
+"id": "qa-qa07txt-68",
+"tipo": "hecho",
+"preguntas": [
+"que es la sequia",
+"que es una inundacion"
+],
+"respuestas": [
+"La sequía es cuando no llueve por mucho tiempo; la inundación, cuando el agua cubre lugares que suelen estar secos."
+]
+},
+{
+"id": "qa-qa07txt-69",
+"tipo": "hecho",
+"preguntas": [
+"que es la zonda",
+"que es el viento zonda"
+],
+"respuestas": [
+"El zonda es un viento caliente y seco que baja de la cordillera, en Mendoza, San Juan y La Rioja."
+]
+},
+{
+"id": "qa-qa07txt-70",
+"tipo": "hecho",
+"preguntas": [
+"que es el pampero",
+"que es la sudestada"
+],
+"respuestas": [
+"El pampero es un viento frío del sudoeste; la sudestada es un viento fuerte del sudeste que trae lluvia y crecidas en el Río de la Plata."
+]
+},
+{
+"id": "qa-qa07txt-71",
+"tipo": "hecho",
+"preguntas": [
+"cuanto pesa una nube",
+"las nubes pesan"
+],
+"respuestas": [
+"Aunque parecen livianas, una nube común puede pesar cientos de toneladas, porque tiene muchísimas gotitas de agua."
+]
+},
+{
+"id": "qa-qa07txt-72",
+"tipo": "hecho",
+"preguntas": [
+"que es una tormenta",
+"como se forma una tormenta"
+],
+"respuestas": [
+"Una tormenta se forma cuando el aire caliente y húmedo sube rápido y forma nubes grandes con lluvia, viento y rayos."
+]
+},
+{
+"id": "qa-qa07txt-73",
+"tipo": "hecho",
+"preguntas": [
+"que es un fosil",
+"que son los fosiles"
+],
+"respuestas": [
+"Un fósil son los restos o marcas de un ser vivo de hace muchísimo tiempo que quedaron en la piedra."
+]
+},
+{
+"id": "qa-qa07txt-74",
+"tipo": "hecho",
+"preguntas": [
+"que es un paleontologo",
+"que hace un paleontologo"
+],
+"respuestas": [
+"El paleontólogo estudia fósiles, como los de dinosaurios."
+]
+},
+{
+"id": "qa-qa07txt-75",
+"tipo": "hecho",
+"preguntas": [
+"que es una piedra preciosa",
+"que es un diamante"
+],
+"respuestas": [
+"Las piedras preciosas son minerales muy lindos y raros. El diamante es el material natural más duro."
+]
+},
+{
+"id": "qa-qa07txt-76",
+"tipo": "hecho",
+"preguntas": [
+"que es el petroleo",
+"de donde sale el petroleo"
+],
+"respuestas": [
+"El petróleo es un líquido que se formó bajo tierra con restos de seres vivos de hace millones de años. Se usa para hacer combustible y plástico."
+]
+},
+{
+"id": "qa-qa07txt-77",
+"tipo": "hecho",
+"preguntas": [
+"que es el oro",
+"de donde sale el oro"
+],
+"respuestas": [
+"El oro es un metal amarillo brillante y muy valioso que se saca de minas."
+]
+},
+{
+"id": "qa-qa07txt-78",
+"tipo": "hecho",
+"preguntas": [
+"que es el hierro",
+"para que sirve el hierro"
+],
+"respuestas": [
+"El hierro es un metal muy usado para hacer herramientas, autos y edificios. También lo necesita nuestra sangre."
+]
+},
+{
+"id": "qa-qa07txt-79",
+"tipo": "hecho",
+"preguntas": [
+"que es la arena",
+"de que esta hecha la arena"
+],
+"respuestas": [
+"La arena son pedacitos muy chiquitos de rocas y caracolas, gastados por el agua y el viento."
+]
+},
+{
+"id": "qa-qa07txt-80",
+"tipo": "hecho",
+"preguntas": [
+"que es el vidrio",
+"como se hace el vidrio"
+],
+"respuestas": [
+"El vidrio se hace derritiendo arena a muy alta temperatura."
+]
+},
+{
+"id": "qa-qa07txt-81",
+"tipo": "hecho",
+"preguntas": [
+"que es el papel",
+"como se hace el papel"
+],
+"respuestas": [
+"El papel se hace con fibras de madera, sobre todo de árboles, mezcladas con agua y prensadas."
+]
+},
+{
+"id": "qa-qa07txt-82",
+"tipo": "hecho",
+"preguntas": [
+"que es la madera",
+"de donde sale la madera"
+],
+"respuestas": [
+"La madera sale del tronco de los árboles."
+]
+},
+{
+"id": "qa-qa07txt-83",
+"tipo": "hecho",
+"preguntas": [
+"que es el algodon",
+"de donde sale el algodon"
+],
+"respuestas": [
+"El algodón es la fibra de una planta; con él se hace tela para ropa. En Argentina se cultiva en el Chaco."
+]
+},
+{
+"id": "qa-qa07txt-84",
+"tipo": "hecho",
+"preguntas": [
+"que es la lana",
+"de donde sale la lana"
+],
+"respuestas": [
+"La lana es el pelo de las ovejas y otros animales, como la llama, que se esquila para hacer ropa."
+]
+},
+{
+"id": "qa-qa07txt-85",
+"tipo": "hecho",
+"preguntas": [
+"que es la seda",
+"de donde sale la seda"
+],
+"respuestas": [
+"La seda la fabrican unos gusanos, los gusanos de seda, para hacer su capullo."
+]
+},
+{
+"id": "qa-qa07txt-86",
+"tipo": "hecho",
+"preguntas": [
+"por que el hielo flota",
+"el hielo es mas liviano que el agua"
+],
+"respuestas": [
+"El hielo flota porque, al congelarse, el agua se expande y queda menos pesada para su tamaño."
+]
+},
+{
+"id": "qa-qa07txt-87",
+"tipo": "hecho",
+"preguntas": [
+"por que el agua moja",
+"que es estar mojado"
+],
+"respuestas": [
+"El agua se pega a muchas superficies y se mete entre sus fibras: eso es mojar."
+]
+},
+{
+"id": "qa-qa07txt-88",
+"tipo": "hecho",
+"preguntas": [
+"que es la sal",
+"de donde sale la sal"
+],
+"respuestas": [
+"La sal se saca del agua de mar o de salinas, como las Salinas Grandes de Jujuy y Salta."
+]
+},
+{
+"id": "qa-qa07txt-89",
+"tipo": "hecho",
+"preguntas": [
+"que son las salinas grandes",
+"donde estan las salinas grandes"
+],
+"respuestas": [
+"Son un enorme desierto de sal blanca entre Jujuy y Salta."
+]
+},
+{
+"id": "qa-qa07txt-90",
+"tipo": "hecho",
+"preguntas": [
+"por que se hace pan rallado",
+"para que sirve el pan rallado"
+],
+"respuestas": [
+"El pan rallado es pan seco molido; se usa para empanar milanesas."
+]
+},
+{
+"id": "qa-qa07txt-91",
+"tipo": "hecho",
+"preguntas": [
+"que es el asado con cuero",
+"que es un asador"
+],
+"respuestas": [
+"El asado con cuero se cocina despacio con la piel del animal; el asador es la persona que hace el asado."
+]
+},
+{
+"id": "qa-qa07txt-92",
+"tipo": "hecho",
+"preguntas": [
+"que es el mate cocido",
+"que diferencia hay entre mate y mate cocido"
+],
+"respuestas": [
+"El mate cocido se prepara como un té, con yerba en saquito o colada; el mate se toma en el recipiente con bombilla."
+]
+},
+{
+"id": "qa-qa07txt-93",
+"tipo": "hecho",
+"preguntas": [
+"que es el te",
+"de donde sale el te"
+],
+"respuestas": [
+"El té se hace con hojas secas de la planta del té. En Argentina se cultiva en Misiones y Corrientes."
+]
+},
+{
+"id": "qa-qa07txt-94",
+"tipo": "hecho",
+"preguntas": [
+"que es el cafe",
+"de donde sale el cafe"
+],
+"respuestas": [
+"El café sale de las semillas tostadas del cafeto, una planta de zonas cálidas."
+]
+},
+{
+"id": "qa-qa07txt-95",
+"tipo": "hecho",
+"preguntas": [
+"que es una gaseosa",
+"es sano tomar gaseosa"
+],
+"respuestas": [
+"Es una bebida con gas y mucha azúcar. Está bien de vez en cuando, pero el agua es lo mejor para tomar todos los días."
+]
+},
+{
+"id": "qa-qa07txt-96",
+"tipo": "hecho",
+"preguntas": [
+"que es la comida chatarra",
+"es mala la comida chatarra"
+],
+"respuestas": [
+"Son comidas con mucha grasa, sal o azúcar y pocos nutrientes. No pasa nada de vez en cuando, pero no conviene todos los días."
+]
+},
+{
+"id": "qa-qa07txt-97",
+"tipo": "hecho",
+"preguntas": [
+"por que no hay que desperdiciar comida",
+"como no tirar comida"
+],
+"respuestas": [
+"Porque hacer comida usa mucha agua, tierra y trabajo. Servite lo que vas a comer y guardá lo que sobra."
+]
+},
+{
+"id": "qa-qa07txt-98",
+"tipo": "hecho",
+"preguntas": [
+"que es la fecha de vencimiento",
+"que pasa si como algo vencido"
+],
+"respuestas": [
+"Es el día hasta el que un alimento es seguro. Si está vencido o huele raro, mejor no comerlo."
+]
+},
+{
+"id": "qa-qa07txt-99",
+"tipo": "hecho",
+"preguntas": [
+"por que hay que lavar las frutas",
+"hay que lavar las verduras"
+],
+"respuestas": [
+"Para sacar tierra, gérmenes y restos de productos que se usan en los cultivos."
+]
+},
+{
+"id": "qa-qa07txt-100",
+"tipo": "hecho",
+"preguntas": [
+"que es la heladera",
+"para que sirve la heladera"
+],
+"respuestas": [
+"La heladera mantiene la comida fría para que dure más sin echarse a perder."
 ]
 }
 ]
