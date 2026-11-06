@@ -323,7 +323,7 @@ function parecido(a, na, b, nb) {
 }
 // Palabras "importantes" de una frase: si le preguntás algo con una palabra que la
 // respuesta aprendida no tiene (ej: "comida" vs "color"), baja la confianza. Así no inventa.
-const VACIAS = new Set("que como cual cuales es son tu tus te el la los las de del al un una uno me mi mis y o vos sos frankers mas muy por para lo se en con hay a le les nos su sus esto eso esta este ese esa decime contame sabes todo".split(" "));
+const VACIAS = new Set("que como cual cuales es son tu tus te el la los las de del al un una uno me mi mis y o vos sos frankers mas muy por para lo se en con hay a le les nos su sus esto eso esta este ese esa decime contame sabes todo dame explicame ejemplo sabias significa quiere decir".split(" "));
 const importantes = (t) => normalizar(t).split(" ").filter(w => w.length > 2 && !VACIAS.has(w));
 function trigramas(w) { const p = ` ${w} `, s = new Set(); for (let i = 0; i < p.length - 2; i++) s.add(p.slice(i, i + 3)); return s; }
 function palabraParecida(a, b) {
@@ -1107,7 +1107,7 @@ async function publicar(cambio) {
       else if (r.status !== 404) throw new Error("GitHub " + r.status);
       cambio(remoto); remoto.actualizado = new Date().toISOString();
       const p = await fetch(API, { method: "PUT", headers: cabeceras(), body: JSON.stringify({
-        message: "Frankers aprendió algo nuevo 🎓", content: aBase64(JSON.stringify(remoto, null, 2) + "\n"), sha,
+        message: "Frankers aprendió algo nuevo 🎓", content: aBase64(JSON.stringify(remoto) + "\n"), sha,
       }) });
       if (p.status === 409 || p.status === 422) continue; // alguien guardó al mismo tiempo: reintento
       if (!p.ok) throw new Error("GitHub " + p.status);
