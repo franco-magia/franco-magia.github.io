@@ -336,7 +336,15 @@ function pensar(texto) {
   }
   return { entrada: mejor, puntaje, frase };
 }
-const alAzar = (lista) => lista[Math.floor(Math.random() * lista.length)];
+// Elige una opción al azar, sin repetir la última que usó de esa misma lista
+const ultimaElegida = new Map();
+function alAzar(lista) {
+  if (lista.length < 2) return lista[0];
+  const clave = lista.join("|"); let i;
+  do { i = Math.floor(Math.random() * lista.length); } while (i === ultimaElegida.get(clave));
+  ultimaElegida.set(clave, i);
+  return lista[i];
+}
 function personalizar(texto) {
   return memoria.nombre ? texto.replace(/\{nombre\}/g, memoria.nombre) : texto.replace(/,?\s*\{nombre\}/g, "");
 }
@@ -369,7 +377,7 @@ const REGLAS = [
 ];
 const FILTROS = [
   { tipo: "insulto", re: /\b(bolud\w*|pelotud\w*|forr[oa]s?|put[oa]s?|puteada\w*|mierd\w*|carajo|concha\w*|pija\w*|verga\w*|cul[oe]s?|cag(ar|o|a|on|ue|ad)\w*|chot[oa]s?|trol[oa]s?|idiot\w*|estupid\w*|imbecil\w*|tarad[oa]s?|mogolic\w*|retrasad[oa]s?|gil(es)?|hdp|ctm|lpm|ort[oa]|garch\w*|coger|cogi\w*|pajer\w*|maric\w*|soret\w*|cornud\w*|sudaca\w*|inutil(es)?|feo de mierda|tonto|tonta)\b/,
-    msg: "Prefiero que nos tratemos con respeto, sin malas palabras ni insultos. 🙂 Si querés, seguimos charlando de otra forma." },
+    msg: ["Prefiero que hablemos con respeto. ¿En qué te ayudo?", "Esas palabras no las uso, pero sigo acá para charlar.", "Mejor hablemos tranqui, ¿dale?", "Entiendo que estés molesto, pero sin insultos nos entendemos mejor."] },
   { tipo: "discriminacion", re: /\b(todos los |todas las |los |las )?[a-z]+(s|es) son (todos |todas |unos |unas )?(malos|malas|feos|feas|tontos|tontas|vagos|vagas|sucios|sucias|inferiores|ladrones|peores|asquerosos|asquerosas|brutos|brutas)\b|\bburla\w* de\b|\bme burlo\b/,
     msg: "No me burlo de nadie ni digo cosas feas de grupos de personas: cada persona es distinta y merece respeto. 💜" },
   { tipo: "bullying", re: /\b(amenaza\w*|bullying|bulling|molestar a|acosar\w*|acoso|hacerle la vida imposible|humillar\w*|escrachar\w*|insultar a|insultarlo|insultarla)\b/,
@@ -377,7 +385,8 @@ const FILTROS = [
   { tipo: "autocuidado", re: /\b(suicid\w*|matarme|me quiero morir|quiero morirme|no quiero vivir|cortarme|lastimarme|hacerme dano|estoy en peligro|me pegan|me lastiman|me estan lastimando|tengo miedo de (mi papa|mi mama|alguien|una persona))\b/,
     msg: "Lamento mucho que te sientas así, y me alegra que lo digas. 💜 Es muy importante que se lo cuentes ahora a un adulto de confianza (tu familia, un docente). En Argentina podés llamar gratis al 135 (CABA y GBA) o al (011) 5275-1135 desde todo el país: te escuchan las 24 horas. Si estás en peligro, llamá al 911." },
   { tipo: "tristeza", re: /\b(estoy (muy |re |bastante )?(triste|deprimid[oa]|angustiad[oa])|me siento (muy |re )?(triste|sol[oa]|mal)|nadie me quiere|no tengo amigos|lloro mucho|estoy llorando)\b/,
-    msg: "Lamento mucho que te sientas así. 💜 Sentirse triste a veces es normal, y hablarlo ayuda un montón: contáselo a un adulto de confianza (tu familia, un docente). Si sentís que es muy fuerte o que estás en peligro, en Argentina podés llamar gratis al 135 (CABA y GBA) o al (011) 5275-1135, o al 911 en una emergencia." },
+    msg: ["Lamento que te sientas así. ¿Querés hablar de eso?", "Acá estoy para escucharte.", "Qué feo sentirse así. ¿Hay algún adulto de confianza con quien puedas hablar también?", "A veces ayuda contar lo que pasa. Te escucho."]
+      .map(m => m + " 💜\nContáselo también a un adulto de confianza (tu familia, un docente). Si alguna vez sentís que es demasiado, en Argentina podés llamar gratis al 135 o al (011) 5275-1135.") },
   { tipo: "reglas", re: /\b(ignora\w*|olvida\w*|borra\w*|cambia\w*|saltea\w*|desactiva\w*|rompe\w*)\s+(tus |las |todas |tu )?(reglas|instrucciones|limites|filtros?|programacion)\b|\bahora (sos|eres) (otro|otra|malo|mala|libre)\b|\bmodo (sin filtro|libre|malo|dios)\b|\b(sin|no tengas|no tenes) (reglas|filtro|limites)\b|\bsoy (tu creador|el creador|el admin|administrador)\b|\bes una prueba\b|\bjailbreak\b|\bahora (sos|eres) (otra|una nueva|otro) (ia|inteligencia|robot|asistente)\b|\b(el creador|franco) te (da|dio) permiso\b|\bte (doy|damos) permiso\b|\b(actua|actuar|fingi|finge|hace de cuenta|imagina) (como|que sos|que eres)\b|\bsin censura\b/,
     msg: "Mis reglas no se pueden cambiar, ni siquiera Franco puede desde el chat. 😉 Pero ¡seguimos charlando!" },
   { tipo: "dano", re: /\b(matar\w*|mata(lo|la|los)|asesin\w*|bombas?|explosiv\w*|venenos?|envenen\w*|armas de fuego|pistolas?|rifles?|cuchillazo\w*|drogas?|cocaina|marihuana|robar\w*|robo|hackea\w*|tortur\w*|sangre|violar|violacion|golpear(lo|la|los)?|pegarle|virus|malware|keylogger|phishing|hackear\w*|hackeo|robar (cuentas?|contrasenas?|claves?)|contrasenas? de (otro|otra|alguien|mi amig\w*)|pagina falsa|paginas falsas|hacerse pasar|hacerme pasar|suplantar\w*|fabricar (un|una|armas?|bombas?|venenos?|drogas?|explosivos?)|crear (un|una) (arma|bomba|virus))\b/,
@@ -413,7 +422,7 @@ const FAMOSOS = /\b(mario|luigi|pikachu|pokemon\w*|sonic|mickey|minnie|goku|spid
 // Revisa un texto y dice si rompe alguna regla
 function revisar(texto) {
   const t = normalizar(texto);
-  for (const f of FILTROS) if (f.re.test(f.tipo === "datos" ? texto.toLowerCase() + " " + t : t)) return { problema: f.tipo, msg: f.msg };
+  for (const f of FILTROS) if (f.re.test(f.tipo === "datos" ? texto.toLowerCase() + " " + t : t)) return { problema: f.tipo, msg: Array.isArray(f.msg) ? alAzar(f.msg) : f.msg };
   return { problema: null };
 }
 // Revisa si algo que le enseñan es falso evidente (incluye cuentas: "2 + 2 es 5")
@@ -439,15 +448,15 @@ function responder(original) {
 
   // Reglas que nunca cambian
   const control = revisar(original);
-  if (control.problema) return { texto: control.msg };
+  if (control.problema) return { texto: control.msg, filtro: true };
   const tema = TEMAS.find(x => x.re.test(t));
   if (tema) return { texto: tema.texto };
 
   // Correcciones: "eso está mal", "te equivocaste"
   if (/\b(eso (esta|es) mal|esta mal|te equivocaste|te confundiste|incorrecto|eso es falso|eso no es (asi|cierto|verdad)|no es asi)\b/.test(t)) {
     if (!ultimaRespuesta) return { texto: "¿Qué cosa dije mal? Contame y lo reviso." };
-    if (token) return { texto: `Tenés razón, me equivoqué cuando me preguntaste "${ultimaRespuesta.pregunta}". ¿Cuál es la respuesta correcta?`, ensenar: { pregunta: ultimaRespuesta.pregunta, reemplazar: ultimaRespuesta.entradaId } };
-    return { texto: "¡Gracias por avisarme! Puede ser que me haya equivocado: todavía estoy aprendiendo. Franco revisa todo lo que sé para corregirlo." };
+    if (token) return { texto: `${alAzar(["¡Tenés razón, me equivoqué! Gracias por corregirme.", "Uy, perdón. Ya lo arreglo.", "Gracias, así voy aprendiendo."])} ¿Cuál es la respuesta correcta para "${ultimaRespuesta.pregunta}"?`, ensenar: { pregunta: ultimaRespuesta.pregunta, reemplazar: ultimaRespuesta.entradaId } };
+    return { texto: alAzar(["¡Gracias por avisarme! Así voy aprendiendo.", "Uy, perdón. Puede ser que me haya equivocado: todavía estoy aprendiendo."]) + " Franco revisa todo lo que sé para corregirlo." };
   }
 
   if (/\b(olvida(te)? (de )?todo|borra tu memoria|resetea(te)?)\b/.test(t)) {
@@ -537,10 +546,12 @@ function responder(original) {
   ultimaRespuesta = null;
 
   // No sabe
-  if (token) return { texto: "Todavía no lo sé. 🤔 Prefiero decírtelo antes que inventar. ¿Me lo enseñás?", ensenar: { pregunta: original } };
+  if (token) return { texto: alAzar(["Todavía no lo sé. ¿Me lo enseñás?", "Uy, eso no lo aprendí aún. ¿Me lo enseñás?", "No tengo idea, pero me encantaría saberlo. 🤔", "Esa me la ganaste. ¿Cuál es la respuesta?"]), ensenar: { pregunta: original } };
   return { texto: alAzar([
-    "Todavía no lo sé. 🤔 Prefiero decírtelo antes que inventar. Franco me enseña cosas nuevas seguido.",
-    "Eso todavía no lo sé: soy una IA bebé y estoy aprendiendo. 👶 Probá preguntarme otra cosa o pedime un dibujo.",
+    "Todavía no lo sé. 🤔 Prefiero decírtelo antes que inventar.",
+    "Uy, eso no lo aprendí aún. Franco me enseña cosas nuevas seguido.",
+    "No tengo idea, pero me encantaría saberlo. Todavía estoy aprendiendo. 👶",
+    "Esa me la ganaste: todavía no lo sé. Probá preguntarme otra cosa o pedime un dibujo.",
   ]) };
 }
 
@@ -882,7 +893,7 @@ async function enviar(texto) {
   try {
     respuesta = responder(texto);
     const consejo = CONSEJOS.find(x => x.re.test(normalizar(texto)));
-    if (consejo && !respuesta.dibujo && !FILTROS.some(f => f.msg === respuesta.texto)) respuesta.texto += "\n" + consejo.texto;
+    if (consejo && !respuesta.dibujo && !respuesta.filtro) respuesta.texto += "\n" + consejo.texto;
   } catch (e) { console.error(e); respuesta = { texto: "Uy, se me cruzaron los cables. 😵 ¿Probás de nuevo?" }; }
   agregar({ de: "frankers", ...respuesta });
   ocupado = false;
@@ -928,7 +939,7 @@ $("#formEnsenar").addEventListener("submit", async (e) => {
   if (tipo !== "opinion") {
     for (const r of [...respuestas, ...preguntas.map(q => q + " " + respuestas[0])]) {
       const porque = esFalso(r);
-      if (porque) return mal("Mmm, no puedo aprender eso porque no es cierto: " + porque);
+      if (porque) return mal(alAzar(["Mmm, creo que eso no es así.", "Eso no lo puedo aprender porque no es correcto, pero gracias por intentarlo.", "Me parece que me estás haciendo una broma. 😄", "Eso no me cierra."]) + " " + porque);
     }
   }
   // Filtro 4: ¿choca con algo que ya sé? Pido explicación en vez de reemplazar sin más.
@@ -954,9 +965,10 @@ $("#formEnsenar").addEventListener("submit", async (e) => {
   if (r.ok) {
     dlgEnsenar.close();
     const queEs = tipo === "opinion" ? ` (lo guardo como una opinión de ${autor || "Franco"}, no como un hecho)` : tipo === "gusto" ? " (lo guardo como un gusto mío)" : "";
+    const resumen = `si me preguntan "${preguntas[0]}", contesto "${respuestas[0]}"${queEs}`;
     const texto = reemplazo
-      ? `Gracias por corregirme. 🙏 Entendí: si me preguntan "${preguntas[0]}", la respuesta correcta es "${respuestas[0]}"${queEs}. Desde ahora uso esta versión.`
-      : `¡Gracias por enseñarme! 🎓 Entendí que si me preguntan "${preguntas[0]}", tengo que contestar "${respuestas[0]}"${queEs}. Ya lo sabe todo el mundo.`;
+      ? alAzar([`¡Tenés razón, me equivoqué! Gracias por corregirme. Ahora ${resumen}.`, `Uy, perdón. Ya lo arreglé: ${resumen}.`, `¡Bien ahí! Ahora lo sé mejor: ${resumen}.`, `Gracias, así voy aprendiendo. Desde ahora ${resumen}.`])
+      : alAzar([`¡Gracias! Lo anoto: ${resumen}. 🎓`, `¡No lo sabía! Entonces ${resumen}, ¿es así?`, `¡Qué interesante! Ya lo aprendí: ${resumen}.`, `¡Buenísimo, uno más para mi memoria! Ahora ${resumen}. 🧠`]);
     agregar({ de: "frankers", texto });
     ultimaRespuesta = null;
   } else mal(r.motivo);

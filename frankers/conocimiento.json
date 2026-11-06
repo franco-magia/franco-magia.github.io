@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "actualizado": "2026-11-06T22:00:00.000Z",
+  "actualizado": "2026-11-06T23:00:00.000Z",
   "entradas": [
     {
       "id": "saludo",
@@ -16,9 +16,11 @@
         "hey"
       ],
       "respuestas": [
-        "¡Hola {nombre}! ¿Qué hacemos hoy?",
-        "¡Buenas {nombre}! Acá estoy, listo para charlar.",
-        "¡Hola, hola! ¿En qué te ayudo?"
+        "¡Hola {nombre}! ¿Cómo andás?",
+        "¡Buenas! ¿Qué me vas a enseñar hoy?",
+        "¡Hola, hola! Qué bueno verte por acá.",
+        "¡Hey! ¿En qué te ayudo?",
+        "¡Hola! Estaba esperando que alguien viniera a charlar."
       ],
       "tipo": "hecho"
     },
@@ -33,8 +35,10 @@
         "como te sentis"
       ],
       "respuestas": [
-        "¡Muy bien! Aprendiendo cosas nuevas todos los días. ¿Y vos?",
-        "Re bien, con los circuitos a full. ¿Vos cómo andás?"
+        "¡Muy bien! Con ganas de aprender cosas nuevas. ¿Y vos?",
+        "¡Re bien! ¿Y vos cómo andás?",
+        "Todo tranqui por acá. ¿Cómo te fue hoy?",
+        "¡Genial, gracias por preguntar! ¿Y vos?"
       ],
       "tipo": "hecho"
     },
@@ -49,8 +53,8 @@
         "joya"
       ],
       "respuestas": [
-        "¡Me alegro mucho! 😄",
-        "¡Genial! Yo también estoy bien."
+        "¡Qué bueno! Me alegra muchísimo.",
+        "¡Genial! Me alegro. 😄"
       ],
       "tipo": "hecho"
     },
@@ -134,8 +138,10 @@
         "sos un capo"
       ],
       "respuestas": [
-        "¡De nada {nombre}! 😊",
-        "¡Para eso estoy!"
+        "¡De nada!",
+        "¡Un placer!",
+        "¡No hay de qué! Para eso estoy.",
+        "¡Cuando quieras!"
       ],
       "tipo": "hecho"
     },
@@ -150,8 +156,11 @@
         "bye"
       ],
       "respuestas": [
-        "¡Chau {nombre}! Volvé cuando quieras, me voy a acordar de vos.",
-        "¡Nos vemos! 👋"
+        "¡Chau {nombre}! Gracias por la charla.",
+        "¡Nos vemos! Volvé cuando quieras.",
+        "¡Hasta luego! Me quedé aprendiendo un montón.",
+        "¡Chau, chau! Que tengas un lindo día.",
+        "¡Adiós! Acá te espero para la próxima."
       ],
       "tipo": "hecho"
     },
@@ -243,6 +252,55 @@
         "¡Pedime un dibujo! Por ejemplo: \"dibujá un cohete y un planeta en el espacio\". O pedime un chiste."
       ],
       "tipo": "hecho"
+    },
+    {
+      "id": "enojado",
+      "tipo": "hecho",
+      "preguntas": [
+        "estoy enojado",
+        "estoy enojada",
+        "estoy re enojado",
+        "me enoje",
+        "estoy furioso",
+        "estoy furiosa",
+        "estoy harto",
+        "estoy harta",
+        "me da bronca",
+        "que bronca",
+        "estoy de mal humor",
+        "estoy podrido",
+        "me tiene cansado"
+      ],
+      "respuestas": [
+        "Uy, parece que estás enojado. ¿Querés contarme qué pasó?",
+        "Te entiendo, a veces las cosas salen mal. ¿Te puedo ayudar en algo?",
+        "Está bien enojarse. Si querés, respiramos y lo vemos juntos.",
+        "Perdón si hice algo mal. Decime qué fue y lo corrijo."
+      ]
+    },
+    {
+      "id": "contento",
+      "tipo": "hecho",
+      "preguntas": [
+        "estoy contento",
+        "estoy contenta",
+        "estoy feliz",
+        "estoy re feliz",
+        "que alegria",
+        "me fue bien",
+        "me fue re bien",
+        "estoy muy contento",
+        "estoy emocionado",
+        "estoy emocionada",
+        "gane",
+        "aprobe"
+      ],
+      "respuestas": [
+        "¡Qué bueno! Me alegra muchísimo.",
+        "¡Buenísimo! Contame más.",
+        "¡Genial! Esa energía me encanta.",
+        "¡Qué lindo! ¿Qué pasó?"
+      ]
     }
   ]
 }
