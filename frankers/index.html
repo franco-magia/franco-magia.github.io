@@ -83,13 +83,13 @@
     .sugerencias { display: flex; gap: 6px; overflow-x: auto; padding: 4px 0 8px; scrollbar-width: none; }
     .sugerencias::-webkit-scrollbar { display: none; }
     .sugerencias .boton { font-weight: 600; color: var(--suave); }
-    form.escribir { display: flex; gap: 8px; padding: 0 0 16px; }
-    form.escribir input {
+    .escribir { display: flex; gap: 8px; padding: 0 0 16px; }
+    .escribir input {
       flex: 1; min-width: 0; padding: 13px 16px; border-radius: 999px; border: 1px solid var(--borde);
       background: rgba(0, 0, 0, .25); outline: none;
     }
-    form.escribir input:focus { border-color: var(--violeta); }
-    form.escribir button { padding: 0 20px; }
+    .escribir input:focus { border-color: var(--violeta); }
+    .escribir button { padding: 0 20px; }
     footer { text-align: center; font-size: .75rem; color: var(--suave); padding: 0 0 10px; }
     footer button { background: none; border: none; color: var(--suave); text-decoration: underline; cursor: pointer; font-size: .75rem; padding: 0; opacity: .6; }
     footer button:hover { opacity: 1; }
@@ -162,16 +162,16 @@
       <button class="boton">¿Cuánto es 12 x 7?</button>
       <button class="boton">Contame un chiste</button>
     </div>
-    <form class="escribir" id="formulario" autocomplete="off">
-      <input id="entrada" placeholder="Escribile a Frankers…" maxlength="300" aria-label="Mensaje para Frankers">
-      <button class="boton principal" type="submit">Enviar</button>
-    </form>
+    <div class="escribir" id="formulario">
+      <input id="entrada" placeholder="Escribile a Frankers…" maxlength="300" aria-label="Mensaje para Frankers" autocomplete="off" enterkeyhint="send">
+      <button class="boton principal" type="button" id="btnEnviar">Enviar</button>
+    </div>
     <footer>Frankers todavía es un bebé IA y puede equivocarse · <button id="btnCreador">modo creador</button></footer>
   </div>
 
   <!-- Ventana: enseñar -->
   <dialog id="dlgEnsenar">
-    <form method="dialog" id="formEnsenar">
+    <div id="formEnsenar">
       <h2>🎓 Enseñarle a Frankers</h2>
       <p>Escribí cómo le pueden preguntar algo y qué tiene que contestar. Lo que le enseñes lo aprende para todos los que lo usen.</p>
       <label for="ensPreguntas">Cuando alguien escriba… <small>(una forma por línea)</small></label>
@@ -194,10 +194,10 @@
       </div>
       <div class="estado" id="ensEstado"></div>
       <div class="fila-botones">
-        <button class="boton" value="cancelar" formnovalidate>Cancelar</button>
-        <button class="boton principal" id="ensGuardar" value="guardar">Enseñar</button>
+        <button class="boton" type="button" id="ensCancelar">Cancelar</button>
+        <button class="boton principal" type="button" id="ensGuardar">Enseñar</button>
       </div>
-    </form>
+    </div>
   </dialog>
 
   <!-- Ventana: lo que sabe -->
@@ -899,7 +899,10 @@ async function enviar(texto) {
   ocupado = false;
 }
 
-$("#formulario").addEventListener("submit", (e) => { e.preventDefault(); const i = $("#entrada"); enviar(i.value); i.value = ""; i.focus(); });
+// Enviar con el botón o con Enter (sin formularios, así funciona en cualquier lado)
+function enviarEntrada() { const i = $("#entrada"); const t = i.value; i.value = ""; enviar(t); i.focus(); }
+$("#btnEnviar").addEventListener("click", enviarEntrada);
+$("#entrada").addEventListener("keydown", (e) => { if (e.key === "Enter" && !e.isComposing) { e.preventDefault(); enviarEntrada(); } });
 $("#sugerencias").addEventListener("click", (e) => { if (e.target.matches("button")) enviar(e.target.textContent); });
 $("#btnLimpiar").onclick = () => { historial = []; guardarHistorial(); chat.innerHTML = ""; ultimoDibujo = null; bienvenida(); };
 
@@ -918,12 +921,11 @@ $("#ensPreguntas").oninput = $("#ensRespuestas").oninput = () => { // si cambia 
   if (ensConflicto) { ensConflicto = null; $("#ensFuenteCaja").hidden = true; $("#ensGuardar").textContent = ensReemplazar ? "Corregir" : "Enseñar"; $("#ensEstado").textContent = ""; }
 };
 $("#btnEnsenar").onclick = () => abrirEnsenar();
-$("#formEnsenar").addEventListener("submit", async (e) => {
-  if (e.submitter && e.submitter.value === "cancelar") return;
-  e.preventDefault();
+$("#ensCancelar").onclick = () => dlgEnsenar.close();
+$("#ensGuardar").addEventListener("click", async () => {
   const preguntas = $("#ensPreguntas").value.split("\n").map(s => s.trim()).filter(Boolean);
   const respuestas = $("#ensRespuestas").value.split("\n").map(s => s.trim()).filter(Boolean);
-  if (!preguntas.length || !respuestas.length) return;
+  if (!preguntas.length || !respuestas.length) { $("#ensEstado").className = "estado mal"; $("#ensEstado").textContent = "Completá qué te pueden decir y qué tengo que contestar."; return; }
   const tipo = $("#ensTipo").value, autor = $("#ensAutor").value.trim(), fuente = $("#ensFuente").value.trim();
   const estado = $("#ensEstado"), boton = $("#ensGuardar");
   const mal = (msg) => { estado.className = "estado mal"; estado.textContent = msg; };
