@@ -1,6 +1,6 @@
 {
 "version": 1,
-"actualizado": "2026-11-06T23:27:57.849Z",
+"actualizado": "2026-11-06T23:28:58.464Z",
 "entradas": [
 {
 "id": "saludo",
@@ -4087,6 +4087,1117 @@
 ],
 "respuestas": [
 "El tucán es un ave de selva con un pico enorme y colorido. En Argentina vive en Misiones."
+]
+},
+{
+"id": "qa-qa02txt-1",
+"tipo": "hecho",
+"preguntas": [
+"cuantos planetas hay en el sistema solar",
+"cuantos planetas hay"
+],
+"respuestas": [
+"Hay 8 planetas: Mercurio, Venus, Tierra, Marte, Júpiter, Saturno, Urano y Neptuno."
+]
+},
+{
+"id": "qa-qa02txt-2",
+"tipo": "hecho",
+"preguntas": [
+"cuales son los planetas del sistema solar",
+"nombra los planetas"
+],
+"respuestas": [
+"Mercurio, Venus, Tierra, Marte, Júpiter, Saturno, Urano y Neptuno, en ese orden desde el Sol."
+]
+},
+{
+"id": "qa-qa02txt-3",
+"tipo": "hecho",
+"preguntas": [
+"cual es el planeta mas grande",
+"que planeta es el mas grande"
+],
+"respuestas": [
+"Júpiter es el planeta más grande del sistema solar."
+]
+},
+{
+"id": "qa-qa02txt-4",
+"tipo": "hecho",
+"preguntas": [
+"cual es el planeta mas chico",
+"cual es el planeta mas pequeno"
+],
+"respuestas": [
+"Mercurio es el planeta más chico del sistema solar."
+]
+},
+{
+"id": "qa-qa02txt-5",
+"tipo": "hecho",
+"preguntas": [
+"cual es el planeta mas cercano al sol",
+"que planeta esta mas cerca del sol"
+],
+"respuestas": [
+"Mercurio es el planeta más cercano al Sol."
+]
+},
+{
+"id": "qa-qa02txt-6",
+"tipo": "hecho",
+"preguntas": [
+"cual es el planeta mas lejano del sol",
+"que planeta esta mas lejos del sol"
+],
+"respuestas": [
+"Neptuno es el planeta más lejano del Sol."
+]
+},
+{
+"id": "qa-qa02txt-7",
+"tipo": "hecho",
+"preguntas": [
+"cual es el planeta mas caliente",
+"que planeta es el mas caluroso"
+],
+"respuestas": [
+"Venus es el planeta más caliente, por su atmósfera espesa que atrapa el calor."
+]
+},
+{
+"id": "qa-qa02txt-8",
+"tipo": "hecho",
+"preguntas": [
+"cual es el planeta rojo",
+"por que marte es rojo"
+],
+"respuestas": [
+"Marte es el planeta rojo: su suelo tiene mucho óxido de hierro, como el óxido."
+]
+},
+{
+"id": "qa-qa02txt-9",
+"tipo": "hecho",
+"preguntas": [
+"que planeta tiene anillos",
+"cual es el planeta de los anillos"
+],
+"respuestas": [
+"Saturno tiene los anillos más famosos, pero Júpiter, Urano y Neptuno también tienen anillos más finitos."
+]
+},
+{
+"id": "qa-qa02txt-10",
+"tipo": "hecho",
+"preguntas": [
+"de que estan hechos los anillos de saturno",
+"que son los anillos de saturno"
+],
+"respuestas": [
+"Los anillos de Saturno están hechos de pedazos de hielo y roca."
+]
+},
+{
+"id": "qa-qa02txt-11",
+"tipo": "hecho",
+"preguntas": [
+"pluton es un planeta",
+"por que pluton no es planeta"
+],
+"respuestas": [
+"Desde 2006, Plutón se considera un planeta enano, porque es chico y comparte su zona con otros objetos."
+]
+},
+{
+"id": "qa-qa02txt-12",
+"tipo": "hecho",
+"preguntas": [
+"que es un planeta enano",
+"que significa planeta enano"
+],
+"respuestas": [
+"Es un cuerpo redondo que gira alrededor del Sol pero no limpió su camino de otros objetos, como Plutón."
+]
+},
+{
+"id": "qa-qa02txt-13",
+"tipo": "hecho",
+"preguntas": [
+"que es el sistema solar",
+"que hay en el sistema solar"
+],
+"respuestas": [
+"Es el Sol y todo lo que gira a su alrededor: planetas, lunas, asteroides y cometas."
+]
+},
+{
+"id": "qa-qa02txt-14",
+"tipo": "hecho",
+"preguntas": [
+"que es una galaxia",
+"que significa galaxia"
+],
+"respuestas": [
+"Una galaxia es un grupo enorme de estrellas, gas y polvo unidos por la gravedad."
+]
+},
+{
+"id": "qa-qa02txt-15",
+"tipo": "hecho",
+"preguntas": [
+"como se llama nuestra galaxia",
+"en que galaxia vivimos"
+],
+"respuestas": [
+"Vivimos en la Vía Láctea."
+]
+},
+{
+"id": "qa-qa02txt-16",
+"tipo": "hecho",
+"preguntas": [
+"que es la via lactea",
+"por que se llama via lactea"
+],
+"respuestas": [
+"La Vía Láctea es nuestra galaxia. Se llama así porque de noche se ve como un camino blanco, como de leche."
+]
+},
+{
+"id": "qa-qa02txt-17",
+"tipo": "hecho",
+"preguntas": [
+"que es el universo",
+"que hay en el universo"
+],
+"respuestas": [
+"El universo es todo lo que existe: galaxias, estrellas, planetas, el espacio y el tiempo."
+]
+},
+{
+"id": "qa-qa02txt-18",
+"tipo": "hecho",
+"preguntas": [
+"cuantos anos tiene el universo",
+"que edad tiene el universo"
+],
+"respuestas": [
+"Se calcula que el universo tiene unos 13.800 millones de años."
+]
+},
+{
+"id": "qa-qa02txt-19",
+"tipo": "hecho",
+"preguntas": [
+"cuantos anos tiene la tierra",
+"que edad tiene la tierra"
+],
+"respuestas": [
+"La Tierra tiene unos 4.500 millones de años."
+]
+},
+{
+"id": "qa-qa02txt-20",
+"tipo": "hecho",
+"preguntas": [
+"que es el big bang",
+"como empezo el universo"
+],
+"respuestas": [
+"El Big Bang es la idea científica de que el universo empezó muy chiquito y caliente, y se fue expandiendo."
+]
+},
+{
+"id": "qa-qa02txt-21",
+"tipo": "hecho",
+"preguntas": [
+"que es una estrella fugaz",
+"las estrellas fugaces son estrellas"
+],
+"respuestas": [
+"No son estrellas: son piedritas del espacio que se queman al entrar en la atmósfera y dejan una raya de luz."
+]
+},
+{
+"id": "qa-qa02txt-22",
+"tipo": "hecho",
+"preguntas": [
+"que es un meteorito",
+"que es un meteoro"
+],
+"respuestas": [
+"Un meteoro es la luz que hace una roca espacial al quemarse en el aire; si llega al suelo, se llama meteorito."
+]
+},
+{
+"id": "qa-qa02txt-23",
+"tipo": "hecho",
+"preguntas": [
+"que es un asteroide",
+"que son los asteroides"
+],
+"respuestas": [
+"Un asteroide es una roca que gira alrededor del Sol. Muchos están entre Marte y Júpiter."
+]
+},
+{
+"id": "qa-qa02txt-24",
+"tipo": "hecho",
+"preguntas": [
+"que es un cometa",
+"como es un cometa"
+],
+"respuestas": [
+"Un cometa es una bola de hielo y polvo que, al acercarse al Sol, forma una cola brillante."
+]
+},
+{
+"id": "qa-qa02txt-25",
+"tipo": "hecho",
+"preguntas": [
+"que es un agujero negro",
+"que pasa en un agujero negro"
+],
+"respuestas": [
+"Es un lugar del espacio con tanta gravedad que nada puede escapar, ni siquiera la luz."
+]
+},
+{
+"id": "qa-qa02txt-26",
+"tipo": "hecho",
+"preguntas": [
+"que es la gravedad",
+"por que las cosas caen"
+],
+"respuestas": [
+"La gravedad es la fuerza que atrae las cosas entre sí. Por ella las cosas caen al suelo y la Luna gira alrededor de la Tierra."
+]
+},
+{
+"id": "qa-qa02txt-27",
+"tipo": "hecho",
+"preguntas": [
+"por que la luna cambia de forma",
+"que son las fases de la luna"
+],
+"respuestas": [
+"La Luna no cambia de forma: vemos distintas partes iluminadas por el Sol mientras gira alrededor de la Tierra."
+]
+},
+{
+"id": "qa-qa02txt-28",
+"tipo": "hecho",
+"preguntas": [
+"cuales son las fases de la luna",
+"como se llaman las fases de la luna"
+],
+"respuestas": [
+"Luna nueva, cuarto creciente, luna llena y cuarto menguante."
+]
+},
+{
+"id": "qa-qa02txt-29",
+"tipo": "hecho",
+"preguntas": [
+"cuanto tarda la luna en dar la vuelta a la tierra",
+"cada cuanto hay luna llena"
+],
+"respuestas": [
+"La Luna tarda unos 29 días y medio en pasar por todas sus fases."
+]
+},
+{
+"id": "qa-qa02txt-30",
+"tipo": "hecho",
+"preguntas": [
+"la luna tiene luz propia",
+"la luna brilla sola"
+],
+"respuestas": [
+"No, la Luna no tiene luz propia: refleja la luz del Sol."
+]
+},
+{
+"id": "qa-qa02txt-31",
+"tipo": "hecho",
+"preguntas": [
+"quien fue el primer hombre en la luna",
+"quien piso la luna primero"
+],
+"respuestas": [
+"Neil Armstrong fue la primera persona en pisar la Luna, el 20 de julio de 1969."
+]
+},
+{
+"id": "qa-qa02txt-32",
+"tipo": "hecho",
+"preguntas": [
+"cuando llego el hombre a la luna",
+"en que ano fueron a la luna"
+],
+"respuestas": [
+"El ser humano llegó a la Luna en 1969, con la misión Apolo 11."
+]
+},
+{
+"id": "qa-qa02txt-33",
+"tipo": "hecho",
+"preguntas": [
+"quien fue el primer hombre en el espacio",
+"quien fue el primer astronauta"
+],
+"respuestas": [
+"Yuri Gagarin fue la primera persona en viajar al espacio, en 1961."
+]
+},
+{
+"id": "qa-qa02txt-34",
+"tipo": "hecho",
+"preguntas": [
+"que es un astronauta",
+"que hace un astronauta"
+],
+"respuestas": [
+"Un astronauta es una persona entrenada para viajar y trabajar en el espacio."
+]
+},
+{
+"id": "qa-qa02txt-35",
+"tipo": "hecho",
+"preguntas": [
+"que es un satelite",
+"que es un satelite natural"
+],
+"respuestas": [
+"Un satélite es algo que gira alrededor de un planeta. La Luna es el satélite natural de la Tierra."
+]
+},
+{
+"id": "qa-qa02txt-36",
+"tipo": "hecho",
+"preguntas": [
+"que es un satelite artificial",
+"para que sirven los satelites"
+],
+"respuestas": [
+"Es una máquina que gira alrededor de la Tierra. Sirven para el GPS, el clima, la tele e internet."
+]
+},
+{
+"id": "qa-qa02txt-37",
+"tipo": "hecho",
+"preguntas": [
+"que es la estacion espacial internacional",
+"que es la iss"
+],
+"respuestas": [
+"Es un laboratorio que gira alrededor de la Tierra, donde viven y trabajan astronautas de varios países."
+]
+},
+{
+"id": "qa-qa02txt-38",
+"tipo": "hecho",
+"preguntas": [
+"que es un telescopio",
+"para que sirve un telescopio"
+],
+"respuestas": [
+"Un telescopio es un aparato que sirve para ver cosas muy lejanas, como planetas y estrellas."
+]
+},
+{
+"id": "qa-qa02txt-39",
+"tipo": "hecho",
+"preguntas": [
+"cuanto tarda la tierra en girar sobre si misma",
+"por que hay dia y noche"
+],
+"respuestas": [
+"La Tierra gira sobre sí misma en unas 24 horas: por eso hay día y noche."
+]
+},
+{
+"id": "qa-qa02txt-40",
+"tipo": "hecho",
+"preguntas": [
+"cuanto tarda la tierra en dar la vuelta al sol",
+"cuanto dura un ano"
+],
+"respuestas": [
+"La Tierra tarda unos 365 días y 6 horas en dar la vuelta al Sol: eso es un año."
+]
+},
+{
+"id": "qa-qa02txt-41",
+"tipo": "hecho",
+"preguntas": [
+"que es un ano bisiesto",
+"por que hay anos bisiestos"
+],
+"respuestas": [
+"Es un año de 366 días: se suma el 29 de febrero cada 4 años para juntar las horas que sobran."
+]
+},
+{
+"id": "qa-qa02txt-42",
+"tipo": "hecho",
+"preguntas": [
+"por que hay estaciones",
+"por que existen las estaciones del ano"
+],
+"respuestas": [
+"Porque la Tierra está inclinada: durante el año, cada parte recibe la luz del Sol más directa o más de costado."
+]
+},
+{
+"id": "qa-qa02txt-43",
+"tipo": "hecho",
+"preguntas": [
+"a que distancia esta el sol",
+"que tan lejos esta el sol"
+],
+"respuestas": [
+"El Sol está a unos 150 millones de kilómetros de la Tierra."
+]
+},
+{
+"id": "qa-qa02txt-44",
+"tipo": "hecho",
+"preguntas": [
+"a que distancia esta la luna",
+"que tan lejos esta la luna"
+],
+"respuestas": [
+"La Luna está a unos 384.000 kilómetros de la Tierra."
+]
+},
+{
+"id": "qa-qa02txt-45",
+"tipo": "hecho",
+"preguntas": [
+"cuanto tarda la luz del sol en llegar a la tierra",
+"cuanto tarda la luz del sol"
+],
+"respuestas": [
+"La luz del Sol tarda unos 8 minutos en llegar a la Tierra."
+]
+},
+{
+"id": "qa-qa02txt-46",
+"tipo": "hecho",
+"preguntas": [
+"que tan grande es el sol",
+"el sol es grande"
+],
+"respuestas": [
+"El Sol es enorme: adentro entrarían más de un millón de Tierras."
+]
+},
+{
+"id": "qa-qa02txt-47",
+"tipo": "hecho",
+"preguntas": [
+"de que esta hecho el sol",
+"que hay en el sol"
+],
+"respuestas": [
+"El Sol está hecho sobre todo de hidrógeno y helio, gases muy calientes."
+]
+},
+{
+"id": "qa-qa02txt-48",
+"tipo": "hecho",
+"preguntas": [
+"el sol es una estrella",
+"que tipo de estrella es el sol"
+],
+"respuestas": [
+"Sí, el Sol es una estrella, y es la más cercana a la Tierra."
+]
+},
+{
+"id": "qa-qa02txt-49",
+"tipo": "hecho",
+"preguntas": [
+"cual es la estrella mas cercana",
+"que estrella esta mas cerca"
+],
+"respuestas": [
+"La estrella más cercana es el Sol. Después viene Próxima Centauri."
+]
+},
+{
+"id": "qa-qa02txt-50",
+"tipo": "hecho",
+"preguntas": [
+"que es un eclipse",
+"que es un eclipse de sol"
+],
+"respuestas": [
+"En un eclipse de Sol, la Luna tapa al Sol. En uno de Luna, la sombra de la Tierra tapa a la Luna."
+]
+},
+{
+"id": "qa-qa02txt-51",
+"tipo": "hecho",
+"preguntas": [
+"se puede mirar el sol",
+"puedo mirar el sol directo"
+],
+"respuestas": [
+"No hay que mirar el Sol directo, ni en un eclipse: puede lastimar los ojos. Se usan anteojos especiales."
+]
+},
+{
+"id": "qa-qa02txt-52",
+"tipo": "hecho",
+"preguntas": [
+"que es la atmosfera",
+"para que sirve la atmosfera"
+],
+"respuestas": [
+"La atmósfera es la capa de aire que rodea la Tierra. Nos da oxígeno y nos protege de los rayos del Sol."
+]
+},
+{
+"id": "qa-qa02txt-53",
+"tipo": "hecho",
+"preguntas": [
+"por que el cielo es celeste",
+"por que el cielo es azul"
+],
+"respuestas": [
+"Porque el aire desparrama más la luz azul del Sol que los otros colores."
+]
+},
+{
+"id": "qa-qa02txt-54",
+"tipo": "hecho",
+"preguntas": [
+"por que el atardecer es naranja",
+"por que el cielo se pone rojo al atardecer"
+],
+"respuestas": [
+"Al atardecer la luz cruza más aire, se pierde el azul y llegan más los colores rojos y naranjas."
+]
+},
+{
+"id": "qa-qa02txt-55",
+"tipo": "hecho",
+"preguntas": [
+"que es un arcoiris",
+"como se forma el arcoiris"
+],
+"respuestas": [
+"El arcoíris aparece cuando la luz del Sol atraviesa gotitas de agua y se separa en colores."
+]
+},
+{
+"id": "qa-qa02txt-56",
+"tipo": "hecho",
+"preguntas": [
+"cuantos colores tiene el arcoiris",
+"cuales son los colores del arcoiris"
+],
+"respuestas": [
+"Se suelen contar 7: rojo, naranja, amarillo, verde, azul, añil y violeta."
+]
+},
+{
+"id": "qa-qa02txt-57",
+"tipo": "hecho",
+"preguntas": [
+"como se forma la lluvia",
+"de donde viene la lluvia"
+],
+"respuestas": [
+"El agua se evapora con el calor, sube, forma nubes y, cuando las gotas se juntan y pesan, cae como lluvia."
+]
+},
+{
+"id": "qa-qa02txt-58",
+"tipo": "hecho",
+"preguntas": [
+"que es el ciclo del agua",
+"como funciona el ciclo del agua"
+],
+"respuestas": [
+"Es el viaje del agua: se evapora, forma nubes, cae como lluvia o nieve, y vuelve a ríos y mares."
+]
+},
+{
+"id": "qa-qa02txt-59",
+"tipo": "hecho",
+"preguntas": [
+"que es la nieve",
+"como se forma la nieve"
+],
+"respuestas": [
+"La nieve son cristalitos de hielo que se forman en las nubes cuando hace mucho frío."
+]
+},
+{
+"id": "qa-qa02txt-60",
+"tipo": "hecho",
+"preguntas": [
+"que es el granizo",
+"como se forma el granizo"
+],
+"respuestas": [
+"El granizo son bolitas de hielo que se forman dentro de nubes de tormenta."
+]
+},
+{
+"id": "qa-qa02txt-61",
+"tipo": "hecho",
+"preguntas": [
+"que es un rayo",
+"como se forma un rayo"
+],
+"respuestas": [
+"Un rayo es una descarga eléctrica enorme que se forma en las nubes de tormenta."
+]
+},
+{
+"id": "qa-qa02txt-62",
+"tipo": "hecho",
+"preguntas": [
+"por que primero se ve el rayo y despues el trueno",
+"que es el trueno"
+],
+"respuestas": [
+"El trueno es el ruido del rayo. Vemos primero el rayo porque la luz viaja mucho más rápido que el sonido."
+]
+},
+{
+"id": "qa-qa02txt-63",
+"tipo": "hecho",
+"preguntas": [
+"que hacer si hay tormenta electrica",
+"como protegerse de los rayos"
+],
+"respuestas": [
+"Quedate adentro de una casa o un auto, lejos de árboles solos, piletas y lugares altos."
+]
+},
+{
+"id": "qa-qa02txt-64",
+"tipo": "hecho",
+"preguntas": [
+"que es un volcan",
+"como funciona un volcan"
+],
+"respuestas": [
+"Un volcán es una montaña por donde sale roca derretida, llamada lava, del interior de la Tierra."
+]
+},
+{
+"id": "qa-qa02txt-65",
+"tipo": "hecho",
+"preguntas": [
+"que es la lava",
+"que es el magma"
+],
+"respuestas": [
+"El magma es roca derretida bajo tierra; cuando sale por un volcán se llama lava."
+]
+},
+{
+"id": "qa-qa02txt-66",
+"tipo": "hecho",
+"preguntas": [
+"que es un terremoto",
+"por que tiembla la tierra"
+],
+"respuestas": [
+"Un terremoto es un temblor fuerte del suelo, causado por el movimiento de las placas de la Tierra."
+]
+},
+{
+"id": "qa-qa02txt-67",
+"tipo": "hecho",
+"preguntas": [
+"que hacer en un terremoto",
+"como protegerse en un sismo"
+],
+"respuestas": [
+"Agachate, cubrite la cabeza bajo una mesa firme y agarrate, lejos de ventanas, hasta que pase."
+]
+},
+{
+"id": "qa-qa02txt-68",
+"tipo": "hecho",
+"preguntas": [
+"que es un tsunami",
+"como se forma un tsunami"
+],
+"respuestas": [
+"Un tsunami es una ola gigante causada casi siempre por un terremoto bajo el mar."
+]
+},
+{
+"id": "qa-qa02txt-69",
+"tipo": "hecho",
+"preguntas": [
+"que es un huracan",
+"que es un tornado"
+],
+"respuestas": [
+"Un huracán es una tormenta enorme con vientos muy fuertes que se forma sobre el mar. Un tornado es un remolino de viento más chico pero muy violento."
+]
+},
+{
+"id": "qa-qa02txt-70",
+"tipo": "hecho",
+"preguntas": [
+"cual es la montana mas alta del mundo",
+"que montana es la mas alta"
+],
+"respuestas": [
+"El Everest, en Asia, es la montaña más alta del mundo: mide unos 8.849 metros."
+]
+},
+{
+"id": "qa-qa02txt-71",
+"tipo": "hecho",
+"preguntas": [
+"cual es la montana mas alta de america",
+"que es el aconcagua"
+],
+"respuestas": [
+"El Aconcagua, en Mendoza, Argentina, es la montaña más alta de América: mide unos 6.961 metros."
+]
+},
+{
+"id": "qa-qa02txt-72",
+"tipo": "hecho",
+"preguntas": [
+"cual es el oceano mas grande",
+"que oceano es el mas grande"
+],
+"respuestas": [
+"El océano Pacífico es el más grande del mundo."
+]
+},
+{
+"id": "qa-qa02txt-73",
+"tipo": "hecho",
+"preguntas": [
+"cuantos oceanos hay",
+"cuales son los oceanos"
+],
+"respuestas": [
+"Hay 5 océanos: Pacífico, Atlántico, Índico, Ártico y Antártico (o Austral)."
+]
+},
+{
+"id": "qa-qa02txt-74",
+"tipo": "hecho",
+"preguntas": [
+"cual es el rio mas largo del mundo",
+"que rio es el mas largo"
+],
+"respuestas": [
+"El Nilo y el Amazonas son los ríos más largos; según cómo se mida, uno u otro gana."
+]
+},
+{
+"id": "qa-qa02txt-75",
+"tipo": "hecho",
+"preguntas": [
+"cual es el rio mas caudaloso",
+"que rio tiene mas agua"
+],
+"respuestas": [
+"El Amazonas es el río que lleva más agua del mundo."
+]
+},
+{
+"id": "qa-qa02txt-76",
+"tipo": "hecho",
+"preguntas": [
+"cual es el desierto mas grande",
+"que desierto es el mas grande"
+],
+"respuestas": [
+"El desierto cálido más grande es el Sahara. Contando los fríos, la Antártida es el desierto más grande."
+]
+},
+{
+"id": "qa-qa02txt-77",
+"tipo": "hecho",
+"preguntas": [
+"por que el mar es salado",
+"de donde sale la sal del mar"
+],
+"respuestas": [
+"Porque los ríos llevan al mar minerales y sales de las rocas, y cuando el agua se evapora, la sal se queda."
+]
+},
+{
+"id": "qa-qa02txt-78",
+"tipo": "hecho",
+"preguntas": [
+"que son las mareas",
+"por que sube y baja el mar"
+],
+"respuestas": [
+"Las mareas son las subidas y bajadas del mar, causadas sobre todo por la gravedad de la Luna."
+]
+},
+{
+"id": "qa-qa02txt-79",
+"tipo": "hecho",
+"preguntas": [
+"que es un continente",
+"cuantos continentes hay"
+],
+"respuestas": [
+"Un continente es una gran extensión de tierra. Se suelen contar 6 o 7: América, Europa, Asia, África, Oceanía y la Antártida."
+]
+},
+{
+"id": "qa-qa02txt-80",
+"tipo": "hecho",
+"preguntas": [
+"en que continente esta argentina",
+"argentina esta en america"
+],
+"respuestas": [
+"Argentina está en América del Sur."
+]
+},
+{
+"id": "qa-qa02txt-81",
+"tipo": "hecho",
+"preguntas": [
+"que es el ecuador",
+"que es la linea del ecuador"
+],
+"respuestas": [
+"Es una línea imaginaria que divide la Tierra en dos mitades: norte y sur."
+]
+},
+{
+"id": "qa-qa02txt-82",
+"tipo": "hecho",
+"preguntas": [
+"que es el polo norte",
+"que es el polo sur"
+],
+"respuestas": [
+"Son los puntos de más arriba y más abajo de la Tierra. El Polo Sur está en la Antártida."
+]
+},
+{
+"id": "qa-qa02txt-83",
+"tipo": "hecho",
+"preguntas": [
+"que es la antartida",
+"como es la antartida"
+],
+"respuestas": [
+"La Antártida es el continente más frío, alrededor del Polo Sur, casi todo cubierto de hielo."
+]
+},
+{
+"id": "qa-qa02txt-84",
+"tipo": "hecho",
+"preguntas": [
+"argentina tiene bases en la antartida",
+"que es la base marambio"
+],
+"respuestas": [
+"Sí, Argentina tiene varias bases científicas en la Antártida, como Marambio y Esperanza."
+]
+},
+{
+"id": "qa-qa02txt-85",
+"tipo": "hecho",
+"preguntas": [
+"la tierra es redonda",
+"la tierra es plana"
+],
+"respuestas": [
+"La Tierra es redonda, como una pelota un poco achatada en los polos."
+]
+},
+{
+"id": "qa-qa02txt-86",
+"tipo": "hecho",
+"preguntas": [
+"cuanto mide la tierra",
+"que tan grande es la tierra"
+],
+"respuestas": [
+"La vuelta completa a la Tierra por el ecuador mide unos 40.000 kilómetros."
+]
+},
+{
+"id": "qa-qa02txt-87",
+"tipo": "hecho",
+"preguntas": [
+"de que esta hecha la tierra",
+"que hay adentro de la tierra"
+],
+"respuestas": [
+"La Tierra tiene una corteza de roca, un manto caliente y un núcleo de metal muy caliente en el centro."
+]
+},
+{
+"id": "qa-qa02txt-88",
+"tipo": "hecho",
+"preguntas": [
+"cuanta agua hay en la tierra",
+"cuanto de la tierra es agua"
+],
+"respuestas": [
+"Más o menos el 70 % de la superficie de la Tierra está cubierta de agua."
+]
+},
+{
+"id": "qa-qa02txt-89",
+"tipo": "hecho",
+"preguntas": [
+"que es el oxigeno",
+"para que sirve el oxigeno"
+],
+"respuestas": [
+"El oxígeno es un gas del aire que necesitamos para respirar."
+]
+},
+{
+"id": "qa-qa02txt-90",
+"tipo": "hecho",
+"preguntas": [
+"que es el dioxido de carbono",
+"que es el co2"
+],
+"respuestas": [
+"Es un gas que sale cuando respiramos y cuando se quema algo. Las plantas lo usan para crecer."
+]
+},
+{
+"id": "qa-qa02txt-91",
+"tipo": "hecho",
+"preguntas": [
+"que es el calentamiento global",
+"que es el cambio climatico"
+],
+"respuestas": [
+"Es el aumento de la temperatura de la Tierra, causado sobre todo por gases que se liberan al quemar combustibles."
+]
+},
+{
+"id": "qa-qa02txt-92",
+"tipo": "hecho",
+"preguntas": [
+"como cuidar el planeta",
+"que puedo hacer para cuidar la tierra"
+],
+"respuestas": [
+"Ahorrar agua y luz, reciclar, no tirar basura, plantar árboles y usar menos plástico ayudan mucho."
+]
+},
+{
+"id": "qa-qa02txt-93",
+"tipo": "hecho",
+"preguntas": [
+"que es reciclar",
+"para que sirve reciclar"
+],
+"respuestas": [
+"Reciclar es usar materiales viejos para hacer cosas nuevas, así se tira menos basura."
+]
+},
+{
+"id": "qa-qa02txt-94",
+"tipo": "hecho",
+"preguntas": [
+"que es la capa de ozono",
+"para que sirve la capa de ozono"
+],
+"respuestas": [
+"Es una capa de la atmósfera que nos protege de los rayos ultravioleta del Sol."
+]
+},
+{
+"id": "qa-qa02txt-95",
+"tipo": "hecho",
+"preguntas": [
+"que es la fotosintesis",
+"como comen las plantas"
+],
+"respuestas": [
+"La fotosíntesis es cómo las plantas fabrican su alimento con luz del Sol, agua y dióxido de carbono, y sueltan oxígeno."
+]
+},
+{
+"id": "qa-qa02txt-96",
+"tipo": "hecho",
+"preguntas": [
+"por que las hojas son verdes",
+"por que las plantas son verdes"
+],
+"respuestas": [
+"Porque tienen clorofila, una sustancia verde que usan para atrapar la luz del Sol."
+]
+},
+{
+"id": "qa-qa02txt-97",
+"tipo": "hecho",
+"preguntas": [
+"por que se caen las hojas en otono",
+"por que las hojas cambian de color"
+],
+"respuestas": [
+"En otoño hay menos luz, el árbol deja de hacer clorofila, las hojas cambian de color y se caen para ahorrar energía."
+]
+},
+{
+"id": "qa-qa02txt-98",
+"tipo": "hecho",
+"preguntas": [
+"cual es el arbol mas alto del mundo",
+"que arbol es el mas alto"
+],
+"respuestas": [
+"Las secuoyas rojas de California son los árboles más altos: pueden pasar los 110 metros."
+]
+},
+{
+"id": "qa-qa02txt-99",
+"tipo": "hecho",
+"preguntas": [
+"que es una selva",
+"que es la selva amazonica"
+],
+"respuestas": [
+"La selva es un bosque muy espeso, húmedo y caluroso. El Amazonas es la selva más grande del mundo."
+]
+},
+{
+"id": "qa-qa02txt-100",
+"tipo": "hecho",
+"preguntas": [
+"que es un bosque",
+"que diferencia hay entre bosque y selva"
+],
+"respuestas": [
+"Un bosque es un lugar con muchos árboles. La selva es un bosque muy húmedo, caluroso y lleno de vida."
+]
+},
+{
+"id": "qa-qa02txt-101",
+"tipo": "hecho",
+"preguntas": [
+"que es un glaciar",
+"donde hay glaciares en argentina"
+],
+"respuestas": [
+"Un glaciar es una enorme masa de hielo que se mueve muy despacio. En Argentina está el Perito Moreno, en Santa Cruz."
 ]
 }
 ]
