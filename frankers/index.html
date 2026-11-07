@@ -727,6 +727,258 @@ function avisoOrtografia(avisos) {
   ]);
 }
 
+/* ---------- 2e. MEMORIA DE CONVERSACIÓN (idea y código de Franco) ----------
+   Hace que Frankers se acuerde de lo que se habló y entienda respuestas cortas
+   como "sí", "no", "¿y vos?", "bien", "eso" o "¿qué?".
+   [¿me preguntás algo?] -> [¡Dale! ¿Cuál es tu comida favorita?]
+   [la pizza]            -> [¡Qué rico! Anoto que tu comida favorita es la pizza.]   (se acordó de la pregunta)
+   [tengo un perro]      -> [¡Ah, mirá! Tenés un perro.]
+   [¿y vos?]             -> [Yo no tengo un perro, ¡soy una IA! Pero me encanta que me cuentes.] */
+const charla = { esperando: null, siguienteEspera: null, ultimoTema: null, ultimaFrasePersona: null };
+
+const RESPUESTAS_CHARLA = {
+  si_contar:      ["¡Dale, te escucho! Contame.", "Acá estoy. ¿Qué pasó?"],
+  no_contar:      ["Está bien, no pasa nada. Acá estoy si cambiás de idea.", "Tranqui, cuando quieras me contás."],
+  si_ensenar:     ["¡Dale! ¿Qué es [cosa]?", "¡Genial! Contame, ¿qué es [cosa]?"],
+  no_ensenar:     ["Bueno, otro día me lo enseñás.", "Está bien, ¡ya lo voy a aprender!"],
+  si_jugar:       ["¡Bien! Juguemos a las adivinanzas: ¿qué tiene dientes pero no come? (Respuesta: el peine)"],
+  no_jugar:       ["Bueno, entonces charlemos. ¡Preguntame lo que quieras!"],
+  si_generico:    ["¡Genial!", "¡Buenísimo!", "¡Dale!"],
+  no_generico:    ["Ah, bueno.", "Entendido.", "Está bien."],
+  escuchar:       ["Uh, entiendo. Gracias por contármelo. ¿Querés contarme más?", "Te escucho. ¿Y cómo te sentís con eso?"],
+  repetir:        ["Te dije: \"[frase]\"", "Lo que dije fue: \"[frase]\""],
+  porque:         ["Te lo dije por lo que me contaste: \"[frase]\".", "Porque vos me dijiste \"[frase]\"."],
+  nadaQueRepetir: ["Todavía no dije nada. ¡Empezá vos!"],
+  nadaDeQueHablar:["¿Y vos qué? No sé de qué hablamos todavía. ¡Contame algo!"],
+};
+// Lo que Frankers sabe de sí mismo (para "¿y vos?", "¿sos…?", "¿tenés…?")
+const PERFIL_IA = {
+  ser:      { si: ["ia", "inteligencia", "robot", "programa", "bot", "maquina", "chatbot", "frankers"],
+              respuestaSi: "¡Sí! Soy una IA que está aprendiendo.",
+              respuestaNo: "No, no soy [cosa]. Soy una IA que está aprendiendo.",
+              yVos: "Yo soy una IA que está aprendiendo." },
+  estar:    { yVos: "¡Yo estoy re bien, gracias!" },
+  tener:    { respuestaNo: "No, no tengo [cosa], ¡soy una IA! Pero me encanta que me cuentes.",
+              yVos: "Yo no tengo [cosa], ¡soy una IA! Pero me encanta que me cuentes." },
+  vivir:    { respuestaNo: "Yo vivo en francosandes.com.", yVos: "Yo vivo en francosandes.com." },
+  llamarse: { yVos: "Yo me llamo Frankers. ¡Mucho gusto!" },
+  gustar:   { yVos: "A mí me gusta aprender cosas nuevas." },
+  otro:     { respuestaNo: "Yo no puedo [verbo], ¡soy una IA! Pero me encanta charlar.",
+              yVos: "Yo no puedo [verbo], ¡soy una IA! Pero me encanta que me cuentes." },
+};
+// Preguntas que Frankers puede hacer cuando le dicen "preguntame algo"
+const PREGUNTAS_IA = [
+  { texto: "¿Cómo te llamás?",             esperando: { tipo: "nombre" }, soloSiNoSabe: "nombre" },
+  { texto: "¿Cuál es tu comida favorita?", esperando: { tipo: "dato", clave: "comida favorita", respuesta: "¡Qué rico! Anoto que tu comida favorita es [valor]." } },
+  { texto: "¿Cuál es tu color favorito?",  esperando: { tipo: "dato", clave: "color favorito",  respuesta: "¡Lindo color! Anoto que tu color favorito es [valor]." } },
+  { texto: "¿Qué te gusta hacer?",         esperando: { tipo: "gusto" } },
+  { texto: "¿Tenés mascotas?",             esperando: { tipo: "siNo", si: ["¡Qué lindo! ¿Cómo se llama?"], no: ["¿Y te gustaría tener una?"],
+                                                        despuesSi: { tipo: "dato", clave: "mascota", respuesta: "¡Qué lindo nombre! Anoto que tu mascota se llama [valor]." } } },
+  { texto: "¿Qué estás haciendo ahora?",   esperando: { tipo: "dato", clave: "haciendo", respuesta: "¡Mirá vos! Así que estás [valor]." } },
+  { texto: "¿Cuál es tu juego favorito?",  esperando: { tipo: "dato", clave: "juego favorito",  respuesta: "¡Buenísimo! Anoto que tu juego favorito es [valor]." } },
+];
+const PALABRAS_SI  = ["si", "dale", "obvio", "claro", "ok", "oki", "sip", "de una", "bueno", "seguro", "si claro", "si dale", "por supuesto"];
+const PALABRAS_NO  = ["no", "nop", "nah", "para nada", "ni ahi", "no gracias", "nunca"];
+const PALABRAS_YVOS = ["y vos", "vos", "y tu", "tu", "y usted", "y a vos", "a vos", "y vos que", "y vos como"];
+const PALABRAS_QUE  = ["que", "como", "no entendi", "eh", "que dijiste", "repeti", "repetilo"];
+const PALABRAS_PORQUE = ["por que", "porque", "por"];
+const PEDIR_PREGUNTA = /(preguntame|pregunta me|me preguntas|me preguntaras|haceme una pregunta|hazme una pregunta|preguntame algo|me haces una pregunta)/;
+
+const limpiarCorto = (texto) => normalizar(texto);
+function rellenarCharla(frase, datos = {}) {
+  return frase.replace(/\[cosa\]/g, datos.cosa || "eso").replace(/\[valor\]/g, datos.valor || "")
+    .replace(/\[verbo\]/g, datos.verbo || "hacer eso").replace(/\[frase\]/g, datos.frase || "")
+    .replace(/\[nombre\]/g, memoria.nombre || "amigo");
+}
+// Último mensaje de alguien en la charla. saltear = cuántos de esos saltear (el actual de la persona ya está guardado)
+function ultimoDe(de, saltear = 0) {
+  for (let i = historial.length - 1; i >= 0; i--) if (historial[i].de === de) { if (saltear-- <= 0) return historial[i]; }
+  return null;
+}
+const textoRespuesta = (texto) => texto.replace(/[¿?¡!.]/g, "").trim().replace(/^(es|son|me gusta|mi \w+ es)\s+/i, "");
+const pareceUnaPregunta = (texto) => /[?¿]/.test(texto) || /^(que|como|cuando|donde|quien|cual|cuanto|por que|dibuj|analiz)/.test(normalizar(texto));
+
+// Después de que Frankers habla: ¿hizo una pregunta? ¿qué respuesta espera?
+function detectarQueEspera(r) {
+  const opciones = [];
+  const ver = (regex, crear) => { const m = r.match(regex); if (m) opciones.push({ pos: r.lastIndexOf(m[0]), esperando: crear(m) }); };
+  ver(/c[oó]mo te llam[aá]s\?/i, () => ({ tipo: "nombre" }));
+  ver(/¿y vos\?|vos c[oó]mo and[aá]s\?/i, () => ({ tipo: "estado" }));
+  ver(/(?:no s[eé]|no aprend[ií]) qu[eé] es (.+?)\./i, m => ({ tipo: "siNo", cosa: m[1], si: RESPUESTAS_CHARLA.si_ensenar, no: RESPUESTAS_CHARLA.no_ensenar, despuesSi: { tipo: "definicion", cosa: m[1] } }));
+  ver(/quer[eé]s contarme|qu[eé] pas[oó]\?|quer[eé]s hablar|para escucharte|te escucho/i, () => ({ tipo: "siNo", si: RESPUESTAS_CHARLA.si_contar, no: RESPUESTAS_CHARLA.no_contar, despuesSi: { tipo: "libre" } }));
+  ver(/juguemos/i, () => ({ tipo: "siNo", si: RESPUESTAS_CHARLA.si_jugar, no: RESPUESTAS_CHARLA.no_jugar }));
+  ver(/qu[eé] te gusta\?/i, () => ({ tipo: "gusto" }));
+  ver(/todav[ií]a no me contaste tu (.+?)\. ¿cu[aá]l es\?/i, m => ({ tipo: "dato", clave: normalizar(m[1]), respuesta: `¡Anotado! Me voy a acordar de que tu ${m[1]} es [valor]. 📝` }));
+  ver(/me (?:lo|la) (?:explic[aá]s|ense[nñ][aá]s)|me cont[aá]s\?/i, () => ({ tipo: "libre" }));
+  if (!opciones.length) return null;
+  const especificas = opciones.filter(o => o.esperando.tipo !== "libre");
+  const lista = especificas.length ? especificas : opciones;
+  lista.sort((a, b) => b.pos - a.pos); // la última pregunta de la respuesta es la que cuenta
+  return lista[0].esperando;
+}
+// Aprender "un gato es un animal que maúlla" contestando a "¿qué es un gato?"
+function aprenderDefinicion(cosa, valor, extras) {
+  const frase = `${cosa} es ${valor}`, clave = sacarArticulos(cosa);
+  if (revisar(frase).problema) return "Eso no lo puedo aprender porque no está bien.";
+  const falso = esFalso(frase); if (falso) return "Mmm, creo que eso no es así. " + falso;
+  charla.ultimoTema = cosa;
+  if (token) {
+    extras.publicar = agregarEntrada([...new Set(["que es " + clave, "que es " + normalizar(cosa), clave.length >= 4 ? clave : null].filter(Boolean))], [capitalizar(frase) + "."], { tipo: "hecho" });
+    return rellenar(alAzar(RESP.aprendi), { cosa, valor }) + " Ya lo sabe todo el mundo. 🎓";
+  }
+  memoria.aprendido[clave] = { cosa, valor }; guardarMemoria();
+  return rellenar(alAzar(RESP.aprendi), { cosa, valor });
+}
+// Usar la pregunta pendiente para entender la respuesta corta. Devuelve texto, o null si cambió de tema.
+function contestarLoPendiente(texto, esp, extras) {
+  const t = limpiarCorto(texto);
+  const esSi = PALABRAS_SI.includes(t) || /^(si|dale|obvio|claro)\b/.test(t);
+  const esNo = PALABRAS_NO.includes(t) || (/^no\b/.test(t) && t.split(" ").length <= 3);
+  const corto = t.split(" ").length <= 6 && !pareceUnaPregunta(texto);
+  switch (esp.tipo) {
+    case "siNo":
+      if (esSi) { charla.siguienteEspera = esp.despuesSi || null; return rellenarCharla(alAzar(esp.si || RESPUESTAS_CHARLA.si_generico), { cosa: esp.cosa }); }
+      if (esNo) return rellenarCharla(alAzar(esp.no || RESPUESTAS_CHARLA.no_generico), { cosa: esp.cosa });
+      return null;
+    case "nombre": {
+      if (!corto) return null;
+      const palabra = textoRespuesta(texto).replace(/^(soy|me llamo|mi nombre es)\s+/i, "").split(" ")[0];
+      if (!palabra || NO_SON_NOMBRES.includes(normalizar(palabra)) || ESTADOS[normalizar(palabra)]) return null;
+      memoria.nombre = capitalizar(palabra.toLowerCase()); guardarMemoria();
+      return rellenar(alAzar(RESP.nombre));
+    }
+    case "estado": {
+      const estado = t.split(" ").map(p => ESTADOS[p]).find(Boolean);
+      if (!estado) return null;
+      const final = /\bno\b/.test(t) ? (estado === "feliz" ? "triste" : "feliz") : estado;
+      return final === "triste" ? alAzar(FILTROS.find(f => f.tipo === "tristeza").msg) : alAzar(RESP[final]);
+    }
+    case "definicion": {
+      if (esNo) return alAzar(RESPUESTAS_CHARLA.no_ensenar);
+      if (pareceUnaPregunta(texto)) return null;
+      return aprenderDefinicion(esp.cosa, textoRespuesta(texto), extras);
+    }
+    case "gusto": {
+      if (!corto || esNo) return null;
+      const cosa = textoRespuesta(texto);
+      if (!memoria.gustos.includes(cosa)) { memoria.gustos.push(cosa); guardarMemoria(); }
+      charla.ultimoTema = cosa;
+      return rellenar(alAzar(RESP.meGusta), { cosa });
+    }
+    case "dato": {
+      if (!corto) return null;
+      const valor = textoRespuesta(texto);
+      memoria.datos[esp.clave] = esp.clave === "mascota" ? "se llama " + valor : valor; guardarMemoria();
+      charla.ultimoTema = valor;
+      return rellenarCharla(esp.respuesta, { valor });
+    }
+    case "libre": {
+      const r = responderSinCorregir(texto); // si entiende algo, responde eso; si no, escucha igual
+      if (!r.desconocido) { Object.assign(extras, r); return r.texto; }
+      if (esNo) return alAzar(RESPUESTAS_CHARLA.no_contar);
+      return alAzar(RESPUESTAS_CHARLA.escuchar);
+    }
+  }
+  return null;
+}
+// Preguntas para Frankers: "¿sos santa?", "¿tenés hermanos?", y "¿y vos?"
+function responderSobreLaIA(a, modo) {
+  const datos = PERFIL_IA[a.infinitivo] || PERFIL_IA.otro;
+  const cosa = (a.complemento || "eso").replace(/[?¿!.]/g, "").trim();
+  if (modo === "yVos") return rellenarCharla(datos.yVos || PERFIL_IA.otro.yVos, { cosa, verbo: a.infinitivo });
+  if (a.infinitivo === "ser" && datos.si.some(p => normalizar(cosa).split(" ").includes(p))) return datos.respuestaSi;
+  if (a.infinitivo === "ser" && /^(feliz|bueno|buena|amigable|inteligente|lindo|linda|listo|lista|gracioso|divertido)$/.test(sacarArticulos(cosa)))
+    return "¡Trato de serlo! Todavía estoy aprendiendo.";
+  if (!datos.respuestaNo) return null;
+  return rellenarCharla(datos.respuestaNo, { cosa, verbo: a.infinitivo });
+}
+const esPreguntaParaLaIA = (a) => a.tipo === "pregunta" && a.verbo && (a.persona === 1 || a.persona === 2)
+  && ["ser", "tener", "vivir"].includes(a.infinitivo) && !(a.infinitivo === "ser" && a.palabraPregunta === "quien") && !a.palabraPregunta;
+
+// Función principal de la charla
+function conversar(texto) {
+  const r = pensarConContexto(texto);
+  r.texto = arreglarMayusculas(r.texto);
+  charla.esperando = charla.siguienteEspera || detectarQueEspera(r.texto);
+  charla.siguienteEspera = null;
+  return r;
+}
+function pensarConContexto(textoOriginal) {
+  let texto = textoOriginal;
+  const t = limpiarCorto(texto), extras = {};
+  // Las reglas van siempre primero
+  if (revisar(texto).problema) return responderSinCorregir(texto);
+  // a) "¿qué?", "¿cómo?", "no entendí" -> repite lo último
+  if (PALABRAS_QUE.includes(t)) {
+    const ultimaIA = ultimoDe("frankers");
+    return { texto: ultimaIA ? rellenarCharla(alAzar(RESPUESTAS_CHARLA.repetir), { frase: ultimaIA.texto }) : alAzar(RESPUESTAS_CHARLA.nadaQueRepetir) };
+  }
+  // b) "¿por qué?"
+  if (PALABRAS_PORQUE.includes(t)) {
+    const ultimaPersona = ultimoDe("yo", 1);
+    return { texto: ultimaPersona ? rellenarCharla(alAzar(RESPUESTAS_CHARLA.porque), { frase: ultimaPersona.texto }) : alAzar(RESPUESTAS_CHARLA.nadaQueRepetir) };
+  }
+  // c) "preguntame algo" -> Frankers pregunta y se acuerda de cuál fue
+  if (PEDIR_PREGUNTA.test(t)) {
+    const posibles = PREGUNTAS_IA.filter(p => !(p.soloSiNoSabe && memoria[p.soloSiNoSabe]) && !(p.esperando.clave && memoria.datos[p.esperando.clave]));
+    const pregunta = alAzar(posibles.length ? posibles : PREGUNTAS_IA);
+    charla.siguienteEspera = pregunta.esperando;
+    return { texto: "¡Dale! " + pregunta.texto };
+  }
+  // d) Hay una pregunta pendiente: ¿esto la contesta?
+  if (charla.esperando) {
+    const r = contestarLoPendiente(texto, charla.esperando, extras);
+    if (r) return { ...extras, texto: r };
+  }
+  // Un "sí" o "no" suelto sin pregunta pendiente
+  if (PALABRAS_SI.includes(t)) return { texto: alAzar(RESPUESTAS_CHARLA.si_generico) };
+  if (PALABRAS_NO.includes(t)) return { texto: alAzar(RESPUESTAS_CHARLA.no_generico) };
+  // e) "¿y vos?" -> lo último que dijo la persona, pero sobre Frankers
+  if (PALABRAS_YVOS.includes(t))
+    return { texto: charla.ultimaFrasePersona ? responderSobreLaIA(charla.ultimaFrasePersona, "yVos") : alAzar(RESPUESTAS_CHARLA.nadaDeQueHablar) };
+  // f) "¿qué es eso?" -> "eso" es el último tema
+  if (charla.ultimoTema && pareceUnaPregunta(texto)) texto = texto.replace(/\b(eso|esto)\b/gi, charla.ultimoTema);
+  // g) Analiza la oración, recuerda el tema y responde
+  const analisis = analizarOracion(texto);
+  const especiales = [];
+  for (const a of analisis) {
+    if (a.verbo && a.complemento) charla.ultimoTema = (a.infinitivo === "gustar" ? a.sujeto : a.complemento).replace(/[?¿!.]/g, "").trim();
+    if (a.verbo && a.tipo === "afirmación" && (a.persona === 0 || a.aQuien === 0)) charla.ultimaFrasePersona = a;
+    if (esPreguntaParaLaIA(a)) { const r = responderSobreLaIA(a, "directa"); if (r) especiales.push({ texto: a.texto, respuesta: r }); }
+  }
+  if (especiales.length) {
+    const resto = analisis.filter(a => !especiales.some(p => p.texto === a.texto)).map(a => a.texto).join(", ");
+    const inicio = resto ? responderSinCorregir(resto) : { texto: "" };
+    return { ...inicio, texto: [inicio.texto, ...especiales.map(p => p.respuesta)].filter(Boolean).join(" ") };
+  }
+  return responderSinCorregir(texto);
+}
+
+
+/* ---------- 2f. LETRAS SIN SENTIDO Y SÍMBOLOS ----------
+   Si alguien escribe "asdfgh" o "#$%&", Frankers no inventa: pide con calma que le escriban con letras. */
+const NO_ENTIENDO = {
+  letras: ["Eso no lo entiendo. Hablemos con calma. 🙂", "Mmm, esas letras no las entiendo. ¿Me lo escribís con palabras?",
+           "Uy, me parece que se te trabó el teclado. 😄 ¿Qué me querías decir?", "No entendí nada de eso. ¿Probamos de nuevo, tranqui?"],
+  simbolos: ["No entiendo símbolos. ¿Me podés hablar con letras, por favor?", "Esos símbolos no los entiendo. ¿Me lo decís con palabras?",
+             "¡Uy, cuántos símbolos! Yo entiendo mejor las letras. ¿Me escribís?"],
+  emoji: ["¡Lindo emoji! 😄 Pero entiendo mejor las palabras. ¿Qué me querés decir?", "¡Me encantan los emojis! ¿Me lo contás también con palabras?"],
+};
+function sinSentido(texto) {
+  const crudo = texto.trim();
+  if (!crudo) return null;
+  if (!/[A-Za-zÁÉÍÓÚÜÑáéíóúüñ0-9]/.test(crudo)) return /\p{Extended_Pictographic}/u.test(crudo) ? "emoji" : "simbolos";
+  if (!PALABRAS) return null;
+  const palabras = (normalizar(crudo).match(/[a-z]+/g) || []).filter(w => w.length >= 3);
+  if (!palabras.length) return null;
+  const rara = (w) => !PALABRAS.has(w) && (
+    /[bcdfghjklmnpqrstvwxz]{4,}/.test(w) || !/[aeiou]/.test(w) ||
+    /(asd|sdf|dfg|fgh|ghj|hjk|jkl|qwe|wer|ert|rty|tyu|zxc|xcv|cvb|vbn|bnm|poi|lkj|mnb)/.test(w) ||
+    (w.length >= 6 && (w.match(/[aeiou]/g) || []).length / w.length < 0.25));
+  const raras = palabras.filter(rara).length;
+  return raras && raras >= Math.ceil(palabras.length / 2) ? "letras" : null;
+}
+
 /* ---------- 3. HABILIDADES ---------- */
 let ultimaRespuesta = null; // para poder corregir: { pregunta, entradaId }
 let ultimoDibujo = null;
@@ -734,8 +986,12 @@ let ultimoDibujo = null;
 // Primero revisa la ortografía, después responde con el texto ya corregido
 function responder(original) {
   if (/^\s*analiz/i.test(original)) return responderSinCorregir(original);
+  // "jsjsjs" y "xd" son risas
+  if (/^\s*((j[sajeiou])+j?|x+d+)\s*$/i.test(original)) original = "jaja";
   const c = corregirOrtografia(original);
-  const r = responderSinCorregir(c.texto);
+  const raro = sinSentido(c.texto);
+  if (raro) return { texto: alAzar(NO_ENTIENDO[raro]) };
+  const r = conversar(c.texto);
   if (c.avisos.length && !r.filtro) r.texto = avisoOrtografia(c.avisos) + "\n" + r.texto;
   return r;
 }
@@ -806,7 +1062,7 @@ function responderSinCorregir(original) {
 
 function noSabe(pregunta) {
   ultimaRespuesta = null;
-  return { texto: alAzar(["Todavía no lo sé. ¿Me lo enseñás?", "Uy, eso no lo aprendí aún. ¿Me lo enseñás?", "No tengo idea, pero me encantaría saberlo. 🤔", "Esa me la ganaste. ¿Cuál es la respuesta?"]), ensenar: { pregunta } };
+  return { texto: alAzar(["Todavía no lo sé. ¿Me lo enseñás?", "Uy, eso no lo aprendí aún. ¿Me lo enseñás?", "No tengo idea, pero me encantaría saberlo. 🤔", "Esa me la ganaste. ¿Cuál es la respuesta?"]), ensenar: { pregunta }, desconocido: true };
 }
 // Busca en lo aprendido. Devuelve el texto de la respuesta o null.
 function conocimientoPara(texto, umbral) {
@@ -1364,7 +1620,7 @@ function enviarEntrada() { const i = $("#entrada"); const t = i.value; i.value =
 $("#btnEnviar").addEventListener("click", enviarEntrada);
 $("#entrada").addEventListener("keydown", (e) => { if (e.key === "Enter" && !e.isComposing) { e.preventDefault(); enviarEntrada(); } });
 $("#sugerencias").addEventListener("click", (e) => { if (e.target.matches("button")) enviar(e.target.textContent); });
-$("#btnLimpiar").onclick = () => { historial = []; guardarHistorial(); chat.innerHTML = ""; ultimoDibujo = null; bienvenida(); };
+$("#btnLimpiar").onclick = () => { historial = []; guardarHistorial(); chat.innerHTML = ""; ultimoDibujo = null; Object.assign(charla, { esperando: null, siguienteEspera: null, ultimoTema: null, ultimaFrasePersona: null }); bienvenida(); };
 
 // Enseñar
 const dlgEnsenar = $("#dlgEnsenar");
