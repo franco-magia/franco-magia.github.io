@@ -180,7 +180,7 @@
   <dialog id="dlgEnsenar">
     <div id="formEnsenar">
       <h2>🎓 Enseñarle a Frankers</h2>
-      <p>Escribí cómo le pueden preguntar algo y qué tiene que contestar. Si pasa mis reglas, lo aprendo para todos los que me usen. 🌎</p>
+      <p id="ensExplicacion">Escribí cómo te pueden preguntar algo y qué tengo que contestar. Si pasa mis reglas, lo aprendo para vos, en este dispositivo.</p>
       <label for="ensPreguntas">Cuando alguien escriba… <small>(una forma por línea)</small></label>
       <textarea id="ensPreguntas" rows="3" required placeholder="cuál es tu comida favorita&#10;qué te gusta comer"></textarea>
       <label for="ensRespuestas">Frankers responde… <small>(si ponés varias líneas, elige una al azar)</small></label>
@@ -224,7 +224,7 @@
   <dialog id="dlgCreador">
     <h2>🔑 Modo creador</h2>
     <div id="creadorApagado">
-      <p>Esto es solo para Franco. Con el modo creador aparece el botón <b>Enseñar</b>, y lo que le enseñes se guarda en GitHub para todos.</p>
+      <p>Esto es solo para Franco. Con el modo creador, lo que le enseñes a Frankers se guarda en GitHub y lo sabe todo el mundo.</p>
       <ol class="pasos">
         <li>Entrá a <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">github.com/settings/personal-access-tokens/new</a>.</li>
         <li>Nombre: <b>Frankers</b>. Expiración: la que quieras.</li>
@@ -234,8 +234,7 @@
       </ol>
       <label for="creadorToken">Token <small>(queda guardado solo en esta compu, nunca lo compartas)</small></label>
       <input id="creadorToken" type="password" placeholder="github_pat_…" autocomplete="off">
-      <label for="creadorClave">Clave del servidor <small>(opcional: para borrar lo que enseña la gente)</small></label>
-      <input id="creadorClave" type="password" autocomplete="off">
+
     </div>
     <div id="creadorPrendido" hidden>
       <p>✅ El modo creador está activado en esta compu. Lo que le enseñes a Frankers se publica para todos.</p>
@@ -1432,7 +1431,7 @@ $("#ensGuardar").addEventListener("click", async () => {
     const texto = reemplazo
       ? alAzar([`¡Tenés razón, me equivoqué! Gracias por corregirme. Ahora ${resumen}.`, `Uy, perdón. Ya lo arreglé: ${resumen}.`, `¡Bien ahí! Ahora lo sé mejor: ${resumen}.`, `Gracias, así voy aprendiendo. Desde ahora ${resumen}.`])
       : alAzar([`¡Gracias! Lo anoto: ${resumen}. 🎓`, `¡No lo sabía! Entonces ${resumen}, ¿es así?`, `¡Qué interesante! Ya lo aprendí: ${resumen}.`, `¡Buenísimo, uno más para mi memoria! Ahora ${resumen}. 🧠`]);
-    agregar({ de: "frankers", texto: texto + (r.soloAca ? " (Por ahora lo aprendí solo en este dispositivo.)" : " Ya lo sabe todo el mundo. 🌎") });
+    agregar({ de: "frankers", texto: texto + (token ? " Ya lo sabe todo el mundo. 🌎" : " Lo aprendí para vos, en este dispositivo. 📱") });
     ultimaRespuesta = null;
   } else mal(r.motivo);
 });
@@ -1476,6 +1475,9 @@ $("#saberCerrar").onclick = () => dlgSaber.close();
 const dlgCreador = $("#dlgCreador");
 function actualizarModo() {
   $("#btnEnsenar").hidden = false;
+  $("#ensExplicacion").textContent = token
+    ? "Modo creador: lo que me enseñes lo aprendo para todo el mundo. 🌎"
+    : "Escribí cómo te pueden preguntar algo y qué tengo que contestar. Si pasa mis reglas, lo aprendo para vos, en este dispositivo. 📱";
   $("#creadorApagado").hidden = !!token; $("#creadorPrendido").hidden = !token;
   $("#creadorActivar").hidden = !!token; $("#creadorSalir").hidden = !token;
   $("#subtitulo").textContent = token ? "Modo creador 🔑 · podés enseñarle" : "IA hecha desde cero por Franco";
@@ -1491,7 +1493,6 @@ $("#creadorActivar").onclick = async () => {
     const r = await fetch(`https://api.github.com/repos/${REPO}`, { headers: { Authorization: "Bearer " + t, Accept: "application/vnd.github+json" } });
     if (!r.ok) throw new Error(r.status === 401 ? "El token no es válido." : "GitHub respondió " + r.status + ". Revisá que el token tenga acceso al repo.");
     token = t; guardado.escribir("frankers-token", t);
-    const clave = $("#creadorClave").value.trim(); if (clave) { claveServidor = clave; guardado.escribir("frankers-clave", clave); }
     actualizarModo();
     estado.className = "estado ok"; estado.textContent = "¡Listo! Ya podés enseñarle a Frankers.";
     cargarConocimiento();
