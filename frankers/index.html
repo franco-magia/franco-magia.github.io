@@ -125,7 +125,10 @@
     }
     dialog textarea:focus, dialog input:focus { border-color: var(--violeta); }
     .fila-botones { display: flex; justify-content: flex-end; gap: 8px; margin-top: 18px; flex-wrap: wrap; }
-    .estado { font-size: .88rem; margin-top: 10px; min-height: 1.2em; }
+    .estado { font-size: .88rem; margin-top: 10px; min-height: 1.2em; white-space: pre-line; }
+    .modos { display: flex; gap: 6px; margin: 4px 0 6px; }
+    .modos .boton.activo { background: var(--degrade); border-color: transparent; color: #fff; }
+    dialog .ayuda { display: block; color: var(--suave); margin-top: 6px; font-size: .8rem; line-height: 1.4; }
     .estado.ok { color: #6ff0a8; } .estado.mal { color: #ff8a9a; }
     ol.pasos { color: var(--suave); padding-left: 20px; line-height: 1.6; font-size: .92rem; margin: 0 0 8px; }
     .lista-saber { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px; }
@@ -181,10 +184,21 @@
     <div id="formEnsenar">
       <h2>🎓 Enseñarle a Frankers</h2>
       <p id="ensExplicacion">Escribí cómo te pueden preguntar algo y qué tengo que contestar. Si pasa mis reglas, lo aprendo para vos, en este dispositivo.</p>
-      <label for="ensPreguntas">Cuando alguien escriba… <small>(una forma por línea)</small></label>
-      <textarea id="ensPreguntas" rows="3" required placeholder="cuál es tu comida favorita&#10;qué te gusta comer"></textarea>
-      <label for="ensRespuestas">Frankers responde… <small>(si ponés varias líneas, elige una al azar)</small></label>
-      <textarea id="ensRespuestas" rows="3" required placeholder="¡Los bits con queso! 🧀"></textarea>
+      <div class="modos" role="tablist">
+        <button type="button" class="boton activo" id="modoUna">Una cosa</button>
+        <button type="button" class="boton" id="modoVarias">Varias cosas juntas</button>
+      </div>
+      <div id="ensUna">
+        <label for="ensPreguntas">Cuando alguien escriba… <small>(una forma por línea)</small></label>
+        <textarea id="ensPreguntas" rows="3" placeholder="cuál es tu comida favorita&#10;qué te gusta comer"></textarea>
+        <label for="ensRespuestas">Frankers responde… <small>(si ponés varias líneas, elige una al azar)</small></label>
+        <textarea id="ensRespuestas" rows="3" placeholder="¡Los bits con queso! 🧀"></textarea>
+      </div>
+      <div id="ensVariasCaja" hidden>
+        <label for="ensVarias">Una cosa por renglón: <small>pregunta | respuesta</small></label>
+        <textarea id="ensVarias" rows="8" placeholder="cuál es tu comida favorita | ¡Los bits con queso! 🧀&#10;qué es un yaguareté / qué es el yaguareté | El felino más grande de América.&#10;de qué color es el cielo | Celeste de día / Oscuro de noche"></textarea>
+        <small class="ayuda">Usá <b>|</b> para separar la pregunta de la respuesta, y <b>/</b> para poner varias formas de preguntar o varias respuestas.</small>
+      </div>
       <label for="ensTipo">Esto es…</label>
       <select id="ensTipo">
         <option value="hecho">Un hecho (algo que se puede comprobar)</option>
@@ -1373,15 +1387,65 @@ function abrirEnsenar(pregunta = "", reemplazar = null, respuesta = "") {
   $("#ensPreguntas").value = pregunta; $("#ensRespuestas").value = respuesta; $("#ensEstado").textContent = ""; $("#ensEstado").className = "estado";
   $("#ensTipo").value = "hecho"; $("#ensAutorCaja").hidden = true; $("#ensFuenteCaja").hidden = true; $("#ensFuente").value = "";
   $("#ensGuardar").textContent = reemplazar ? "Corregir" : "Enseñar";
-  dlgEnsenar.showModal(); (pregunta && !respuesta ? $("#ensRespuestas") : $("#ensPreguntas")).focus();
+  $("#ensVarias").value = "";
+  dlgEnsenar.showModal(); ponerModo(false); (pregunta && !respuesta ? $("#ensRespuestas") : $("#ensPreguntas")).focus();
 }
 $("#ensTipo").onchange = () => { $("#ensAutorCaja").hidden = $("#ensTipo").value !== "opinion"; };
+let modoVarias = false;
+function ponerModo(varias) {
+  modoVarias = varias;
+  $("#ensUna").hidden = varias; $("#ensVariasCaja").hidden = !varias;
+  $("#modoUna").classList.toggle("activo", !varias); $("#modoVarias").classList.toggle("activo", varias);
+  $("#ensFuenteCaja").hidden = true; ensConflicto = null; $("#ensEstado").textContent = "";
+  $("#ensGuardar").textContent = varias ? "Enseñar todo" : (ensReemplazar ? "Corregir" : "Enseñar");
+  (varias ? $("#ensVarias") : $("#ensPreguntas")).focus();
+}
+$("#modoUna").onclick = () => ponerModo(false);
+$("#modoVarias").onclick = () => ponerModo(true);
+// Enseñar muchas cosas de una: cada renglón "pregunta | respuesta"
+async function ensenarVarias() {
+  const estado = $("#ensEstado"), boton = $("#ensGuardar");
+  const tipo = $("#ensTipo").value, autor = $("#ensAutor").value.trim();
+  const renglones = $("#ensVarias").value.split("\n").map(r => r.trim()).filter(Boolean);
+  if (!renglones.length) { estado.className = "estado mal"; estado.textContent = "Escribí al menos un renglón: pregunta | respuesta"; return; }
+  const buenas = [], malas = [];
+  renglones.forEach((r, i) => {
+    const partes = r.split("|");
+    if (partes.length < 2) return malas.push(`Renglón ${i + 1}: falta el "|" entre la pregunta y la respuesta.`);
+    const preguntas = partes[0].split("/").map(x => x.trim()).filter(Boolean);
+    const respuestas = partes.slice(1).join("|").split("/").map(x => x.trim()).filter(Boolean);
+    if (!preguntas.length || !respuestas.length) return malas.push(`Renglón ${i + 1}: falta la pregunta o la respuesta.`);
+    if (revisar([...preguntas, ...respuestas, autor].join("\n")).problema) return malas.push(`Renglón ${i + 1}: rompe mis reglas.`);
+    if (respuestas.some(x => x.length > 280)) return malas.push(`Renglón ${i + 1}: la respuesta es muy larga.`);
+    if (tipo !== "opinion") { const f = esFalso(respuestas.join(" ")) || esFalso(preguntas[0] + " " + respuestas[0]); if (f) return malas.push(`Renglón ${i + 1}: no es cierto. ${f}`); }
+    const { entrada, puntaje } = pensar(preguntas[0]);
+    if (entrada && puntaje >= 0.6 && !entrada.respuestas.some(x => respuestas.some(n => normalizar(n) === normalizar(x))))
+      return malas.push(`Renglón ${i + 1}: choca con algo que ya sé ("${entrada.respuestas[0].slice(0, 60)}"). Cambialo de a uno con "Una cosa".`);
+    buenas.push({ preguntas, respuestas });
+  });
+  if (!buenas.length) { estado.className = "estado mal"; estado.textContent = "No pude aprender ninguno:\n" + malas.join("\n"); return; }
+  boton.disabled = true; estado.className = "estado"; estado.textContent = `Aprendiendo ${buenas.length} cosas… 🧠`;
+  let r;
+  if (token) {
+    const cambios = buenas.map(b => agregarEntrada(b.preguntas, b.respuestas, { tipo, autor }));
+    r = await publicar(kb => cambios.forEach(c => c(kb)));
+  } else {
+    for (const b of buenas) r = await ensenarComunidad({ ...b, tipo, autor: tipo === "opinion" ? (autor || "alguien") : undefined });
+  }
+  boton.disabled = false;
+  if (!r || !r.ok) { estado.className = "estado mal"; estado.textContent = (r && r.motivo) || "No pude guardarlo."; return; }
+  dlgEnsenar.close();
+  let texto = `¡Gracias! Aprendí ${buenas.length} ${buenas.length === 1 ? "cosa nueva" : "cosas nuevas"} de una. 🎓` + (token ? " Ya las sabe todo el mundo. 🌎" : " Las aprendí para vos, en este dispositivo. 📱");
+  if (malas.length) texto += "\nEstas no las aprendí:\n" + malas.join("\n");
+  agregar({ de: "frankers", texto });
+}
 $("#ensPreguntas").oninput = $("#ensRespuestas").oninput = () => { // si cambia el texto, se vuelve a revisar el choque
   if (ensConflicto) { ensConflicto = null; $("#ensFuenteCaja").hidden = true; $("#ensGuardar").textContent = ensReemplazar ? "Corregir" : "Enseñar"; $("#ensEstado").textContent = ""; }
 };
 $("#btnEnsenar").onclick = () => abrirEnsenar();
 $("#ensCancelar").onclick = () => dlgEnsenar.close();
 $("#ensGuardar").addEventListener("click", async () => {
+  if (modoVarias) return ensenarVarias();
   const preguntas = $("#ensPreguntas").value.split("\n").map(s => s.trim()).filter(Boolean);
   const respuestas = $("#ensRespuestas").value.split("\n").map(s => s.trim()).filter(Boolean);
   if (!preguntas.length || !respuestas.length) { $("#ensEstado").className = "estado mal"; $("#ensEstado").textContent = "Completá qué te pueden decir y qué tengo que contestar."; return; }
