@@ -1,6 +1,6 @@
 {
 "version": 1,
-"actualizado": "2026-11-06T23:40:12.419Z",
+"actualizado": "2026-11-07T11:20:54.693Z",
 "entradas": [
 {
 "id": "saludo",
@@ -16444,6 +16444,19 @@
 ],
 "respuestas": [
 "¡Yo también te quiero! 💜"
+]
+},
+{
+"id": "qa-qa11txt-41",
+"tipo": "hecho",
+"preguntas": [
+"yo tambien",
+"yo tmb",
+"a mi tambien",
+"igual yo"
+],
+"respuestas": [
+"¡Qué bueno! Coincidimos. 😊"
 ]
 }
 ]

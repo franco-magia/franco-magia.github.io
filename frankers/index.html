@@ -337,7 +337,7 @@ function trigramas(w) { const p = ` ${w} `, s = new Set(); for (let i = 0; i < p
 function palabraParecida(a, b) {
   if (a === b) return true;
   const A = trigramas(a), B = trigramas(b); let c = 0; for (const g of A) if (B.has(g)) c++;
-  return (2 * c) / (A.size + B.size) >= 0.5;
+  return (2 * c) / (A.size + B.size) >= 0.6;
 }
 function pensar(texto) {
   const v = pesar(rasgos(texto)), n = largo(v), mias = importantes(texto);
@@ -636,11 +636,110 @@ function explicarAnalisis(texto) {
   }).join("\n");
 }
 
+/* ---------- 2d. ORTOGRAFÍA ----------
+   Si escribís una palabra con un errorcito (una letra cambiada, de más, de menos
+   o dos letras dadas vuelta), Frankers te avisa con buena onda y te entiende igual.
+   No corrige tildes, ni nombres, ni palabras que no conoce bien: prefiere no molestar. */
+let PALABRAS = null;   // palabra sin tildes -> { forma, rango } (rango 0 = la más usada)
+let CANDIDATAS = null; // palabras comunes a las que se puede corregir
+let PARES = new Set();
+async function cargarPalabras() {
+  try {
+    const texto = window.PALABRAS_EMBEBIDAS || await (await fetch("palabras.txt")).text();
+    const mapa = new Map();
+    texto.split(" ").forEach((w, rango) => { const n = normalizar(w); if (n && !mapa.has(n)) mapa.set(n, { forma: w, rango }); });
+    // Palabras que Frankers usa y conoce (también cuentan como bien escritas)
+    const extra = [...Object.keys(VERBOS), ...Object.keys(COLORES), ...Object.keys(ESCENAS), ...Object.keys(NUMEROS), ...RELLENO,
+      ...Object.values(OBJETOS).flatMap(o => o.palabras), "frankers", "franco", "francosandes", "dibuja", "dibujame", "dibujá", "analiza", "analizá",
+      "jaja", "jajaja", "okey", "oki", "che", "boludo", "fiaca", "yaguarete", "chabon", "copado", "bondi", "finde"];
+    extra.forEach(w => { const n = normalizar(w); if (n && !mapa.has(n)) mapa.set(n, { forma: w, rango: 60000 }); });
+    for (const e of [...conocimiento.entradas]) for (const t of [...e.preguntas, ...e.respuestas])
+      for (const w of t.toLowerCase().match(/[a-záéíóúüñ]+/g) || []) { const n = normalizar(w); if (n && !mapa.has(n)) mapa.set(n, { forma: w, rango: 50000 }); }
+    PALABRAS = mapa;
+    CANDIDATAS = [...mapa.entries()].filter(([n, i]) => n.length >= 2 && (i.rango < 20000 || i.rango === 50000))
+      .map(([n, i]) => [n, { ...i, prohibida: !!revisar(n).problema }]);
+    // Pares de palabras que aparecen juntas en lo que sabe ("de leche"), para elegir mejor la corrección
+    PARES = new Set();
+    for (const e of conocimiento.entradas) for (const t of [...e.preguntas, ...e.respuestas]) {
+      const ws = normalizar(t).split(" "); for (let i = 1; i < ws.length; i++) PARES.add(ws[i - 1] + " " + ws[i]);
+    }
+  } catch { PALABRAS = null; } // si no carga la lista, no corrige nada
+}
+// ¿"mal" se parece a "bien" con un solo error? Devuelve qué pasó, o null.
+function unError(mal, bien) {
+  if (mal.length === bien.length) {
+    const d = []; for (let i = 0; i < mal.length; i++) if (mal[i] !== bien[i]) d.push(i);
+    if (d.length === 1) return { tipo: "cambio", puse: mal[d[0]], era: bien[d[0]] };
+    if (d.length === 2 && d[1] === d[0] + 1 && mal[d[0]] === bien[d[1]] && mal[d[1]] === bien[d[0]]) return { tipo: "orden", par: mal.slice(d[0], d[0] + 2) };
+    return null;
+  }
+  if (mal.length + 1 === bien.length) { for (let i = 0; i < bien.length; i++) if (bien.slice(0, i) + bien.slice(i + 1) === mal) return { tipo: "falta", era: bien[i] }; }
+  if (mal.length === bien.length + 1) { for (let i = 0; i < mal.length; i++) if (mal.slice(0, i) + mal.slice(i + 1) === bien) return { tipo: "sobra", puse: mal[i] }; }
+  return null;
+}
+const ABREVIATURAS = { qe: "que", ke: "que", q: "que", k: "que", xq: "porque", pq: "porque", porq: "porque", tmb: "también", tb: "también", tmbn: "también", xfa: "por favor", pf: "por favor", bn: "bien", msj: "mensaje", tqm: "te quiero mucho", nose: "no sé", aver: "a ver" };
+function corregirOrtografia(texto) {
+  const avisos = [];
+  if (!PALABRAS) return { texto, avisos };
+  const propias = new Set([memoria.nombre, ...Object.values(memoria.datos), ...memoria.gustos].filter(Boolean).flatMap(v => normalizar(String(v)).split(" ")));
+  let corregido = texto;
+  const todas = texto.match(/[A-Za-zÁÉÍÓÚÜÑáéíóúüñ]+/g) || [];
+  todas.forEach((w, i) => {
+    if (avisos.length >= 2) return;
+    const n = normalizar(w);
+    if (ABREVIATURAS[n]) { // "qe", "xq", "tmb"…
+      const forma = (n === "xq" || n === "pq" || n === "porq") && i === 0 ? "por qué" : ABREVIATURAS[n]; // al principio es pregunta
+      corregido = corregido.replace(new RegExp("(^|[^A-Za-zÁÉÍÓÚÜÑáéíóúüñ])" + w + "(?=$|[^A-Za-zÁÉÍÓÚÜÑáéíóúüñ])"), "$1" + forma);
+      avisos.push({ escrito: w, forma, error: { tipo: "abreviatura", escrito: w } });
+      return;
+    }
+    if (n.length < 2 || PALABRAS.has(n) || propias.has(n) || /^(ja|je|ji|jo)+$/.test(n)) return;
+    if (i > 0 && /^[A-ZÁÉÍÓÚÑ]/.test(w)) return; // con mayúscula en el medio: seguro es un nombre
+    const antes = i > 0 ? normalizar(todas[i - 1]) : "";
+    // Puntaje: más usada = mejor; si forma un par conocido con la palabra anterior, mucho mejor
+    const puntaje = (c, info) => info.rango - (antes && PARES.has(antes + " " + c) ? 100000 : 0) + (c[0] !== n[0] ? 50000 : 0); // casi nunca se le erra a la primera letra
+    let mejor = null, error = null, mejorPuntaje = Infinity;
+    for (const [c, info] of CANDIDATAS) {
+      if (Math.abs(c.length - n.length) > 1) continue;
+      if (n.length < 4 && info.rango > 300) continue; // palabras cortitas: solo las muy comunes
+      const p = puntaje(c, info);
+      if (p >= mejorPuntaje) continue;
+      const e = unError(n, c);
+      if (e) { mejor = info; error = e; mejorPuntaje = p; }
+    }
+    if (!mejor) return;
+    corregido = corregido.replace(w, mejor.forma);
+    if (!mejor.prohibida) avisos.push({ escrito: w, forma: mejor.forma, error }); // un insulto mal escrito: se entiende, pero no se repite
+  });
+  return { texto: corregido, avisos };
+}
+function avisoOrtografia(avisos) {
+  const explicar = ({ error: e }) =>
+    e.tipo === "cambio" ? `pusiste «${e.puse}» en vez de «${e.era}»` :
+    e.tipo === "falta" ? `te faltó una «${e.era}»` :
+    e.tipo === "sobra" ? `te sobró una «${e.puse}»` :
+    e.tipo === "abreviatura" ? `escribiste «${e.escrito}»` : `diste vuelta las letras «${e.par}»`;
+  const partes = avisos.map(a => `«${a.forma}» (${explicar(a)})`);
+  return alAzar([
+    `Creo que quisiste decir ${partes.join(" y ")}, ¡pero te entiendo! 😉`,
+    `Ojo: me parece que es ${partes.join(" y ")}. Igual te entendí. 😊`,
+    `Un detallito: se escribe ${partes.join(" y ")}. ¡Pero te entiendo perfecto!`,
+  ]);
+}
+
 /* ---------- 3. HABILIDADES ---------- */
 let ultimaRespuesta = null; // para poder corregir: { pregunta, entradaId }
 let ultimoDibujo = null;
 
+// Primero revisa la ortografía, después responde con el texto ya corregido
 function responder(original) {
+  if (/^\s*analiz/i.test(original)) return responderSinCorregir(original);
+  const c = corregirOrtografia(original);
+  const r = responderSinCorregir(c.texto);
+  if (c.avisos.length && !r.filtro) r.texto = avisoOrtografia(c.avisos) + "\n" + r.texto;
+  return r;
+}
+function responderSinCorregir(original) {
   const t = normalizar(original);
 
   // Reglas que nunca cambian
@@ -819,7 +918,7 @@ function responderPedazo(a, nombreNuevo, extras) {
     }
     // Enseñar algo: "el sol es una estrella"
     if (a.tipo === "afirmación" && a.infinitivo === "ser" && a.persona === 3 && !a.sujetoImplicito && a.complemento
-        && !PRONOMBRES.has(normalizar(a.sujeto)) && !/^(mi|mis|tu|tus|su|sus)\b/.test(normalizar(a.sujeto)) && a.sujeto.split(" ").length <= 4)
+        && !PRONOMBRES.has(normalizar(a.sujeto)) && !/^(mi|mis|tu|tus|su|sus|porque|por que|que|como|cuando|donde|si|aunque)\b/.test(normalizar(a.sujeto)) && a.sujeto.split(" ").length <= 4)
       return aprenderHecho(a, extras);
   }
   const parecido = conocimientoPara(a.texto, 0.42);
@@ -1402,7 +1501,7 @@ $("#creadorActivar").onclick = async () => {
 // Arranque
 actualizarModo();
 if (historial.length) historial.forEach(mostrar); else bienvenida();
-cargarConocimiento().then(cargarComunidad);
+cargarConocimiento().then(() => { cargarComunidad(); cargarPalabras(); });
 setInterval(cargarComunidad, 60000); // cada minuto trae lo nuevo que enseñó la gente
 $("#entrada").focus();
 </script>
