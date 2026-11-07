@@ -299,7 +299,8 @@ function rasgos(texto) {
     if (!palabra) continue;
     const p = ` ${palabra} `;
     for (let i = 0; i < p.length - 2; i++) { const g = p.slice(i, i + 3); m.set(g, (m.get(g) || 0) + 1); }
-    m.set("#" + palabra, (m.get("#" + palabra) || 0) + 2);
+    m.set("#" + palabra, (m.get("#" + palabra) || 0) + 1);
+    const l = lema(palabra); m.set("#" + l, (m.get("#" + l) || 0) + 2); // la forma base pesa más
   }
   return m;
 }
@@ -333,7 +334,7 @@ function parecido(a, na, b, nb) {
 // Palabras "importantes" de una frase: si le preguntás algo con una palabra que la
 // respuesta aprendida no tiene (ej: "comida" vs "color"), baja la confianza. Así no inventa.
 const VACIAS = new Set("que como cual cuales es son tu tus te el la los las de del al un una uno me mi mis y o vos sos frankers mas muy por para lo se en con hay a le les nos su sus esto eso esta este ese esa decime contame sabes todo dame explicame ejemplo sabias significa quiere decir".split(" "));
-const importantes = (t) => normalizar(t).split(" ").filter(w => w.length > 2 && !VACIAS.has(w));
+const importantes = (t) => normalizar(t).split(" ").filter(w => w.length > 2 && !VACIAS.has(w)).map(lema);
 function trigramas(w) { const p = ` ${w} `, s = new Set(); for (let i = 0; i < p.length - 2; i++) s.add(p.slice(i, i + 3)); return s; }
 function palabraParecida(a, b) {
   if (a === b) return true;
@@ -341,6 +342,12 @@ function palabraParecida(a, b) {
   return (2 * c) / (A.size + B.size) >= 0.6;
 }
 function pensar(texto) {
+  const original = pensarUna(texto), corta = simplificar(normalizar(texto));
+  if (!corta || corta === normalizar(texto)) return original;
+  const otra = pensarUna(corta);
+  return otra.puntaje > original.puntaje ? otra : original;
+}
+function pensarUna(texto) {
   const v = pesar(rasgos(texto)), n = largo(v), mias = importantes(texto);
   let mejor = null, puntaje = 0, frase = "";
   for (const it of indice) {
@@ -363,6 +370,32 @@ function alAzar(lista) {
 }
 function personalizar(texto) {
   return memoria.nombre ? texto.replace(/\{nombre\}/g, memoria.nombre) : texto.replace(/,?\s*\{nombre\}/g, "");
+}
+
+
+/* ---------- 2g. PALABRAS Y FRASES PARA ENTENDER MEJOR ----------
+   LEMAS: miles de formas de palabras llevadas a su forma base ("perritos" → "perro", "comieron" → "comer"),
+   así Frankers entiende la pregunta aunque esté escrita distinto.
+   FRASES: maneras en que la gente arranca o termina una pregunta ("¿me podrías decir…?", "porfa"),
+   que Frankers deja de lado para quedarse con lo importante. */
+let LEMAS = new Map();
+async function cargarLemas() {
+  try {
+    const t = window.LEMAS_EMBEBIDOS || await (await fetch("lemas.txt")).text();
+    LEMAS = new Map(t.split(" ").map(x => x.split(":")));
+  } catch {}
+}
+const lema = (w) => LEMAS.get(w) || w;
+const FRASES_ARRANQUE = ["me harias el favor de ayudarme con", "serias tan amable de ayudarme con", "me harias el favor de responderme", "me harias el favor de explicarme", "serias tan amable de responderme", "me harias el favor de ayudar con", "serias tan amable de explicarme", "serias tan amable de ayudar con", "me harias el favor de responder", "me harias el favor de enseñarme", "serias tan amable de responder", "me harias el favor de contarme", "me harias el favor de explicar", "serias tan amable de enseñarme", "serias tan amable de explicar", "serias tan amable de contarme", "me harias el favor de enseñar", "me harias el favor de decirme", "me harias el favor de contar", "en la escuela me preguntaron", "serias tan amable de decirme", "serias tan amable de enseñar", "serias tan amable de contar", "me harias el favor de decir", "me dijeron que te pregunte", "serias tan amable de decir", "mi hermano quiere saber", "me quieres ayudarme con", "me podrias ayudarme con", "me quieres responderme", "me podrias responderme", "me queres ayudarme con", "me puedes ayudarme con", "me podes ayudarme con", "me podrias explicarme", "mi amigo quiere saber", "me podrias ayudar con", "me quieres ayudar con", "me quieres explicarme", "me puedes responderme", "me queres responderme", "me queres ayudar con", "mi mama quiere saber", "me podes responderme", "me puedes ayudar con", "podrias ayudarme con", "me podrias enseñarme", "me quieres responder", "me podrias responder", "me puedes explicarme", "me quieres enseñarme", "me queres explicarme", "te hago una pregunta", "mi papa quiere saber", "te quiero preguntar", "puedes ayudarme con", "te queria preguntar", "me queres enseñarme", "explicame por favor", "me queres responder", "me quieres explicar", "me podes explicarme", "me podrias explicar", "siempre quise saber", "mi maestra pregunto", "me podrias contarme", "me puedes enseñarme", "podrias responderme", "me puedes responder", "me podes ayudar con", "me quieres contarme", "podrias explicarme", "me queres explicar", "tengo una pregunta", "me podes enseñarme", "me podrias enseñar", "me quieres decirme", "puedes responderme", "es para una prueba", "podrias ayudar con", "me puedes explicar", "me queres contarme", "me podrias decirme", "podes ayudarme con", "me puedes contarme", "me podes responder", "me quieres enseñar", "me queres enseñar", "me puedes decirme", "me podrias contar", "me interesa saber", "me puedes enseñar", "podrias responder", "podes responderme", "me quieres contar", "me gustaria saber", "puedes ayudar con", "me queres decirme", "me ayudas a saber", "me podes explicar", "puedes explicarme", "podrias enseñarme", "me podes contarme", "tengo curiosidad", "me puedes contar", "puedes enseñarme", "me da curiosidad", "es para la tarea", "me podes enseñar", "me podrias decir", "podrias explicar", "me podes decirme", "podes ayudar con", "me quieres decir", "decime por favor", "me queres contar", "puedes responder", "podrias contarme", "podes explicarme", "para la escuela", "podes enseñarme", "podes responder", "yo quiero saber", "fijate si sabes", "podrias enseñar", "sabrias decirme", "para el colegio", "puedes explicar", "puedes contarme", "yo queria saber", "me puedes decir", "nos preguntamos", "me queres decir", "me podes contar", "podrias decirme", "podes explicar", "a que no sabes", "puedes decirme", "me podes decir", "alguna idea de", "puedes enseñar", "necesito saber", "podes contarme", "quisiera saber", "podrias contar", "tengo una duda", "hola frankers", "otra pregunta", "buenas tardes", "puedes contar", "para la tarea", "podes enseñar", "podes decirme", "podrias decir", "sabes decirme", "me ayudas con", "tenes idea de", "buenas noches", "oye frankers", "quiero saber", "podes contar", "seguro sabes", "che frankers", "queria saber", "una pregunta", "me averiguas", "una consulta", "me respondes", "puedes decir", "podes decir", "te pregunto", "me explicas", "me pregunto", "ayudame con", "usted sabe", "disculpame", "me enseñas", "tenes idea", "averiguame", "me mostras", "respondeme", "otra cosa", "si sabias", "me contas", "por favor", "explicame", "vos sabes", "investiga", "explícame", "ayuda con", "entonces", "enseñame", "una duda", "averigua", "aclarame", "buen dia", "responde", "me decis", "cuentame", "consulta", "mostrame", "pregunta", "sabes si", "si sabes", "frankers", "disculpa", "contame", "adivina", "explica", "y ahora", "perdona", "buscame", "fijate", "buenas", "perdon", "sabias", "porfis", "please", "decime", "holis", "busca", "conta", "sabes", "bueno", "a ver", "porfa", "frank", "ahora", "deci", "otra", "sabe", "plis", "hola", "dime", "dale", "aver", "che", "oye", "hey", "bue", "ey", "oi", "y"];
+const FRASES_CIERRE = ["en pocas palabras", "bien explicado", "para la tarea", "con detalle", "para chicos", "si puedes", "por favor", "de nuevo", "si sabes", "resumido", "frankers", "si podes", "otra vez", "gracias", "please", "rapido", "porfis", "simple", "facil", "porfa", "frank", "ahora", "jeje", "dale", "plis", "jaja", "pls", "che", "ya", "xd"];
+function simplificar(t) {
+  let s = " " + t + " ", cambio = true, vueltas = 0;
+  while (cambio && vueltas++ < 4) {
+    cambio = false;
+    for (const f of FRASES_ARRANQUE) if (s.startsWith(" " + f + " ") && s.length > f.length + 3) { s = " " + s.slice(f.length + 2); cambio = true; break; }
+    for (const f of FRASES_CIERRE) if (s.endsWith(" " + f + " ") && s.length > f.length + 3) { s = s.slice(0, s.length - f.length - 1); cambio = true; break; }
+  }
+  return s.trim();
 }
 
 /* ---------- 2b. REGLAS QUE NUNCA CAMBIAN ----------
@@ -1076,7 +1109,7 @@ function conocimientoPara(texto, umbral) {
   if (/\bno\b/.test(normalizar(texto)) !== /\bno\b/.test(normalizar(frase))) return null; // "no estoy feliz" ≠ "estoy feliz"
   ultimaRespuesta = { pregunta: texto, entradaId: entrada.id };
   let r = personalizar(alAzar(entrada.respuestas));
-  if (/^(qa|dic|x)-/.test(entrada.id)) r = adornar(r);
+  if (/^(qa|dic|x)-/.test(entrada.id) && !/^qa-qa1[01]txt/.test(entrada.id)) r = adornar(r); // a la charla no se le agregan adornos
   return entrada.tipo === "opinion" ? `${entrada.autor || "Alguien"} opina: "${r}" (es una opinión, no un hecho).` : r;
 }
 // Memoria de cosas tuyas: "mi color favorito es el azul", "cuál es mi color favorito", "qué sabés de mí"
@@ -1195,7 +1228,13 @@ function responderPedazo(a, nombreNuevo, extras) {
 }
 // Une las respuestas de todos los pedazos
 function responderPorPartes(original) {
-  const analisis = analizarOracion(original);
+  let analisis = analizarOracion(original);
+  // Si hay una pregunta de verdad, los arranques como "che Frankers" o "tengo una pregunta" no se contestan aparte
+  const relleno = (a) => { const n = normalizar(a.texto); return !n || FRASES_ARRANQUE.includes(n) || FRASES_CIERRE.includes(n) || ["frankers", "che frankers", "hola frankers"].includes(n); };
+  if (analisis.length > 1 && analisis.some(a => !relleno(a))) {
+    const saludo = analisis.find(a => /^(hola|buenas|buen dia|buenas tardes|buenas noches|hey|holis)\b/.test(normalizar(a.texto)) && relleno(a));
+    analisis = analisis.filter(a => !relleno(a) || a === saludo);
+  }
   if (!analisis.length) return noSabe(original);
   let nombreNuevo = false;
   for (const a of analisis) { const n = buscarNombre(a); if (n) { memoria.nombre = n; nombreNuevo = true; } }
@@ -1470,6 +1509,7 @@ async function cargarExtra() {
   } catch {}
 }
 async function cargarConocimiento(conExtra = true) {
+  if (!LEMAS.size) await cargarLemas();
   if (conExtra) await cargarExtra();
   const copia = guardado.leer("frankers-conocimiento", null);
   if (copia) { conocimiento = copia; construirIndice(); }
