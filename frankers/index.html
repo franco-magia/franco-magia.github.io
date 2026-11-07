@@ -279,6 +279,7 @@ let historial = guardado.leer("frankers-historial", []);
 let token = guardado.leer("frankers-token", null);
 let conocimiento = { version: 1, actualizado: "", entradas: [] };
 let comunidad = []; // lo que enseñó cualquier persona (viene del servidor)
+let conocimientoExtra = []; // miles de preguntas de base (archivo aparte, solo lectura)
 let ensenadoAca = guardado.leer("frankers-ensenado", []); // lo enseñado en este dispositivo
 const guardarMemoria = () => guardado.escribir("frankers-memoria", memoria);
 const guardarHistorial = () => { historial = historial.slice(-80); guardado.escribir("frankers-historial", historial); };
@@ -312,7 +313,7 @@ const largo = (v) => Math.sqrt([...v.values()].reduce((s, x) => s + x * x, 0));
 function construirIndice() {
   frecuencia = new Map();
   const frases = [];
-  for (const e of [...conocimiento.entradas, ...comunidad, ...ensenadoAca]) {
+  for (const e of [...conocimiento.entradas, ...conocimientoExtra, ...comunidad, ...ensenadoAca]) {
     // Regla: nunca repetir algo prohibido, aunque haya llegado a guardarse
     if (revisar([...e.preguntas, ...e.respuestas, e.autor || ""].join(" ")).problema) continue;
     for (const q of e.preguntas) {
@@ -653,14 +654,14 @@ async function cargarPalabras() {
       ...Object.values(OBJETOS).flatMap(o => o.palabras), "frankers", "franco", "francosandes", "dibuja", "dibujame", "dibujá", "analiza", "analizá",
       "jaja", "jajaja", "okey", "oki", "che", "boludo", "fiaca", "yaguarete", "chabon", "copado", "bondi", "finde"];
     extra.forEach(w => { const n = normalizar(w); if (n && !mapa.has(n)) mapa.set(n, { forma: w, rango: 60000 }); });
-    for (const e of [...conocimiento.entradas]) for (const t of [...e.preguntas, ...e.respuestas])
+    for (const e of [...conocimiento.entradas, ...conocimientoExtra]) for (const t of [...e.preguntas, ...e.respuestas])
       for (const w of t.toLowerCase().match(/[a-záéíóúüñ]+/g) || []) { const n = normalizar(w); if (n && !mapa.has(n)) mapa.set(n, { forma: w, rango: 50000 }); }
     PALABRAS = mapa;
     CANDIDATAS = [...mapa.entries()].filter(([n, i]) => n.length >= 2 && (i.rango < 20000 || i.rango === 50000))
       .map(([n, i]) => [n, { ...i, prohibida: !!revisar(n).problema }]);
     // Pares de palabras que aparecen juntas en lo que sabe ("de leche"), para elegir mejor la corrección
     PARES = new Set();
-    for (const e of conocimiento.entradas) for (const t of [...e.preguntas, ...e.respuestas]) {
+    for (const e of [...conocimiento.entradas, ...conocimientoExtra]) for (const t of [...e.preguntas, ...e.respuestas]) {
       const ws = normalizar(t).split(" "); for (let i = 1; i < ws.length; i++) PARES.add(ws[i - 1] + " " + ws[i]);
     }
   } catch { PALABRAS = null; } // si no carga la lista, no corrige nada
@@ -1064,13 +1065,18 @@ function noSabe(pregunta) {
   ultimaRespuesta = null;
   return { texto: alAzar(["Todavía no lo sé. ¿Me lo enseñás?", "Uy, eso no lo aprendí aún. ¿Me lo enseñás?", "No tengo idea, pero me encantaría saberlo. 🤔", "Esa me la ganaste. ¿Cuál es la respuesta?"]), ensenar: { pregunta }, desconocido: true };
 }
+// Para que nunca conteste igual: le suma una entrada y un cierre al azar (de 2 a 20 formas por respuesta)
+const ENTRADAS_RESP = ["", "", "¡Buena pregunta! ", "Te cuento: ", "Mirá: ", "¡Esa la sé! ", "Dato: ", "A ver… ", "Ahí va: ", "Según lo que aprendí: "];
+const CIERRES_RESP = ["", "", " 😊", " ¿Sabías eso?", " ¡Qué interesante!", " ¿Querés saber algo más?", " 🤓"];
+const adornar = (r) => alAzar(ENTRADAS_RESP) + r + alAzar(CIERRES_RESP);
 // Busca en lo aprendido. Devuelve el texto de la respuesta o null.
 function conocimientoPara(texto, umbral) {
   const { entrada, puntaje, frase } = pensar(texto);
   if (!entrada || puntaje < umbral) return null;
   if (/\bno\b/.test(normalizar(texto)) !== /\bno\b/.test(normalizar(frase))) return null; // "no estoy feliz" ≠ "estoy feliz"
   ultimaRespuesta = { pregunta: texto, entradaId: entrada.id };
-  const r = personalizar(alAzar(entrada.respuestas));
+  let r = personalizar(alAzar(entrada.respuestas));
+  if (/^(qa|dic|x)-/.test(entrada.id)) r = adornar(r);
   return entrada.tipo === "opinion" ? `${entrada.autor || "Alguien"} opina: "${r}" (es una opinión, no un hecho).` : r;
 }
 // Memoria de cosas tuyas: "mi color favorito es el azul", "cuál es mi color favorito", "qué sabés de mí"
@@ -1435,7 +1441,36 @@ const deBase64 = (s) => new TextDecoder().decode(Uint8Array.from(atob(s.replace(
 const API = `https://api.github.com/repos/${REPO}/contents/${RUTA}`;
 const cabeceras = () => ({ Authorization: "Bearer " + token, Accept: "application/vnd.github+json" });
 
-async function cargarConocimiento() {
+// Las miles de preguntas de base están en un archivo aparte (GitHub no deja editar desde la página archivos de más de 1 MB)
+let versionCargada = null;
+function cartelActualizando(si) {
+  $("#subtitulo").textContent = si ? "Actualizando… 🔄" : (token ? "Modo creador 🔑 · podés enseñarle" : "IA hecha desde cero por Franco");
+}
+// Cada 30 segundos se fija si Franco publicó algo nuevo; si hay, dice "Actualizando…" y lo carga solo
+async function revisarVersion() {
+  if (location.protocol === "file:") return;
+  try {
+    const v = await (await fetch("version.json?v=" + Date.now(), { cache: "no-store" })).json();
+    if (versionCargada && v.version !== versionCargada) {
+      cartelActualizando(true);
+      window.CONOCIMIENTO_EXTRA = null;
+      const r = await fetch("conocimiento-extra.json?v=" + v.version, { cache: "no-store" });
+      if (r.ok) conocimientoExtra = (await r.json()).entradas || [];
+      await cargarConocimiento(false);
+      await cargarPalabras();
+      setTimeout(() => cartelActualizando(false), 1200);
+    }
+    versionCargada = v.version;
+  } catch {}
+}
+async function cargarExtra() {
+  try {
+    if (window.CONOCIMIENTO_EXTRA) conocimientoExtra = window.CONOCIMIENTO_EXTRA;
+    else { const r = await fetch("conocimiento-extra.json?v=" + Date.now()); if (r.ok) conocimientoExtra = (await r.json()).entradas || []; }
+  } catch {}
+}
+async function cargarConocimiento(conExtra = true) {
+  if (conExtra) await cargarExtra();
   const copia = guardado.leer("frankers-conocimiento", null);
   if (copia) { conocimiento = copia; construirIndice(); }
   try {
@@ -1446,9 +1481,10 @@ async function cargarConocimiento() {
     }
     if (!remoto) { const r = await fetch("conocimiento.json?v=" + Date.now(), { cache: "no-store" }); if (r.ok) remoto = await r.json(); }
     if (remoto && (!copia || (remoto.actualizado || "") >= (copia.actualizado || ""))) {
-      conocimiento = remoto; guardado.escribir("frankers-conocimiento", remoto); construirIndice();
+      conocimiento = remoto; guardado.escribir("frankers-conocimiento", remoto);
     }
   } catch {}
+  construirIndice();
 }
 // cambio = función que modifica el conocimiento (agregar o borrar). Se aplica a la última versión de GitHub y se guarda.
 async function publicar(cambio) {
@@ -1699,7 +1735,7 @@ $("#ensGuardar").addEventListener("click", async () => {
 const dlgSaber = $("#dlgSaber");
 function dibujarListaSaber() {
   const lista = $("#listaSaber"); lista.innerHTML = "";
-  const todas = [...conocimiento.entradas.map(e => ({ ...e, origen: "franco" })), ...comunidad.map(e => ({ ...e, origen: "comunidad" })), ...ensenadoAca.map(e => ({ ...e, origen: "aca" }))];
+  const todas = [...conocimientoExtra.map(e => ({ ...e, origen: "base" })), ...conocimiento.entradas.map(e => ({ ...e, origen: "franco" })), ...comunidad.map(e => ({ ...e, origen: "comunidad" })), ...ensenadoAca.map(e => ({ ...e, origen: "aca" }))];
   const filtro = normalizar($("#saberBuscar").value || "");
   $("#saberResumen").textContent = `Aprendí ${todas.length} cosas (${comunidad.length} me las enseñó la gente), y además sé recordar tu nombre y datos, hacer cuentas, decir la hora y dibujar ${Object.values(OBJETOS).map(o => o.nombre).join(", ")}.`;
   $("#listaReglas").innerHTML = REGLAS.map(r => `<li>${escaparHTML(r)}</li>`).join("");
@@ -1739,7 +1775,7 @@ function actualizarModo() {
     : "Escribí cómo te pueden preguntar algo y qué tengo que contestar. Si pasa mis reglas, lo aprendo para vos, en este dispositivo. 📱";
   $("#creadorApagado").hidden = !!token; $("#creadorPrendido").hidden = !token;
   $("#creadorActivar").hidden = !!token; $("#creadorSalir").hidden = !token;
-  $("#subtitulo").textContent = token ? "Modo creador 🔑 · podés enseñarle" : "IA hecha desde cero por Franco";
+  cartelActualizando(false);
 }
 $("#btnCreador").onclick = () => { $("#creadorEstado").textContent = ""; $("#creadorToken").value = ""; dlgCreador.showModal(); };
 $("#creadorCerrar").onclick = () => dlgCreador.close();
@@ -1761,7 +1797,9 @@ $("#creadorActivar").onclick = async () => {
 // Arranque
 actualizarModo();
 if (historial.length) historial.forEach(mostrar); else bienvenida();
-cargarConocimiento().then(() => { cargarComunidad(); cargarPalabras(); });
+cartelActualizando(true);
+cargarConocimiento().then(async () => { cargarComunidad(); await cargarPalabras(); cartelActualizando(false); revisarVersion(); });
+setInterval(revisarVersion, 30000);
 setInterval(cargarComunidad, 60000); // cada minuto trae lo nuevo que enseñó la gente
 $("#entrada").focus();
 </script>
