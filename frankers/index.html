@@ -55,6 +55,20 @@
     .nombre h1 span { background: var(--degrade); -webkit-background-clip: text; background-clip: text; color: transparent; }
     .nombre small { color: var(--suave); font-size: .82rem; }
     .quien-sos { display: block; }
+    /* Pantalla grande de "¿quién sos?" */
+    dialog.pantalla-nombre { width: 100vw; height: 100dvh; max-width: none; max-height: none; margin: 0; border: none; border-radius: 0;
+      background: radial-gradient(ellipse at top, #2a1f5c, #140f2e 70%); display: grid; place-items: center; padding: 16px; }
+    dialog.pantalla-nombre:not([open]) { display: none; }
+    dialog.pantalla-nombre::backdrop { background: #140f2e; }
+    .pn-caja { width: min(520px, 100%); text-align: center; }
+    .pn-caja h2 { font-size: clamp(2rem, 7vw, 3rem); margin: 10px 0; line-height: 1.15; }
+    .pn-caja p { font-size: 1.15rem; margin: 0 0 18px; }
+    .pn-cara { width: 96px !important; height: 96px !important; gap: 16px !important; margin: 0 auto 10px; }
+    .pn-cara i { width: 15px !important; height: 24px !important; border-radius: 8px !important; }
+    .pn-degrade, #pnNombre { background: var(--degrade); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    #inputNombre { font-size: 1.3rem; padding: 16px 18px; text-align: center; border-radius: 16px; margin-bottom: 6px; }
+    .pn-botones { display: grid; gap: 12px; margin-top: 22px; }
+    .pn-caja .pn-grande { font-size: 1.25rem; padding: 16px 22px; width: 100%; margin-top: 8px; }
     .quien-sos button { background: none; border: none; color: var(--celeste); cursor: pointer; padding: 0; font-size: .78rem; text-decoration: underline; }
     .acciones { display: flex; gap: 6px; }
     .boton {
@@ -180,17 +194,25 @@
     <footer>Frankers todavía es un bebé IA y puede equivocarse · <button id="btnCreador">modo creador</button></footer>
   </div>
 
-  <!-- Ventana: tu nombre (hay que ponerlo para charlar) -->
-  <dialog id="dlgNombre">
-    <div style="text-align:center">
-      <div class="cara" style="margin:0 auto 12px;width:64px;height:64px;gap:11px" aria-hidden="true"><i style="width:11px;height:17px"></i><i style="width:11px;height:17px"></i></div>
-      <h2>¡Hola! Soy Frankers 🤖</h2>
-      <p>Antes de charlar, ¿cómo te llamás?</p>
+  <!-- Pantalla grande al entrar: ¿quién sos? -->
+  <dialog id="dlgNombre" class="pantalla-nombre">
+    <div class="pn-caja">
+      <div class="cara pn-cara" aria-hidden="true"><i></i><i></i></div>
+      <div id="pnConfirmar" hidden>
+        <h2>¿Sos <span id="pnNombre"></span>?</h2>
+        <div class="pn-botones">
+          <button class="boton principal pn-grande" type="button" id="btnSoyYo">¡Sí, soy yo!</button>
+          <button class="boton pn-grande" type="button" id="btnNoSoy">No, cambiar</button>
+        </div>
+      </div>
+      <div id="pnPreguntar">
+        <h2>¡Hola! Soy <span class="pn-degrade">Frankers</span> 🤖</h2>
+        <p>Antes de charlar, ¿cómo te llamás?</p>
+        <input id="inputNombre" maxlength="20" autocomplete="off" placeholder="Escribí tu nombre">
+        <div class="estado mal" id="nombreEstado"></div>
+        <button class="boton principal pn-grande" type="button" id="btnNombre">¡Empezar!</button>
+      </div>
     </div>
-    <label for="inputNombre">Tu nombre</label>
-    <input id="inputNombre" maxlength="20" autocomplete="off" placeholder="Escribí tu nombre">
-    <div class="estado mal" id="nombreEstado"></div>
-    <div class="fila-botones"><button class="boton principal" type="button" id="btnNombre">¡Empezar!</button></div>
   </dialog>
 
   <!-- Ventana: enseñar -->
@@ -1858,10 +1880,15 @@ $("#creadorActivar").onclick = async () => {
 
 // Tu nombre: hay que ponerlo para charlar (cada persona pone el suyo)
 function pedirNombre(cambiar = false) {
-  const d = $("#dlgNombre");
-  $("#inputNombre").value = cambiar ? "" : (memoria.nombre || ""); $("#nombreEstado").textContent = "";
-  d.showModal(); $("#inputNombre").focus();
+  const d = $("#dlgNombre"), confirmar = !!memoria.nombre && !cambiar;
+  $("#pnConfirmar").hidden = !confirmar; $("#pnPreguntar").hidden = confirmar;
+  $("#pnNombre").textContent = memoria.nombre || "";
+  $("#inputNombre").value = ""; $("#nombreEstado").textContent = "";
+  if (!d.open) d.showModal();
+  (confirmar ? $("#btnSoyYo") : $("#inputNombre")).focus();
 }
+$("#btnSoyYo").onclick = () => { $("#dlgNombre").close(); mostrarQuienSos(); $("#entrada").focus(); };
+$("#btnNoSoy").onclick = () => pedirNombre(true);
 function mostrarQuienSos() {
   const q = $("#quienSos");
   q.hidden = !memoria.nombre;
@@ -1887,9 +1914,10 @@ function guardarNombre() {
 }
 $("#btnNombre").onclick = guardarNombre;
 $("#inputNombre").addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); guardarNombre(); } });
-$("#dlgNombre").addEventListener("cancel", (e) => { if (!memoria.nombre) e.preventDefault(); }); // sin nombre no se puede cerrar
+$("#dlgNombre").addEventListener("cancel", (e) => e.preventDefault()); // hay que elegir: soy yo, o poner el nombre
 
-// Arranque
+// Arranque: lo primero que aparece es la pantalla grande de "¿quién sos?"
+pedirNombre();
 actualizarModo();
 if (historial.length) historial.forEach(mostrar); else bienvenida();
 cartelActualizando(true);
@@ -1897,7 +1925,6 @@ cargarConocimiento().then(async () => { cargarComunidad(); await cargarPalabras(
 setInterval(revisarVersion, 30000);
 setInterval(cargarComunidad, 60000); // cada minuto trae lo nuevo que enseñó la gente
 mostrarQuienSos();
-if (!memoria.nombre) pedirNombre();
 $("#entrada").focus();
 </script>
 </body>
