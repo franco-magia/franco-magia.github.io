@@ -517,7 +517,8 @@ $("#btnCompartir").onclick = async () => {
 };
 
 /* Modo creador */
-function actualizarModo() { const ver = !!token || EN_ARCHIVO; $("#btnEditar").hidden = !ver; $("#btnShort").hidden = !ver; $("#creadorSalir").hidden = !token; }
+// El editor está siempre: sin llave de GitHub, lo que subís queda solo en tu compu hasta que Claude lo publica
+function actualizarModo() { $("#btnEditar").hidden = false; $("#btnShort").hidden = false; $("#creadorSalir").hidden = !token; }
 $("#btnCreador").onclick = () => { $("#creadorEstado").textContent = token ? "✅ El modo creador está activado." : ""; $("#dlgCreador").showModal(); };
 $("#creadorCerrar").onclick = () => $("#dlgCreador").close();
 $("#creadorSalir").onclick = () => { token = null; try { localStorage.removeItem("frankers-token"); } catch {} actualizarModo(); $("#dlgCreador").close(); };
@@ -1131,7 +1132,6 @@ async function subirAGitHub(video, caratula, info) {
 }
 $("#btnSubir").onclick = async () => {
   const titulo = $("#nombreVideo").value.trim();
-  if (!token && !EN_ARCHIVO) return estado("❌ Activá el modo creador para subir videos.");
   if (!videoCargado) return estado("❌ Primero elegí un video.");
   if (!titulo) { pestana("video"); $("#nombreVideo").focus(); return estado("❌ Ponele un nombre al video."); }
   renderizando = true; $("#btnSubir").disabled = true; $("#cerrarEditor").disabled = true;
