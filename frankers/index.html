@@ -54,6 +54,8 @@
     .nombre h1 { font-family: "Fredoka", sans-serif; font-size: 1.35rem; margin: 0; line-height: 1.1; }
     .nombre h1 span { background: var(--degrade); -webkit-background-clip: text; background-clip: text; color: transparent; }
     .nombre small { color: var(--suave); font-size: .82rem; }
+    .quien-sos { display: block; }
+    .quien-sos button { background: none; border: none; color: var(--celeste); cursor: pointer; padding: 0; font-size: .78rem; text-decoration: underline; }
     .acciones { display: flex; gap: 6px; }
     .boton {
       border: 1px solid var(--borde); background: var(--tarjeta); border-radius: 999px;
@@ -151,6 +153,7 @@
         <div class="nombre">
           <h1><span>Frankers</span></h1>
           <small id="subtitulo">IA hecha desde cero por Franco</small>
+          <small id="quienSos" class="quien-sos" hidden></small>
         </div>
       </div>
       <div class="acciones">
@@ -176,6 +179,19 @@
     </div>
     <footer>Frankers todavía es un bebé IA y puede equivocarse · <button id="btnCreador">modo creador</button></footer>
   </div>
+
+  <!-- Ventana: tu nombre (hay que ponerlo para charlar) -->
+  <dialog id="dlgNombre">
+    <div style="text-align:center">
+      <div class="cara" style="margin:0 auto 12px;width:64px;height:64px;gap:11px" aria-hidden="true"><i style="width:11px;height:17px"></i><i style="width:11px;height:17px"></i></div>
+      <h2>¡Hola! Soy Frankers 🤖</h2>
+      <p>Antes de charlar, ¿cómo te llamás?</p>
+    </div>
+    <label for="inputNombre">Tu nombre</label>
+    <input id="inputNombre" maxlength="20" autocomplete="off" placeholder="Escribí tu nombre">
+    <div class="estado mal" id="nombreEstado"></div>
+    <div class="fila-botones"><button class="boton principal" type="button" id="btnNombre">¡Empezar!</button></div>
+  </dialog>
 
   <!-- Ventana: enseñar -->
   <dialog id="dlgEnsenar">
@@ -281,7 +297,13 @@ let conocimiento = { version: 1, actualizado: "", entradas: [] };
 let comunidad = []; // lo que enseñó cualquier persona (viene del servidor)
 let conocimientoExtra = []; // miles de preguntas de base (archivo aparte, solo lectura)
 let ensenadoAca = guardado.leer("frankers-ensenado", []); // lo enseñado en este dispositivo
-const guardarMemoria = () => guardado.escribir("frankers-memoria", memoria);
+const guardarMemoria = () => {
+  guardado.escribir("frankers-memoria", memoria);
+  if (typeof mostrarQuienSos === "function" && document.readyState !== "loading") {
+    mostrarQuienSos();
+    if (!memoria.nombre && !$("#dlgNombre").open) setTimeout(() => pedirNombre(), 1500); // "olvidate de todo": vuelve a preguntar el nombre
+  }
+};
 const guardarHistorial = () => { historial = historial.slice(-80); guardado.escribir("frankers-historial", historial); };
 
 /* ---------- 2. CEREBRO ----------
@@ -1834,6 +1856,39 @@ $("#creadorActivar").onclick = async () => {
   } catch (e) { estado.className = "estado mal"; estado.textContent = e.message || "No pude conectarme con GitHub."; }
 };
 
+// Tu nombre: hay que ponerlo para charlar (cada persona pone el suyo)
+function pedirNombre(cambiar = false) {
+  const d = $("#dlgNombre");
+  $("#inputNombre").value = cambiar ? "" : (memoria.nombre || ""); $("#nombreEstado").textContent = "";
+  d.showModal(); $("#inputNombre").focus();
+}
+function mostrarQuienSos() {
+  const q = $("#quienSos");
+  q.hidden = !memoria.nombre;
+  if (memoria.nombre) { q.innerHTML = `Charlando con <b>${escaparHTML(memoria.nombre)}</b> · <button type="button" id="btnCambiarNombre">¿No sos vos? Cambiar</button>`; $("#btnCambiarNombre").onclick = () => pedirNombre(true); }
+}
+function guardarNombre() {
+  const n = $("#inputNombre").value.trim().replace(/\s+/g, " ");
+  const estado = $("#nombreEstado");
+  if (n.length < 2) { estado.textContent = "Escribí tu nombre (al menos 2 letras)."; return; }
+  if (!/^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ' ]+$/.test(n)) { estado.textContent = "Usá solo letras, por favor."; return; }
+  if (revisar(n).problema) { estado.textContent = "Ese nombre no lo puedo usar. Probá con tu nombre de verdad 🙂"; return; }
+  const nuevo = n.split(" ").map(capitalizar).join(" ");
+  if (memoria.nombre && normalizar(memoria.nombre) !== normalizar(nuevo)) {
+    // Otra persona: empieza de cero, con su propia memoria y su propia charla
+    memoria = { nombre: null, datos: {}, gustos: [], hechos: [], aprendido: {} };
+    historial = []; guardarHistorial(); chat.innerHTML = "";
+    Object.assign(charla, { esperando: null, siguienteEspera: null, ultimoTema: null, ultimaFrasePersona: null });
+  }
+  memoria.nombre = nuevo; guardarMemoria();
+  $("#dlgNombre").close(); mostrarQuienSos();
+  if (!historial.length) { chat.innerHTML = ""; bienvenida(); }
+  $("#entrada").focus();
+}
+$("#btnNombre").onclick = guardarNombre;
+$("#inputNombre").addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); guardarNombre(); } });
+$("#dlgNombre").addEventListener("cancel", (e) => { if (!memoria.nombre) e.preventDefault(); }); // sin nombre no se puede cerrar
+
 // Arranque
 actualizarModo();
 if (historial.length) historial.forEach(mostrar); else bienvenida();
@@ -1841,6 +1896,8 @@ cartelActualizando(true);
 cargarConocimiento().then(async () => { cargarComunidad(); await cargarPalabras(); cartelActualizando(false); revisarVersion(); });
 setInterval(revisarVersion, 30000);
 setInterval(cargarComunidad, 60000); // cada minuto trae lo nuevo que enseñó la gente
+mostrarQuienSos();
+if (!memoria.nombre) pedirNombre();
 $("#entrada").focus();
 </script>
 </body>
