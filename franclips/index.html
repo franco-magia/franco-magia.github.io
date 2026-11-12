@@ -190,7 +190,7 @@
           <div class="elegir-video" id="elegirVideo">
             <div style="font-size:3rem">🎞️</div>
             <b>Elegí el video que querés subir</b>
-            <span class="nota">Por ejemplo, una grabación de pantalla o un gameplay. Ideal: menos de 10 minutos.</span>
+            <span class="nota">Por ejemplo, una grabación de pantalla o un gameplay. Ideal: menos de 10 minutos.<br>También podés <b>arrastrar</b> el video acá o <b>pegarlo</b> con Ctrl + V.</span>
             <label class="boton principal">📂 Elegir video<input type="file" id="archivoVideo" accept="video/*" hidden></label>
           </div>
           <canvas id="lienzoVideo" width="1280" height="720" hidden></canvas>
@@ -273,6 +273,8 @@
         <div class="panel">
           <label><input type="checkbox" id="sinCaratula"> <b>Sin carátula</b> (se usa un momento al azar del video)</label>
 
+          <label class="boton principal" style="display:block;text-align:center;margin:10px 0">📂 Subir una foto de tus archivos<input type="file" id="fotoArchivos" accept="image/*" hidden></label>
+          <p class="nota">También podés <b>pegar</b> una foto (Ctrl + V) o <b>arrastrarla</b> encima del dibujo.</p>
           <h3>🖼️ Fondo</h3>
           <label class="campo"><span>Tipo de fondo</span><select id="fondoTipo"><option value="video">Un momento del video</option><option value="foto">Una foto</option><option value="color">Un color</option><option value="degrade">Un degradé</option></select></label>
           <label class="campo" id="fondoMomentoCaja"><span>Momento del video</span><input type="range" id="fondoMomento" min="0" max="1000" value="300"></label>
@@ -346,6 +348,7 @@
       <button class="boton chico" disabled title="Todavía no se puede">💬</button>
       <span class="pronto">Likes y comentarios: ¡pronto!</span>
     </div>
+    <p class="nota" style="text-align:center;margin:6px 0 0">Usá la ruedita del mouse (o deslizá el dedo) para pasar de short 🖱️</p>
     <div class="fila">
       <button class="boton" id="shortAnterior">▲ Anterior</button>
       <button class="boton" id="shortCerrar">✕ Cerrar</button>
@@ -879,6 +882,39 @@ $("#btnSubir").onclick = async () => {
   } catch (e) { console.error(e); estado("❌ " + (e.message || "No se pudo subir.")); progreso(0); }
   renderizando = false; $("#btnSubir").disabled = false; $("#cerrarEditor").disabled = false;
 };
+
+// Subir fotos y videos: botón, pegar (Ctrl + V) o arrastrar
+function usarArchivo(f) {
+  if (!f) return;
+  if (f.type.startsWith("video/")) {
+    const dt = new DataTransfer(); dt.items.add(f); $("#archivoVideo").files = dt.files; $("#archivoVideo").dispatchEvent(new Event("change"));
+    pestana("video");
+  } else if (f.type.startsWith("image/")) {
+    cargarImagen(f).then(img => { pestana("caratula"); nuevoObjeto("foto", img); });
+  } else if (f.type.startsWith("audio/")) {
+    musica.src = URL.createObjectURL(f); estado("🎵 Música agregada: " + f.name);
+  }
+}
+$("#fotoArchivos").onchange = (e) => { usarArchivo(e.target.files[0]); e.target.value = ""; };
+document.addEventListener("paste", (e) => {
+  if (!$("#editor").open) return;
+  const f = [...(e.clipboardData?.files || [])][0]; if (f) { e.preventDefault(); usarArchivo(f); }
+});
+$("#editor").addEventListener("dragover", (e) => e.preventDefault());
+$("#editor").addEventListener("drop", (e) => { e.preventDefault(); usarArchivo(e.dataTransfer.files[0]); });
+
+// Shorts: con la ruedita del mouse o deslizando el dedo se pasa al siguiente
+let ultimaRuedita = 0, toqueY = null;
+$("#verShort").addEventListener("wheel", (e) => {
+  e.preventDefault();
+  const ahora = Date.now(); if (ahora - ultimaRuedita < 600 || Math.abs(e.deltaY) < 15) return;
+  ultimaRuedita = ahora; moverShort(e.deltaY > 0 ? 1 : -1);
+}, { passive: false });
+$("#verShort").addEventListener("touchstart", (e) => { toqueY = e.touches[0].clientY; }, { passive: true });
+$("#verShort").addEventListener("touchend", (e) => {
+  if (toqueY === null) return; const d = toqueY - e.changedTouches[0].clientY; toqueY = null;
+  if (Math.abs(d) > 60) moverShort(d > 0 ? 1 : -1);
+});
 
 actualizarModo();
 cargarVideos();
