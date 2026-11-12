@@ -613,7 +613,8 @@ async function cargarVideos() {
   }
   // Videos que hizo Claude (solo vienen en el archivo HTML de Franco; si los borra, no vuelven más)
   const borrados = (() => { try { return JSON.parse(localStorage.getItem("franclips-borrados") || "[]"); } catch { return []; } })();
-  for (const v of (window.VIDEOS_DE_CLAUDE || [])) if (!borrados.includes(v.id) && !videos.some(x => x.id === v.id)) videos.push({ ...v, deClaude: true });
+  const aBlob = (d) => { try { const [cab, b64] = d.split(","), bin = atob(b64), u = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i); return URL.createObjectURL(new Blob([u], { type: cab.slice(5, cab.indexOf(";")) })); } catch { return d; } };
+  for (const v of (window.VIDEOS_DE_CLAUDE || [])) if (!borrados.includes(v.id) && !videos.some(x => x.id === v.id)) videos.push({ ...v, archivo: aBlob(v.archivo), deClaude: true });
   videos.sort((a, b) => (b.fecha || "").localeCompare(a.fecha || ""));
   mostrarLista();
   const id = new URLSearchParams(location.search).get("v");
