@@ -37,7 +37,7 @@
     .menu-pie { margin-top: auto; padding: 12px 16px; font-size: .78rem; color: var(--suave); line-height: 1.6; }
     .menu-pie button { background: none; border: none; color: var(--suave); text-decoration: underline; cursor: pointer; padding: 0; font-size: .78rem; }
     .contenido { padding: 26px 34px 60px; min-width: 0; }
-    .banner { display: block; width: 100%; aspect-ratio: 16 / 4.2; object-fit: cover; object-position: center 50%; border-radius: 18px; margin-bottom: 20px; box-shadow: 0 10px 40px rgba(40,110,255,.25); }
+    .banner { display: block; width: 100%; aspect-ratio: 16 / 4.2; object-fit: cover; object-position: center 50%; border-radius: 18px; margin-bottom: 30px; box-shadow: 0 10px 40px rgba(40,110,255,.25); }
     .canal { display: flex; align-items: center; gap: 22px; padding: 24px; margin-bottom: 30px; border-radius: 20px; background: var(--tarjeta); border: 1px solid var(--borde); flex-wrap: wrap; }
     .canal-avatar { width: 84px; height: 84px; border-radius: 50%; display: grid; place-items: center; font-family: "Pacifico", cursive; font-size: 1.7rem; color: #fff; background: linear-gradient(135deg, #4fd8ff, #8a5cff 60%, #c86bff); box-shadow: 0 0 30px rgba(120,110,255,.5); }
     .canal h2 { margin: 0; font-family: "Fredoka", sans-serif; }
@@ -267,8 +267,8 @@
 
     <div class="contenido">
       <main id="vistaInicio">
+        <img class="banner" id="banner" src="banner.jpg" alt="Franclips Video · francosandes.com">
         <section id="vistaSubs" hidden>
-          <img class="banner" src="banner.jpg" alt="Franclips Video · francosandes.com">
           <div class="canal">
             <div class="canal-avatar">F.S</div>
             <div><h2>Franco Sandes</h2><p class="nota" id="canalCuenta"></p></div>
@@ -631,6 +631,7 @@ function mostrarLista() {
   const sec = q ? "buscar" : seccion;
   const verLargos = sec !== "shorts", verShorts = sec !== "videos";
   $("#vistaSubs").hidden = sec !== "subs";
+  $("#banner").hidden = !(sec === "inicio" || sec === "subs");
   $("#tituloLista").textContent = sec === "buscar" ? `Resultados para "${$("#buscar").value}"` : sec === "videos" && largos.length ? "🎬 Videos" : sec === "subs" && coinciden.length ? "Videos de Franco" : "";
   const g = $("#grilla"); g.innerHTML = "";
   if (verLargos) largos.forEach(v => g.appendChild(tarjeta(v)));
