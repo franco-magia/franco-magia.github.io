@@ -82,6 +82,8 @@
     .video-card .miniatura { position: relative; aspect-ratio: 16/9; border-radius: 14px; overflow: hidden; background: #000; }
     .video-card img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .25s; }
     .video-card:hover img, .video-card:focus-visible img { transform: scale(1.04); }
+    .recuperar { display: grid; gap: 8px; padding: 14px 18px; margin: 6px 0 4px; border-radius: 14px; background: rgba(79,216,255,.1); border: 1px solid var(--celeste); }
+    .guardado { font-size: .75rem; color: var(--suave); }
     .borrar-card { position: absolute; left: 8px; top: 8px; border: none; border-radius: 10px; background: rgba(0,0,0,.75); padding: 5px 8px; cursor: pointer; font-size: 1rem; opacity: .85; }
     .borrar-card:hover { background: #ff4d6d; opacity: 1; }
     .video-card .duracion { position: absolute; right: 8px; bottom: 8px; background: rgba(0,0,0,.8); font-size: .78rem; font-weight: 700; padding: 2px 6px; border-radius: 6px; }
@@ -373,6 +375,11 @@
             <b>Elegí el video que querés editar</b>
             <span class="nota">Por ejemplo, una grabación de pantalla o un gameplay.<br>También podés <b>arrastrar</b> el video acá o <b>pegarlo</b> con Ctrl + V.</span>
             <b id="msgVideo" style="display:block;margin-top:8px;color:#ffcf4a"></b>
+            <div id="recuperar" class="recuperar" hidden>
+              <b>♻️ Tenés un video sin terminar</b>
+              <span id="recuperarTxt" class="nota"></span>
+              <div class="fila" style="justify-content:center"><button class="boton principal" id="btnRecuperar">▶️ Seguir editándolo</button><button class="boton chico" id="btnDescartar">🗑️ Descartarlo</button></div>
+            </div>
             <label class="boton principal">📂 Elegir video<input type="file" id="archivoVideo" hidden></label>
           </div>
           <canvas id="lienzoVideo" width="1280" height="720" hidden></canvas>
@@ -437,6 +444,7 @@
           <div class="linea-barra">
             <button class="boton chico" id="btnPlay" title="Reproducir (barra espaciadora)">▶️</button>
             <span id="tiempoTexto" class="tiempo">0:00</span>
+            <span id="guardadoTxt" class="guardado" title="Lo que editás se guarda solo en esta compu, por si se cierra la página o pasa algo"></span>
             <span class="sep"></span>
             <button class="ico" id="btnDeshacer" title="Deshacer (Ctrl+Z)">↶</button>
             <button class="ico" id="btnRehacer" title="Rehacer (Ctrl+Y)">↷</button>
@@ -873,7 +881,7 @@ function armarPaleta(div, agregar) {
   FORMAS.forEach(([t, n]) => item(n, t, null, true));
   EMOJIS.forEach(e => item(e, "emoji", e));
   const foto = document.createElement("label"); foto.className = "item txt"; foto.innerHTML = `📷 Foto<input type="file" hidden>`;
-  foto.querySelector("input").onchange = async (e) => { const f = e.target.files[0]; e.target.value = ""; if (f) { try { agregar("foto", await cargarImagen(f), null); } catch { estado("❌ Esa foto no se pudo abrir."); } } };
+  foto.querySelector("input").onchange = async (e) => { const f = e.target.files[0]; e.target.value = ""; if (f) { try { agregar("foto", await imagenDeArchivo(f), null); } catch { estado("❌ Ese archivo no se pudo usar como foto."); } } };
   div.appendChild(foto);
 }
 
@@ -1384,7 +1392,7 @@ async function convertirVideo(f, avisar) {
 
 /* Elegir el video */
 $("#archivoVideo").onchange = (e) => { const f = e.target.files[0]; e.target.value = ""; if (f) cargarVideo(f); };
-function cargarVideo(f) {
+function cargarVideo(f, alListo) {
   if (f.type.startsWith("image/")) return usarArchivo(f);
   const avisar = (t) => { $("#msgVideo").textContent = t; estado(t); };
   avisar("⏳ Cargando \"" + f.name + "\"…");
@@ -1401,7 +1409,7 @@ function cargarVideo(f) {
   let hecho = false;
   const convertir = async () => {
     clearTimeout(window.esperaVideo);
-    try { const nuevo = await convertirVideo(f, avisar); nuevo.convertido = true; return cargarVideo(nuevo); }
+    try { const nuevo = await convertirVideo(f, avisar); nuevo.convertido = true; return cargarVideo(nuevo, alListo); }
     catch (e) { return avisar(`❌ No pude convertir "${f.name}" (${e && e.message || e}). Decile a Claude este mensaje.`); }
   };
   const listo = () => {
@@ -1416,7 +1424,9 @@ function cargarVideo(f) {
     sel = null; capaElegida = null; tramoElegido = -1;
     fuente.currentTime = Math.min(0.1, dur() / 2);
     requestAnimationFrame(() => zoom(true));
+    proyectoVideo = f; $("#recuperar").hidden = true;
     actualizarFondoCaratula(); mostrarProp();
+    if (alListo) alListo(); else guardarProyecto();
   };
   fuente.onloadedmetadata = () => {
     if (isFinite(fuente.duration) && fuente.duration > 0) return listo();
@@ -1488,6 +1498,7 @@ function dibujarPista(cont, clave) {
 }
 function dibujarLinea() {
   if (!videoCargado) return;
+  guardarProyecto();
   const ancho = dur() * pps, cont = $("#lineaContenido");
   cont.style.width = (ancho + X0 * 2) + "px";
   const pasos = [0.25, 0.5, 1, 2, 5, 10, 15, 30, 60, 120, 300, 600, 1200]; const paso = pasos.find(p => p * pps >= 70) || 1200;
@@ -1575,7 +1586,7 @@ async function agregarCosa(d, p, t) {
     const def = (d.tipo === "musica" ? GENEROS : SONIDOS).find(x => x.id === d.valor);
     const o = d.tipo === "musica" ? { tipo: "musica", nombre: def.nombre, buffer: buf, loop: true, inicio: 0, desde: t, hasta: dur(), vol: 0.6, suave: true }
       : { tipo: "sonido", nombre: def.nombre, buffer: buf, loop: false, inicio: 0, desde: t, hasta: hasta(buf.duration), vol: 1, suave: false };
-    audios.push(o); estado(""); return elegirClip("audio", o);
+    o.origen = { tipo: d.tipo, id: d.valor }; audios.push(o); estado(""); return elegirClip("audio", o);
   }
   if (d.tipo === "textoEstilo") {
     const e = TEXTOS[d.valor]; const o = crearObjeto("texto", null, lienzoV.width, lienzoV.height, p);
@@ -1680,7 +1691,7 @@ async function grabarVoz() {
     $("#btnVoz").textContent = "🎙️ Grabar voz"; $("#vozGrabar").textContent = "🎙️ Empezar a grabar"; if (!fuente.paused) pausar();
     try {
       const buf = await mesaDeSonido().ac.decodeAudioData(await new Blob(partes).arrayBuffer());
-      antes(true); const o = { tipo: "voz", nombre: "🎙️ Tu voz", buffer: buf, loop: false, inicio: 0, desde, hasta: Math.min(dur(), Math.max(hastaT, desde + buf.duration * 0.98)), vol: 1.2, suave: false };
+      antes(true); const o = { origen: { tipo: "archivo", blob: new Blob(partes, { type: rec.mimeType }) }, tipo: "voz", nombre: "🎙️ Tu voz", buffer: buf, loop: false, inicio: 0, desde, hasta: Math.min(dur(), Math.max(hastaT, desde + buf.duration * 0.98)), vol: 1.2, suave: false };
       audios.push(o); elegirClip("audio", o); estado("🎙️ ¡Voz grabada! La ves en la pista de música.");
     } catch { estado("❌ No se pudo guardar la grabación de voz."); }
   };
@@ -1720,7 +1731,7 @@ async function audioPropio(f, esMusica) {
   try {
     estado("⏳ Abriendo " + f.name + "…");
     const buf = await mesaDeSonido().ac.decodeAudioData(await f.arrayBuffer()), t = fuente.currentTime;
-    antes(true); const o = { tipo: esMusica ? "musica" : "sonido", nombre: "🎵 " + f.name.replace(/\.[^.]+$/, ""), buffer: buf, loop: false, inicio: 0, desde: t, hasta: Math.min(dur(), t + buf.duration), vol: esMusica ? 0.7 : 1, suave: esMusica };
+    antes(true); const o = { origen: { tipo: "archivo", blob: f }, tipo: esMusica ? "musica" : "sonido", nombre: "🎵 " + f.name.replace(/\.[^.]+$/, ""), buffer: buf, loop: false, inicio: 0, desde: t, hasta: Math.min(dur(), t + buf.duration), vol: esMusica ? 0.7 : 1, suave: esMusica };
     audios.push(o); elegirClip("audio", o); estado("");
   } catch { estado("❌ \"" + f.name + "\" no se pudo abrir como sonido."); }
 }
@@ -1870,7 +1881,7 @@ document.addEventListener("keydown", (e) => {
   if (e.key === " " && pagina === "video") { e.preventDefault(); $("#btnPlay").click(); }
 });
 const cargarImagen = (f) => new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = URL.createObjectURL(f); });
-$("#fondoFoto").onchange = async (e) => { const f = e.target.files[0]; if (f) { fondoFoto = await cargarImagen(f); caratulaTocada = true; dibujarCaratula(); } };
+$("#fondoFoto").onchange = async (e) => { const f = e.target.files[0]; e.target.value = ""; if (f) { try { fondoFoto = await imagenDeArchivo(f); caratulaTocada = true; dibujarCaratula(); guardarProyecto(); } catch { estado("❌ Ese archivo no se pudo usar como fondo."); } } };
 $("#fondoTipo").onchange = () => {
   const t = $("#fondoTipo").value;
   $("#fondoMomentoCaja").hidden = t !== "video"; $("#fondoFotoCaja").hidden = t !== "foto"; $("#fondoColorCaja").hidden = !(t === "color" || t === "degrade");
@@ -1912,10 +1923,82 @@ function limpiarEditor() {
   $("#sinCaratula").checked = false; $("#fondoTipo").value = "video";
   $("#fondoMomentoCaja").hidden = false; $("#fondoFotoCaja").hidden = true; $("#fondoColorCaja").hidden = true;
   $("#elegirVideo").hidden = false; lienzoV.hidden = true; $("#zonaEdicion").hidden = true; $("#btnSubir").disabled = true;
-  mostrarProp(); estado(""); progreso(0); editorUsado = false;
+  proyectoVideo = null; mostrarProp(); estado(""); progreso(0); editorUsado = false;
 }
-$("#btnEditar").onclick = () => { if (editorUsado) limpiarEditor(); $("#editor").showModal(); $("#tipoVideo").value = "video"; medidasLienzo(); pestana("video"); };
-$("#btnShort").onclick = () => { if (editorUsado) limpiarEditor(); $("#editor").showModal(); $("#tipoVideo").value = "short"; medidasLienzo(); pestana("video"); };
+
+/* Guardado automático: lo que editás se guarda solo (en esta compu), así nunca se pierde */
+let proyectoVideo = null, restaurando = false, esperaGuardar = null;
+const PROY = {
+  abrir() { return new Promise((res, rej) => { const r = indexedDB.open("franclips-proyecto", 1); r.onupgradeneeded = () => r.result.createObjectStore("p"); r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); }); },
+  async guardar(v) { const db = await this.abrir(); return new Promise((res, rej) => { const t = db.transaction("p", "readwrite"); t.objectStore("p").put(v, "actual"); t.oncomplete = res; t.onerror = () => rej(t.error); }); },
+  async leer() { try { const db = await this.abrir(); return await new Promise(res => { const r = db.transaction("p").objectStore("p").get("actual"); r.onsuccess = () => res(r.result || null); r.onerror = () => res(null); }); } catch { return null; } },
+  async borrar() { try { const db = await this.abrir(); await new Promise(res => { const t = db.transaction("p", "readwrite"); t.objectStore("p").delete("actual"); t.oncomplete = res; t.onerror = res; }); } catch {} },
+};
+const CAMPOS = ["nombreVideo", "tipoVideo", "volVideo", "fBrillo", "fContraste", "fSaturacion", "fBlur", "eZoom", "eMarco", "subColor", "subFondo", "subTam", "subPos", "subLetra", "fondoTipo", "fondoMomento", "fondoColor1", "fondoColor2", "cfBrillo", "cfContraste", "cfSaturacion", "cfBlur"];
+const TILDES = ["eEspejo", "eFade", "sinCaratula"];
+function fotoADatos(img) { try { const c = document.createElement("canvas"); c.width = img.naturalWidth || img.width; c.height = img.naturalHeight || img.height; c.getContext("2d").drawImage(img, 0, 0); return c.toDataURL("image/jpeg", 0.9); } catch { return null; } }
+const sinFoto = (o) => { const c = { ...o }; if (o.img) { c.imgDatos = o.imgDatos || (o.imgDatos = fotoADatos(o.img)); } delete c.img; return c; };
+function guardarProyecto() {
+  if (!videoCargado || restaurando || !proyectoVideo) return;
+  clearTimeout(esperaGuardar);
+  esperaGuardar = setTimeout(async () => {
+    try {
+      await PROY.guardar({
+        video: proyectoVideo, nombreArchivo: proyectoVideo.name || "video.mp4", fecha: new Date().toISOString(),
+        campos: Object.fromEntries(CAMPOS.map(id => [id, $("#" + id).value])), tildes: Object.fromEntries(TILDES.map(id => [id, $("#" + id).checked])),
+        tramos, subs, filtrosT, efectos, capas: capas.map(sinFoto), objetos: objetos.map(sinFoto),
+        audios: audios.map(a => { const c = { ...a }; delete c.buffer; return c; }),
+        fondoFoto: fondoFoto ? (fondoFoto.imgDatos || (fondoFoto.imgDatos = fotoADatos(fondoFoto))) : null,
+      });
+      $("#guardadoTxt").textContent = "💾 Guardado";
+    } catch { $("#guardadoTxt").textContent = "⚠️ No se pudo guardar"; }
+  }, 900);
+}
+async function restaurarProyecto(p) {
+  restaurando = true; estado("♻️ Recuperando lo que estabas editando…");
+  const f = p.video instanceof File ? p.video : new File([p.video], p.nombreArchivo, { type: p.video.type || "video/mp4" });
+  f.convertido = true;
+  cargarVideo(f, async () => {
+    try {
+      for (const [id, v] of Object.entries(p.campos || {})) if ($("#" + id)) $("#" + id).value = v;
+      for (const [id, v] of Object.entries(p.tildes || {})) if ($("#" + id)) $("#" + id).checked = v;
+      medidasLienzo();
+      const imagen = (d) => new Promise(r => { if (!d) return r(null); const i = new Image(); i.onload = () => r(i); i.onerror = () => r(null); i.src = d; });
+      const conFoto = async (o) => o.imgDatos ? { ...o, img: await imagen(o.imgDatos) } : o;
+      tramos = p.tramos && p.tramos.length ? p.tramos : tramos; subs = p.subs || []; filtrosT = p.filtrosT || []; efectos = p.efectos || [];
+      capas = await Promise.all((p.capas || []).map(conFoto)); objetos = await Promise.all((p.objetos || []).map(conFoto));
+      if (p.fondoFoto) { fondoFoto = await imagen(p.fondoFoto); if (fondoFoto) fondoFoto.imgDatos = p.fondoFoto; }
+      audios = await Promise.all((p.audios || []).map(async a => {
+        let buffer = null;
+        try {
+          const o = a.origen || {};
+          if (o.tipo === "musica") buffer = await hacerMusica(o.id);
+          else if (o.tipo === "sonido") buffer = await hacerSonido(o.id);
+          else if (o.tipo === "archivo" && o.blob) buffer = await mesaDeSonido().ac.decodeAudioData(await o.blob.arrayBuffer());
+        } catch {}
+        return { ...a, buffer };
+      }));
+      $("#fondoMomentoCaja").hidden = $("#fondoTipo").value !== "video"; $("#fondoFotoCaja").hidden = $("#fondoTipo").value !== "foto"; $("#fondoColorCaja").hidden = !["color", "degrade"].includes($("#fondoTipo").value);
+      if (objetos.length) caratulaTocada = true;
+      estado("♻️ ¡Listo! Volvió todo lo que estabas editando.");
+    } catch (e) { estado("⚠️ Recuperé el video, pero no todo lo que tenía."); }
+    restaurando = false; dibujarLinea(); actualizarFondoCaratula(); dibujarCaratula(); mostrarProp(); guardarProyecto();
+  });
+}
+async function ofrecerRecuperar() {
+  if (videoCargado) return;
+  const p = await PROY.leer(); if (!p || !p.video) { $("#recuperar").hidden = true; return; }
+  $("#recuperarTxt").textContent = `"${(p.campos && p.campos.nombreVideo) || p.nombreArchivo}" · ${new Date(p.fecha).toLocaleString("es-AR", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })}`;
+  $("#recuperar").hidden = false;
+  $("#btnRecuperar").onclick = () => { $("#recuperar").hidden = true; restaurarProyecto(p); };
+  $("#btnDescartar").onclick = async () => { if (!confirm("¿Descartar ese video sin terminar? Se borra lo que tenía editado.")) return; await PROY.borrar(); $("#recuperar").hidden = true; };
+}
+// Cada cambio se guarda solo
+document.addEventListener("input", (e) => { if (e.target.closest && e.target.closest("#editor")) guardarProyecto(); });
+document.addEventListener("change", (e) => { if (e.target.closest && e.target.closest("#editor")) guardarProyecto(); });
+document.addEventListener("pointerup", () => { if ($("#editor").open) guardarProyecto(); });
+$("#btnEditar").onclick = () => { if (editorUsado) limpiarEditor(); $("#editor").showModal(); if (!videoCargado) { $("#tipoVideo").value = "video"; medidasLienzo(); } pestana("video"); ofrecerRecuperar(); };
+$("#btnShort").onclick = () => { if (editorUsado) limpiarEditor(); $("#editor").showModal(); if (!videoCargado) { $("#tipoVideo").value = "short"; medidasLienzo(); } pestana("video"); ofrecerRecuperar(); };
 $("#cerrarEditor").onclick = () => { if (renderizando) return; pausar(); $("#editor").close(); };
 window.addEventListener("resize", () => { if (videoCargado && pagina === "video" && $("#editor").open) zoom(false); });
 
@@ -2034,7 +2117,7 @@ $("#btnSubir").onclick = async () => {
       await BD.guardar({ id, tipo, titulo, duracion: Math.round(duracion), fecha: new Date().toISOString(), video: blob, imagen: caratula });
       const bajar = (blob_, nombre) => { const a = document.createElement("a"); a.href = URL.createObjectURL(blob_); a.download = nombre; document.body.appendChild(a); a.click(); a.remove(); };
       bajar(blob, base + "." + ext); setTimeout(() => bajar(caratula, base + " - caratula.jpg"), 600);
-      progreso(1); estado(`✅ ¡Subido! Ya lo ves en tu Franclips (solo vos). Cuando le digas a Claude "actualizá Franclips", lo publica para todo el mundo.`);
+      PROY.borrar(); progreso(1); estado(`✅ ¡Subido! Ya lo ves en tu Franclips (solo vos). Cuando le digas a Claude "actualizá Franclips", lo publica para todo el mundo.`);
       videos.unshift({ id, tipo, titulo, duracion: Math.round(duracion), fecha: new Date().toISOString(), archivo: URL.createObjectURL(blob), caratula: URL.createObjectURL(caratula), pendiente: true });
       mostrarLista(); editorUsado = true; renderizando = false; $("#btnSubir").disabled = false; $("#cerrarEditor").disabled = false;
       return;
@@ -2048,15 +2131,30 @@ $("#btnSubir").onclick = async () => {
 };
 
 // Subir fotos y videos: botón, pegar (Ctrl + V) o arrastrar
+// Una foto de cualquier archivo: si es imagen, la imagen; si es un video, un cuadro del video
+function fotoDeVideo(f) {
+  return new Promise((res, rej) => {
+    const v = document.createElement("video"); v.muted = true; v.preload = "auto"; v.playsInline = true; v.src = URL.createObjectURL(f);
+    const t = setTimeout(() => rej(new Error("tardó mucho")), 20000);
+    v.onloadeddata = () => { v.currentTime = Math.min(1, (isFinite(v.duration) ? v.duration : 2) / 3); };
+    v.onseeked = () => { clearTimeout(t); const c = document.createElement("canvas"); c.width = v.videoWidth; c.height = v.videoHeight; if (!c.width) return rej(new Error("sin imagen")); c.getContext("2d").drawImage(v, 0, 0); const i = new Image(); i.onload = () => res(i); i.src = c.toDataURL("image/jpeg", 0.92); };
+    v.onerror = () => { clearTimeout(t); rej(new Error("no se pudo abrir")); };
+  });
+}
+async function imagenDeArchivo(f) {
+  try { return await cargarImagen(f); } catch {}
+  const img = await fotoDeVideo(f); estado("📸 Era un video: usé una foto de ese video (tu video editado no se tocó)."); return img;
+}
+const hayEdiciones = () => videoCargado && (tramos.length > 1 || capas.length || subs.length || filtrosT.length || efectos.length || audios.length || objetos.length || historia.length);
 function usarArchivo(f) {
   if (!f) return;
-  if (f.type.startsWith("image/")) {
-    cargarImagen(f).then(img => { pestana("caratula"); nuevoObjeto("foto", img); });
-  } else if (f.type.startsWith("audio/")) {
-    audioPropio(f, true);
-  } else {
-    pestana("video"); cargarVideo(f);
+  if (f.type.startsWith("audio/")) return audioPropio(f, true);
+  // En la carátula, todo lo que llega es una foto (si es un video, una foto del video). NUNCA cambia tu video.
+  if (pagina === "caratula" || f.type.startsWith("image/")) {
+    return imagenDeArchivo(f).then(img => { pestana("caratula"); nuevoObjeto("foto", img); guardarProyecto(); }).catch(() => estado("❌ Ese archivo no se pudo usar como foto."));
   }
+  if (hayEdiciones() && !confirm("Ya estás editando un video. ¿Querés CAMBIARLO por \"" + f.name + "\"?\n\nSi aceptás, se pierde lo que editaste. Si no, tocá Cancelar.")) return;
+  pestana("video"); cargarVideo(f);
 }
 $("#fotoArchivos").onchange = (e) => { usarArchivo(e.target.files[0]); e.target.value = ""; };
 document.addEventListener("paste", (e) => {
