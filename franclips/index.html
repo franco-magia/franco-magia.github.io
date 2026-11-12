@@ -2031,18 +2031,27 @@ async function armarVideo() {
     const pz = piezas[i];
     if (i > 0) { grabadora.pause(); sincronizarAudio(pz.desde, false); await irA(pz.desde); dibujarCuadro(ctx, c.width, c.height, a, pz.desde, true, tiempoSalida(pz.desde)); grabadora.resume(); }
     fuente.playbackRate = pz.vel || 1; aplicarVolumenes(pz.desde);
-    await fuente.play();
+    fuente.play().catch(() => {});
     await new Promise((res) => {
+      // Reloj propio (no se frena si la página queda tapada) + vigilante por si el video se traba
+      let ultimo = -1, quieto = 0, terminado = false;
       const paso = () => {
+        if (terminado) return;
         const ts = Math.min(fuente.currentTime, pz.hasta), tout = tiempoSalida(ts);
         sincronizarAudio(ts, true);
         dibujarCuadro(ctx, c.width, c.height, a, ts, true, tout);
         const f = Math.min(1, tout / largo);
-        progreso(f * 0.6); estado(`🎬 Armando el video… ${Math.round(f * 100)} % (tarda lo mismo que dura el video)`);
-        if (fuente.currentTime >= pz.hasta || fuente.ended) return res();
-        requestAnimationFrame(paso);
+        progreso(f * 0.6); estado(`🎬 Armando el video… ${Math.round(f * 100)} % (tarda lo mismo que dura el video · dejá esta página a la vista)`);
+        if (fuente.currentTime >= pz.hasta - 0.04 || fuente.ended) { terminado = true; reloj.terminate(); return res(); }
+        if (Math.abs(fuente.currentTime - ultimo) < 0.001) {
+          quieto++;
+          if (quieto === 45 || quieto === 120) fuente.play().catch(() => {});           // ~1.5 s trabado: le doy play de nuevo
+          if (quieto === 90 || quieto === 180) fuente.currentTime = Math.min(pz.hasta, fuente.currentTime + 0.15); // sigue trabado: salto un poquito
+          if (quieto > 300) { terminado = true; reloj.terminate(); return res(); }       // 10 s trabado: sigo con lo que hay
+        } else { quieto = 0; ultimo = fuente.currentTime; }
       };
-      paso();
+      const reloj = new Worker(URL.createObjectURL(new Blob(["setInterval(() => postMessage(0), 33);"], { type: "text/javascript" })));
+      reloj.onmessage = paso; paso();
     });
     fuente.pause();
   }
