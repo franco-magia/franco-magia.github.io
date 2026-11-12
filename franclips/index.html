@@ -1928,13 +1928,15 @@ async function armarVideo() {
   const a = ajustes(), piezas = quedan();
   if (!piezas.length) throw new Error("Quitaste todos los pedazos del video. Volvé a poner alguno.");
   const largo = largoFinal();
-  const c = document.createElement("canvas"); c.width = lienzoV.width; c.height = lienzoV.height; const ctx = c.getContext("2d");
+  const c = document.createElement("canvas"); c.width = lienzoV.width; c.height = lienzoV.height; const ctx = c.getContext("2d", { alpha: false }); // sin transparencia: así ningún reproductor lo muestra negro
   const { ac, gv, gm } = mesaDeSonido(); await ac.resume();
   const destino = ac.createMediaStreamDestination();
   gv.connect(destino); gm.connect(destino);
   const flujo = c.captureStream(30);
   destino.stream.getAudioTracks().forEach(t => flujo.addTrack(t));
-  const tipo = ["video/webm;codecs=vp9,opus", "video/webm;codecs=vp8,opus", "video/webm"].find(t => MediaRecorder.isTypeSupported(t)) || "";
+  // MP4 (H.264) es el que se ve en todos lados; si el navegador no lo puede grabar, webm
+  const tipo = ["video/mp4;codecs=avc1.42E01F,mp4a.40.2", "video/mp4;codecs=avc1,mp4a", "video/mp4", "video/webm;codecs=vp8,opus", "video/webm;codecs=vp9,opus", "video/webm"].find(t => MediaRecorder.isTypeSupported(t)) || "";
+  const esMp4 = tipo.startsWith("video/mp4");
   const grabadora = new MediaRecorder(flujo, { mimeType: tipo, videoBitsPerSecond: 2_500_000 });
   const partes = []; grabadora.ondataavailable = (e) => { if (e.data.size) partes.push(e.data); };
   const terminado = new Promise(res => grabadora.onstop = res);
@@ -1964,10 +1966,10 @@ async function armarVideo() {
   sincronizarAudio(0, false);
   grabadora.stop(); await terminado;
   gv.disconnect(destino); gm.disconnect(destino);
-  let blob = new Blob(partes, { type: "video/webm" });
+  let blob = new Blob(partes, { type: esMp4 ? "video/mp4" : "video/webm" });
   // El navegador no guarda cuánto dura el video grabado: se lo agregamos para que se pueda adelantar
-  if (window.ysFixWebmDuration) { try { blob = await new Promise(res => window.ysFixWebmDuration(blob, largo * 1000, res)); } catch {} }
-  return { blob, duracion: largo };
+  if (!esMp4 && window.ysFixWebmDuration) { try { blob = await new Promise(res => window.ysFixWebmDuration(blob, largo * 1000, res)); } catch {} }
+  return { blob, duracion: largo, ext: esMp4 ? "mp4" : "webm" };
 }
 async function armarCaratula() {
   const c = document.createElement("canvas"); c.width = CW; c.height = CH;
@@ -1986,7 +1988,7 @@ async function gh(ruta, opciones = {}) {
 }
 // Sube el video, la carátula y la lista de videos en un solo cambio de GitHub
 async function subirAGitHub(video, caratula, info) {
-  const id = info.id, rutaVideo = `${CARPETA}/videos/${id}.webm`, rutaCaratula = `${CARPETA}/caratulas/${id}.jpg`;
+  const ext = info.ext || "webm", id = info.id, rutaVideo = `${CARPETA}/videos/${id}.${ext}`, rutaCaratula = `${CARPETA}/caratulas/${id}.jpg`;
   estado("📦 Preparando el video para subir…"); progreso(0.65);
   const [b64video, b64caratula] = await Promise.all([aBase64(video), aBase64(caratula)]);
   estado("⬆️ Subiendo el video a GitHub… (si es largo, puede tardar)"); progreso(0.7);
@@ -2000,7 +2002,7 @@ async function subirAGitHub(video, caratula, info) {
     lista = JSON.parse(new TextDecoder().decode(Uint8Array.from(atob(actual.content.replace(/\n/g, "")), c => c.charCodeAt(0))));
   } catch {}
   lista.videos = (lista.videos || []).filter(v => v.id !== id);
-  lista.videos.push({ id, tipo: info.tipo, titulo: info.titulo, archivo: `videos/${id}.webm`, caratula: `caratulas/${id}.jpg`, duracion: Math.round(info.duracion), fecha: new Date().toISOString() });
+  lista.videos.push({ id, tipo: info.tipo, titulo: info.titulo, archivo: `videos/${id}.${ext}`, caratula: `caratulas/${id}.jpg`, duracion: Math.round(info.duracion), fecha: new Date().toISOString() });
   progreso(0.9); estado("📝 Guardando en tu página…");
   const ref = await gh(`/git/ref/heads/${RAMA}`);
   const commit = await gh(`/git/commits/${ref.object.sha}`);
@@ -2021,7 +2023,7 @@ $("#btnSubir").onclick = async () => {
   try {
     estado("🖼️ Armando la carátula…"); progreso(0.02);
     const caratula = await armarCaratula();
-    const { blob, duracion } = await armarVideo();
+    const { blob, duracion, ext } = await armarVideo();
     if (blob.size > 95 * 1024 * 1024) throw new Error(`El video quedó muy pesado (${Math.round(blob.size / 1048576)} MB). GitHub acepta hasta unos 95 MB: recortalo un poco.`);
     const id = normalizar(titulo).replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 40) + "-" + Date.now().toString(36);
     const tipo = $("#tipoVideo").value;
@@ -2031,13 +2033,13 @@ $("#btnSubir").onclick = async () => {
       const base = `${tipo === "short" ? "SHORT" : "VIDEO"} - ${titulo.replace(/[\\/:*?"<>|\[\]]/g, "")} [${id}]`;
       await BD.guardar({ id, tipo, titulo, duracion: Math.round(duracion), fecha: new Date().toISOString(), video: blob, imagen: caratula });
       const bajar = (blob_, nombre) => { const a = document.createElement("a"); a.href = URL.createObjectURL(blob_); a.download = nombre; document.body.appendChild(a); a.click(); a.remove(); };
-      bajar(blob, base + ".webm"); setTimeout(() => bajar(caratula, base + " - caratula.jpg"), 600);
+      bajar(blob, base + "." + ext); setTimeout(() => bajar(caratula, base + " - caratula.jpg"), 600);
       progreso(1); estado(`✅ ¡Subido! Ya lo ves en tu Franclips (solo vos). Cuando le digas a Claude "actualizá Franclips", lo publica para todo el mundo.`);
       videos.unshift({ id, tipo, titulo, duracion: Math.round(duracion), fecha: new Date().toISOString(), archivo: URL.createObjectURL(blob), caratula: URL.createObjectURL(caratula), pendiente: true });
       mostrarLista(); editorUsado = true; renderizando = false; $("#btnSubir").disabled = false; $("#cerrarEditor").disabled = false;
       return;
     }
-    const lista = await subirAGitHub(blob, caratula, { id, titulo, duracion, tipo });
+    const lista = await subirAGitHub(blob, caratula, { id, titulo, duracion, tipo, ext });
     progreso(1); estado(`✅ ¡Subido${tipo === "short" ? " tu short" : ""}! "${titulo}" aparece en tu página en uno o dos minutos (GitHub tiene que publicarlo).`);
     videos = lista.videos.map(v => v.id === id ? { ...v, archivo: URL.createObjectURL(blob), caratula: URL.createObjectURL(caratula) } : v);
     videos.sort((a, b) => (b.fecha || "").localeCompare(a.fecha || "")); mostrarLista(); editorUsado = true;
