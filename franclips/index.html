@@ -385,14 +385,29 @@ const $ = (s) => document.querySelector(s);
 const leer = (k, d) => { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch { return d; } };
 const escribir = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} };
 let token = leer("frankers-token", null); // el mismo modo creador que Frankers
+// En el archivo de Franco (abierto desde la compu) los botones de subir están siempre
+const EN_ARCHIVO = location.protocol === "file:" || location.href === "about:srcdoc";
 const escaparHTML = (s) => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 const normalizar = (t) => t.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").trim();
 const mmss = (s) => { s = Math.max(0, Math.round(s)); return Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0"); };
+
+/* Videos guardados en esta compu (los que subiste desde el archivo y todavía no publicó Claude) */
+const BD = {
+  abrir() { return new Promise((res, rej) => { const r = indexedDB.open("franclips", 1); r.onupgradeneeded = () => r.result.createObjectStore("videos", { keyPath: "id" }); r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); }); },
+  async guardar(v) { const db = await this.abrir(); return new Promise((res, rej) => { const t = db.transaction("videos", "readwrite"); t.objectStore("videos").put(v); t.oncomplete = res; t.onerror = () => rej(t.error); }); },
+  async todos() { try { const db = await this.abrir(); return await new Promise(res => { const r = db.transaction("videos").objectStore("videos").getAll(); r.onsuccess = () => res(r.result || []); r.onerror = () => res([]); }); } catch { return []; } },
+  async borrar(id) { try { const db = await this.abrir(); db.transaction("videos", "readwrite").objectStore("videos").delete(id); } catch {} },
+};
 
 /* ---------- 1. GALERÍA ---------- */
 let videos = [];
 async function cargarVideos() {
   try { const r = await fetch("videos.json?v=" + Date.now(), { cache: "no-store" }); if (r.ok) videos = (await r.json()).videos || []; } catch {}
+  // Los tuyos que todavía esperan publicación (solo en esta compu)
+  for (const v of await BD.todos()) {
+    if (videos.some(x => x.id === v.id)) { BD.borrar(v.id); continue; } // ya lo publicó Claude
+    videos.push({ ...v, archivo: URL.createObjectURL(v.video), caratula: URL.createObjectURL(v.imagen), pendiente: true });
+  }
   videos.sort((a, b) => (b.fecha || "").localeCompare(a.fecha || ""));
   mostrarLista();
   const id = new URLSearchParams(location.search).get("v");
@@ -402,7 +417,7 @@ function tarjeta(v) {
   const d = document.createElement("div");
   d.className = "video-card"; d.tabIndex = 0;
   d.innerHTML = `<div class="miniatura"><img src="${escaparHTML(v.caratula)}" alt="" loading="lazy"><span class="duracion">${mmss(v.duracion || 0)}</span></div>
-    <div><h3>${escaparHTML(v.titulo)}</h3><small>${new Date(v.fecha).toLocaleDateString("es-AR", { day: "numeric", month: "long", year: "numeric" })}</small></div>`;
+    <div><h3>${escaparHTML(v.titulo)}</h3>${v.pendiente ? '<small style="color:#ffcf4a">🔒 Solo vos · esperando publicación</small><br>' : ""}<small>${new Date(v.fecha).toLocaleDateString("es-AR", { day: "numeric", month: "long", year: "numeric" })}</small></div>`;
   d.onclick = () => abrirVideo(v.id);
   d.onkeydown = (e) => { if (e.key === "Enter") abrirVideo(v.id); };
   return d;
@@ -457,12 +472,12 @@ function abrirVideo(id, guardarHistoria = true) {
   const otros = $("#otrosVideos"); otros.innerHTML = "";
   videos.filter(x => x.id !== id).slice(0, 12).forEach(x => otros.appendChild(tarjeta(x)));
   if (!otros.children.length) otros.innerHTML = `<p class="nota">Pronto va a haber más videos.</p>`;
-  if (guardarHistoria) history.pushState({ v: id }, "", "?v=" + id);
+  if (guardarHistoria) try { history.pushState({ v: id }, "", EN_ARCHIVO ? undefined : "?v=" + id); } catch (e) {}
   window.scrollTo(0, 0);
 }
 function volverInicio(guardarHistoria = true) {
   $("#reproductor").pause(); $("#vistaVideo").hidden = true; $("#vistaInicio").hidden = false;
-  if (guardarHistoria) history.pushState({}, "", "./");
+  if (guardarHistoria) try { history.pushState({}, "", EN_ARCHIVO ? undefined : "./"); } catch (e) {}
 }
 window.onpopstate = () => { const id = new URLSearchParams(location.search).get("v"); id ? abrirVideo(id, false) : volverInicio(false); };
 $("#irInicio").onclick = (e) => { e.preventDefault(); volverInicio(); };
@@ -474,7 +489,7 @@ $("#btnCompartir").onclick = async () => {
 };
 
 /* Modo creador */
-function actualizarModo() { $("#btnEditar").hidden = !token; $("#btnShort").hidden = !token; $("#creadorSalir").hidden = !token; }
+function actualizarModo() { const ver = !!token || EN_ARCHIVO; $("#btnEditar").hidden = !ver; $("#btnShort").hidden = !ver; $("#creadorSalir").hidden = !token; }
 $("#btnCreador").onclick = () => { $("#creadorEstado").textContent = token ? "✅ El modo creador está activado." : ""; $("#dlgCreador").showModal(); };
 $("#creadorCerrar").onclick = () => $("#dlgCreador").close();
 $("#creadorSalir").onclick = () => { token = null; try { localStorage.removeItem("frankers-token"); } catch {} actualizarModo(); $("#dlgCreador").close(); };
@@ -863,7 +878,7 @@ async function subirAGitHub(video, caratula, info) {
 }
 $("#btnSubir").onclick = async () => {
   const titulo = $("#nombreVideo").value.trim();
-  if (!token) return estado("❌ Activá el modo creador para subir videos.");
+  if (!token && !EN_ARCHIVO) return estado("❌ Activá el modo creador para subir videos.");
   if (!videoCargado) return estado("❌ Primero elegí un video.");
   if (!titulo) { pestana("video"); $("#nombreVideo").focus(); return estado("❌ Ponele un nombre al video."); }
   renderizando = true; $("#btnSubir").disabled = true; $("#cerrarEditor").disabled = true;
@@ -875,6 +890,17 @@ $("#btnSubir").onclick = async () => {
     const id = normalizar(titulo).replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 40) + "-" + Date.now().toString(36);
     const tipo = $("#tipoVideo").value;
     if (tipo === "short" && duracion > 180) throw new Error("Un short puede durar como mucho 3 minutos. Recortalo un poco.");
+    if (!token) {
+      // Sin llave de GitHub: se descargan el video y la carátula para mandárselos a Claude
+      const base = `${tipo === "short" ? "SHORT" : "VIDEO"} - ${titulo.replace(/[\\/:*?"<>|\[\]]/g, "")} [${id}]`;
+      await BD.guardar({ id, tipo, titulo, duracion: Math.round(duracion), fecha: new Date().toISOString(), video: blob, imagen: caratula });
+      const bajar = (blob_, nombre) => { const a = document.createElement("a"); a.href = URL.createObjectURL(blob_); a.download = nombre; document.body.appendChild(a); a.click(); a.remove(); };
+      bajar(blob, base + ".webm"); setTimeout(() => bajar(caratula, base + " - caratula.jpg"), 600);
+      progreso(1); estado(`✅ ¡Subido! Ya lo ves en tu Franclips (solo vos). Cuando le digas a Claude "actualizá Franclips", lo publica para todo el mundo.`);
+      videos.unshift({ id, tipo, titulo, duracion: Math.round(duracion), fecha: new Date().toISOString(), archivo: URL.createObjectURL(blob), caratula: URL.createObjectURL(caratula), pendiente: true });
+      mostrarLista(); editorUsado = true; renderizando = false; $("#btnSubir").disabled = false; $("#cerrarEditor").disabled = false;
+      return;
+    }
     const lista = await subirAGitHub(blob, caratula, { id, titulo, duracion, tipo });
     progreso(1); estado(`✅ ¡Subido${tipo === "short" ? " tu short" : ""}! "${titulo}" aparece en tu página en uno o dos minutos (GitHub tiene que publicarlo).`);
     videos = lista.videos.map(v => v.id === id ? { ...v, archivo: URL.createObjectURL(blob), caratula: URL.createObjectURL(caratula) } : v);

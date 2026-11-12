@@ -256,7 +256,10 @@
     <input id="saberBuscar" placeholder="Buscar en lo que sé…" style="margin-bottom:10px">
     <ul class="lista-saber" id="listaSaber"></ul>
     <div class="estado" id="saberEstado"></div>
-    <div class="fila-botones"><button class="boton" id="saberCerrar">Cerrar</button></div>
+    <div class="fila-botones">
+      <button class="boton principal" id="btnExportar" hidden>📤 Exportar lo que me enseñaste</button>
+      <button class="boton" id="saberCerrar">Cerrar</button>
+    </div>
   </dialog>
 
   <!-- Ventana: modo creador -->
@@ -1810,7 +1813,7 @@ $("#ensGuardar").addEventListener("click", async () => {
     const texto = reemplazo
       ? alAzar([`¡Tenés razón, me equivoqué! Gracias por corregirme. Ahora ${resumen}.`, `Uy, perdón. Ya lo arreglé: ${resumen}.`, `¡Bien ahí! Ahora lo sé mejor: ${resumen}.`, `Gracias, así voy aprendiendo. Desde ahora ${resumen}.`])
       : alAzar([`¡Gracias! Lo anoto: ${resumen}. 🎓`, `¡No lo sabía! Entonces ${resumen}, ¿es así?`, `¡Qué interesante! Ya lo aprendí: ${resumen}.`, `¡Buenísimo, uno más para mi memoria! Ahora ${resumen}. 🧠`]);
-    agregar({ de: "frankers", texto: texto + (token ? " Ya lo sabe todo el mundo. 🌎" : " Lo aprendí para vos, en este dispositivo. 📱") });
+    agregar({ de: "frankers", texto: texto + (token ? " Ya lo sabe todo el mundo. 🌎" : EN_ARCHIVO ? " Para que lo sepa todo el mundo, andá a 📚 Lo que sé → 📤 Exportar y mandáselo a Claude." : " Lo aprendí para vos, en este dispositivo. 📱") });
     ultimaRespuesta = null;
   } else mal(r.motivo);
 });
@@ -1849,6 +1852,16 @@ function dibujarListaSaber() {
 $("#btnSaber").onclick = () => { $("#saberEstado").textContent = ""; $("#saberBuscar").value = ""; dibujarListaSaber(); dlgSaber.showModal(); };
 $("#saberBuscar").oninput = () => dibujarListaSaber();
 $("#saberCerrar").onclick = () => dlgSaber.close();
+// En el archivo de Franco: exportar lo enseñado para mandárselo a Claude (y que lo sepa todo el mundo)
+const EN_ARCHIVO = location.protocol === "file:" || location.href === "about:srcdoc";
+$("#btnExportar").hidden = !EN_ARCHIVO;
+$("#btnExportar").onclick = () => {
+  if (!ensenadoAca.length) { $("#saberEstado").className = "estado mal"; $("#saberEstado").textContent = "Todavía no me enseñaste nada en este dispositivo."; return; }
+  const datos = JSON.stringify({ frankers: "ensenanzas", fecha: new Date().toISOString(), entradas: ensenadoAca }, null, 2);
+  const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([datos], { type: "application/json" }));
+  a.download = `Frankers - lo que le enseñé (${ensenadoAca.length}).json`; document.body.appendChild(a); a.click(); a.remove();
+  $("#saberEstado").className = "estado ok"; $("#saberEstado").textContent = `✅ Se descargó el archivo con ${ensenadoAca.length} cosas. Mandáselo a Claude en el chat y lo carga para todo el mundo.`;
+};
 
 // Modo creador
 const dlgCreador = $("#dlgCreador");
