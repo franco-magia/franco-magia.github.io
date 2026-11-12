@@ -2126,7 +2126,7 @@ $("#btnSubir").onclick = async () => {
       await BD.guardar({ id, tipo, titulo, duracion: Math.round(duracion), fecha: new Date().toISOString(), video: blob, imagen: caratula });
       const bajar = (blob_, nombre) => { const a = document.createElement("a"); a.href = URL.createObjectURL(blob_); a.download = nombre; document.body.appendChild(a); a.click(); a.remove(); };
       bajar(blob, base + "." + ext); setTimeout(() => bajar(caratula, base + " - caratula.jpg"), 600);
-      PROY.borrar(); progreso(1); estado(`✅ ¡Subido! Ya lo ves en tu Franclips (solo vos). Cuando le digas a Claude "actualizá Franclips", lo publica para todo el mundo.`);
+      progreso(1); estado(`✅ ¡Subido! Ya lo ves en tu Franclips (solo vos). Cuando le digas a Claude "actualizá Franclips", lo publica para todo el mundo.`);
       videos.unshift({ id, tipo, titulo, duracion: Math.round(duracion), fecha: new Date().toISOString(), archivo: URL.createObjectURL(blob), caratula: URL.createObjectURL(caratula), pendiente: true });
       mostrarLista(); editorUsado = true; renderizando = false; $("#btnSubir").disabled = false; $("#cerrarEditor").disabled = false;
       return;
