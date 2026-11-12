@@ -94,6 +94,7 @@
 
     /* Reproductor */
     .ver { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 24px; padding-bottom: 40px; }
+    .ver video::cue { background: rgba(0,0,0,.72); color: #fff; font-family: "Nunito", sans-serif; font-weight: 800; font-size: 1.05em; }
     .ver video { width: 100%; max-height: 70vh; background: #000; border-radius: 14px; display: block; }
     .ver h2 { font-family: "Fredoka", sans-serif; font-weight: 500; margin: 14px 0 6px; font-size: 1.4rem; }
     .acciones-video { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 10px 0; }
@@ -617,7 +618,7 @@ async function cargarVideos() {
   let traje = false;
   if (navigator.onLine && location.protocol !== "file:") try { const r = await fetch("videos.json?v=" + Date.now(), { cache: "no-store" }); if (r.ok) { videos = (await r.json()).videos || []; traje = true; } } catch {}
   // Sin internet (en el archivo HTML): los videos publicados vienen adentro del archivo
-  if (!traje && window.VIDEOS_PUBLICADOS) videos = window.VIDEOS_PUBLICADOS.map(v => ({ ...v, archivo: aBlob(v.archivo) }));
+  if (!traje && window.VIDEOS_PUBLICADOS) videos = window.VIDEOS_PUBLICADOS.map(v => ({ ...v, archivo: aBlob(v.archivo), subtitulos: v.subtitulos ? aBlob(v.subtitulos) : v.subtitulos }));
   // Los tuyos que todavía esperan publicación (solo en esta compu)
   for (const v of await BD.todos()) {
     if (videos.some(x => x.id === v.id)) { BD.borrar(v.id); continue; } // ya lo publicó Claude
@@ -716,6 +717,9 @@ function abrirVideo(id, guardarHistoria = true) {
   // Por si un video no trae su duración, la averigua para que se pueda adelantar
   r.onloadedmetadata = () => { if (r.duration === Infinity) { r.currentTime = 1e9; r.ontimeupdate = () => { r.ontimeupdate = null; r.currentTime = 0; }; } };
   $("#verTitulo").textContent = v.titulo;
+  // Subtítulos (se pueden apagar con el botón de subtítulos del reproductor)
+  r.querySelectorAll("track").forEach(t => t.remove());
+  if (v.subtitulos) { const t = document.createElement("track"); t.kind = "subtitles"; t.srclang = "es"; t.label = "Español"; t.default = true; t.src = v.subtitulos; r.appendChild(t); r.textTracks[0] && (r.textTracks[0].mode = "showing"); }
   $("#btnBorrarVideo").hidden = !(v.pendiente || v.deClaude); $("#btnBorrarVideo").onclick = () => borrarLocal(v.id);
   $("#verFecha").textContent = new Date(v.fecha).toLocaleDateString("es-AR", { day: "numeric", month: "long", year: "numeric" }) + " · " + mmss(v.duracion || 0);
   const otros = $("#otrosVideos"); otros.innerHTML = "";
