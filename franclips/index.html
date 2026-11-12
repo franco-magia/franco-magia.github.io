@@ -1230,6 +1230,44 @@ function bucleVista() {
 }
 requestAnimationFrame(bucleVista);
 
+/* Convertidor: si el navegador no entiende el formato del video (por ejemplo H.265/HEVC de las grabaciones de Recortes),
+   lo pasamos a un mp4 común ACÁ MISMO en tu compu, con ffmpeg para navegadores */
+let ffmpegListo = null;
+const cargarScript = (src) => new Promise((res, rej) => { const s = document.createElement("script"); s.src = src; s.onload = res; s.onerror = rej; document.head.appendChild(s); });
+function obtenerFFmpeg() {
+  if (ffmpegListo) return ffmpegListo;
+  ffmpegListo = (async () => {
+    const B = "https://cdn.jsdelivr.net/npm/";
+    if (!window.FFmpegWASM) await cargarScript(B + "@ffmpeg/ffmpeg@0.12.10/dist/umd/ffmpeg.js");
+    if (!window.FFmpegUtil) await cargarScript(B + "@ffmpeg/util@0.12.1/dist/umd/index.js");
+    const { FFmpeg } = window.FFmpegWASM, { toBlobURL } = window.FFmpegUtil;
+    const ff = new FFmpeg();
+    await ff.load({
+      classWorkerURL: await toBlobURL(B + "@ffmpeg/ffmpeg@0.12.10/dist/umd/814.ffmpeg.js", "text/javascript"),
+      coreURL: await toBlobURL(B + "@ffmpeg/core@0.12.6/dist/esm/ffmpeg-core.js", "text/javascript"),
+      wasmURL: await toBlobURL(B + "@ffmpeg/core@0.12.6/dist/esm/ffmpeg-core.wasm", "application/wasm"),
+    });
+    return ff;
+  })();
+  ffmpegListo.catch(() => { ffmpegListo = null; });
+  return ffmpegListo;
+}
+async function convertirVideo(f, avisar) {
+  avisar("🔄 Este video tiene un formato que el navegador no entiende. Lo estoy convirtiendo acá en tu compu… (preparando)");
+  const ff = await obtenerFFmpeg();
+  const ext = (f.name.match(/\.[^.]+$/) || [".mp4"])[0].toLowerCase();
+  const entrada = "entrada" + ext, salida = "salida.mp4";
+  await ff.writeFile(entrada, new Uint8Array(await f.arrayBuffer()));
+  const prog = ({ progress }) => { const pc = Math.max(0, Math.min(100, Math.round(progress * 100))); avisar(`🔄 Convirtiendo "${f.name}" para que se pueda editar… ${pc} % (no cierres la página)`); progreso(progress); };
+  ff.on("progress", prog);
+  try {
+    await ff.exec(["-i", entrada, "-vf", "scale='min(1280,iw)':-2", "-c:v", "libx264", "-preset", "ultrafast", "-crf", "26", "-pix_fmt", "yuv420p", "-c:a", "aac", "-b:a", "160k", "-movflags", "+faststart", salida]);
+    const datos = await ff.readFile(salida);
+    if (!datos || !datos.length) throw new Error("vacío");
+    return new File([datos.buffer], f.name.replace(/\.[^.]+$/, "") + ".mp4", { type: "video/mp4" });
+  } finally { ff.off("progress", prog); progreso(0); try { await ff.deleteFile(entrada); await ff.deleteFile(salida); } catch {} }
+}
+
 /* Elegir el video */
 $("#archivoVideo").onchange = (e) => { const f = e.target.files[0]; e.target.value = ""; if (f) cargarVideo(f); };
 function cargarVideo(f) {
@@ -1241,10 +1279,21 @@ function cargarVideo(f) {
   window.esperaVideo = setTimeout(() => { if (!videoCargado) avisar(`⚠️ "${f.name}" está tardando mucho o no se puede abrir (código ${fuente.readyState}-${fuente.networkState}-${fuente.error ? fuente.error.code : 0}). Decile a Claude este código.`); }, 15000);
   fuente.preload = "auto";
   fuente.src = URL.createObjectURL(f);
-  fuente.onerror = () => avisar(`❌ "${f.name}" no se puede reproducir en este navegador (código ${fuente.error ? fuente.error.code : "?"}). Probá con otro archivo, o decile a Claude este código.`);
+  fuente.onerror = async () => {
+    const codigo = fuente.error ? fuente.error.code : 0;
+    if ((codigo === 4 || codigo === 3) && !f.convertido) return convertir();
+    avisar(`❌ "${f.name}" no se puede reproducir en este navegador (código ${codigo}). Probá con otro archivo, o decile a Claude este código.`);
+  };
   let hecho = false;
+  const convertir = async () => {
+    clearTimeout(window.esperaVideo);
+    try { const nuevo = await convertirVideo(f, avisar); nuevo.convertido = true; return cargarVideo(nuevo); }
+    catch (e) { return avisar(`❌ No pude convertir "${f.name}" (${e && e.message || e}). Decile a Claude este mensaje.`); }
+  };
   const listo = () => {
     if (hecho) return; hecho = true;
+    // El navegador abrió solo el sonido (no entiende la imagen): lo convertimos
+    if (!fuente.videoWidth && !f.convertido) { hecho = false; fuente.onloadedmetadata = null; return convertir(); }
     medidasLienzo();
     if (!$("#nombreVideo").value) $("#nombreVideo").value = f.name.replace(/\.[^.]+$/, "").replace(/[_-]+/g, " ");
     videoCargado = true; $("#msgVideo").textContent = ""; estado("");
