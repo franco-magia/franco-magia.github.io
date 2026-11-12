@@ -613,7 +613,11 @@ const BD = {
 /* ---------- 1. GALERÍA ---------- */
 let videos = [];
 async function cargarVideos() {
-  if (navigator.onLine && location.protocol !== "file:") try { const r = await fetch("videos.json?v=" + Date.now(), { cache: "no-store" }); if (r.ok) videos = (await r.json()).videos || []; } catch {}
+  const aBlob = (d) => { try { const [cab, b64] = d.split(","), bin = atob(b64), u = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i); return URL.createObjectURL(new Blob([u], { type: cab.slice(5, cab.indexOf(";")) })); } catch { return d; } };
+  let traje = false;
+  if (navigator.onLine && location.protocol !== "file:") try { const r = await fetch("videos.json?v=" + Date.now(), { cache: "no-store" }); if (r.ok) { videos = (await r.json()).videos || []; traje = true; } } catch {}
+  // Sin internet (en el archivo HTML): los videos publicados vienen adentro del archivo
+  if (!traje && window.VIDEOS_PUBLICADOS) videos = window.VIDEOS_PUBLICADOS.map(v => ({ ...v, archivo: aBlob(v.archivo) }));
   // Los tuyos que todavía esperan publicación (solo en esta compu)
   for (const v of await BD.todos()) {
     if (videos.some(x => x.id === v.id)) { BD.borrar(v.id); continue; } // ya lo publicó Claude
@@ -621,7 +625,6 @@ async function cargarVideos() {
   }
   // Videos que hizo Claude (solo vienen en el archivo HTML de Franco; si los borra, no vuelven más)
   const borrados = (() => { try { return JSON.parse(localStorage.getItem("franclips-borrados") || "[]"); } catch { return []; } })();
-  const aBlob = (d) => { try { const [cab, b64] = d.split(","), bin = atob(b64), u = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i); return URL.createObjectURL(new Blob([u], { type: cab.slice(5, cab.indexOf(";")) })); } catch { return d; } };
   for (const v of (window.VIDEOS_DE_CLAUDE || [])) if (!borrados.includes(v.id) && !videos.some(x => x.id === v.id)) videos.push({ ...v, archivo: aBlob(v.archivo), deClaude: true });
   videos.sort((a, b) => (b.fecha || "").localeCompare(a.fecha || ""));
   mostrarLista();

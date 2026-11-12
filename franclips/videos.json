@@ -1,3 +1,13 @@
 {
-  "videos": []
+ "videos": [
+  {
+   "id": "grabacion-de-pantalla-2026-11-12-083611-mwduabxd",
+   "tipo": "video",
+   "titulo": "Grabación de pantalla 2026-11-12 083611",
+   "archivo": "videos/grabacion-de-pantalla-2026-11-12-083611-mwduabxd.mp4",
+   "caratula": "caratulas/grabacion-de-pantalla-2026-11-12-083611-mwduabxd.jpg",
+   "duracion": 229,
+   "fecha": "2026-11-12T17:45:00Z"
+  }
+ ]
 }
