@@ -191,7 +191,7 @@
             <div style="font-size:3rem">🎞️</div>
             <b>Elegí el video que querés subir</b>
             <span class="nota">Por ejemplo, una grabación de pantalla o un gameplay. Ideal: menos de 10 minutos.<br>También podés <b>arrastrar</b> el video acá o <b>pegarlo</b> con Ctrl + V.</span>
-            <label class="boton principal">📂 Elegir video<input type="file" id="archivoVideo" accept="video/*" hidden></label>
+            <label class="boton principal">📂 Elegir video<input type="file" id="archivoVideo" accept="video/*,.mp4,.webm,.mkv,.mov,.avi,.wmv,.m4v,.3gp" hidden></label>
           </div>
           <canvas id="lienzoVideo" width="1280" height="720" hidden></canvas>
           <div class="controles-reproduccion" id="controlesVideo" hidden>
@@ -223,7 +223,7 @@
           <label class="campo"><select id="velocidad"><option value="0.5">0.5× (cámara lenta)</option><option value="1" selected>1× (normal)</option><option value="1.5">1.5×</option><option value="2">2× (rápido)</option></select></label>
 
           <h3>🎵 Música</h3>
-          <label class="campo"><span>Canción (mp3, etc.)</span><input type="file" id="archivoMusica" accept="audio/*"></label>
+          <label class="campo"><span>Canción (mp3, etc.)</span><input type="file" id="archivoMusica" accept="audio/*,.mp3,.wav,.ogg,.m4a,.aac,.flac"></label>
           <div class="fila">
             <label class="campo"><span>Volumen música</span><input type="range" id="volMusica" min="0" max="1" step="0.05" value="0.7"></label>
             <label class="campo"><span>Volumen del video</span><input type="range" id="volVideo" min="0" max="1" step="0.05" value="1"></label>
@@ -273,12 +273,12 @@
         <div class="panel">
           <label><input type="checkbox" id="sinCaratula"> <b>Sin carátula</b> (se usa un momento al azar del video)</label>
 
-          <label class="boton principal" style="display:block;text-align:center;margin:10px 0">📂 Subir una foto de tus archivos<input type="file" id="fotoArchivos" accept="image/*" hidden></label>
+          <label class="boton principal" style="display:block;text-align:center;margin:10px 0">📂 Subir una foto de tus archivos<input type="file" id="fotoArchivos" accept="image/*,.png,.jpg,.jpeg,.gif,.webp,.bmp" hidden></label>
           <p class="nota">También podés <b>pegar</b> una foto (Ctrl + V) o <b>arrastrarla</b> encima del dibujo.</p>
           <h3>🖼️ Fondo</h3>
           <label class="campo"><span>Tipo de fondo</span><select id="fondoTipo"><option value="video">Un momento del video</option><option value="foto">Una foto</option><option value="color">Un color</option><option value="degrade">Un degradé</option></select></label>
           <label class="campo" id="fondoMomentoCaja"><span>Momento del video</span><input type="range" id="fondoMomento" min="0" max="1000" value="300"></label>
-          <label class="campo" id="fondoFotoCaja" hidden><span>Foto de fondo</span><input type="file" id="fondoFoto" accept="image/*"></label>
+          <label class="campo" id="fondoFotoCaja" hidden><span>Foto de fondo</span><input type="file" id="fondoFoto" accept="image/*,.png,.jpg,.jpeg,.gif,.webp,.bmp"></label>
           <div class="fila" id="fondoColorCaja" hidden>
             <label class="campo"><span>Color 1</span><input type="color" id="fondoColor1" value="#4fd8ff"></label>
             <label class="campo"><span>Color 2</span><input type="color" id="fondoColor2" value="#8a5cff"></label>
@@ -299,7 +299,7 @@
             <button class="boton chico" data-nuevo="circulo">⚪ Círculo</button>
             <button class="boton chico" data-nuevo="estrella">⭐ Estrella</button>
             <button class="boton chico" data-nuevo="flecha">➡️ Flecha</button>
-            <label class="boton chico">📷 Foto<input type="file" id="nuevaFoto" accept="image/*" hidden></label>
+            <label class="boton chico">📷 Foto<input type="file" id="nuevaFoto" accept="image/*,.png,.jpg,.jpeg,.gif,.webp,.bmp" hidden></label>
           </div>
           <div class="emojis" id="emojis"></div>
 
