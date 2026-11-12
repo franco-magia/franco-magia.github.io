@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Franclips Videos</title>
+  <meta name="description" content="Franclips Videos: los videos de Franco. Gameplays, programación y más.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;700&family=Nunito:wght@400;600;700;800&family=Bangers&family=Pacifico&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --fondo: #140f2e; --fondo-2: #221a4a; --texto: #f3efff; --suave: #b9b0e0;
+      --celeste: #4fd8ff; --violeta: #8a5cff; --lila: #c86bff; --rojo: #ff4d6d;
+      --tarjeta: rgba(255,255,255,.06); --tarjeta-2: rgba(255,255,255,.1); --borde: rgba(255,255,255,.12);
+      --degrade: linear-gradient(135deg, #4fd8ff, #8a5cff 60%, #c86bff);
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; }
+    body { font-family: "Nunito", system-ui, sans-serif; color: var(--texto); background: radial-gradient(ellipse at top, var(--fondo-2), var(--fondo) 70%) fixed; min-height: 100vh; }
+    button, input, select, textarea { font: inherit; color: inherit; }
+    a { color: var(--celeste); }
+    [hidden] { display: none !important; }
+    .contenedor { max-width: 1180px; margin: 0 auto; padding: 0 16px; }
+
+    /* Encabezado */
+    header { display: flex; align-items: center; gap: 14px; padding: 16px 0; flex-wrap: wrap; }
+    .volver { color: var(--suave); text-decoration: none; font-size: .9rem; }
+    .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; color: inherit; }
+    .logo .play { width: 42px; height: 30px; border-radius: 9px; background: var(--degrade); display: grid; place-items: center; box-shadow: 0 0 20px rgba(138,92,255,.5); }
+    .logo .play::after { content: ""; border-left: 12px solid #fff; border-top: 7px solid transparent; border-bottom: 7px solid transparent; margin-left: 3px; }
+    .logo h1 { font-family: "Fredoka", sans-serif; font-size: 1.45rem; margin: 0; }
+    .logo h1 span { background: var(--degrade); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .buscar { flex: 1; min-width: 200px; display: flex; }
+    .buscar input { flex: 1; padding: 11px 16px; border-radius: 999px 0 0 999px; border: 1px solid var(--borde); background: rgba(0,0,0,.25); outline: none; }
+    .buscar input:focus { border-color: var(--violeta); }
+    .buscar button { border: 1px solid var(--borde); border-left: none; border-radius: 0 999px 999px 0; background: var(--tarjeta-2); padding: 0 16px; cursor: pointer; }
+    .boton { border: 1px solid var(--borde); background: var(--tarjeta); border-radius: 999px; padding: 9px 16px; cursor: pointer; font-weight: 700; white-space: nowrap; transition: background .15s, border-color .15s; }
+    .boton:hover { background: var(--tarjeta-2); border-color: var(--celeste); }
+    .boton.principal { background: var(--degrade); color: #fff; border-color: transparent; }
+    .boton.principal:hover { filter: brightness(1.1); }
+    .boton.chico { padding: 5px 11px; font-size: .85rem; }
+    .boton:disabled { opacity: .5; cursor: not-allowed; }
+
+    /* Galería */
+    .titulo-seccion { font-family: "Fredoka", sans-serif; font-weight: 500; font-size: 1.3rem; margin: 10px 0 14px; color: var(--suave); }
+    .grilla { display: grid; gap: 22px 18px; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); padding-bottom: 40px; }
+    .video-card { cursor: pointer; border-radius: 14px; outline: none; }
+    .video-card .miniatura { position: relative; aspect-ratio: 16/9; border-radius: 14px; overflow: hidden; background: #000; }
+    .video-card img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .25s; }
+    .video-card:hover img, .video-card:focus-visible img { transform: scale(1.04); }
+    .video-card .duracion { position: absolute; right: 8px; bottom: 8px; background: rgba(0,0,0,.8); font-size: .78rem; font-weight: 700; padding: 2px 6px; border-radius: 6px; }
+    .video-card h3 { font-size: 1rem; margin: 10px 2px 2px; line-height: 1.3; }
+    .video-card small { color: var(--suave); margin-left: 2px; }
+    .vacio { text-align: center; color: var(--suave); padding: 60px 16px; border: 2px dashed var(--borde); border-radius: 20px; }
+    .vacio .grande { font-size: 3rem; }
+
+    /* Reproductor */
+    .ver { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 24px; padding-bottom: 40px; }
+    .ver video { width: 100%; max-height: 70vh; background: #000; border-radius: 14px; display: block; }
+    .ver h2 { font-family: "Fredoka", sans-serif; font-weight: 500; margin: 14px 0 6px; font-size: 1.4rem; }
+    .acciones-video { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 10px 0; }
+    .pronto { font-size: .8rem; color: #ffcf4a; background: rgba(255,207,74,.12); border-radius: 999px; padding: 3px 10px; }
+    .comentarios { background: var(--tarjeta); border: 1px solid var(--borde); border-radius: 14px; padding: 14px; margin-top: 12px; }
+    .comentarios textarea { width: 100%; border-radius: 10px; border: 1px solid var(--borde); background: rgba(0,0,0,.25); padding: 10px; resize: none; }
+    .lateral h4 { margin: 0 0 10px; color: var(--suave); font-weight: 700; }
+    .lateral .video-card { display: grid; grid-template-columns: 140px 1fr; gap: 10px; margin-bottom: 12px; }
+    .lateral .video-card h3 { margin: 0; font-size: .9rem; }
+    @media (max-width: 860px) { .ver { grid-template-columns: 1fr; } }
+
+    /* Shorts */
+    .barra-shorts { width: 100%; display: flex; align-items: center; justify-content: center; gap: 10px; margin: 6px 0 18px; padding: 16px 20px;
+      border-radius: 18px; border: 1px solid var(--borde); background: linear-gradient(90deg, rgba(79,216,255,.14), rgba(200,107,255,.18)); cursor: pointer;
+      font-family: "Fredoka", sans-serif; font-size: 1.15rem; transition: transform .15s, border-color .15s; }
+    .barra-shorts:hover { transform: translateY(-2px); border-color: var(--celeste); }
+    .barra-shorts .flecha { transition: transform .2s; }
+    .barra-shorts[aria-expanded="true"] .flecha { transform: rotate(180deg); }
+    .grilla-shorts { display: grid; gap: 14px; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); padding-bottom: 40px; }
+    .grilla-shorts .video-card .miniatura { aspect-ratio: 9/16; }
+    #verShort { width: min(440px, calc(100vw - 16px)); padding: 14px; }
+    #verShort video { width: 100%; aspect-ratio: 9/16; max-height: calc(100dvh - 210px); background: #000; border-radius: 14px; display: block; object-fit: contain; }
+    #verShort .fila { justify-content: space-between; margin-top: 8px; }
+    footer { text-align: center; color: var(--suave); font-size: .78rem; padding: 10px 0 24px; }
+    footer button { background: none; border: none; color: var(--suave); text-decoration: underline; cursor: pointer; font-size: .78rem; opacity: .6; }
+
+    /* Editor */
+    dialog { border: 1px solid var(--borde); border-radius: 20px; background: #19133b; color: var(--texto); padding: 0; }
+    dialog::backdrop { background: rgba(5,3,15,.8); backdrop-filter: blur(3px); }
+    #editor { width: min(1220px, calc(100vw - 16px)); height: calc(100dvh - 16px); max-height: none; max-width: none; }
+    .editor-marco { display: flex; flex-direction: column; height: 100%; }
+    .editor-cabeza { display: flex; align-items: center; gap: 10px; padding: 12px 16px; border-bottom: 1px solid var(--borde); flex-wrap: wrap; }
+    .editor-cabeza h2 { font-family: "Fredoka", sans-serif; margin: 0; font-size: 1.25rem; flex: 1; }
+    .pestanas { display: flex; gap: 6px; }
+    .pestanas .boton.activa { background: var(--degrade); color: #fff; border-color: transparent; }
+    .editor-cuerpo { flex: 1; display: grid; grid-template-columns: minmax(0, 1fr) 340px; min-height: 0; }
+    .escenario { padding: 16px; display: flex; flex-direction: column; gap: 10px; min-height: 0; overflow: auto; }
+    .escenario canvas { width: 100%; max-height: 62vh; object-fit: contain; background: #000; border-radius: 12px; display: block; touch-action: none; }
+    .controles-reproduccion { display: flex; gap: 8px; align-items: center; }
+    .controles-reproduccion input[type=range] { flex: 1; }
+    .panel { border-left: 1px solid var(--borde); padding: 14px 16px; overflow-y: auto; }
+    .panel h3 { font-family: "Fredoka", sans-serif; font-weight: 500; font-size: 1.02rem; margin: 16px 0 8px; }
+    .panel h3:first-child { margin-top: 0; }
+    .campo { display: grid; gap: 4px; margin-bottom: 10px; font-size: .9rem; }
+    .campo > span { color: var(--suave); font-weight: 700; }
+    .campo input[type=text], .campo input[type=number], .campo select, .campo textarea { padding: 8px 10px; border-radius: 10px; border: 1px solid var(--borde); background: rgba(0,0,0,.3); outline: none; width: 100%; }
+    .campo select { background: #120d2c; }
+    .fila { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+    .fila .campo { flex: 1; min-width: 90px; }
+    .lista-textos { display: grid; gap: 6px; margin-bottom: 8px; }
+    .lista-textos .item { display: flex; gap: 6px; align-items: center; background: var(--tarjeta); border-radius: 10px; padding: 6px 8px; font-size: .85rem; }
+    .lista-textos .item span { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .objetos-botones { display: flex; flex-wrap: wrap; gap: 6px; }
+    .emojis { display: flex; flex-wrap: wrap; gap: 4px; margin: 6px 0; }
+    .emojis button { font-size: 1.3rem; background: var(--tarjeta); border: 1px solid var(--borde); border-radius: 8px; padding: 2px 6px; cursor: pointer; }
+    .nota { font-size: .8rem; color: var(--suave); line-height: 1.4; }
+    .editor-pie { border-top: 1px solid var(--borde); padding: 12px 16px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+    .barra { flex: 1; min-width: 160px; height: 10px; border-radius: 999px; background: var(--tarjeta-2); overflow: hidden; }
+    .barra div { height: 100%; width: 0; background: var(--degrade); transition: width .2s; }
+    #estadoSubida { font-size: .9rem; flex-basis: 100%; }
+    .elegir-video { display: grid; place-items: center; gap: 12px; text-align: center; padding: 50px 16px; border: 2px dashed var(--borde); border-radius: 16px; color: var(--suave); }
+    @media (max-width: 860px) { .editor-cuerpo { grid-template-columns: 1fr; overflow-y: auto; } .panel { border-left: none; border-top: 1px solid var(--borde); overflow: visible; } }
+
+    #dlgCreador { width: min(520px, calc(100vw - 32px)); padding: 22px; }
+    #dlgCreador input { width: 100%; padding: 10px; border-radius: 10px; border: 1px solid var(--borde); background: rgba(0,0,0,.3); }
+  </style>
+</head>
+<body>
+  <div class="contenedor">
+    <header>
+      <a class="volver" href="/">← Inicio</a>
+      <a class="logo" href="./" id="irInicio"><span class="play"></span><h1><span>Franclips</span> Videos</h1></a>
+      <form class="buscar" id="formBuscar" role="search" onsubmit="return false">
+        <input id="buscar" type="search" placeholder="Buscar videos…" aria-label="Buscar videos">
+        <button type="button" id="btnBuscar" aria-label="Buscar">🔍</button>
+      </form>
+      <button class="boton principal" id="btnEditar" hidden>✏️ Editar videos</button>
+      <button class="boton principal" id="btnShort" hidden>📱 Subir short</button>
+    </header>
+
+    <main id="vistaInicio">
+      <div class="titulo-seccion" id="tituloLista">Videos</div>
+      <div class="grilla" id="grilla"></div>
+      <button class="barra-shorts" id="btnShorts" aria-expanded="false">📱 Shorts <span id="cantShorts"></span> <span class="flecha">▼</span></button>
+      <div class="grilla-shorts" id="grillaShorts" hidden></div>
+    </main>
+
+    <main id="vistaVideo" hidden>
+      <div class="ver">
+        <div>
+          <video id="reproductor" controls playsinline></video>
+          <h2 id="verTitulo"></h2>
+          <div class="nota" id="verFecha"></div>
+          <div class="acciones-video">
+            <button class="boton chico" disabled title="Todavía no se puede">👍 Me gusta</button>
+            <button class="boton chico" disabled title="Todavía no se puede">👎 No me gusta</button>
+            <button class="boton chico" id="btnCompartir">🔗 Compartir</button>
+            <span class="pronto">Los likes, dislikes y comentarios todavía no se pueden usar. ¡Pronto!</span>
+          </div>
+          <div class="comentarios">
+            <b>💬 Comentarios</b>
+            <p class="nota">Todavía no se pueden dejar comentarios. ¡Muy pronto vas a poder!</p>
+            <textarea rows="2" disabled placeholder="Escribí un comentario… (todavía no se puede)"></textarea>
+          </div>
+        </div>
+        <aside class="lateral">
+          <h4>Más videos</h4>
+          <div id="otrosVideos"></div>
+        </aside>
+      </div>
+    </main>
+
+    <footer>Franclips Videos · hecho por Franco · <button id="btnCreador">modo creador</button></footer>
+  </div>
+
+  <!-- ===================== EDITOR ===================== -->
+  <dialog id="editor">
+    <div class="editor-marco">
+      <div class="editor-cabeza">
+        <h2>✏️ Editar video</h2>
+        <div class="pestanas">
+          <button class="boton activa" id="tabVideo">🎬 Video</button>
+          <button class="boton" id="tabCaratula">🖼️ Carátula</button>
+        </div>
+        <button class="boton" id="cerrarEditor">✕ Cerrar</button>
+      </div>
+
+      <!-- Pestaña VIDEO -->
+      <div class="editor-cuerpo" id="paginaVideo">
+        <div class="escenario">
+          <div class="elegir-video" id="elegirVideo">
+            <div style="font-size:3rem">🎞️</div>
+            <b>Elegí el video que querés subir</b>
+            <span class="nota">Por ejemplo, una grabación de pantalla o un gameplay. Ideal: menos de 10 minutos.</span>
+            <label class="boton principal">📂 Elegir video<input type="file" id="archivoVideo" accept="video/*" hidden></label>
+          </div>
+          <canvas id="lienzoVideo" width="1280" height="720" hidden></canvas>
+          <div class="controles-reproduccion" id="controlesVideo" hidden>
+            <button class="boton chico" id="btnPlay">▶️</button>
+            <input type="range" id="barraTiempo" min="0" max="1000" value="0" aria-label="Tiempo">
+            <span id="tiempoTexto" class="nota">0:00</span>
+          </div>
+          <video id="fuenteVideo" playsinline hidden></video>
+          <audio id="fuenteMusica" hidden></audio>
+        </div>
+        <div class="panel">
+          <h3>📐 Tipo</h3>
+          <label class="campo"><select id="tipoVideo"><option value="video">🎬 Video (horizontal)</option><option value="short">📱 Short (vertical)</option></select></label>
+          <p class="nota" id="notaShort" hidden>Los shorts se ven en vertical y conviene que duren menos de 1 minuto.</p>
+          <h3>📝 Nombre</h3>
+          <label class="campo"><span>Nombre del video</span><input type="text" id="nombreVideo" maxlength="100" placeholder="Ej: Mi primer gameplay"></label>
+
+          <h3>✂️ Recortar</h3>
+          <div class="fila">
+            <label class="campo"><span>Desde (seg)</span><input type="number" id="recorteDesde" min="0" step="0.1" value="0"></label>
+            <label class="campo"><span>Hasta (seg)</span><input type="number" id="recorteHasta" min="0" step="0.1" value="0"></label>
+          </div>
+          <div class="fila">
+            <button class="boton chico" id="marcarDesde">📍 Desde acá</button>
+            <button class="boton chico" id="marcarHasta">📍 Hasta acá</button>
+          </div>
+
+          <h3>⏩ Velocidad</h3>
+          <label class="campo"><select id="velocidad"><option value="0.5">0.5× (cámara lenta)</option><option value="1" selected>1× (normal)</option><option value="1.5">1.5×</option><option value="2">2× (rápido)</option></select></label>
+
+          <h3>🎵 Música</h3>
+          <label class="campo"><span>Canción (mp3, etc.)</span><input type="file" id="archivoMusica" accept="audio/*"></label>
+          <div class="fila">
+            <label class="campo"><span>Volumen música</span><input type="range" id="volMusica" min="0" max="1" step="0.05" value="0.7"></label>
+            <label class="campo"><span>Volumen del video</span><input type="range" id="volVideo" min="0" max="1" step="0.05" value="1"></label>
+          </div>
+          <label class="campo"><span>La música empieza en el segundo</span><input type="number" id="musicaDesde" min="0" step="0.5" value="0"></label>
+
+          <h3>🎨 Filtros</h3>
+          <div class="fila">
+            <label class="campo"><span>Brillo</span><input type="range" id="fBrillo" min="50" max="160" value="100"></label>
+            <label class="campo"><span>Contraste</span><input type="range" id="fContraste" min="50" max="160" value="100"></label>
+          </div>
+          <div class="fila">
+            <label class="campo"><span>Color</span><input type="range" id="fSaturacion" min="0" max="250" value="100"></label>
+            <label class="campo"><span>Desenfoque</span><input type="range" id="fBlur" min="0" max="8" value="0"></label>
+          </div>
+          <label class="campo"><span>Estilo</span><select id="fEstilo"><option value="">Normal</option><option value="grayscale(1)">Blanco y negro</option><option value="sepia(1)">Antiguo (sepia)</option><option value="hue-rotate(180deg)">Colores locos</option><option value="invert(1)">Negativo</option><option value="saturate(1.8) contrast(1.15)">Vibrante</option></select></label>
+
+          <h3>✨ Efectos</h3>
+          <div class="fila">
+            <label><input type="checkbox" id="eEspejo"> Espejo</label>
+            <label><input type="checkbox" id="eFade"> Aparecer y desaparecer</label>
+          </div>
+          <label class="campo"><span>Zoom</span><input type="range" id="eZoom" min="1" max="2" step="0.05" value="1"></label>
+          <label class="campo"><span>Marco de color</span><select id="eMarco"><option value="">Sin marco</option><option value="#4fd8ff">Celeste</option><option value="#8a5cff">Violeta</option><option value="#ff4d6d">Rojo</option><option value="#ffcf4a">Amarillo</option><option value="#ffffff">Blanco</option></select></label>
+
+          <h3>🔤 Textos y emojis en el video</h3>
+          <div class="lista-textos" id="listaTextos"></div>
+          <label class="campo"><span>Texto (podés poner emojis 😎)</span><input type="text" id="tTexto" maxlength="80" placeholder="¡Mirá esto!"></label>
+          <div class="fila">
+            <label class="campo"><span>Lugar</span><select id="tLugar"><option value="arriba">Arriba</option><option value="centro">Centro</option><option value="abajo" selected>Abajo</option></select></label>
+            <label class="campo"><span>Color</span><input type="color" id="tColor" value="#ffffff"></label>
+          </div>
+          <div class="fila">
+            <label class="campo"><span>Desde (seg)</span><input type="number" id="tDesde" min="0" step="0.5" value="0"></label>
+            <label class="campo"><span>Hasta (seg)</span><input type="number" id="tHasta" min="0" step="0.5" value="5"></label>
+          </div>
+          <button class="boton chico" id="agregarTexto">➕ Agregar texto</button>
+        </div>
+      </div>
+
+      <!-- Pestaña CARÁTULA -->
+      <div class="editor-cuerpo" id="paginaCaratula" hidden>
+        <div class="escenario">
+          <canvas id="lienzoCaratula" width="1280" height="720"></canvas>
+          <p class="nota">Tocá un objeto para elegirlo. Arrastralo para moverlo, usá el cuadradito blanco de la esquina para agrandarlo y el círculo de arriba para inclinarlo.</p>
+        </div>
+        <div class="panel">
+          <label><input type="checkbox" id="sinCaratula"> <b>Sin carátula</b> (se usa un momento al azar del video)</label>
+
+          <h3>🖼️ Fondo</h3>
+          <label class="campo"><span>Tipo de fondo</span><select id="fondoTipo"><option value="video">Un momento del video</option><option value="foto">Una foto</option><option value="color">Un color</option><option value="degrade">Un degradé</option></select></label>
+          <label class="campo" id="fondoMomentoCaja"><span>Momento del video</span><input type="range" id="fondoMomento" min="0" max="1000" value="300"></label>
+          <label class="campo" id="fondoFotoCaja" hidden><span>Foto de fondo</span><input type="file" id="fondoFoto" accept="image/*"></label>
+          <div class="fila" id="fondoColorCaja" hidden>
+            <label class="campo"><span>Color 1</span><input type="color" id="fondoColor1" value="#4fd8ff"></label>
+            <label class="campo"><span>Color 2</span><input type="color" id="fondoColor2" value="#8a5cff"></label>
+          </div>
+          <div class="fila">
+            <label class="campo"><span>Brillo</span><input type="range" id="cfBrillo" min="40" max="170" value="100"></label>
+            <label class="campo"><span>Contraste</span><input type="range" id="cfContraste" min="40" max="170" value="100"></label>
+          </div>
+          <div class="fila">
+            <label class="campo"><span>Color</span><input type="range" id="cfSaturacion" min="0" max="250" value="100"></label>
+            <label class="campo"><span>Desenfoque</span><input type="range" id="cfBlur" min="0" max="12" value="0"></label>
+          </div>
+
+          <h3>➕ Agregar objetos</h3>
+          <div class="objetos-botones">
+            <button class="boton chico" data-nuevo="texto">🔤 Texto</button>
+            <button class="boton chico" data-nuevo="rect">⬛ Rectángulo</button>
+            <button class="boton chico" data-nuevo="circulo">⚪ Círculo</button>
+            <button class="boton chico" data-nuevo="estrella">⭐ Estrella</button>
+            <button class="boton chico" data-nuevo="flecha">➡️ Flecha</button>
+            <label class="boton chico">📷 Foto<input type="file" id="nuevaFoto" accept="image/*" hidden></label>
+          </div>
+          <div class="emojis" id="emojis"></div>
+
+          <div id="propiedades" hidden>
+            <h3>🛠️ Objeto elegido</h3>
+            <label class="campo" id="propTextoCaja"><span>Texto</span><input type="text" id="propTexto" maxlength="60"></label>
+            <label class="campo" id="propFuenteCaja"><span>Letra</span><select id="propFuente"><option value="Bangers">Bangers (cómic)</option><option value="Fredoka">Fredoka (redonda)</option><option value="Pacifico">Pacifico (manuscrita)</option><option value="Nunito">Nunito (simple)</option><option value="Impact">Impact (gruesa)</option></select></label>
+            <div class="fila">
+              <label class="campo"><span>Color</span><input type="color" id="propColor" value="#ffffff"></label>
+              <label class="campo"><span>Borde</span><input type="color" id="propBorde" value="#000000"></label>
+            </div>
+            <label class="campo"><span>Inclinación</span><input type="range" id="propGiro" min="-180" max="180" value="0"></label>
+            <label class="campo"><span>Transparencia</span><input type="range" id="propOpacidad" min="0.1" max="1" step="0.05" value="1"></label>
+            <div id="propFiltrosFoto">
+              <div class="fila">
+                <label class="campo"><span>Brillo foto</span><input type="range" id="pfBrillo" min="40" max="170" value="100"></label>
+                <label class="campo"><span>Color foto</span><input type="range" id="pfSaturacion" min="0" max="250" value="100"></label>
+              </div>
+              <label class="campo"><span>Estilo foto</span><select id="pfEstilo"><option value="">Normal</option><option value="grayscale(1)">Blanco y negro</option><option value="sepia(1)">Antiguo</option><option value="invert(1)">Negativo</option><option value="hue-rotate(160deg)">Colores locos</option></select></label>
+            </div>
+            <div class="objetos-botones">
+              <button class="boton chico" id="propAdelante">⬆️ Adelante</button>
+              <button class="boton chico" id="propAtras">⬇️ Atrás</button>
+              <button class="boton chico" id="propEspejo">↔️ Espejo</button>
+              <button class="boton chico" id="propDuplicar">📄 Duplicar</button>
+              <button class="boton chico" id="propBorrar">🗑️ Borrar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="editor-pie">
+        <div class="barra"><div id="barraSubida"></div></div>
+        <button class="boton principal" id="btnSubir" disabled>⬆️ Subir</button>
+        <div id="estadoSubida" class="nota"></div>
+      </div>
+    </div>
+  </dialog>
+
+  <dialog id="verShort">
+    <video id="reproductorShort" controls playsinline loop></video>
+    <h3 id="shortTitulo" style="margin:10px 0 4px"></h3>
+    <div class="acciones-video">
+      <button class="boton chico" disabled title="Todavía no se puede">👍</button>
+      <button class="boton chico" disabled title="Todavía no se puede">👎</button>
+      <button class="boton chico" disabled title="Todavía no se puede">💬</button>
+      <span class="pronto">Likes y comentarios: ¡pronto!</span>
+    </div>
+    <div class="fila">
+      <button class="boton" id="shortAnterior">▲ Anterior</button>
+      <button class="boton" id="shortCerrar">✕ Cerrar</button>
+      <button class="boton" id="shortSiguiente">▼ Siguiente</button>
+    </div>
+  </dialog>
+
+  <dialog id="dlgCreador">
+    <h2 style="font-family:Fredoka;margin:0 0 8px">🔑 Modo creador</h2>
+    <p class="nota">Solo para Franco. Pegá el mismo token de GitHub que usás en Frankers (si ya lo activaste en Frankers en esta compu, ya funciona solo).</p>
+    <input id="creadorToken" type="password" placeholder="github_pat_…" autocomplete="off">
+    <p class="nota" id="creadorEstado"></p>
+    <div class="fila" style="justify-content:flex-end">
+      <button class="boton" id="creadorSalir">Salir del modo creador</button>
+      <button class="boton" id="creadorCerrar">Cerrar</button>
+      <button class="boton principal" id="creadorActivar">Activar</button>
+    </div>
+  </dialog>
+
+<script src="https://cdn.jsdelivr.net/npm/fix-webm-duration@1.0.6/fix-webm-duration.js"></script>
+<script>
+"use strict";
+/* =========================================================
+   FRANCLIPS VIDEOS · los videos de Franco
+   1. Galería, buscador y reproductor
+   2. Editor de video (recortar, velocidad, música, filtros, efectos, textos)
+   3. Editor de carátula (fondo + objetos que se mueven, agrandan y giran)
+   4. Subir (arma el video final en la compu y lo guarda en GitHub)
+   ========================================================= */
+const REPO = "franco-magia/franco-magia.github.io";
+const RAMA = "main";
+const CARPETA = "franclips";
+const $ = (s) => document.querySelector(s);
+const leer = (k, d) => { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch { return d; } };
+const escribir = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} };
+let token = leer("frankers-token", null); // el mismo modo creador que Frankers
+const escaparHTML = (s) => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const normalizar = (t) => t.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").trim();
+const mmss = (s) => { s = Math.max(0, Math.round(s)); return Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0"); };
+
+/* ---------- 1. GALERÍA ---------- */
+let videos = [];
+async function cargarVideos() {
+  try { const r = await fetch("videos.json?v=" + Date.now(), { cache: "no-store" }); if (r.ok) videos = (await r.json()).videos || []; } catch {}
+  videos.sort((a, b) => (b.fecha || "").localeCompare(a.fecha || ""));
+  mostrarLista();
+  const id = new URLSearchParams(location.search).get("v");
+  if (id) abrirVideo(id, false);
+}
+function tarjeta(v) {
+  const d = document.createElement("div");
+  d.className = "video-card"; d.tabIndex = 0;
+  d.innerHTML = `<div class="miniatura"><img src="${escaparHTML(v.caratula)}" alt="" loading="lazy"><span class="duracion">${mmss(v.duracion || 0)}</span></div>
+    <div><h3>${escaparHTML(v.titulo)}</h3><small>${new Date(v.fecha).toLocaleDateString("es-AR", { day: "numeric", month: "long", year: "numeric" })}</small></div>`;
+  d.onclick = () => abrirVideo(v.id);
+  d.onkeydown = (e) => { if (e.key === "Enter") abrirVideo(v.id); };
+  return d;
+}
+function mostrarLista() {
+  const q = normalizar($("#buscar").value);
+  const coinciden = q ? videos.filter(v => normalizar(v.titulo).includes(q)) : videos;
+  const lista = coinciden.filter(v => v.tipo !== "short"), shorts = coinciden.filter(v => v.tipo === "short");
+  $("#tituloLista").textContent = q ? `Resultados para "${$("#buscar").value}" (${coinciden.length})` : "Videos";
+  const g = $("#grilla"); g.innerHTML = "";
+  if (!lista.length) g.innerHTML = `<div class="vacio" style="grid-column:1/-1"><div class="grande">${q ? "🔍" : "🎬"}</div><p>${q ? "No encontré videos largos con ese nombre." : "Todavía no hay videos. ¡Muy pronto!"}</p></div>`;
+  lista.forEach(v => g.appendChild(tarjeta(v)));
+  // Shorts: en el rectángulo de abajo
+  $("#cantShorts").textContent = `(${shorts.length})`;
+  const gs = $("#grillaShorts"); gs.innerHTML = "";
+  if (!shorts.length) gs.innerHTML = `<div class="vacio" style="grid-column:1/-1"><div class="grande">📱</div><p>${q ? "No hay shorts con ese nombre." : "Todavía no hay shorts. ¡Pronto!"}</p></div>`;
+  shorts.forEach(v => gs.appendChild(tarjeta(v)));
+  if (q && shorts.length) abrirShorts(true);
+}
+function abrirShorts(abrir) {
+  $("#grillaShorts").hidden = !abrir; $("#btnShorts").setAttribute("aria-expanded", String(abrir));
+}
+$("#btnShorts").onclick = () => abrirShorts($("#grillaShorts").hidden);
+let shortActual = null;
+function verShort(id) {
+  const v = videos.find(x => x.id === id); if (!v) return;
+  shortActual = id;
+  const r = $("#reproductorShort"); r.src = v.archivo; r.poster = v.caratula;
+  r.onloadedmetadata = () => { if (r.duration === Infinity) { r.currentTime = 1e9; r.ontimeupdate = () => { r.ontimeupdate = null; r.currentTime = 0; }; } };
+  $("#shortTitulo").textContent = v.titulo;
+  if (!$("#verShort").open) $("#verShort").showModal();
+  r.play().catch(() => {});
+}
+function moverShort(paso) {
+  const lista = videos.filter(v => v.tipo === "short"); const i = lista.findIndex(v => v.id === shortActual);
+  if (i >= 0 && lista.length) verShort(lista[(i + paso + lista.length) % lista.length].id);
+}
+$("#shortAnterior").onclick = () => moverShort(-1);
+$("#shortSiguiente").onclick = () => moverShort(1);
+$("#shortCerrar").onclick = () => { $("#reproductorShort").pause(); $("#verShort").close(); };
+$("#verShort").addEventListener("close", () => $("#reproductorShort").pause());
+$("#verShort").addEventListener("keydown", (e) => { if (e.key === "ArrowDown") moverShort(1); if (e.key === "ArrowUp") moverShort(-1); });
+function abrirVideo(id, guardarHistoria = true) {
+  const v = videos.find(x => x.id === id); if (!v) return;
+  if (v.tipo === "short") return verShort(id);
+  $("#vistaInicio").hidden = true; $("#vistaVideo").hidden = false;
+  const r = $("#reproductor"); r.src = v.archivo; r.poster = v.caratula;
+  // Por si un video no trae su duración, la averigua para que se pueda adelantar
+  r.onloadedmetadata = () => { if (r.duration === Infinity) { r.currentTime = 1e9; r.ontimeupdate = () => { r.ontimeupdate = null; r.currentTime = 0; }; } };
+  $("#verTitulo").textContent = v.titulo;
+  $("#verFecha").textContent = new Date(v.fecha).toLocaleDateString("es-AR", { day: "numeric", month: "long", year: "numeric" }) + " · " + mmss(v.duracion || 0);
+  const otros = $("#otrosVideos"); otros.innerHTML = "";
+  videos.filter(x => x.id !== id).slice(0, 12).forEach(x => otros.appendChild(tarjeta(x)));
+  if (!otros.children.length) otros.innerHTML = `<p class="nota">Pronto va a haber más videos.</p>`;
+  if (guardarHistoria) history.pushState({ v: id }, "", "?v=" + id);
+  window.scrollTo(0, 0);
+}
+function volverInicio(guardarHistoria = true) {
+  $("#reproductor").pause(); $("#vistaVideo").hidden = true; $("#vistaInicio").hidden = false;
+  if (guardarHistoria) history.pushState({}, "", "./");
+}
+window.onpopstate = () => { const id = new URLSearchParams(location.search).get("v"); id ? abrirVideo(id, false) : volverInicio(false); };
+$("#irInicio").onclick = (e) => { e.preventDefault(); volverInicio(); };
+$("#buscar").oninput = () => { if (!$("#vistaVideo").hidden) volverInicio(); mostrarLista(); };
+$("#btnBuscar").onclick = () => { volverInicio(); mostrarLista(); };
+$("#btnCompartir").onclick = async () => {
+  try { await navigator.clipboard.writeText(location.href); $("#btnCompartir").textContent = "✅ ¡Link copiado!"; } catch { $("#btnCompartir").textContent = "🔗 " + location.href; }
+  setTimeout(() => $("#btnCompartir").textContent = "🔗 Compartir", 2500);
+};
+
+/* Modo creador */
+function actualizarModo() { $("#btnEditar").hidden = !token; $("#btnShort").hidden = !token; $("#creadorSalir").hidden = !token; }
+$("#btnCreador").onclick = () => { $("#creadorEstado").textContent = token ? "✅ El modo creador está activado." : ""; $("#dlgCreador").showModal(); };
+$("#creadorCerrar").onclick = () => $("#dlgCreador").close();
+$("#creadorSalir").onclick = () => { token = null; try { localStorage.removeItem("frankers-token"); } catch {} actualizarModo(); $("#dlgCreador").close(); };
+$("#creadorActivar").onclick = async () => {
+  const t = $("#creadorToken").value.trim(); if (!t) return;
+  $("#creadorEstado").textContent = "Probando…";
+  try {
+    const r = await fetch(`https://api.github.com/repos/${REPO}`, { headers: { Authorization: "Bearer " + t } });
+    if (!r.ok) throw 0;
+    token = t; escribir("frankers-token", t); actualizarModo(); $("#creadorEstado").textContent = "✅ ¡Listo! Ya podés editar videos.";
+  } catch { $("#creadorEstado").textContent = "❌ GitHub no aceptó ese token."; }
+};
+
+/* ---------- 2. EDITOR DE VIDEO ---------- */
+const fuente = $("#fuenteVideo"), musica = $("#fuenteMusica"), lienzoV = $("#lienzoVideo"), ctxV = lienzoV.getContext("2d");
+let videoCargado = false, textos = [], arrastrandoTiempo = false;
+const num = (id) => parseFloat($(id).value) || 0;
+function ajustes() {
+  return {
+    desde: num("#recorteDesde"), hasta: num("#recorteHasta") || fuente.duration || 0, velocidad: num("#velocidad") || 1,
+    filtro: `brightness(${num("#fBrillo")}%) contrast(${num("#fContraste")}%) saturate(${num("#fSaturacion")}%) blur(${num("#fBlur")}px) ${$("#fEstilo").value}`,
+    espejo: $("#eEspejo").checked, fade: $("#eFade").checked, zoom: num("#eZoom") || 1, marco: $("#eMarco").value,
+    short: $("#tipoVideo").value === "short",
+  };
+}
+// Dibuja un cuadro del video con todos los efectos. t = segundos desde el inicio del recorte
+function dibujarCuadro(ctx, W, H, a, t, conTextos = true) {
+  ctx.save();
+  ctx.fillStyle = "#000"; ctx.fillRect(0, 0, W, H);
+  const vw = fuente.videoWidth || 16, vh = fuente.videoHeight || 9;
+  const esc = (a.short ? Math.max(W / vw, H / vh) : Math.min(W / vw, H / vh)) * a.zoom, dw = vw * esc, dh = vh * esc; // short: llena la pantalla vertical
+  ctx.filter = a.filtro.trim() || "none";
+  ctx.translate(W / 2, H / 2); if (a.espejo) ctx.scale(-1, 1);
+  try { ctx.drawImage(fuente, -dw / 2, -dh / 2, dw, dh); } catch {}
+  ctx.restore();
+  if (conTextos) for (const tx of textos) if (t >= tx.desde && t <= tx.hasta) {
+    const tam = Math.round(Math.min(H, W * 1.2) * 0.075), y = tx.lugar === "arriba" ? H * 0.13 : tx.lugar === "centro" ? H * 0.5 : H * 0.88;
+    ctx.save(); ctx.font = `${tam}px Bangers, Impact, sans-serif`; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+    ctx.lineWidth = tam * 0.14; ctx.strokeStyle = "rgba(0,0,0,.85)"; ctx.lineJoin = "round";
+    ctx.strokeText(tx.texto, W / 2, y); ctx.fillStyle = tx.color; ctx.fillText(tx.texto, W / 2, y); ctx.restore();
+  }
+  if (a.marco) { ctx.save(); ctx.strokeStyle = a.marco; ctx.lineWidth = H * 0.025; ctx.strokeRect(0, 0, W, H); ctx.restore(); }
+  if (a.fade) {
+    const largo = (a.hasta - a.desde), f = Math.min(1, t / 0.8, (largo - t) / 0.8);
+    if (f < 1) { ctx.fillStyle = `rgba(0,0,0,${1 - Math.max(0, f)})`; ctx.fillRect(0, 0, W, H); }
+  }
+}
+function bucleVista() {
+  if (videoCargado && !$("#paginaVideo").hidden && !renderizando) {
+    const a = ajustes();
+    dibujarCuadro(ctxV, lienzoV.width, lienzoV.height, a, fuente.currentTime - a.desde);
+    if (!arrastrandoTiempo && fuente.duration) $("#barraTiempo").value = Math.round(fuente.currentTime / fuente.duration * 1000);
+    $("#tiempoTexto").textContent = mmss(fuente.currentTime) + " / " + mmss(fuente.duration || 0);
+    if (!fuente.paused && fuente.currentTime >= a.hasta) { fuente.pause(); musica.pause(); $("#btnPlay").textContent = "▶️"; }
+  }
+  requestAnimationFrame(bucleVista);
+}
+requestAnimationFrame(bucleVista);
+
+$("#archivoVideo").onchange = (e) => {
+  const f = e.target.files[0]; if (!f) return;
+  if (f.size > 500 * 1024 * 1024) { alert("Ese video es muy pesado (más de 500 MB). Probá con uno más corto."); return; }
+  fuente.src = URL.createObjectURL(f);
+  fuente.onloadedmetadata = () => {
+    medidasLienzo();
+    $("#recorteDesde").value = 0; $("#recorteHasta").value = fuente.duration.toFixed(1);
+    if (!$("#nombreVideo").value) $("#nombreVideo").value = f.name.replace(/\.[^.]+$/, "").replace(/[_-]+/g, " ");
+    videoCargado = true;
+    $("#elegirVideo").hidden = true; lienzoV.hidden = false; $("#controlesVideo").hidden = false; $("#btnSubir").disabled = false;
+    fuente.currentTime = Math.min(0.1, fuente.duration / 2);
+    actualizarFondoCaratula();
+  };
+};
+$("#btnPlay").onclick = () => {
+  if (!videoCargado) return;
+  const a = ajustes();
+  if (fuente.paused) {
+    if (fuente.currentTime < a.desde || fuente.currentTime >= a.hasta) fuente.currentTime = a.desde;
+    const { ac } = mesaDeSonido(); ac.resume();
+    fuente.playbackRate = a.velocidad; fuente.muted = false;
+    if (musica.src) { musica.currentTime = num("#musicaDesde") + (fuente.currentTime - a.desde) / a.velocidad; musica.play().catch(() => {}); }
+    fuente.play(); $("#btnPlay").textContent = "⏸️";
+  } else { fuente.pause(); musica.pause(); $("#btnPlay").textContent = "▶️"; }
+};
+$("#barraTiempo").oninput = () => { arrastrandoTiempo = true; if (fuente.duration) fuente.currentTime = $("#barraTiempo").value / 1000 * fuente.duration; };
+$("#barraTiempo").onchange = () => { arrastrandoTiempo = false; };
+$("#marcarDesde").onclick = () => { $("#recorteDesde").value = fuente.currentTime.toFixed(1); };
+$("#marcarHasta").onclick = () => { $("#recorteHasta").value = fuente.currentTime.toFixed(1); };
+$("#volVideo").oninput = aplicarVolumenes;
+$("#volMusica").oninput = aplicarVolumenes;
+$("#archivoMusica").onchange = (e) => { const f = e.target.files[0]; if (f) musica.src = URL.createObjectURL(f); };
+function dibujarListaTextos() {
+  const l = $("#listaTextos"); l.innerHTML = "";
+  textos.forEach((t, i) => {
+    const d = document.createElement("div"); d.className = "item";
+    d.innerHTML = `<span>${escaparHTML(t.texto)} · ${t.desde}s a ${t.hasta}s</span>`;
+    const b = document.createElement("button"); b.className = "boton chico"; b.textContent = "🗑️"; b.onclick = () => { textos.splice(i, 1); dibujarListaTextos(); };
+    d.appendChild(b); l.appendChild(d);
+  });
+}
+$("#agregarTexto").onclick = () => {
+  const texto = $("#tTexto").value.trim(); if (!texto) return;
+  textos.push({ texto, lugar: $("#tLugar").value, color: $("#tColor").value, desde: num("#tDesde"), hasta: num("#tHasta") || 9999 });
+  $("#tTexto").value = ""; dibujarListaTextos();
+};
+
+/* ---------- 3. EDITOR DE CARÁTULA ---------- */
+const lienzoC = $("#lienzoCaratula"), ctxC = lienzoC.getContext("2d");
+let CW = 1280, CH = 720; // la carátula de un short es vertical (720 × 1280)
+let objetos = [], elegido = null, fondoImagen = null, fondoFoto = null, caratulaTocada = false;
+const EMOJIS = "😎🔥🎮⭐😂😱👾🚀💥🏆🎵❤️👍🤖🐱🐶🌈⚡💎🎯👀🤯😍🥇✨".match(/\p{Extended_Pictographic}️?/gu);
+EMOJIS.forEach(e => { const b = document.createElement("button"); b.textContent = e; b.onclick = () => nuevoObjeto("emoji", e); $("#emojis").appendChild(b); });
+const filtroFondo = () => `brightness(${num("#cfBrillo")}%) contrast(${num("#cfContraste")}%) saturate(${num("#cfSaturacion")}%) blur(${num("#cfBlur")}px)`;
+
+async function actualizarFondoCaratula() {
+  if ($("#fondoTipo").value !== "video" || !videoCargado) return;
+  const t = num("#fondoMomento") / 1000 * (fuente.duration || 0);
+  fondoImagen = await capturarMomento(t);
+  dibujarCaratula();
+}
+// Saca una foto del video en el segundo t (con los filtros del video)
+function capturarMomento(t) {
+  return new Promise((res) => {
+    const estabaEn = fuente.currentTime, pausado = fuente.paused; fuente.pause();
+    const listo = () => {
+      fuente.removeEventListener("seeked", listo);
+      const c = document.createElement("canvas"); c.width = CW; c.height = CH;
+      const a = ajustes(); dibujarCuadro(c.getContext("2d"), CW, CH, { ...a, fade: false }, t - a.desde, false);
+      fuente.currentTime = estabaEn; if (!pausado) fuente.play();
+      res(c);
+    };
+    fuente.addEventListener("seeked", listo);
+    fuente.currentTime = Math.max(0, Math.min(t, (fuente.duration || 1) - 0.05));
+  });
+}
+function caja(o) { return { cx: o.x, cy: o.y, w: o.w, h: o.h, rot: o.rot * Math.PI / 180 }; }
+function dibujarObjeto(ctx, o) {
+  ctx.save(); ctx.translate(o.x, o.y); ctx.rotate(o.rot * Math.PI / 180); ctx.globalAlpha = o.opacidad;
+  if (o.espejo) ctx.scale(-1, 1);
+  const w = o.w, h = o.h;
+  ctx.fillStyle = o.color; ctx.strokeStyle = o.borde; ctx.lineJoin = "round";
+  if (o.tipo === "texto" || o.tipo === "emoji") {
+    const fuente_ = o.tipo === "emoji" ? "sans-serif" : `"${o.fuente}", Impact, sans-serif`;
+    let tam = h * 0.8; ctx.font = `${tam}px ${fuente_}`;
+    const ancho = ctx.measureText(o.texto).width || 1; if (ancho > w) { tam *= w / ancho; ctx.font = `${tam}px ${fuente_}`; }
+    ctx.textAlign = "center"; ctx.textBaseline = "middle";
+    if (o.tipo === "texto") { ctx.lineWidth = tam * 0.12; ctx.strokeText(o.texto, 0, 0); }
+    ctx.fillText(o.texto, 0, 0);
+  } else if (o.tipo === "rect") { ctx.lineWidth = 8; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(-w / 2, -h / 2, w, h, 18) : ctx.rect(-w / 2, -h / 2, w, h); ctx.fill(); ctx.stroke(); }
+  else if (o.tipo === "circulo") { ctx.lineWidth = 8; ctx.beginPath(); ctx.ellipse(0, 0, w / 2, h / 2, 0, 0, Math.PI * 2); ctx.fill(); ctx.stroke(); }
+  else if (o.tipo === "estrella") {
+    ctx.lineWidth = 6; ctx.beginPath();
+    for (let i = 0; i < 10; i++) { const a = -Math.PI / 2 + i * Math.PI / 5, r = i % 2 ? 0.45 : 1; ctx.lineTo(Math.cos(a) * w / 2 * r, Math.sin(a) * h / 2 * r); }
+    ctx.closePath(); ctx.fill(); ctx.stroke();
+  } else if (o.tipo === "flecha") {
+    ctx.lineWidth = 6; ctx.beginPath();
+    ctx.moveTo(-w / 2, -h * 0.18); ctx.lineTo(w * 0.15, -h * 0.18); ctx.lineTo(w * 0.15, -h / 2); ctx.lineTo(w / 2, 0);
+    ctx.lineTo(w * 0.15, h / 2); ctx.lineTo(w * 0.15, h * 0.18); ctx.lineTo(-w / 2, h * 0.18); ctx.closePath(); ctx.fill(); ctx.stroke();
+  } else if (o.tipo === "foto" && o.img) {
+    ctx.filter = `brightness(${o.fBrillo}%) saturate(${o.fSaturacion}%) ${o.fEstilo}`;
+    ctx.drawImage(o.img, -w / 2, -h / 2, w, h);
+  }
+  ctx.restore();
+}
+function dibujarCaratula(ctx = ctxC, conSeleccion = true) {
+  ctx.save(); ctx.clearRect(0, 0, CW, CH);
+  ctx.filter = filtroFondo();
+  const tipo = $("#fondoTipo").value;
+  if (tipo === "video" && fondoImagen) ctx.drawImage(fondoImagen, 0, 0, CW, CH);
+  else if (tipo === "foto" && fondoFoto) { const e = Math.max(CW / fondoFoto.width, CH / fondoFoto.height); ctx.drawImage(fondoFoto, (CW - fondoFoto.width * e) / 2, (CH - fondoFoto.height * e) / 2, fondoFoto.width * e, fondoFoto.height * e); }
+  else if (tipo === "degrade") { const g = ctx.createLinearGradient(0, 0, CW, CH); g.addColorStop(0, $("#fondoColor1").value); g.addColorStop(1, $("#fondoColor2").value); ctx.fillStyle = g; ctx.fillRect(0, 0, CW, CH); }
+  else if (tipo === "color") { ctx.fillStyle = $("#fondoColor1").value; ctx.fillRect(0, 0, CW, CH); }
+  else { ctx.fillStyle = "#222"; ctx.fillRect(0, 0, CW, CH); ctx.filter = "none"; ctx.fillStyle = "#888"; ctx.font = "40px Nunito"; ctx.textAlign = "center"; ctx.fillText(tipo === "video" ? "Elegí un video primero" : "Elegí una foto", CW / 2, CH / 2); }
+  ctx.restore();
+  objetos.forEach(o => dibujarObjeto(ctx, o));
+  if (conSeleccion && elegido) {
+    const o = elegido; ctx.save(); ctx.translate(o.x, o.y); ctx.rotate(o.rot * Math.PI / 180);
+    ctx.strokeStyle = "#4fd8ff"; ctx.lineWidth = 3; ctx.setLineDash([12, 8]); ctx.strokeRect(-o.w / 2 - 6, -o.h / 2 - 6, o.w + 12, o.h + 12); ctx.setLineDash([]);
+    ctx.fillStyle = "#fff"; ctx.strokeStyle = "#4fd8ff"; ctx.fillRect(o.w / 2 - 8, o.h / 2 - 8, 28, 28); ctx.strokeRect(o.w / 2 - 8, o.h / 2 - 8, 28, 28);
+    ctx.beginPath(); ctx.moveTo(0, -o.h / 2 - 6); ctx.lineTo(0, -o.h / 2 - 50); ctx.stroke();
+    ctx.beginPath(); ctx.arc(0, -o.h / 2 - 62, 15, 0, Math.PI * 2); ctx.fill(); ctx.stroke(); ctx.restore();
+  }
+}
+function nuevoObjeto(tipo, extra) {
+  const base = { tipo, x: CW / 2 + (Math.random() - .5) * 200, y: CH / 2 + (Math.random() - .5) * 120, w: 300, h: 200, rot: 0, opacidad: 1, espejo: false,
+    color: "#ffcf4a", borde: "#000000", fuente: "Bangers", texto: "", fBrillo: 100, fSaturacion: 100, fEstilo: "" };
+  if (tipo === "texto") Object.assign(base, { texto: "¡TU TÍTULO!", w: 640, h: 130, color: "#ffffff" });
+  if (tipo === "emoji") Object.assign(base, { texto: extra, w: 180, h: 180 });
+  if (tipo === "circulo") Object.assign(base, { w: 220, h: 220, color: "#ff4d6d" });
+  if (tipo === "rect") Object.assign(base, { color: "#8a5cff" });
+  if (tipo === "flecha") Object.assign(base, { w: 300, h: 140, color: "#ff4d6d", rot: -20 });
+  if (tipo === "foto") { const e = Math.min(500 / extra.width, 400 / extra.height); Object.assign(base, { img: extra, w: extra.width * e, h: extra.height * e }); }
+  objetos.push(base); elegir(base); caratulaTocada = true; $("#sinCaratula").checked = false;
+}
+function elegir(o) {
+  elegido = o; $("#propiedades").hidden = !o;
+  if (o) {
+    $("#propTextoCaja").hidden = o.tipo !== "texto"; $("#propFuenteCaja").hidden = o.tipo !== "texto"; $("#propFiltrosFoto").hidden = o.tipo !== "foto";
+    $("#propTexto").value = o.texto; $("#propFuente").value = o.fuente; $("#propColor").value = o.color; $("#propBorde").value = o.borde;
+    $("#propGiro").value = o.rot; $("#propOpacidad").value = o.opacidad; $("#pfBrillo").value = o.fBrillo; $("#pfSaturacion").value = o.fSaturacion; $("#pfEstilo").value = o.fEstilo;
+  }
+  dibujarCaratula();
+}
+// Puntero → coordenadas del lienzo
+function punto(e) { const r = lienzoC.getBoundingClientRect(); const e2 = Math.min(r.width / CW, r.height / CH); const ox = (r.width - CW * e2) / 2, oy = (r.height - CH * e2) / 2; return { x: (e.clientX - r.left - ox) / e2, y: (e.clientY - r.top - oy) / e2 }; }
+function local(o, p) { const a = -o.rot * Math.PI / 180, dx = p.x - o.x, dy = p.y - o.y; return { x: dx * Math.cos(a) - dy * Math.sin(a), y: dx * Math.sin(a) + dy * Math.cos(a) }; }
+let accion = null;
+lienzoC.addEventListener("pointerdown", (e) => {
+  const p = punto(e); lienzoC.setPointerCapture(e.pointerId);
+  if (elegido) {
+    const l = local(elegido, p);
+    if (Math.hypot(l.x, l.y + elegido.h / 2 + 62) < 30) { accion = { tipo: "girar" }; return; }
+    if (Math.abs(l.x - elegido.w / 2 - 6) < 30 && Math.abs(l.y - elegido.h / 2 - 6) < 30) { accion = { tipo: "tamano", w: elegido.w, h: elegido.h, l }; return; }
+  }
+  for (let i = objetos.length - 1; i >= 0; i--) { const o = objetos[i], l = local(o, p); if (Math.abs(l.x) <= o.w / 2 && Math.abs(l.y) <= o.h / 2) { elegir(o); accion = { tipo: "mover", dx: p.x - o.x, dy: p.y - o.y }; return; } }
+  elegir(null); accion = null;
+});
+lienzoC.addEventListener("pointermove", (e) => {
+  if (!accion || !elegido) return;
+  const p = punto(e), o = elegido;
+  if (accion.tipo === "mover") { o.x = p.x - accion.dx; o.y = p.y - accion.dy; }
+  if (accion.tipo === "girar") { o.rot = Math.round(Math.atan2(p.y - o.y, p.x - o.x) * 180 / Math.PI + 90); if (o.rot > 180) o.rot -= 360; $("#propGiro").value = o.rot; }
+  if (accion.tipo === "tamano") { const l = local(o, p), f = Math.max(0.1, (l.x + l.y) / (accion.l.x + accion.l.y)); o.w = Math.max(30, accion.w * f); o.h = Math.max(30, accion.h * f); }
+  dibujarCaratula();
+});
+lienzoC.addEventListener("pointerup", () => { accion = null; });
+const conElegido = (fn) => () => { if (elegido) { fn(elegido); dibujarCaratula(); } };
+$("#propTexto").oninput = conElegido(o => o.texto = $("#propTexto").value);
+$("#propFuente").onchange = conElegido(o => o.fuente = $("#propFuente").value);
+$("#propColor").oninput = conElegido(o => o.color = $("#propColor").value);
+$("#propBorde").oninput = conElegido(o => o.borde = $("#propBorde").value);
+$("#propGiro").oninput = conElegido(o => o.rot = num("#propGiro"));
+$("#propOpacidad").oninput = conElegido(o => o.opacidad = num("#propOpacidad"));
+$("#pfBrillo").oninput = conElegido(o => o.fBrillo = num("#pfBrillo"));
+$("#pfSaturacion").oninput = conElegido(o => o.fSaturacion = num("#pfSaturacion"));
+$("#pfEstilo").onchange = conElegido(o => o.fEstilo = $("#pfEstilo").value);
+$("#propEspejo").onclick = conElegido(o => o.espejo = !o.espejo);
+$("#propAdelante").onclick = conElegido(o => { const i = objetos.indexOf(o); if (i < objetos.length - 1) { objetos.splice(i, 1); objetos.splice(i + 1, 0, o); } });
+$("#propAtras").onclick = conElegido(o => { const i = objetos.indexOf(o); if (i > 0) { objetos.splice(i, 1); objetos.splice(i - 1, 0, o); } });
+$("#propDuplicar").onclick = () => { if (!elegido) return; const c = { ...elegido, x: elegido.x + 40, y: elegido.y + 40 }; objetos.push(c); elegir(c); };
+$("#propBorrar").onclick = () => { if (!elegido) return; objetos.splice(objetos.indexOf(elegido), 1); elegir(null); };
+document.querySelectorAll("[data-nuevo]").forEach(b => b.onclick = () => nuevoObjeto(b.dataset.nuevo));
+const cargarImagen = (f) => new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = URL.createObjectURL(f); });
+$("#nuevaFoto").onchange = async (e) => { const f = e.target.files[0]; if (f) nuevoObjeto("foto", await cargarImagen(f)); e.target.value = ""; };
+$("#fondoFoto").onchange = async (e) => { const f = e.target.files[0]; if (f) { fondoFoto = await cargarImagen(f); caratulaTocada = true; dibujarCaratula(); } };
+$("#fondoTipo").onchange = () => {
+  const t = $("#fondoTipo").value;
+  $("#fondoMomentoCaja").hidden = t !== "video"; $("#fondoFotoCaja").hidden = t !== "foto"; $("#fondoColorCaja").hidden = !(t === "color" || t === "degrade");
+  caratulaTocada = true; $("#sinCaratula").checked = false; dibujarCaratula();
+};
+$("#fondoMomento").onchange = () => { caratulaTocada = true; $("#sinCaratula").checked = false; actualizarFondoCaratula(); };
+["#fondoColor1", "#fondoColor2", "#cfBrillo", "#cfContraste", "#cfSaturacion", "#cfBlur"].forEach(id => $(id).oninput = () => { caratulaTocada = true; $("#sinCaratula").checked = false; dibujarCaratula(); });
+
+// Pestañas
+function pestana(cual) {
+  $("#paginaVideo").hidden = cual !== "video"; $("#paginaCaratula").hidden = cual !== "caratula";
+  $("#tabVideo").classList.toggle("activa", cual === "video"); $("#tabCaratula").classList.toggle("activa", cual === "caratula");
+  if (cual === "caratula") { fuente.pause(); musica.pause(); $("#btnPlay").textContent = "▶️"; if (!fondoImagen) actualizarFondoCaratula(); dibujarCaratula(); }
+}
+$("#tabVideo").onclick = () => pestana("video");
+$("#tabCaratula").onclick = () => pestana("caratula");
+function medidasLienzo() {
+  const short = $("#tipoVideo").value === "short";
+  if (short) { lienzoV.width = 720; lienzoV.height = 1280; }
+  else { const ancho = Math.min(1280, fuente.videoWidth || 1280); lienzoV.width = ancho; lienzoV.height = Math.round(ancho * (fuente.videoHeight || 720) / (fuente.videoWidth || 1280)); }
+  const [nw, nh] = short ? [720, 1280] : [1280, 720];
+  if (nw !== CW) { objetos.forEach(o => { o.x = o.x / CW * nw; o.y = o.y / CH * nh; }); CW = nw; CH = nh; lienzoC.width = CW; lienzoC.height = CH; fondoImagen = null; }
+  $("#notaShort").hidden = !short;
+  lienzoV.style.maxHeight = short ? "70vh" : ""; lienzoC.style.maxHeight = short ? "70vh" : "";
+  if (videoCargado) actualizarFondoCaratula(); else dibujarCaratula();
+}
+$("#tipoVideo").onchange = medidasLienzo;
+// Después de subir, el editor queda limpio para el próximo video
+let editorUsado = false;
+function limpiarEditor() {
+  fuente.pause(); musica.pause(); fuente.removeAttribute("src"); fuente.load(); musica.removeAttribute("src");
+  videoCargado = false; textos = []; objetos = []; elegido = null; fondoImagen = null; fondoFoto = null; caratulaTocada = false;
+  ["#archivoVideo", "#archivoMusica", "#fondoFoto", "#nombreVideo", "#tTexto"].forEach(id => $(id).value = "");
+  $("#recorteDesde").value = 0; $("#recorteHasta").value = 0; $("#sinCaratula").checked = false; $("#fondoTipo").value = "video";
+  $("#fondoMomentoCaja").hidden = false; $("#fondoFotoCaja").hidden = true; $("#fondoColorCaja").hidden = true;
+  $("#elegirVideo").hidden = false; lienzoV.hidden = true; $("#controlesVideo").hidden = true; $("#btnSubir").disabled = true;
+  $("#propiedades").hidden = true; dibujarListaTextos(); estado(""); progreso(0); editorUsado = false;
+}
+$("#btnEditar").onclick = () => { if (editorUsado) limpiarEditor(); $("#editor").showModal(); $("#tipoVideo").value = "video"; medidasLienzo(); pestana("video"); };
+$("#btnShort").onclick = () => { if (editorUsado) limpiarEditor(); $("#editor").showModal(); $("#tipoVideo").value = "short"; medidasLienzo(); pestana("video"); };
+$("#cerrarEditor").onclick = () => { if (renderizando) return; fuente.pause(); musica.pause(); $("#editor").close(); };
+
+/* Mesa de sonido: el video y la música pasan por acá (para escucharlos y para grabarlos) */
+let sonido = null;
+function mesaDeSonido() {
+  if (sonido) return sonido;
+  const ac = new (window.AudioContext || window.webkitAudioContext)();
+  const gv = ac.createGain(), gm = ac.createGain();
+  ac.createMediaElementSource(fuente).connect(gv); ac.createMediaElementSource(musica).connect(gm);
+  gv.connect(ac.destination); gm.connect(ac.destination);
+  sonido = { ac, gv, gm };
+  aplicarVolumenes();
+  return sonido;
+}
+function aplicarVolumenes() { if (sonido) { sonido.gv.gain.value = num("#volVideo"); sonido.gm.gain.value = num("#volMusica"); } }
+
+/* ---------- 4. SUBIR ---------- */
+let renderizando = false;
+const estado = (t) => { $("#estadoSubida").textContent = t; };
+const progreso = (p) => { $("#barraSubida").style.width = Math.round(p * 100) + "%"; };
+// Arma el video final: lo reproduce con los efectos sobre un lienzo y lo graba
+async function armarVideo() {
+  const a = ajustes();
+  if (a.hasta <= a.desde) throw new Error("El recorte está al revés: \"Hasta\" tiene que ser mayor que \"Desde\".");
+  const c = document.createElement("canvas"); c.width = lienzoV.width; c.height = lienzoV.height; const ctx = c.getContext("2d");
+  const { ac, gv, gm } = mesaDeSonido(); await ac.resume();
+  const destino = ac.createMediaStreamDestination();
+  gv.connect(destino); gm.connect(destino); aplicarVolumenes();
+  const flujo = c.captureStream(30);
+  destino.stream.getAudioTracks().forEach(t => flujo.addTrack(t));
+  const tipo = ["video/webm;codecs=vp9,opus", "video/webm;codecs=vp8,opus", "video/webm"].find(t => MediaRecorder.isTypeSupported(t)) || "";
+  const grabadora = new MediaRecorder(flujo, { mimeType: tipo, videoBitsPerSecond: 2_500_000 });
+  const partes = []; grabadora.ondataavailable = (e) => { if (e.data.size) partes.push(e.data); };
+  const terminado = new Promise(res => grabadora.onstop = res);
+  fuente.pause(); fuente.currentTime = a.desde; await new Promise(r => fuente.addEventListener("seeked", r, { once: true }));
+  fuente.playbackRate = a.velocidad; fuente.muted = false;
+  if (musica.src) musica.currentTime = num("#musicaDesde");
+  grabadora.start(500);
+  await fuente.play(); if (musica.src) musica.play().catch(() => {});
+  const largo = a.hasta - a.desde;
+  await new Promise((res) => {
+    const paso = () => {
+      const t = fuente.currentTime - a.desde;
+      dibujarCuadro(ctx, c.width, c.height, a, t);
+      progreso(Math.min(1, t / largo) * 0.6); estado(`🎬 Armando el video… ${Math.round(Math.min(1, t / largo) * 100)} % (tarda lo mismo que dura el video)`);
+      if (fuente.currentTime >= a.hasta || fuente.ended) return res();
+      requestAnimationFrame(paso);
+    };
+    paso();
+  });
+  fuente.pause(); musica.pause(); grabadora.stop(); await terminado;
+  gv.disconnect(destino); gm.disconnect(destino);
+  let blob = new Blob(partes, { type: "video/webm" });
+  // El navegador no guarda cuánto dura el video grabado: se lo agregamos para que se pueda adelantar
+  if (window.ysFixWebmDuration) { try { blob = await new Promise(res => window.ysFixWebmDuration(blob, largo / a.velocidad * 1000, res)); } catch {} }
+  return { blob, duracion: largo / a.velocidad };
+}
+async function armarCaratula() {
+  const c = document.createElement("canvas"); c.width = CW; c.height = CH;
+  if ($("#sinCaratula").checked || (!caratulaTocada && !objetos.length)) {
+    // Sin carátula: un momento al azar del video
+    const a = ajustes(), t = a.desde + Math.random() * (a.hasta - a.desde);
+    const foto = await capturarMomento(t); c.getContext("2d").drawImage(foto, 0, 0);
+  } else { if ($("#fondoTipo").value === "video" && !fondoImagen) await actualizarFondoCaratula(); dibujarCaratula(c.getContext("2d"), false); }
+  return new Promise(res => c.toBlob(res, "image/jpeg", 0.88));
+}
+const aBase64 = (blob) => new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(String(r.result).split(",")[1]); r.onerror = rej; r.readAsDataURL(blob); });
+async function gh(ruta, opciones = {}) {
+  const r = await fetch(`https://api.github.com/repos/${REPO}${ruta}`, { ...opciones, headers: { Authorization: "Bearer " + token, Accept: "application/vnd.github+json", "Content-Type": "application/json" } });
+  if (!r.ok) throw new Error(r.status === 401 || r.status === 403 ? "GitHub no aceptó el token. Revisá el modo creador." : `GitHub respondió ${r.status}.`);
+  return r.json();
+}
+// Sube el video, la carátula y la lista de videos en un solo cambio de GitHub
+async function subirAGitHub(video, caratula, info) {
+  const id = info.id, rutaVideo = `${CARPETA}/videos/${id}.webm`, rutaCaratula = `${CARPETA}/caratulas/${id}.jpg`;
+  estado("📦 Preparando el video para subir…"); progreso(0.65);
+  const [b64video, b64caratula] = await Promise.all([aBase64(video), aBase64(caratula)]);
+  estado("⬆️ Subiendo el video a GitHub… (si es largo, puede tardar)"); progreso(0.7);
+  const blobVideo = await gh("/git/blobs", { method: "POST", body: JSON.stringify({ content: b64video, encoding: "base64" }) });
+  progreso(0.85); estado("⬆️ Subiendo la carátula…");
+  const blobCaratula = await gh("/git/blobs", { method: "POST", body: JSON.stringify({ content: b64caratula, encoding: "base64" }) });
+  // Lista de videos actual (directo de GitHub, para no pisar nada)
+  let lista = { videos: [] };
+  try {
+    const actual = await gh(`/contents/${CARPETA}/videos.json?ref=${RAMA}`);
+    lista = JSON.parse(new TextDecoder().decode(Uint8Array.from(atob(actual.content.replace(/\n/g, "")), c => c.charCodeAt(0))));
+  } catch {}
+  lista.videos = (lista.videos || []).filter(v => v.id !== id);
+  lista.videos.push({ id, tipo: info.tipo, titulo: info.titulo, archivo: `videos/${id}.webm`, caratula: `caratulas/${id}.jpg`, duracion: Math.round(info.duracion), fecha: new Date().toISOString() });
+  progreso(0.9); estado("📝 Guardando en tu página…");
+  const ref = await gh(`/git/ref/heads/${RAMA}`);
+  const commit = await gh(`/git/commits/${ref.object.sha}`);
+  const arbol = await gh("/git/trees", { method: "POST", body: JSON.stringify({ base_tree: commit.tree.sha, tree: [
+    { path: rutaVideo, mode: "100644", type: "blob", sha: blobVideo.sha },
+    { path: rutaCaratula, mode: "100644", type: "blob", sha: blobCaratula.sha },
+    { path: `${CARPETA}/videos.json`, mode: "100644", type: "blob", content: JSON.stringify(lista, null, 2) + "\n" },
+  ] }) });
+  const nuevo = await gh("/git/commits", { method: "POST", body: JSON.stringify({ message: `Franclips: nuevo video "${info.titulo}" 🎬`, tree: arbol.sha, parents: [ref.object.sha] }) });
+  await gh(`/git/refs/heads/${RAMA}`, { method: "PATCH", body: JSON.stringify({ sha: nuevo.sha }) });
+  return lista;
+}
+$("#btnSubir").onclick = async () => {
+  const titulo = $("#nombreVideo").value.trim();
+  if (!token) return estado("❌ Activá el modo creador para subir videos.");
+  if (!videoCargado) return estado("❌ Primero elegí un video.");
+  if (!titulo) { pestana("video"); $("#nombreVideo").focus(); return estado("❌ Ponele un nombre al video."); }
+  renderizando = true; $("#btnSubir").disabled = true; $("#cerrarEditor").disabled = true;
+  try {
+    estado("🖼️ Armando la carátula…"); progreso(0.02);
+    const caratula = await armarCaratula();
+    const { blob, duracion } = await armarVideo();
+    if (blob.size > 95 * 1024 * 1024) throw new Error(`El video quedó muy pesado (${Math.round(blob.size / 1048576)} MB). GitHub acepta hasta unos 95 MB: recortalo un poco.`);
+    const id = normalizar(titulo).replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 40) + "-" + Date.now().toString(36);
+    const tipo = $("#tipoVideo").value;
+    if (tipo === "short" && duracion > 180) throw new Error("Un short puede durar como mucho 3 minutos. Recortalo un poco.");
+    const lista = await subirAGitHub(blob, caratula, { id, titulo, duracion, tipo });
+    progreso(1); estado(`✅ ¡Subido${tipo === "short" ? " tu short" : ""}! "${titulo}" aparece en tu página en uno o dos minutos (GitHub tiene que publicarlo).`);
+    videos = lista.videos.map(v => v.id === id ? { ...v, archivo: URL.createObjectURL(blob), caratula: URL.createObjectURL(caratula) } : v);
+    videos.sort((a, b) => (b.fecha || "").localeCompare(a.fecha || "")); mostrarLista(); editorUsado = true;
+  } catch (e) { console.error(e); estado("❌ " + (e.message || "No se pudo subir.")); progreso(0); }
+  renderizando = false; $("#btnSubir").disabled = false; $("#cerrarEditor").disabled = false;
+};
+
+actualizarModo();
+cargarVideos();
+document.fonts && document.fonts.ready.then(() => dibujarCaratula());
+dibujarCaratula();
+</script>
+</body>
+</html>
