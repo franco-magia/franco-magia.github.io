@@ -82,6 +82,8 @@
     .video-card .miniatura { position: relative; aspect-ratio: 16/9; border-radius: 14px; overflow: hidden; background: #000; }
     .video-card img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .25s; }
     .video-card:hover img, .video-card:focus-visible img { transform: scale(1.04); }
+    .borrar-card { position: absolute; left: 8px; top: 8px; border: none; border-radius: 10px; background: rgba(0,0,0,.75); padding: 5px 8px; cursor: pointer; font-size: 1rem; opacity: .85; }
+    .borrar-card:hover { background: #ff4d6d; opacity: 1; }
     .video-card .duracion { position: absolute; right: 8px; bottom: 8px; background: rgba(0,0,0,.8); font-size: .78rem; font-weight: 700; padding: 2px 6px; border-radius: 6px; }
     .video-card h3 { font-size: 1rem; margin: 10px 2px 2px; line-height: 1.3; }
     .video-card small { color: var(--suave); margin-left: 2px; }
@@ -291,6 +293,7 @@
             <button class="boton chico" disabled title="Todavía no se puede">👍 Me gusta</button>
             <button class="boton chico" disabled title="Todavía no se puede">👎 No me gusta</button>
             <button class="boton chico" id="btnCompartir">🔗 Compartir</button>
+            <button class="boton chico" id="btnBorrarVideo" hidden>🗑️ Borrar para siempre</button>
             <span class="pronto">Los likes, dislikes y comentarios todavía no se pueden usar. ¡Pronto!</span>
           </div>
           <div class="comentarios">
@@ -550,7 +553,7 @@
     <p class="nota" style="text-align:center;margin:6px 0 0">Usá la ruedita del mouse (o deslizá el dedo) para pasar de short 🖱️</p>
     <div class="fila">
       <button class="boton" id="shortAnterior">▲ Anterior</button>
-      <button class="boton" id="shortCerrar">✕ Cerrar</button>
+      <button class="boton chico" id="shortBorrar" hidden>🗑️ Borrar</button><button class="boton" id="shortCerrar">✕ Cerrar</button>
       <button class="boton" id="shortSiguiente">▼ Siguiente</button>
     </div>
   </dialog>
@@ -596,7 +599,7 @@ const BD = {
   abrir() { return new Promise((res, rej) => { const r = indexedDB.open("franclips", 1); r.onupgradeneeded = () => r.result.createObjectStore("videos", { keyPath: "id" }); r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); }); },
   async guardar(v) { const db = await this.abrir(); return new Promise((res, rej) => { const t = db.transaction("videos", "readwrite"); t.objectStore("videos").put(v); t.oncomplete = res; t.onerror = () => rej(t.error); }); },
   async todos() { try { const db = await this.abrir(); return await new Promise(res => { const r = db.transaction("videos").objectStore("videos").getAll(); r.onsuccess = () => res(r.result || []); r.onerror = () => res([]); }); } catch { return []; } },
-  async borrar(id) { try { const db = await this.abrir(); db.transaction("videos", "readwrite").objectStore("videos").delete(id); } catch {} },
+  async borrar(id) { try { const db = await this.abrir(); await new Promise((res, rej) => { const tx = db.transaction("videos", "readwrite"); tx.objectStore("videos").delete(id); tx.oncomplete = res; tx.onerror = rej; }); } catch {} },
 };
 
 /* ---------- 1. GALERÍA ---------- */
@@ -618,9 +621,24 @@ function tarjeta(v) {
   d.className = "video-card"; d.tabIndex = 0;
   d.innerHTML = `<div class="miniatura"><img src="${escaparHTML(v.caratula)}" alt="" loading="lazy"><span class="duracion">${mmss(v.duracion || 0)}</span></div>
     <div><h3>${escaparHTML(v.titulo)}</h3>${v.pendiente ? '<small style="color:#ffcf4a">🔒 Solo vos · esperando publicación</small><br>' : ""}<small>${new Date(v.fecha).toLocaleDateString("es-AR", { day: "numeric", month: "long", year: "numeric" })}</small></div>`;
+  if (v.pendiente) {
+    const b = document.createElement("button"); b.className = "borrar-card"; b.title = "Borrar para siempre"; b.textContent = "🗑️";
+    b.onclick = (e) => { e.stopPropagation(); borrarLocal(v.id); };
+    d.querySelector(".miniatura").appendChild(b);
+  }
   d.onclick = () => abrirVideo(v.id);
   d.onkeydown = (e) => { if (e.key === "Enter") abrirVideo(v.id); };
   return d;
+}
+// Borrar para siempre uno de TUS videos (los que están solo en esta compu)
+async function borrarLocal(id) {
+  const v = videos.find(x => x.id === id); if (!v || !v.pendiente) return;
+  if (!confirm(`¿Borrar "${v.titulo}" para siempre?\n\nSe borra de esta compu y no se puede recuperar.`)) return;
+  await BD.borrar(id);
+  videos = videos.filter(x => x.id !== id);
+  if (!$("#vistaVideo").hidden) volverInicio();
+  if ($("#verShort").open) { $("#reproductorShort").pause(); $("#verShort").close(); }
+  mostrarLista();
 }
 let seccion = "inicio";
 const suscripto = () => { try { return localStorage.getItem("franclips-suscripto") === "1"; } catch { return false; } };
@@ -661,6 +679,7 @@ function verShort(id) {
   const r = $("#reproductorShort"); r.src = v.archivo; r.poster = v.caratula;
   r.onloadedmetadata = () => { if (r.duration === Infinity) { r.currentTime = 1e9; r.ontimeupdate = () => { r.ontimeupdate = null; r.currentTime = 0; }; } };
   $("#shortTitulo").textContent = v.titulo;
+  $("#shortBorrar").hidden = !v.pendiente; $("#shortBorrar").onclick = () => borrarLocal(v.id);
   if (!$("#verShort").open) $("#verShort").showModal();
   r.play().catch(() => {});
 }
@@ -681,6 +700,7 @@ function abrirVideo(id, guardarHistoria = true) {
   // Por si un video no trae su duración, la averigua para que se pueda adelantar
   r.onloadedmetadata = () => { if (r.duration === Infinity) { r.currentTime = 1e9; r.ontimeupdate = () => { r.ontimeupdate = null; r.currentTime = 0; }; } };
   $("#verTitulo").textContent = v.titulo;
+  $("#btnBorrarVideo").hidden = !v.pendiente; $("#btnBorrarVideo").onclick = () => borrarLocal(v.id);
   $("#verFecha").textContent = new Date(v.fecha).toLocaleDateString("es-AR", { day: "numeric", month: "long", year: "numeric" }) + " · " + mmss(v.duracion || 0);
   const otros = $("#otrosVideos"); otros.innerHTML = "";
   videos.filter(x => x.id !== id).slice(0, 12).forEach(x => otros.appendChild(tarjeta(x)));
