@@ -21,10 +21,40 @@
     button, input, select, textarea { font: inherit; color: inherit; }
     a { color: var(--celeste); }
     [hidden] { display: none !important; }
-    .contenedor { max-width: 1180px; margin: 0 auto; padding: 0 16px; }
+    /* Estructura: barra de arriba, menú a la izquierda y contenido */
+    .app { display: grid; grid-template-columns: 232px minmax(0, 1fr); grid-template-rows: auto 1fr; min-height: 100vh; }
+    .barra-top { grid-column: 1 / -1; position: sticky; top: 0; z-index: 20; display: flex; align-items: center; gap: 18px; padding: 12px 24px; background: rgba(20,15,46,.88); backdrop-filter: blur(12px); border-bottom: 1px solid var(--borde); }
+    .menu-boton { display: none; background: none; border: none; font-size: 1.4rem; cursor: pointer; padding: 4px 8px; border-radius: 10px; }
+    .menu-boton:hover { background: var(--tarjeta); }
+    .barra-top .buscar { max-width: 620px; margin: 0 auto; }
+    .acciones-top { display: flex; gap: 10px; }
+    .menu { position: sticky; top: 67px; align-self: start; height: calc(100vh - 67px); overflow-y: auto; padding: 14px 12px; display: flex; flex-direction: column; gap: 4px; border-right: 1px solid var(--borde); }
+    .menu .item { display: flex; align-items: center; gap: 16px; padding: 11px 16px; border-radius: 12px; color: var(--texto); text-decoration: none; font-weight: 700; }
+    .menu .item .ic { font-size: 1.2rem; width: 26px; text-align: center; }
+    .menu .item:hover { background: var(--tarjeta); }
+    .menu .item.activo { background: var(--tarjeta-2); box-shadow: inset 3px 0 0 var(--celeste); }
+    .menu-sep { height: 1px; background: var(--borde); margin: 10px 6px; }
+    .menu-pie { margin-top: auto; padding: 12px 16px; font-size: .78rem; color: var(--suave); line-height: 1.6; }
+    .menu-pie button { background: none; border: none; color: var(--suave); text-decoration: underline; cursor: pointer; padding: 0; font-size: .78rem; }
+    .contenido { padding: 26px 34px 60px; min-width: 0; }
+    .canal { display: flex; align-items: center; gap: 22px; padding: 24px; margin-bottom: 30px; border-radius: 20px; background: var(--tarjeta); border: 1px solid var(--borde); flex-wrap: wrap; }
+    .canal-avatar { width: 84px; height: 84px; border-radius: 50%; display: grid; place-items: center; font-family: "Pacifico", cursive; font-size: 1.7rem; color: #fff; background: linear-gradient(135deg, #4fd8ff, #8a5cff 60%, #c86bff); box-shadow: 0 0 30px rgba(120,110,255,.5); }
+    .canal h2 { margin: 0; font-family: "Fredoka", sans-serif; }
+    .canal > div:nth-child(2) { flex: 1; }
+    #btnSuscribir.suscripto { background: var(--tarjeta-2); color: var(--texto); }
+    @media (max-width: 860px) {
+      .app { grid-template-columns: 1fr; }
+      .menu-boton { display: block; }
+      .barra-top { padding: 10px 12px; gap: 10px; flex-wrap: wrap; }
+      .barra-top .buscar { order: 5; flex-basis: 100%; }
+      .logo h1 { font-size: 1.15rem; }
+      .menu { position: fixed; top: 0; left: 0; height: 100vh; width: 250px; z-index: 30; background: #160f36; transform: translateX(-100%); transition: transform .2s; box-shadow: 10px 0 30px rgba(0,0,0,.5); }
+      .menu.abierto { transform: none; }
+      .contenido { padding: 18px 14px 50px; }
+      .acciones-top .boton { padding: 7px 11px; font-size: .85rem; }
+    }
 
     /* Encabezado */
-    header { display: flex; align-items: center; gap: 14px; padding: 16px 0; flex-wrap: wrap; }
     .volver { color: var(--suave); text-decoration: none; font-size: .9rem; }
     .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; color: inherit; }
     .logo .play { width: 42px; height: 30px; border-radius: 9px; background: var(--degrade); display: grid; place-items: center; box-shadow: 0 0 20px rgba(138,92,255,.5); }
@@ -43,8 +73,10 @@
     .boton:disabled { opacity: .5; cursor: not-allowed; }
 
     /* Galería */
-    .titulo-seccion { font-family: "Fredoka", sans-serif; font-weight: 500; font-size: 1.3rem; margin: 10px 0 14px; color: var(--suave); }
-    .grilla { display: grid; gap: 22px 18px; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); padding-bottom: 40px; }
+    .titulo-seccion { font-family: "Fredoka", sans-serif; font-weight: 500; font-size: 1.35rem; margin: 0 0 18px; }
+    .titulo-seccion:empty { display: none; }
+    .grilla { display: grid; gap: 34px 22px; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); padding-bottom: 42px; }
+    .grilla:empty, .grilla-shorts:empty, .grilla-shorts.estante:empty { display: none; }
     .video-card { cursor: pointer; border-radius: 14px; outline: none; }
     .video-card .miniatura { position: relative; aspect-ratio: 16/9; border-radius: 14px; overflow: hidden; background: #000; }
     .video-card img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .25s; }
@@ -75,7 +107,10 @@
     .barra-shorts:hover { transform: translateY(-2px); border-color: var(--celeste); }
     .barra-shorts .flecha { transition: transform .2s; }
     .barra-shorts[aria-expanded="true"] .flecha { transform: rotate(180deg); }
-    .grilla-shorts { display: grid; gap: 14px; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); padding-bottom: 40px; }
+    .grilla-shorts { display: grid; gap: 22px 16px; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); padding-bottom: 42px; }
+    .grilla-shorts.estante { display: flex; gap: 16px; overflow-x: auto; padding-bottom: 16px; margin-bottom: 26px; scroll-snap-type: x mandatory; }
+    .grilla-shorts.estante .video-card { scroll-snap-align: start; flex: 0 0 190px; min-width: 0; }
+    .grilla-shorts .video-card, .grilla .video-card { min-width: 0; }
     .grilla-shorts .video-card .miniatura { aspect-ratio: 9/16; }
     #verShort { width: min(440px, calc(100vw - 16px)); padding: 14px; }
     #verShort video { width: 100%; aspect-ratio: 9/16; max-height: calc(100dvh - 210px); background: #000; border-radius: 14px; display: block; object-fit: contain; }
@@ -205,24 +240,44 @@
   </style>
 </head>
 <body>
-  <div class="contenedor">
-    <header>
-      <a class="volver" href="/">← Inicio</a>
+  <div class="app">
+    <header class="barra-top">
+      <button class="menu-boton" id="menuBoton" aria-label="Menú">☰</button>
       <a class="logo" href="./" id="irInicio"><span class="play"></span><h1><span>Franclips</span> Videos</h1></a>
       <form class="buscar" id="formBuscar" role="search" onsubmit="return false">
         <input id="buscar" type="search" placeholder="Buscar videos…" aria-label="Buscar videos">
         <button type="button" id="btnBuscar" aria-label="Buscar">🔍</button>
       </form>
-      <button class="boton principal" id="btnEditar" hidden>✏️ Editar videos</button>
-      <button class="boton principal" id="btnShort" hidden>📱 Subir short</button>
+      <div class="acciones-top">
+        <button class="boton principal" id="btnEditar" hidden>✏️ Editar videos</button>
+        <button class="boton" id="btnShort" hidden>📱 Subir short</button>
+      </div>
     </header>
 
-    <main id="vistaInicio">
-      <div class="titulo-seccion" id="tituloLista">Videos</div>
-      <div class="grilla" id="grilla"></div>
-      <button class="barra-shorts" id="btnShorts" aria-expanded="false">📱 Shorts <span id="cantShorts"></span> <span class="flecha">▼</span></button>
-      <div class="grilla-shorts" id="grillaShorts" hidden></div>
-    </main>
+    <nav class="menu" id="menu">
+      <a class="item activo" data-sec="inicio" href="./"><span class="ic">🏠</span><span>Inicio</span></a>
+      <a class="item" data-sec="videos" href="./"><span class="ic">🎬</span><span>Videos</span></a>
+      <a class="item" data-sec="shorts" href="./"><span class="ic">📱</span><span>Shorts</span></a>
+      <a class="item" data-sec="subs" href="./"><span class="ic">📺</span><span>Suscripciones</span></a>
+      <div class="menu-sep"></div>
+      <a class="item" href="/"><span class="ic">🏡</span><span>francosandes.com</span></a>
+      <div class="menu-pie">Franclips Videos · hecho por Franco<br><button id="btnCreador">modo creador</button></div>
+    </nav>
+
+    <div class="contenido">
+      <main id="vistaInicio">
+        <section id="vistaSubs" hidden>
+          <div class="canal">
+            <div class="canal-avatar">F.S</div>
+            <div><h2>Franco Sandes</h2><p class="nota" id="canalCuenta"></p></div>
+            <button class="boton principal" id="btnSuscribir">🔔 Suscribirme</button>
+          </div>
+        </section>
+        <h2 class="titulo-seccion" id="tituloLista"></h2>
+        <div class="grilla" id="grilla"></div>
+        <h2 class="titulo-seccion" id="tituloShorts">📱 Shorts</h2>
+        <div class="grilla-shorts" id="grillaShorts"></div>
+      </main>
 
     <main id="vistaVideo" hidden>
       <div class="ver">
@@ -243,13 +298,13 @@
           </div>
         </div>
         <aside class="lateral">
-          <h4>Más videos</h4>
+          <h4 id="otrosTitulo">Más videos</h4>
           <div id="otrosVideos"></div>
         </aside>
       </div>
     </main>
 
-    <footer>Franclips Videos · hecho por Franco · <button id="btnCreador">modo creador</button></footer>
+    </div>
   </div>
 
   <!-- ===================== EDITOR ===================== -->
@@ -565,25 +620,37 @@ function tarjeta(v) {
   d.onkeydown = (e) => { if (e.key === "Enter") abrirVideo(v.id); };
   return d;
 }
+let seccion = "inicio";
+const suscripto = () => { try { return localStorage.getItem("franclips-suscripto") === "1"; } catch { return false; } };
 function mostrarLista() {
   const q = normalizar($("#buscar").value);
   const coinciden = q ? videos.filter(v => normalizar(v.titulo).includes(q)) : videos;
-  const lista = coinciden.filter(v => v.tipo !== "short"), shorts = coinciden.filter(v => v.tipo === "short");
-  $("#tituloLista").textContent = q ? `Resultados para "${$("#buscar").value}" (${coinciden.length})` : "Videos";
+  const largos = coinciden.filter(v => v.tipo !== "short"), shorts = coinciden.filter(v => v.tipo === "short");
+  const sec = q ? "buscar" : seccion;
+  const verLargos = sec !== "shorts", verShorts = sec !== "videos";
+  $("#vistaSubs").hidden = sec !== "subs";
+  $("#tituloLista").textContent = sec === "buscar" ? `Resultados para "${$("#buscar").value}"` : sec === "videos" && largos.length ? "🎬 Videos" : sec === "subs" && coinciden.length ? "Videos de Franco" : "";
   const g = $("#grilla"); g.innerHTML = "";
-  if (!lista.length) g.innerHTML = `<div class="vacio" style="grid-column:1/-1"><div class="grande">${q ? "🔍" : "🎬"}</div><p>${q ? "No encontré videos largos con ese nombre." : "Todavía no hay videos. ¡Muy pronto!"}</p></div>`;
-  lista.forEach(v => g.appendChild(tarjeta(v)));
-  // Shorts: en el rectángulo de abajo
-  $("#cantShorts").textContent = `(${shorts.length})`;
+  if (verLargos) largos.forEach(v => g.appendChild(tarjeta(v)));
   const gs = $("#grillaShorts"); gs.innerHTML = "";
-  if (!shorts.length) gs.innerHTML = `<div class="vacio" style="grid-column:1/-1"><div class="grande">📱</div><p>${q ? "No hay shorts con ese nombre." : "Todavía no hay shorts. ¡Pronto!"}</p></div>`;
-  shorts.forEach(v => gs.appendChild(tarjeta(v)));
-  if (q && shorts.length) abrirShorts(true);
+  if (verShorts) shorts.forEach(v => gs.appendChild(tarjeta(v)));
+  gs.classList.toggle("estante", sec === "inicio" || sec === "subs");
+  $("#tituloShorts").hidden = !(verShorts && shorts.length) || sec === "shorts" && false;
+  $("#tituloShorts").textContent = "📱 Shorts";
+  if (sec === "subs") {
+    $("#canalCuenta").textContent = [largos.length ? `${largos.length} video${largos.length > 1 ? "s" : ""}` : "", shorts.length ? `${shorts.length} short${shorts.length > 1 ? "s" : ""}` : ""].filter(Boolean).join(" · ") || "Canal de Franclips";
+    const b = $("#btnSuscribir"); b.textContent = suscripto() ? "✅ Suscripto" : "🔔 Suscribirme"; b.classList.toggle("suscripto", suscripto());
+  }
 }
-function abrirShorts(abrir) {
-  $("#grillaShorts").hidden = !abrir; $("#btnShorts").setAttribute("aria-expanded", String(abrir));
+function irSeccion(cual) {
+  seccion = cual; $("#buscar").value = "";
+  document.querySelectorAll(".menu .item[data-sec]").forEach(a => a.classList.toggle("activo", a.dataset.sec === cual));
+  $("#menu").classList.remove("abierto");
+  volverInicio(); mostrarLista(); window.scrollTo(0, 0);
 }
-$("#btnShorts").onclick = () => abrirShorts($("#grillaShorts").hidden);
+document.querySelectorAll(".menu .item[data-sec]").forEach(a => a.onclick = (e) => { e.preventDefault(); irSeccion(a.dataset.sec); });
+$("#menuBoton").onclick = () => $("#menu").classList.toggle("abierto");
+$("#btnSuscribir").onclick = () => { try { localStorage.setItem("franclips-suscripto", suscripto() ? "0" : "1"); } catch {} mostrarLista(); };
 let shortActual = null;
 function verShort(id) {
   const v = videos.find(x => x.id === id); if (!v) return;
@@ -614,7 +681,7 @@ function abrirVideo(id, guardarHistoria = true) {
   $("#verFecha").textContent = new Date(v.fecha).toLocaleDateString("es-AR", { day: "numeric", month: "long", year: "numeric" }) + " · " + mmss(v.duracion || 0);
   const otros = $("#otrosVideos"); otros.innerHTML = "";
   videos.filter(x => x.id !== id).slice(0, 12).forEach(x => otros.appendChild(tarjeta(x)));
-  if (!otros.children.length) otros.innerHTML = `<p class="nota">Pronto va a haber más videos.</p>`;
+  $("#otrosTitulo").hidden = !otros.children.length;
   if (guardarHistoria) try { history.pushState({ v: id }, "", EN_ARCHIVO ? undefined : "?v=" + id); } catch (e) {}
   window.scrollTo(0, 0);
 }
@@ -623,7 +690,7 @@ function volverInicio(guardarHistoria = true) {
   if (guardarHistoria) try { history.pushState({}, "", EN_ARCHIVO ? undefined : "./"); } catch (e) {}
 }
 window.onpopstate = () => { const id = new URLSearchParams(location.search).get("v"); id ? abrirVideo(id, false) : volverInicio(false); };
-$("#irInicio").onclick = (e) => { e.preventDefault(); volverInicio(); };
+$("#irInicio").onclick = (e) => { e.preventDefault(); irSeccion("inicio"); };
 $("#buscar").oninput = () => { if (!$("#vistaVideo").hidden) volverInicio(); mostrarLista(); };
 $("#btnBuscar").onclick = () => { volverInicio(); mostrarLista(); };
 $("#btnCompartir").onclick = async () => {
