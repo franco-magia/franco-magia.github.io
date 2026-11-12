@@ -1,6 +1,16 @@
 {
  "videos": [
   {
+   "id": "grabacion-de-pantalla-2026-11-12-152441-mwe0sdd4",
+   "tipo": "video",
+   "titulo": "Entrevista a la IA (miren el final)",
+   "archivo": "videos/grabacion-de-pantalla-2026-11-12-152441-mwe0sdd4.mp4",
+   "caratula": "caratulas/grabacion-de-pantalla-2026-11-12-152441-mwe0sdd4.jpg",
+   "subtitulos": "subtitulos/grabacion-de-pantalla-2026-11-12-152441-mwe0sdd4.vtt",
+   "duracion": 437,
+   "fecha": "2026-11-12T21:00:00Z"
+  },
+  {
    "id": "grabacion-de-pantalla-2026-11-12-083611-mwduabxd",
    "tipo": "video",
    "titulo": "El primer video de prueba. ¡Espero que les guste! 😊",
