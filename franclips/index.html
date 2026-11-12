@@ -191,6 +191,7 @@
             <div style="font-size:3rem">🎞️</div>
             <b>Elegí el video que querés subir</b>
             <span class="nota">Por ejemplo, una grabación de pantalla o un gameplay. Ideal: menos de 10 minutos.<br>También podés <b>arrastrar</b> el video acá o <b>pegarlo</b> con Ctrl + V.</span>
+            <b id="msgVideo" style="display:block;margin-top:8px;color:#ffcf4a"></b>
             <label class="boton principal">📂 Elegir video<input type="file" id="archivoVideo" hidden></label>
           </div>
           <canvas id="lienzoVideo" width="1280" height="720" hidden></canvas>
@@ -552,13 +553,17 @@ requestAnimationFrame(bucleVista);
 $("#archivoVideo").onchange = (e) => {
   const f = e.target.files[0]; if (!f) return;
   if (f.type.startsWith("image/")) { e.target.value = ""; usarArchivo(f); return; }
+  const avisar = (t) => { $("#msgVideo").textContent = t; estado(t); };
+  avisar("⏳ Cargando \"" + f.name + "\"…");
+  clearTimeout(window.esperaVideo);
+  window.esperaVideo = setTimeout(() => { if (!videoCargado) avisar("⚠️ \"" + f.name + "\" está tardando mucho o no se puede abrir. Si es una grabación de Recortes, probá arrastrarla acá desde la carpeta Videos → Grabaciones de pantalla."); }, 15000);
   fuente.src = URL.createObjectURL(f);
-  fuente.onerror = () => estado("❌ \"" + f.name + "\" no se puede reproducir como video en este navegador. Probá con otro archivo (mp4 o webm andan siempre).");
+  fuente.onerror = () => avisar("❌ \"" + f.name + "\" no se puede reproducir como video en este navegador. Probá con otro archivo (mp4 o webm andan siempre).");
   fuente.onloadedmetadata = () => {
     medidasLienzo();
     $("#recorteDesde").value = 0; $("#recorteHasta").value = fuente.duration.toFixed(1);
     if (!$("#nombreVideo").value) $("#nombreVideo").value = f.name.replace(/\.[^.]+$/, "").replace(/[_-]+/g, " ");
-    videoCargado = true;
+    videoCargado = true; $("#msgVideo").textContent = ""; estado("");
     $("#elegirVideo").hidden = true; lienzoV.hidden = false; $("#controlesVideo").hidden = false; $("#btnSubir").disabled = false;
     fuente.currentTime = Math.min(0.1, fuente.duration / 2);
     actualizarFondoCaratula();
