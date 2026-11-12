@@ -605,12 +605,15 @@ const BD = {
 /* ---------- 1. GALERÍA ---------- */
 let videos = [];
 async function cargarVideos() {
-  try { const r = await fetch("videos.json?v=" + Date.now(), { cache: "no-store" }); if (r.ok) videos = (await r.json()).videos || []; } catch {}
+  if (navigator.onLine && location.protocol !== "file:") try { const r = await fetch("videos.json?v=" + Date.now(), { cache: "no-store" }); if (r.ok) videos = (await r.json()).videos || []; } catch {}
   // Los tuyos que todavía esperan publicación (solo en esta compu)
   for (const v of await BD.todos()) {
     if (videos.some(x => x.id === v.id)) { BD.borrar(v.id); continue; } // ya lo publicó Claude
     videos.push({ ...v, archivo: URL.createObjectURL(v.video), caratula: URL.createObjectURL(v.imagen), pendiente: true });
   }
+  // Videos que hizo Claude (solo vienen en el archivo HTML de Franco; si los borra, no vuelven más)
+  const borrados = (() => { try { return JSON.parse(localStorage.getItem("franclips-borrados") || "[]"); } catch { return []; } })();
+  for (const v of (window.VIDEOS_DE_CLAUDE || [])) if (!borrados.includes(v.id) && !videos.some(x => x.id === v.id)) videos.push({ ...v, deClaude: true });
   videos.sort((a, b) => (b.fecha || "").localeCompare(a.fecha || ""));
   mostrarLista();
   const id = new URLSearchParams(location.search).get("v");
@@ -620,8 +623,8 @@ function tarjeta(v) {
   const d = document.createElement("div");
   d.className = "video-card"; d.tabIndex = 0;
   d.innerHTML = `<div class="miniatura"><img src="${escaparHTML(v.caratula)}" alt="" loading="lazy"><span class="duracion">${mmss(v.duracion || 0)}</span></div>
-    <div><h3>${escaparHTML(v.titulo)}</h3>${v.pendiente ? '<small style="color:#ffcf4a">🔒 Solo vos · esperando publicación</small><br>' : ""}<small>${new Date(v.fecha).toLocaleDateString("es-AR", { day: "numeric", month: "long", year: "numeric" })}</small></div>`;
-  if (v.pendiente) {
+    <div><h3>${escaparHTML(v.titulo)}</h3>${v.deClaude ? '<small style="color:#4fd8ff">🤖 Hecho por Claude · solo vos</small><br>' : v.pendiente ? '<small style="color:#ffcf4a">🔒 Solo vos · esperando publicación</small><br>' : ""}<small>${new Date(v.fecha).toLocaleDateString("es-AR", { day: "numeric", month: "long", year: "numeric" })}</small></div>`;
+  if (v.pendiente || v.deClaude) {
     const b = document.createElement("button"); b.className = "borrar-card"; b.title = "Borrar para siempre"; b.textContent = "🗑️";
     b.onclick = (e) => { e.stopPropagation(); borrarLocal(v.id); };
     d.querySelector(".miniatura").appendChild(b);
@@ -632,9 +635,10 @@ function tarjeta(v) {
 }
 // Borrar para siempre uno de TUS videos (los que están solo en esta compu)
 async function borrarLocal(id) {
-  const v = videos.find(x => x.id === id); if (!v || !v.pendiente) return;
-  if (!confirm(`¿Borrar "${v.titulo}" para siempre?\n\nSe borra de esta compu y no se puede recuperar.`)) return;
-  await BD.borrar(id);
+  const v = videos.find(x => x.id === id); if (!v || !(v.pendiente || v.deClaude)) return;
+  if (!confirm(`¿Borrar "${v.titulo}" para siempre?\n\nNo va a ninguna papelera: se borra y no se puede recuperar.`)) return;
+  if (v.deClaude) { try { const l = JSON.parse(localStorage.getItem("franclips-borrados") || "[]"); l.push(id); localStorage.setItem("franclips-borrados", JSON.stringify(l)); } catch {} }
+  else await BD.borrar(id);
   videos = videos.filter(x => x.id !== id);
   if (!$("#vistaVideo").hidden) volverInicio();
   if ($("#verShort").open) { $("#reproductorShort").pause(); $("#verShort").close(); }
@@ -679,7 +683,7 @@ function verShort(id) {
   const r = $("#reproductorShort"); r.src = v.archivo; r.poster = v.caratula;
   r.onloadedmetadata = () => { if (r.duration === Infinity) { r.currentTime = 1e9; r.ontimeupdate = () => { r.ontimeupdate = null; r.currentTime = 0; }; } };
   $("#shortTitulo").textContent = v.titulo;
-  $("#shortBorrar").hidden = !v.pendiente; $("#shortBorrar").onclick = () => borrarLocal(v.id);
+  $("#shortBorrar").hidden = !(v.pendiente || v.deClaude); $("#shortBorrar").onclick = () => borrarLocal(v.id);
   if (!$("#verShort").open) $("#verShort").showModal();
   r.play().catch(() => {});
 }
@@ -700,7 +704,7 @@ function abrirVideo(id, guardarHistoria = true) {
   // Por si un video no trae su duración, la averigua para que se pueda adelantar
   r.onloadedmetadata = () => { if (r.duration === Infinity) { r.currentTime = 1e9; r.ontimeupdate = () => { r.ontimeupdate = null; r.currentTime = 0; }; } };
   $("#verTitulo").textContent = v.titulo;
-  $("#btnBorrarVideo").hidden = !v.pendiente; $("#btnBorrarVideo").onclick = () => borrarLocal(v.id);
+  $("#btnBorrarVideo").hidden = !(v.pendiente || v.deClaude); $("#btnBorrarVideo").onclick = () => borrarLocal(v.id);
   $("#verFecha").textContent = new Date(v.fecha).toLocaleDateString("es-AR", { day: "numeric", month: "long", year: "numeric" }) + " · " + mmss(v.duracion || 0);
   const otros = $("#otrosVideos"); otros.innerHTML = "";
   videos.filter(x => x.id !== id).slice(0, 12).forEach(x => otros.appendChild(tarjeta(x)));
@@ -1322,40 +1326,59 @@ requestAnimationFrame(bucleVista);
 
 /* Convertidor: si el navegador no entiende el formato del video (por ejemplo H.265/HEVC de las grabaciones de Recortes),
    lo pasamos a un mp4 común ACÁ MISMO en tu compu, con ffmpeg para navegadores */
-let ffmpegListo = null;
-const cargarScript = (src) => new Promise((res, rej) => { const s = document.createElement("script"); s.src = src; s.onload = res; s.onerror = rej; document.head.appendChild(s); });
-function obtenerFFmpeg() {
-  if (ffmpegListo) return ffmpegListo;
-  ffmpegListo = (async () => {
-    const B = "https://cdn.jsdelivr.net/npm/";
-    if (!window.FFmpegWASM) await cargarScript(B + "@ffmpeg/ffmpeg@0.12.10/dist/umd/ffmpeg.js");
-    if (!window.FFmpegUtil) await cargarScript(B + "@ffmpeg/util@0.12.1/dist/umd/index.js");
-    const { FFmpeg } = window.FFmpegWASM, { toBlobURL } = window.FFmpegUtil;
-    const ff = new FFmpeg();
-    await ff.load({
-      classWorkerURL: await toBlobURL(B + "@ffmpeg/ffmpeg@0.12.10/dist/umd/814.ffmpeg.js", "text/javascript"),
-      coreURL: await toBlobURL(B + "@ffmpeg/core@0.12.6/dist/esm/ffmpeg-core.js", "text/javascript"),
-      wasmURL: await toBlobURL(B + "@ffmpeg/core@0.12.6/dist/esm/ffmpeg-core.wasm", "application/wasm"),
-    });
-    return ff;
-  })();
-  ffmpegListo.catch(() => { ffmpegListo = null; });
-  return ffmpegListo;
+// Trabajador propio (no usa "módulos", así anda en todos lados: la web, el archivo y Brave)
+const CORE_FFMPEG = "https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.6/dist/umd/ffmpeg-core.js";
+const TRABAJADOR_FFMPEG = `
+let core = null;
+self.onmessage = async (e) => {
+  const m = e.data;
+  try {
+    if (m.tipo === "cargar") {
+      if (!core) {
+        importScripts(m.core);
+        core = await self.createFFmpegCore({ mainScriptUrlOrBlob: m.core + "#" + btoa(JSON.stringify({ wasmURL: m.core.replace(/\\.js$/, ".wasm"), workerURL: "" })) });
+        core.setProgress((p) => self.postMessage({ tipo: "progreso", p: p.progress }));
+        core.setLogger(() => {});
+      }
+      self.postMessage({ tipo: "listo" });
+    } else if (m.tipo === "convertir") {
+      core.FS.writeFile(m.entrada, new Uint8Array(m.datos));
+      core.setTimeout(-1); core.exec(...m.args); const ret = core.ret; core.reset();
+      let salida = null; try { salida = core.FS.readFile(m.salida); } catch (x) {}
+      try { core.FS.unlink(m.entrada); } catch (x) {} try { core.FS.unlink(m.salida); } catch (x) {}
+      if (!salida || !salida.length) throw new Error("no salió nada (código " + ret + ")");
+      self.postMessage({ tipo: "hecho", datos: salida.buffer }, [salida.buffer]);
+    }
+  } catch (err) { self.postMessage({ tipo: "error", mensaje: String(err && err.message || err) }); }
+};`;
+let trabajador = null;
+function hablarTrabajador(msg, alProgreso, transferir) {
+  return new Promise((res, rej) => {
+    trabajador.onmessage = (e) => {
+      const m = e.data;
+      if (m.tipo === "progreso") alProgreso && alProgreso(m.p);
+      else if (m.tipo === "error") rej(new Error(m.mensaje));
+      else res(m);
+    };
+    trabajador.onerror = (e) => { e.preventDefault && e.preventDefault(); rej(new Error(e.message || "el convertidor no pudo arrancar")); };
+    trabajador.postMessage(msg, transferir || []);
+  });
 }
 async function convertirVideo(f, avisar) {
-  avisar("🔄 Este video tiene un formato que el navegador no entiende. Lo estoy convirtiendo acá en tu compu… (preparando)");
-  const ff = await obtenerFFmpeg();
-  const ext = (f.name.match(/\.[^.]+$/) || [".mp4"])[0].toLowerCase();
-  const entrada = "entrada" + ext, salida = "salida.mp4";
-  await ff.writeFile(entrada, new Uint8Array(await f.arrayBuffer()));
-  const prog = ({ progress }) => { const pc = Math.max(0, Math.min(100, Math.round(progress * 100))); avisar(`🔄 Convirtiendo "${f.name}" para que se pueda editar… ${pc} % (no cierres la página)`); progreso(progress); };
-  ff.on("progress", prog);
+  if (!navigator.onLine) throw new Error("para convertir este video hace falta internet la primera vez (el convertidor se baja)");
+  avisar("🔄 Este video tiene un formato que el navegador no entiende. Lo estoy convirtiendo acá en tu compu… (preparando el convertidor, la primera vez tarda un poco)");
+  if (!trabajador) trabajador = new Worker(URL.createObjectURL(new Blob([TRABAJADOR_FFMPEG], { type: "text/javascript" })));
+  try { await hablarTrabajador({ tipo: "cargar", core: CORE_FFMPEG }); }
+  catch (e) { trabajador.terminate(); trabajador = null; throw e; }
+  const ext = (f.name.match(/\.[^.]+$/) || [".mp4"])[0].toLowerCase().replace(/[^.a-z0-9]/g, "") || ".mp4";
+  const datos = await f.arrayBuffer();
+  const args = ["-i", "entrada" + ext, "-vf", "scale='min(1280,iw)':-2", "-c:v", "libx264", "-preset", "ultrafast", "-crf", "26", "-pix_fmt", "yuv420p", "-c:a", "aac", "-b:a", "160k", "-movflags", "+faststart", "salida.mp4"];
   try {
-    await ff.exec(["-i", entrada, "-vf", "scale='min(1280,iw)':-2", "-c:v", "libx264", "-preset", "ultrafast", "-crf", "26", "-pix_fmt", "yuv420p", "-c:a", "aac", "-b:a", "160k", "-movflags", "+faststart", salida]);
-    const datos = await ff.readFile(salida);
-    if (!datos || !datos.length) throw new Error("vacío");
-    return new File([datos.buffer], f.name.replace(/\.[^.]+$/, "") + ".mp4", { type: "video/mp4" });
-  } finally { ff.off("progress", prog); progreso(0); try { await ff.deleteFile(entrada); await ff.deleteFile(salida); } catch {} }
+    const r = await hablarTrabajador({ tipo: "convertir", entrada: "entrada" + ext, salida: "salida.mp4", datos, args }, (p) => {
+      const pc = Math.max(0, Math.min(100, Math.round(p * 100))); avisar(`🔄 Convirtiendo "${f.name}" para que se pueda editar… ${pc} % (no cierres la página)`); progreso(Math.max(0, Math.min(1, p)));
+    }, [datos]);
+    return new File([r.datos], f.name.replace(/\.[^.]+$/, "") + ".mp4", { type: "video/mp4" });
+  } finally { progreso(0); }
 }
 
 /* Elegir el video */
