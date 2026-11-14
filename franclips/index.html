@@ -96,6 +96,14 @@
     .ver { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 24px; padding-bottom: 40px; }
     .ver video::cue, #reproductorShort::cue { background-color: rgba(138,92,255,.85); background-image: linear-gradient(90deg, rgba(79,216,255,.9), rgba(138,92,255,.9) 50%, rgba(255,111,174,.9)); color: #fff; font-family: "Fredoka", "Nunito", sans-serif; font-weight: 700; font-size: 1.05em; text-shadow: 0 0 6px rgba(20,0,60,.9), 0 2px 3px rgba(20,0,60,.8); }
     .ver video { width: 100%; max-height: 70vh; background: #000; border-radius: 14px; display: block; }
+    .marco { position: relative; width: min(100%, calc(70vh * 1280 / 718)); margin: 0 auto; }
+    .marco video { aspect-ratio: 1280 / 718; max-height: none; }
+    #finales .final { position: absolute; top: 5%; width: 27%; border: 0; padding: 0; cursor: pointer; background: rgba(10,4,30,.75); border-radius: 12px; overflow: hidden; color: #fff; text-align: left; box-shadow: 0 0 0 2px rgba(138,92,255,.9), 0 6px 22px rgba(0,0,0,.6); animation: aparecerFinal .5s ease both; font: inherit; }
+    #finales .final:nth-child(1) { left: 3%; } #finales .final:nth-child(2) { right: 3%; }
+    #finales .final:hover { box-shadow: 0 0 0 3px #ff6fae, 0 6px 26px rgba(0,0,0,.7); transform: scale(1.03); }
+    #finales .final img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; display: block; }
+    #finales .final span { display: block; padding: 6px 8px; font-size: clamp(.6rem, 1.3vw, .9rem); font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    @keyframes aparecerFinal { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: none; } }
     .ver h2 { font-family: "Fredoka", sans-serif; font-weight: 500; margin: 14px 0 6px; font-size: 1.4rem; }
     .acciones-video { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 10px 0; }
     .pronto { font-size: .8rem; color: #ffcf4a; background: rgba(255,207,74,.12); border-radius: 999px; padding: 3px 10px; }
@@ -289,7 +297,7 @@
     <main id="vistaVideo" hidden>
       <div class="ver">
         <div>
-          <video id="reproductor" controls playsinline></video>
+          <div class="marco"><video id="reproductor" controls playsinline></video><div id="finales"></div></div>
           <h2 id="verTitulo"></h2>
           <div class="nota" id="verFecha"></div>
           <div class="acciones-video">
@@ -691,7 +699,7 @@ function irSeccion(cual) {
 document.querySelectorAll(".menu .item[data-sec]").forEach(a => a.onclick = (e) => { e.preventDefault(); irSeccion(a.dataset.sec); });
 $("#menuBoton").onclick = () => $("#menu").classList.toggle("abierto");
 $("#btnSuscribir").onclick = () => { try { localStorage.setItem("franclips-suscripto", suscripto() ? "0" : "1"); } catch {} mostrarLista(); };
-let shortActual = null;
+let shortActual = null, shortActualLargo = null;
 function verShort(id) {
   const v = videos.find(x => x.id === id); if (!v) return;
   shortActual = id;
@@ -721,6 +729,21 @@ function abrirVideo(id, guardarHistoria = true) {
   // Por si un video no trae su duración, la averigua para que se pueda adelantar
   r.onloadedmetadata = () => { if (r.duration === Infinity) { r.currentTime = 1e9; r.ontimeupdate = () => { r.ontimeupdate = null; r.currentTime = 0; }; } };
   $("#verTitulo").textContent = v.titulo;
+  // Pantalla final: en los últimos segundos aparecen cuadraditos con otros videos, como en YouTube
+  const finales = $("#finales"); finales.innerHTML = "";
+  const sugeridos = [...videos.filter(x => x.id !== id && x.tipo !== "short"), ...videos.filter(x => x.id !== id && x.tipo === "short")].slice(0, 2);
+  r.addEventListener("timeupdate", function mirarFinal() {
+    if (shortActualLargo !== id) return r.removeEventListener("timeupdate", mirarFinal);
+    const durar = v.pantallaFinal || 0, total = r.duration;
+    const toca = durar > 0 && isFinite(total) && r.currentTime >= total - durar;
+    if (toca && !finales.children.length) sugeridos.forEach(x => {
+      const b = document.createElement("button"); b.className = "final"; b.title = x.titulo;
+      b.innerHTML = `<img alt=""><span></span>`; b.querySelector("img").src = x.caratula || ""; b.querySelector("span").textContent = (x.tipo === "short" ? "📱 " : "▶ ") + x.titulo;
+      b.onclick = () => abrirVideo(x.id); finales.appendChild(b);
+    });
+    if (!toca && finales.children.length) finales.innerHTML = "";
+  });
+  shortActualLargo = id;
   // Subtítulos (se pueden apagar con el botón de subtítulos del reproductor)
   r.querySelectorAll("track").forEach(t => t.remove());
   if (v.subtitulos) { const t = document.createElement("track"); t.kind = "subtitles"; t.srclang = "es"; t.label = "Español"; t.default = true; t.src = v.subtitulos; r.appendChild(t); r.textTracks[0] && (r.textTracks[0].mode = "showing"); }
