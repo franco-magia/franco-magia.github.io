@@ -1,6 +1,16 @@
 {
  "videos": [
   {
+   "id": "grabacion-de-pantalla-2026-11-14-114547-mwgj418a",
+   "tipo": "short",
+   "titulo": "Tutorial: cómo crear tu propia canción 🎵",
+   "archivo": "videos/grabacion-de-pantalla-2026-11-14-114547-mwgj418a.mp4",
+   "caratula": "caratulas/grabacion-de-pantalla-2026-11-14-114547-mwgj418a.jpg",
+   "subtitulos": "subtitulos/grabacion-de-pantalla-2026-11-14-114547-mwgj418a.vtt",
+   "duracion": 145,
+   "fecha": "2026-11-14T14:45:00Z"
+  },
+  {
    "id": "grabacion-de-pantalla-2026-11-12-152441-mwe0sdd4",
    "tipo": "video",
    "titulo": "Entrevista a la IA (miren el final)",

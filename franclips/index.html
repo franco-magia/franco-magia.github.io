@@ -94,7 +94,7 @@
 
     /* Reproductor */
     .ver { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 24px; padding-bottom: 40px; }
-    .ver video::cue { background-color: rgba(138,92,255,.85); background-image: linear-gradient(90deg, rgba(79,216,255,.9), rgba(138,92,255,.9) 50%, rgba(255,111,174,.9)); color: #fff; font-family: "Fredoka", "Nunito", sans-serif; font-weight: 700; font-size: 1.05em; text-shadow: 0 0 6px rgba(20,0,60,.9), 0 2px 3px rgba(20,0,60,.8); }
+    .ver video::cue, #reproductorShort::cue { background-color: rgba(138,92,255,.85); background-image: linear-gradient(90deg, rgba(79,216,255,.9), rgba(138,92,255,.9) 50%, rgba(255,111,174,.9)); color: #fff; font-family: "Fredoka", "Nunito", sans-serif; font-weight: 700; font-size: 1.05em; text-shadow: 0 0 6px rgba(20,0,60,.9), 0 2px 3px rgba(20,0,60,.8); }
     .ver video { width: 100%; max-height: 70vh; background: #000; border-radius: 14px; display: block; }
     .ver h2 { font-family: "Fredoka", sans-serif; font-weight: 500; margin: 14px 0 6px; font-size: 1.4rem; }
     .acciones-video { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 10px 0; }
@@ -696,6 +696,8 @@ function verShort(id) {
   const v = videos.find(x => x.id === id); if (!v) return;
   shortActual = id;
   const r = $("#reproductorShort"); r.src = v.archivo; r.poster = v.caratula;
+  r.querySelectorAll("track").forEach(t => t.remove());
+  if (v.subtitulos) { const t = document.createElement("track"); t.kind = "subtitles"; t.srclang = "es"; t.label = "Español"; t.default = true; t.src = v.subtitulos; r.appendChild(t); r.textTracks[0] && (r.textTracks[0].mode = "showing"); }
   r.onloadedmetadata = () => { if (r.duration === Infinity) { r.currentTime = 1e9; r.ontimeupdate = () => { r.ontimeupdate = null; r.currentTime = 0; }; } };
   $("#shortTitulo").textContent = v.titulo;
   $("#shortBorrar").hidden = !(v.pendiente || v.deClaude); $("#shortBorrar").onclick = () => borrarLocal(v.id);
