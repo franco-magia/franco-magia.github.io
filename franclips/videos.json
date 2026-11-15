@@ -8,7 +8,8 @@
    "caratula": "caratulas/grabacion-de-pantalla-2026-11-14-114547-mwgj418a.jpg",
    "subtitulos": "subtitulos/grabacion-de-pantalla-2026-11-14-114547-mwgj418a.vtt",
    "duracion": 145,
-   "fecha": "2026-11-14T14:45:00Z"
+   "fecha": "2026-11-14T14:45:00Z",
+   "canal": "video"
   },
   {
    "id": "grabacion-de-pantalla-2026-11-12-152441-mwe0sdd4",
@@ -19,7 +20,8 @@
    "subtitulos": "subtitulos/grabacion-de-pantalla-2026-11-12-152441-mwe0sdd4.vtt",
    "duracion": 466,
    "fecha": "2026-11-12T21:00:00Z",
-   "pantallaFinal": 20
+   "pantallaFinal": 20,
+   "canal": "video"
   },
   {
    "id": "grabacion-de-pantalla-2026-11-12-083611-mwduabxd",
@@ -30,7 +32,8 @@
    "duracion": 259,
    "fecha": "2026-11-12T17:45:00Z",
    "subtitulos": "subtitulos/grabacion-de-pantalla-2026-11-12-083611-mwduabxd.vtt",
-   "pantallaFinal": 20
+   "pantallaFinal": 20,
+   "canal": "video"
   }
  ]
 }

@@ -42,7 +42,10 @@
     .canal-avatar { width: 84px; height: 84px; border-radius: 50%; display: grid; place-items: center; font-family: "Pacifico", cursive; font-size: 1.7rem; color: #fff; background: linear-gradient(135deg, #4fd8ff, #8a5cff 60%, #c86bff); box-shadow: 0 0 30px rgba(120,110,255,.5); }
     .canal h2 { margin: 0; font-family: "Fredoka", sans-serif; }
     .canal > div:nth-child(2) { flex: 1; }
-    #btnSuscribir.suscripto { background: var(--tarjeta-2); color: var(--texto); }
+    .canal .suscribir.suscripto { background: var(--tarjeta-2); color: var(--texto); }
+    .canal.clic { cursor: pointer; } .canal.clic:hover { border-color: #8a5cff; }
+    .menu-titulo { font-size: .78rem; text-transform: uppercase; letter-spacing: .08em; color: var(--suave, #a9a3c9); padding: 4px 16px 6px; }
+    #verCanal { color: #4fd8ff; font-weight: 700; cursor: pointer; } #verCanal:hover { text-decoration: underline; }
     @media (max-width: 860px) {
       .app { grid-template-columns: 1fr; }
       .menu-boton { display: block; }
@@ -274,6 +277,10 @@
       <a class="item" data-sec="shorts" href="./"><span class="ic">📱</span><span>Shorts</span></a>
       <a class="item" data-sec="subs" href="./"><span class="ic">📺</span><span>Suscripciones</span></a>
       <div class="menu-sep"></div>
+      <div class="menu-titulo">Canales</div>
+      <a class="item" data-sec="canal:video" href="./"><span class="ic">🎬</span><span>FRANKCLIPS VIDEO</span></a>
+      <a class="item" data-sec="canal:gameplays" href="./"><span class="ic">🎮</span><span>Frank Clips Gameplays</span></a>
+      <div class="menu-sep"></div>
       <a class="item" href="/"><span class="ic">🏡</span><span>francosandes.com</span></a>
       <div class="menu-pie">Franclips Videos · hecho por Franco<br><button id="btnCreador">modo creador</button></div>
     </nav>
@@ -281,13 +288,7 @@
     <div class="contenido">
       <main id="vistaInicio">
         <img class="banner" id="banner" src="banner.jpg" alt="Franclips Video · francosandes.com">
-        <section id="vistaSubs" hidden>
-          <div class="canal">
-            <div class="canal-avatar">F.S</div>
-            <div><h2>Franco Sandes</h2><p class="nota" id="canalCuenta"></p></div>
-            <button class="boton principal" id="btnSuscribir">🔔 Suscribirme</button>
-          </div>
-        </section>
+        <section id="vistaSubs" hidden></section>
         <h2 class="titulo-seccion" id="tituloLista"></h2>
         <div class="grilla" id="grilla"></div>
         <h2 class="titulo-seccion" id="tituloShorts">📱 Shorts</h2>
@@ -299,7 +300,7 @@
         <div>
           <div class="marco"><video id="reproductor" controls playsinline></video><div id="finales"></div></div>
           <h2 id="verTitulo"></h2>
-          <div class="nota" id="verFecha"></div>
+          <div class="nota"><span id="verCanal"></span> · <span id="verFecha"></span></div>
           <div class="acciones-video">
             <button class="boton chico" disabled title="Todavía no se puede">👍 Me gusta</button>
             <button class="boton chico" disabled title="Todavía no se puede">👎 No me gusta</button>
@@ -397,6 +398,7 @@
         <div class="panel" id="panelVideo">
           <div class="fila">
             <label class="campo"><span>📐 Tipo</span><select id="tipoVideo"><option value="video">🎬 Video (horizontal)</option><option value="short">📱 Short (vertical)</option></select></label>
+            <label class="campo"><span>📺 Canal</span><select id="canalVideo"><option value="video">🎬 FRANKCLIPS VIDEO</option><option value="gameplays">🎮 Frank Clips Gameplays</option></select></label>
           </div>
           <p class="nota" id="notaShort" hidden>Los shorts se ven en vertical y conviene que duren menos de 1 minuto.</p>
           <label class="campo"><span>📝 Nombre del video</span><input type="text" id="nombreVideo" maxlength="100" placeholder="Ej: Mi primer gameplay"></label>
@@ -668,27 +670,51 @@ async function borrarLocal(id) {
   mostrarLista();
 }
 let seccion = "inicio";
-const suscripto = () => { try { return localStorage.getItem("franclips-suscripto") === "1"; } catch { return false; } };
+// Los canales de Franclips (todos con la misma intro, música y pantalla final)
+const CANALES = [
+  { id: "video", nombre: "FRANKCLIPS VIDEO", corto: "F.S", banner: "banner.jpg" },
+  { id: "gameplays", nombre: "Frank Clips Gameplays", corto: "🎮", banner: "banner.jpg" },
+];
+const canalDe = (v) => CANALES.find(c => c.id === (v.canal || "video")) || CANALES[0];
+function misSubs() {
+  try { const l = JSON.parse(localStorage.getItem("franclips-subs") || "null"); if (Array.isArray(l)) return l; return localStorage.getItem("franclips-suscripto") === "1" ? ["video"] : []; } catch { return []; }
+}
+function cambiarSub(id) { const l = misSubs(), i = l.indexOf(id); i >= 0 ? l.splice(i, 1) : l.push(id); try { localStorage.setItem("franclips-subs", JSON.stringify(l)); } catch {} mostrarLista(); }
+function tarjetaCanal(c, cuantos, clic) {
+  const d = document.createElement("div"); d.className = "canal" + (clic ? " clic" : "");
+  const largos = cuantos.filter(v => v.tipo !== "short").length, shorts = cuantos.length - largos;
+  d.innerHTML = `<div class="canal-avatar"></div><div><h2></h2><p class="nota"></p></div><button class="boton principal suscribir"></button>`;
+  d.querySelector(".canal-avatar").textContent = c.corto; d.querySelector("h2").textContent = c.nombre;
+  d.querySelector("p").textContent = [largos ? `${largos} video${largos > 1 ? "s" : ""}` : "", shorts ? `${shorts} short${shorts > 1 ? "s" : ""}` : ""].filter(Boolean).join(" · ") || "Canal de Franclips";
+  const b = d.querySelector("button"), si = misSubs().includes(c.id);
+  b.textContent = si ? "✅ Suscripto" : "🔔 Suscribirme"; b.classList.toggle("suscripto", si);
+  b.onclick = (e) => { e.stopPropagation(); cambiarSub(c.id); };
+  if (clic) d.onclick = () => irSeccion("canal:" + c.id);
+  return d;
+}
 function mostrarLista() {
   const q = normalizar($("#buscar").value);
-  const coinciden = q ? videos.filter(v => normalizar(v.titulo).includes(q)) : videos;
-  const largos = coinciden.filter(v => v.tipo !== "short"), shorts = coinciden.filter(v => v.tipo === "short");
   const sec = q ? "buscar" : seccion;
+  const canalSec = sec.startsWith("canal:") ? sec.slice(6) : null;
+  let coinciden = q ? videos.filter(v => normalizar(v.titulo).includes(q)) : videos;
+  if (canalSec) coinciden = coinciden.filter(v => canalDe(v).id === canalSec);
+  if (sec === "subs") coinciden = coinciden.filter(v => misSubs().includes(canalDe(v).id));
+  const largos = coinciden.filter(v => v.tipo !== "short"), shorts = coinciden.filter(v => v.tipo === "short");
   const verLargos = sec !== "shorts", verShorts = sec !== "videos";
-  $("#vistaSubs").hidden = sec !== "subs";
-  $("#banner").hidden = !(sec === "inicio" || sec === "subs");
-  $("#tituloLista").textContent = sec === "buscar" ? `Resultados para "${$("#buscar").value}"` : sec === "videos" && largos.length ? "🎬 Videos" : sec === "subs" && coinciden.length ? "Videos de Franco" : "";
+  const vs = $("#vistaSubs"); vs.innerHTML = ""; vs.hidden = !(sec === "subs" || canalSec);
+  if (sec === "subs") CANALES.forEach(c => vs.appendChild(tarjetaCanal(c, videos.filter(v => canalDe(v).id === c.id), true)));
+  if (canalSec) { const c = CANALES.find(x => x.id === canalSec) || CANALES[0]; vs.appendChild(tarjetaCanal(c, coinciden, false)); }
+  const canalBanner = canalSec ? (CANALES.find(x => x.id === canalSec) || CANALES[0]) : CANALES[0];
+  if (!$("#banner").src.endsWith(canalBanner.banner)) $("#banner").src = canalBanner.banner;
+  $("#banner").hidden = !(sec === "inicio" || sec === "subs" || canalSec);
+  $("#tituloLista").textContent = sec === "buscar" ? `Resultados para "${$("#buscar").value}"` : sec === "videos" && largos.length ? "🎬 Videos" : (sec === "subs" || canalSec) && largos.length ? "🎬 Videos" : "";
   const g = $("#grilla"); g.innerHTML = "";
   if (verLargos) largos.forEach(v => g.appendChild(tarjeta(v)));
   const gs = $("#grillaShorts"); gs.innerHTML = "";
   if (verShorts) shorts.forEach(v => gs.appendChild(tarjeta(v)));
-  gs.classList.toggle("estante", sec === "inicio" || sec === "subs");
-  $("#tituloShorts").hidden = !(verShorts && shorts.length) || sec === "shorts" && false;
+  gs.classList.toggle("estante", sec === "inicio" || sec === "subs" || !!canalSec);
+  $("#tituloShorts").hidden = !(verShorts && shorts.length);
   $("#tituloShorts").textContent = "📱 Shorts";
-  if (sec === "subs") {
-    $("#canalCuenta").textContent = [largos.length ? `${largos.length} video${largos.length > 1 ? "s" : ""}` : "", shorts.length ? `${shorts.length} short${shorts.length > 1 ? "s" : ""}` : ""].filter(Boolean).join(" · ") || "Canal de Franclips";
-    const b = $("#btnSuscribir"); b.textContent = suscripto() ? "✅ Suscripto" : "🔔 Suscribirme"; b.classList.toggle("suscripto", suscripto());
-  }
 }
 function irSeccion(cual) {
   seccion = cual; $("#buscar").value = "";
@@ -698,7 +724,6 @@ function irSeccion(cual) {
 }
 document.querySelectorAll(".menu .item[data-sec]").forEach(a => a.onclick = (e) => { e.preventDefault(); irSeccion(a.dataset.sec); });
 $("#menuBoton").onclick = () => $("#menu").classList.toggle("abierto");
-$("#btnSuscribir").onclick = () => { try { localStorage.setItem("franclips-suscripto", suscripto() ? "0" : "1"); } catch {} mostrarLista(); };
 let shortActual = null, shortActualLargo = null;
 function verShort(id) {
   const v = videos.find(x => x.id === id); if (!v) return;
@@ -748,6 +773,7 @@ function abrirVideo(id, guardarHistoria = true) {
   r.querySelectorAll("track").forEach(t => t.remove());
   if (v.subtitulos) { const t = document.createElement("track"); t.kind = "subtitles"; t.srclang = "es"; t.label = "Español"; t.default = true; t.src = v.subtitulos; r.appendChild(t); r.textTracks[0] && (r.textTracks[0].mode = "showing"); }
   $("#btnBorrarVideo").hidden = !(v.pendiente || v.deClaude); $("#btnBorrarVideo").onclick = () => borrarLocal(v.id);
+  { const c = canalDe(v); $("#verCanal").textContent = (c.id === "gameplays" ? "🎮 " : "🎬 ") + c.nombre; $("#verCanal").onclick = () => irSeccion("canal:" + c.id); }
   $("#verFecha").textContent = new Date(v.fecha).toLocaleDateString("es-AR", { day: "numeric", month: "long", year: "numeric" }) + " · " + mmss(v.duracion || 0);
   const otros = $("#otrosVideos"); otros.innerHTML = "";
   videos.filter(x => x.id !== id).slice(0, 12).forEach(x => otros.appendChild(tarjeta(x)));
@@ -1969,7 +1995,7 @@ const PROY = {
   async leer() { try { const db = await this.abrir(); return await new Promise(res => { const r = db.transaction("p").objectStore("p").get("actual"); r.onsuccess = () => res(r.result || null); r.onerror = () => res(null); }); } catch { return null; } },
   async borrar() { try { const db = await this.abrir(); await new Promise(res => { const t = db.transaction("p", "readwrite"); t.objectStore("p").delete("actual"); t.oncomplete = res; t.onerror = res; }); } catch {} },
 };
-const CAMPOS = ["nombreVideo", "tipoVideo", "volVideo", "fBrillo", "fContraste", "fSaturacion", "fBlur", "eZoom", "eMarco", "subColor", "subFondo", "subTam", "subPos", "subLetra", "fondoTipo", "fondoMomento", "fondoColor1", "fondoColor2", "cfBrillo", "cfContraste", "cfSaturacion", "cfBlur"];
+const CAMPOS = ["nombreVideo", "tipoVideo", "canalVideo", "volVideo", "fBrillo", "fContraste", "fSaturacion", "fBlur", "eZoom", "eMarco", "subColor", "subFondo", "subTam", "subPos", "subLetra", "fondoTipo", "fondoMomento", "fondoColor1", "fondoColor2", "cfBrillo", "cfContraste", "cfSaturacion", "cfBlur"];
 const TILDES = ["eEspejo", "eFade", "sinCaratula"];
 function fotoADatos(img) { try { const c = document.createElement("canvas"); c.width = img.naturalWidth || img.width; c.height = img.naturalHeight || img.height; c.getContext("2d").drawImage(img, 0, 0); return c.toDataURL("image/jpeg", 0.9); } catch { return null; } }
 const sinFoto = (o) => { const c = { ...o }; if (o.img) { c.imgDatos = o.imgDatos || (o.imgDatos = fotoADatos(o.img)); } delete c.img; return c; };
@@ -2275,7 +2301,7 @@ async function subirAGitHub(video, caratula, info) {
     lista = JSON.parse(new TextDecoder().decode(Uint8Array.from(atob(actual.content.replace(/\n/g, "")), c => c.charCodeAt(0))));
   } catch {}
   lista.videos = (lista.videos || []).filter(v => v.id !== id);
-  lista.videos.push({ id, tipo: info.tipo, titulo: info.titulo, archivo: `videos/${id}.${ext}`, caratula: `caratulas/${id}.jpg`, duracion: Math.round(info.duracion), fecha: new Date().toISOString() });
+  lista.videos.push({ id, tipo: info.tipo, canal: info.canal || "video", titulo: info.titulo, archivo: `videos/${id}.${ext}`, caratula: `caratulas/${id}.jpg`, duracion: Math.round(info.duracion), fecha: new Date().toISOString() });
   progreso(0.9); estado("📝 Guardando en tu página…");
   const ref = await gh(`/git/ref/heads/${RAMA}`);
   const commit = await gh(`/git/commits/${ref.object.sha}`);
@@ -2302,20 +2328,20 @@ $("#btnSubir").onclick = async () => {
     const { blob, duracion, ext } = hecho;
     if (blob.size > 95 * 1024 * 1024) throw new Error(`El video quedó muy pesado (${Math.round(blob.size / 1048576)} MB). GitHub acepta hasta unos 95 MB: recortalo un poco.`);
     const id = normalizar(titulo).replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 40) + "-" + Date.now().toString(36);
-    const tipo = $("#tipoVideo").value;
+    const tipo = $("#tipoVideo").value, canal = $("#canalVideo").value;
     if (tipo === "short" && duracion > 180) throw new Error("Un short puede durar como mucho 3 minutos. Recortalo un poco.");
     if (!token) {
       // Sin llave de GitHub: se descargan el video y la carátula para mandárselos a Claude
-      const base = `${tipo === "short" ? "SHORT" : "VIDEO"} - ${titulo.replace(/[\\/:*?"<>|\[\]]/g, "")} [${id}]`;
-      await BD.guardar({ id, tipo, titulo, duracion: Math.round(duracion), fecha: new Date().toISOString(), video: blob, imagen: caratula });
+      const base = `${tipo === "short" ? "SHORT" : "VIDEO"}${canal === "gameplays" ? " (Gameplays)" : ""} - ${titulo.replace(/[\\/:*?"<>|\[\]]/g, "")} [${id}]`;
+      await BD.guardar({ id, tipo, canal, titulo, duracion: Math.round(duracion), fecha: new Date().toISOString(), video: blob, imagen: caratula });
       const bajar = (blob_, nombre) => { const a = document.createElement("a"); a.href = URL.createObjectURL(blob_); a.download = nombre; document.body.appendChild(a); a.click(); a.remove(); };
       bajar(blob, base + "." + ext); setTimeout(() => bajar(caratula, base + " - caratula.jpg"), 600);
       progreso(1); estado(`✅ ¡Subido! Ya lo ves en tu Franclips (solo vos). Cuando le digas a Claude "actualizá Franclips", lo publica para todo el mundo.`);
-      videos.unshift({ id, tipo, titulo, duracion: Math.round(duracion), fecha: new Date().toISOString(), archivo: URL.createObjectURL(blob), caratula: URL.createObjectURL(caratula), pendiente: true });
+      videos.unshift({ id, tipo, canal, titulo, duracion: Math.round(duracion), fecha: new Date().toISOString(), archivo: URL.createObjectURL(blob), caratula: URL.createObjectURL(caratula), pendiente: true });
       mostrarLista(); editorUsado = true; renderizando = false; $("#btnSubir").disabled = false; $("#cerrarEditor").disabled = false;
       return;
     }
-    const lista = await subirAGitHub(blob, caratula, { id, titulo, duracion, tipo, ext });
+    const lista = await subirAGitHub(blob, caratula, { id, titulo, duracion, tipo, canal, ext });
     progreso(1); estado(`✅ ¡Subido${tipo === "short" ? " tu short" : ""}! "${titulo}" aparece en tu página en uno o dos minutos (GitHub tiene que publicarlo).`);
     videos = lista.videos.map(v => v.id === id ? { ...v, archivo: URL.createObjectURL(blob), caratula: URL.createObjectURL(caratula) } : v);
     videos.sort((a, b) => (b.fecha || "").localeCompare(a.fecha || "")); mostrarLista(); editorUsado = true;
