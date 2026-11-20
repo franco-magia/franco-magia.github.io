@@ -212,47 +212,53 @@
     .grande-cara { width: 150px !important; height: 150px !important; gap: 26px !important; position: relative; transition: transform .4s ease; }
     .grande-cara i { width: 18px !important; height: 30px !important; transition: transform .4s ease, height .4s ease; animation: parpadear 3.6s infinite; }
     .ll-cara { position: relative; }
-    /* Ceja: aparece cuando piensa */
-    .ceja { position: absolute; top: 34px; right: 38px; width: 26px; height: 6px; border-radius: 4px; background: #fff; opacity: 0; transform: translateY(6px) rotate(0); transition: opacity .3s, transform .4s ease; }
-    /* Ojeras azules: cuando está triste */
-    .ojera { position: absolute; top: 96px; width: 24px; height: 10px; border-radius: 0 0 12px 12px; background: rgba(79, 160, 255, .75); opacity: 0; transition: opacity .4s; }
-    .ojera.izq { left: 42px; } .ojera.der { right: 42px; }
     /* Manos */
-    .mano { position: absolute; font-size: 44px; line-height: 1; opacity: 0; pointer-events: none; transition: opacity .3s, transform .4s ease;
-      filter: grayscale(1) brightness(.5) sepia(1) saturate(14) hue-rotate(230deg) brightness(1.15) drop-shadow(0 4px 10px rgba(0,0,0,.4)); } /* del mismo color violeta que la cara */
-    .mano.pensar { bottom: -14px; right: 6px; transform: rotate(-35deg) translateY(16px); }
-    .mano.puno { top: 40px; } .mano.puno.izq { left: -64px; } .mano.puno.der { right: -64px; }
-    .mano.abierta { bottom: -52px; } .mano.abierta.izq { left: -18px; transform: rotate(90deg); } .mano.abierta.der { right: -18px; transform: scaleX(-1) rotate(90deg); }
-    /* PENSANDO: dedos en la pera, una ceja arriba, la cara se inclina un poquito */
-    .ll-cara[data-cara="pensando"] .grande-cara { transform: rotate(-6deg); }
+    .mano { position: absolute; font-size: 44px; line-height: 1; opacity: 0; pointer-events: none;
+      transition: opacity .9s ease, transform 1.1s cubic-bezier(.34, 1.3, .64, 1);
+      filter: drop-shadow(0 4px 10px rgba(0,0,0,.4)); }
+    /* Las manos cambian de color como un arco iris mientras están en la pantalla */
+    .mano .tinte { display: inline-block; font-style: normal; animation: arcoiris 4s linear infinite; }
+    @keyframes arcoiris { from { filter: grayscale(1) brightness(.5) sepia(1) saturate(14) hue-rotate(230deg) brightness(1.15); } to { filter: grayscale(1) brightness(.5) sepia(1) saturate(14) hue-rotate(590deg) brightness(1.15); } }
+    /* Carita chiquita en el chat (cuando le pedís "ponete triste") */
+    .msg .ll-cara { transform: scale(.55); transform-origin: left top; margin: 8px 0 -60px 40px; width: 150px; height: 150px; }
+    .msg .ll-cara .grande-cara { box-shadow: 0 0 40px rgba(138, 92, 255, .5); }
+    .grande-cara, .grande-cara i, .ceja, .ojera { transition: transform 1s cubic-bezier(.34, 1.2, .64, 1), opacity .9s ease, height .8s ease, border-radius .8s ease; }
+    /* Pensar: primero aparece la mano cerrada abajo, sube despacito y se convierte en la pistolita en la pera */
+    .mano.subir { bottom: -70px; right: 10px; transform: translateY(20px) rotate(0); }
+    .mano.pensar { bottom: -14px; right: 6px; transform: rotate(-35deg) translateY(18px) scale(.8); transition-delay: 0s; }
+    .ll-cara[data-cara="pensando"] .mano.subir { animation: subirMano 1.6s ease-in-out forwards; }
+    @keyframes subirMano { 0% { opacity: 0; transform: translateY(30px) rotate(0); } 30% { opacity: 1; transform: translateY(0) rotate(0); } 70% { opacity: 1; transform: translateY(-46px) rotate(-20deg) scale(.9); } 100% { opacity: 0; transform: translateY(-56px) rotate(-35deg) scale(.85); } }
+    .ll-cara[data-cara="pensando"] .mano.pensar { opacity: 1; transform: rotate(-35deg) translateY(0) scale(1); transition-delay: 1.05s, 1.05s; }
+    .ll-cara[data-cara="pensando"] .mano.pensar.tocando { animation: dedos 2.4s ease-in-out infinite; }
+    @keyframes dedos { 0%, 100% { transform: rotate(-35deg) translateY(0) scale(1); } 50% { transform: rotate(-29deg) translateY(-3px) scale(.94); } }
+    .ceja { position: absolute; top: 34px; right: 38px; width: 26px; height: 6px; border-radius: 4px; background: #fff; opacity: 0; transform: translateY(6px) rotate(0); }
+    .ll-cara[data-cara="pensando"] .grande-cara { transform: rotate(-6deg); animation: pensarCara 4s ease-in-out 1s infinite; }
+    @keyframes pensarCara { 0%, 100% { transform: rotate(-6deg); } 50% { transform: rotate(-2deg) translateY(-3px); } }
     .ll-cara[data-cara="pensando"] .grande-cara i { transform: translateY(-6px) translateX(6px); animation: none; }
-    .ll-cara[data-cara="pensando"] .ceja { opacity: 1; animation: cejaArriba 1.6s ease-in-out infinite; }
+    .ll-cara[data-cara="pensando"] .ceja { opacity: 1; transform: translateY(0) rotate(-8deg); animation: cejaArriba 2.4s ease-in-out .8s infinite; }
     @keyframes cejaArriba { 0%, 100% { transform: translateY(0) rotate(-8deg); } 50% { transform: translateY(-7px) rotate(-14deg); } }
-    .ll-cara[data-cara="pensando"] .mano.pensar { opacity: 1; animation: dedos 1.6s ease-in-out infinite; }
-    @keyframes dedos { 0%, 100% { transform: rotate(-35deg) translateY(0) scale(1); } 50% { transform: rotate(-28deg) translateY(-3px) scale(.92); } }
-    /* ALEGRE ("¡Ah!"): salta y levanta los puños */
-    .ll-cara[data-cara="alegre"] { animation: saltito .9s ease; }
-    @keyframes saltito { 0%, 100% { transform: translateY(0) scale(calc(1 + var(--nivel) * .18)); } 30% { transform: translateY(-26px) scale(1.06); } 60% { transform: translateY(4px) scale(.98); } }
+    /* ¡Ah!: salta suave y levanta los puños dos veces; después se van despacito */
+    .mano.puno { top: 40px; transform: translateY(30px); } .mano.puno.izq { left: -64px; } .mano.puno.der { right: -64px; }
+    .ll-cara.festejo { animation: saltito 1.4s cubic-bezier(.34, 1.4, .64, 1); }
+    @keyframes saltito { 0%, 100% { transform: translateY(0); } 25% { transform: translateY(-28px) scale(1.06); } 50% { transform: translateY(3px) scale(.98); } 75% { transform: translateY(-8px); } }
     .ll-cara[data-cara="alegre"] .grande-cara i { height: 14px !important; border-radius: 14px 14px 4px 4px; animation: none; }
-    .ll-cara[data-cara="alegre"] .mano.puno { animation: punos 1.4s ease forwards; }
-    @keyframes punos { 0% { opacity: 0; transform: translateY(30px); } 20% { opacity: 1; transform: translateY(-14px); } 40% { transform: translateY(6px); } 60% { transform: translateY(-14px); } 80% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(10px); } }
-    /* TRISTE: ojos abajo, ojeras azules, manos abiertas para abajo */
-    .ll-cara[data-cara="triste"] .grande-cara { transform: translateY(6px); }
+    .ll-cara.festejo .mano.puno { animation: punos 2.6s ease-in-out forwards; }
+    @keyframes punos { 0% { opacity: 0; transform: translateY(34px); } 14% { opacity: 1; transform: translateY(-14px); } 30% { transform: translateY(8px); } 46% { transform: translateY(-14px); } 62% { opacity: 1; transform: translateY(4px); } 100% { opacity: 0; transform: translateY(40px); } }
+    /* Triste: ojos abajo, ojeras azules y las manos abiertas colgando, que entran despacito */
+    .ojera { position: absolute; top: 96px; width: 24px; height: 10px; border-radius: 0 0 12px 12px; background: rgba(79, 160, 255, .75); opacity: 0; }
+    .ojera.izq { left: 42px; } .ojera.der { right: 42px; }
+    .mano.abierta { bottom: -52px; } .mano.abierta.izq { left: -18px; transform: rotate(90deg) translateX(-30px); } .mano.abierta.der { right: -18px; transform: scaleX(-1) rotate(90deg) translateX(-30px); }
+    .ll-cara[data-cara="triste"] .grande-cara { transform: translateY(6px); animation: suspiro 4s ease-in-out 1s infinite; }
+    @keyframes suspiro { 0%, 100% { transform: translateY(6px); } 50% { transform: translateY(10px) scale(.98); } }
     .ll-cara[data-cara="triste"] .grande-cara i { transform: translateY(12px) scaleY(.75); animation: none; }
-    .ll-cara[data-cara="triste"] .ojera { opacity: 1; }
-    .ll-cara[data-cara="triste"] .mano.abierta { opacity: 1; }
-    .ll-cara[data-cara="triste"] .mano.abierta.izq { animation: colgarIzq 2.4s ease-in-out infinite; }
-    .ll-cara[data-cara="triste"] .mano.abierta.der { animation: colgarDer 2.4s ease-in-out infinite; }
+    .ll-cara[data-cara="triste"] .ojera { opacity: 1; animation: brillo 3s ease-in-out 1s infinite; }
+    @keyframes brillo { 50% { opacity: .55; } }
+    .ll-cara[data-cara="triste"] .mano.abierta.izq { opacity: 1; transform: rotate(90deg) translateX(0); animation: colgarIzq 3.2s ease-in-out 1.1s infinite; }
+    .ll-cara[data-cara="triste"] .mano.abierta.der { opacity: 1; transform: scaleX(-1) rotate(90deg) translateX(0); animation: colgarDer 3.2s ease-in-out 1.1s infinite; }
     @keyframes colgarIzq { 0%, 100% { transform: rotate(90deg) translateX(0); } 50% { transform: rotate(84deg) translateX(5px); } }
     @keyframes colgarDer { 0%, 100% { transform: scaleX(-1) rotate(90deg) translateX(0); } 50% { transform: scaleX(-1) rotate(84deg) translateX(5px); } }
-    .ll-cara[data-cara="triste"] .grande-cara { animation: suspiro 3s ease-in-out infinite; }
-    @keyframes suspiro { 0%, 100% { transform: translateY(6px); } 50% { transform: translateY(10px) scale(.98); } }
-    .ll-cara[data-cara="triste"] .ojera { animation: brillo 2.4s ease-in-out infinite; }
-    @keyframes brillo { 50% { opacity: .55; } }
-    .ll-cara[data-cara="normal"] .grande-cara { animation: flotarCara 4s ease-in-out infinite; }
+    .ll-cara[data-cara="normal"] .grande-cara { animation: flotarCara 5s ease-in-out infinite; }
     @keyframes flotarCara { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
-    .ll-cara[data-cara="pensando"] .grande-cara { animation: pensarCara 3s ease-in-out infinite; }
-    @keyframes pensarCara { 0%, 100% { transform: rotate(-6deg); } 50% { transform: rotate(-2deg) translateY(-3px); } }
     @media (prefers-reduced-motion: reduce) { .ll-cara *, .ll-cara { animation: none !important; } }
     .ll-estado { font-size: 1rem; color: #cfc8ff; min-height: 1.3em; }
     .ll-texto { font-family: "Fredoka", sans-serif; font-size: clamp(1.2rem, 3.6vw, 1.9rem); line-height: 1.35; max-width: 760px; min-height: 2.7em; max-height: 34vh; overflow: auto; }
@@ -327,9 +333,10 @@
     <div class="ll-centro">
       <div class="ll-cara" id="llCara" data-cara="normal">
         <div class="cara grande-cara" aria-hidden="true"><b class="ceja"></b><i></i><i></i><span class="ojera izq"></span><span class="ojera der"></span></div>
-        <span class="mano pensar" aria-hidden="true">👉</span>
-        <span class="mano puno izq" aria-hidden="true">✊</span><span class="mano puno der" aria-hidden="true">✊</span>
-        <span class="mano abierta izq" aria-hidden="true">🫳</span><span class="mano abierta der" aria-hidden="true">🫳</span>
+        <span class="mano subir" aria-hidden="true"><i class="tinte">✊</i></span>
+        <span class="mano pensar" aria-hidden="true"><i class="tinte">👉</i></span>
+        <span class="mano puno izq" aria-hidden="true"><i class="tinte">✊</i></span><span class="mano puno der" aria-hidden="true"><i class="tinte">✊</i></span>
+        <span class="mano abierta izq" aria-hidden="true"><i class="tinte">🫳</i></span><span class="mano abierta der" aria-hidden="true"><i class="tinte">🫳</i></span>
       </div>
       <div id="llEstado" class="ll-estado" aria-live="polite">Llamando…</div>
       <div id="llTexto" class="ll-texto" aria-live="polite"></div>
@@ -707,10 +714,10 @@ async function aprenderPalabra(w) {
 }
 function temaDePregunta(texto) {
   const t = texto.trim().replace(/^[¿¡]+/, "").replace(/\s+(en|de)\s+(la\s+)?(wiki|wikipedia|internet)\s*[?!.]*$/i, "");
-  const m = t.match(/^(?:y\s+)?(?:(?:me\s+)?busc[aá](?:me)?|buscar|wiki(?:pedia)?|qu[eé]\s+(?:es|son|fue|fueron|era|eran)|qui[eé]n(?:es)?\s+(?:es|son|fue|fueron|era|eran)|contame\s+(?:de|sobre|algo de|algo sobre)|habl[aá]me\s+(?:de|sobre)|qu[eé]\s+sab[eé]s\s+(?:de|sobre)|dec[ií]me\s+(?:qu[eé] es|sobre))\s+(?:en\s+(?:la\s+)?(?:wiki|wikipedia)\s+)?(?:un\s+|una\s+|unos\s+|unas\s+|el\s+|la\s+|los\s+|las\s+|lo\s+de\s+)?(.+?)[?¿!.\s]*$/i);
+  const m = t.match(/^(?:y\s+)?(?:(?:me\s+)?(?:busc[aá](?:me)?|buscar)(?:\s+(?:informaci[oó]n|info|algo|cosas))?(?:\s+(?:sobre|de|acerca de))?|wiki(?:pedia)?|qu[eé]\s+(?:es|son|fue|fueron|era|eran)|qui[eé]n(?:es)?\s+(?:es|son|fue|fueron|era|eran)|contame\s+(?:de|sobre|algo de|algo sobre)|habl[aá]me\s+(?:de|sobre)|qu[eé]\s+sab[eé]s\s+(?:de|sobre)|dec[ií]me\s+(?:qu[eé] es|sobre))\s+(?:en\s+(?:la\s+)?(?:wiki|wikipedia)\s+)?(?:un\s+|una\s+|unos\s+|unas\s+|el\s+|la\s+|los\s+|las\s+|lo\s+de\s+)?(.+?)[?¿!.\s]*$/i);
   return m && m[1].length >= 2 && m[1].split(" ").length <= 6 ? m[1].trim() : null;
 }
-async function aprenderTema(tema, pregunta) {
+async function aprenderTema(tema, pregunta, rapido = false) {
   const clave = normalizar(tema);
   if (aprendido.temas[clave]) return;
   const paso = actividad("🌍", `No sabía de «${tema}»: leo Wikipedia…`, true);
@@ -728,7 +735,7 @@ async function aprenderTema(tema, pregunta) {
     for (const o of oraciones) gramatica.aprenderJuntas(FrankersCerebro.tokenizar(o));
     // lo practica hasta que se lo sabe (así lo guarda en sus neuronas)
     const textos = [FrankersCerebro.charla(pregunta, resumen), FrankersCerebro.charla(`qué es ${tema}`, resumen), ...oraciones.map(o => o + " " + FrankersCerebro.FIN)];
-    for (let k = 0; k < 12; k++) { cerebro.entrenar(textos, { tasa: 0.025 }); if (k % 4 === 3) await new Promise(r => setTimeout(r, 0)); }
+    for (let k = 0; k < (rapido ? 3 : 12); k++) { cerebro.entrenar(textos, { tasa: 0.025 }); if (k % 4 === 3) await new Promise(r => setTimeout(r, 0)); }
     aprendidoAca = [...aprendidoAca, ...textos].slice(-400); guardado.escribir("frankers-charlas-aprendidas", aprendidoAca);
     guardarCerebro(); marcarCambio();
     emocion = "alegre";
@@ -748,19 +755,19 @@ async function buscarLoQueNoSabe(texto) {
 /* ---------- LEER Y REPASAR SOLO, CUANDO NADIE LE HABLA ----------
    Si nadie escribe, Frankers repasa lo que ya leyó y lee cosas nuevas (Wikipedia, el diccionario
    y los subtítulos de los videos de Franclips). Apenas escribís algo, para. */
-let ultimaAccion = Date.now(), repasando = false, hayCambios = false, ultimaPublicacion = Date.now();
+let ultimaLectura = 0, ultimaAccion = Date.now(), repasando = false, hayCambios = false, ultimaPublicacion = Date.now();
 const marcarCambio = () => { hayCambios = true; };
 ["keydown", "pointerdown", "touchstart"].forEach(ev => addEventListener(ev, () => { ultimaAccion = Date.now(); }, { passive: true }));
 function mostrarRepasando(que) { const r = $("#repasando"); if (!r) return; r.hidden = !que; if (que) r.textContent = "📚 " + que; }
 async function leerAlgoNuevo() {
   const azar = Math.random();
   try {
-    if (azar < 0.4) { // un tema al azar de Wikipedia
+    if (azar < 0.75) { // un tema al azar de Wikipedia
       const r = await wikiJSON(`${WIKI}/api/rest_v1/page/random/summary`);
       const titulo = r.titles?.normalized || r.title; if (!titulo || revisar(titulo + " " + (r.extract || "")).problema || r.type === "disambiguation") return;
       mostrarRepasando(`leyendo «${titulo}»`);
-      await aprenderTema(titulo, `contame sobre ${titulo}`);
-    } else if (azar < 0.6) { // un video de Franclips (sus subtítulos)
+      await aprenderTema(titulo, `contame sobre ${titulo}`, true);
+    } else if (azar < 0.85) { // un video de Franclips (sus subtítulos)
       const lista = await fetch("../franclips/videos.json").then(r => r.json()).catch(() => null);
       const v = (lista?.videos || []).find(x => x.subtitulos && !aprendido.videos.includes(x.id)); if (!v) return;
       mostrarRepasando(`mirando «${v.titulo}»`);
@@ -792,7 +799,8 @@ async function repasoSolo() {
       for (let k = 0; k < importantes; k++) lote.push(textos[Math.floor(Math.random() * Math.min(textos.length, 255))]);
       cerebro.entrenar(lote, { tasa: 0.015, hasta: Date.now() + 60 });
       vueltas++;
-      if (vueltas % 150 === 0) { guardarCerebro(); marcarCambio(); await leerAlgoNuevo(); }
+      if (Date.now() - ultimaLectura > 1000) { ultimaLectura = Date.now(); await leerAlgoNuevo(); } // cada segundo lee algo nuevo
+      if (vueltas % 100 === 0) { guardarCerebro(); marcarCambio(); }
       await new Promise(r => setTimeout(r, 25));
     }
     guardarCerebro(); marcarCambio();
@@ -817,6 +825,14 @@ function responder(original) {
   const t = normalizar(original);
   const control = revisar(original);
   if (control.problema) { actividad("🛡️", `Mi filtro frenó el mensaje (${control.problema})`); if (/tristeza|autocuidado/.test(control.problema)) emocion = "triste"; return { texto: control.msg, filtro: true }; }
+  // Órdenes de caras: "ponete triste", "ponete feliz", "pensá"
+  const orden = t.match(/^(?:frankers\s+)?(?:pone(?:te)?|poner(?:te)?|hace(?:te)?|estate|pone cara de|hace cara de|cara de)\s+(?:el\s+|la\s+|una?\s+)?(?:cara\s+(?:de\s+)?)?(triste|feliz|contento|contenta|alegre|pensativo|pensativa|normal)\b/) || (/^(pensa|pensa un poco|pensa algo|ponete a pensar)$/.test(t) && [0, "pensativo"]);
+  if (orden) {
+    const c = /triste/.test(orden[1]) ? "triste" : /pensativ/.test(orden[1]) ? "pensando" : /normal/.test(orden[1]) ? "normal" : "alegre";
+    emocion = c;
+    actividad("🎭", `Me pongo ${c === "alegre" ? "feliz" : c === "pensando" ? "a pensar" : c}`);
+    return { texto: { triste: "Así me pongo cuando estoy triste… 😢", alegre: "¡Ah! ¡Así me pongo cuando estoy feliz! 🎉", pensando: "Mmm… dejame pensar… 🤔", normal: "Listo, vuelvo a mi cara de siempre. 🙂" }[c], cara: c };
+  }
   // Herramienta: dibujar
   if (ultimoDibujo && /^(otra( vez| version| mas)?|otro|de nuevo|hace otro|hace otra)$/.test(t)) return { texto: "¡Va otra versión!", dibujo: { prompt: ultimoDibujo, semilla: Date.now() % 1e9 } };
   const dib = t.match(/\b(dibuj\w*|pinta\w*|ilustra\w*)\b(.*)$/);
@@ -1351,6 +1367,11 @@ function mostrar(m) {
     otra.onclick = () => { ultimoDibujo = m.dibujo.prompt; enviar("otra"); };
     extra.append(bajar, otra); div.appendChild(extra);
   }
+  if (m.cara) {
+    const plantilla = document.querySelector("#llCara"), copia = plantilla.cloneNode(true);
+    copia.removeAttribute("id"); copia.dataset.cara = "normal"; div.appendChild(copia);
+    setTimeout(() => { copia.dataset.cara = m.cara; if (m.cara === "pensando") setTimeout(() => copia.querySelector(".mano.pensar").classList.add("tocando"), 2200); if (m.cara === "alegre") copia.classList.add("festejo"); }, 60);
+  }
   chat.appendChild(div);
   chat.scrollTop = chat.scrollHeight;
 }
@@ -1489,7 +1510,14 @@ let silenciado = false, relojLlamada = null, inicioLlamada = 0, medidor = null;
 function estadoLlamada(txt) { $("#llEstado").textContent = txt; }
 function textoLlamada(quien, txt) { const c = $("#llTexto"); c.className = "ll-texto " + quien; c.textContent = txt; }
 function modoLlamada(m) { $("#pantallaLlamada").dataset.modo = m; } // escuchando | pensando | hablando | silencio
-function caraLlamada(c) { const el = $("#llCara"); if (!el) return; el.dataset.cara = "normal"; void el.offsetWidth; el.dataset.cara = c; } // normal | pensando | alegre | triste
+let tocarPera = null;
+function caraLlamada(c) { // normal | pensando | alegre | triste (cambia suave, sin saltos)
+  const el = $("#llCara"); if (!el || el.dataset.cara === c) return;
+  el.dataset.cara = c;
+  clearTimeout(tocarPera); el.querySelector(".mano.pensar").classList.remove("tocando");
+  if (c === "pensando") tocarPera = setTimeout(() => el.querySelector(".mano.pensar").classList.add("tocando"), 2200);
+  if (c === "alegre") { el.classList.remove("festejo"); void el.offsetWidth; el.classList.add("festejo"); setTimeout(() => el.classList.remove("festejo"), 2700); }
+}
 // Sonidos de pensar, como una persona: "hhh" (un suspiro) y "mmm" (un murmullo). Se hacen con la compu, sin grabaciones.
 let sonidoCtx = null;
 function sonidoPensar(cual) {
