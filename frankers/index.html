@@ -200,6 +200,43 @@
     #frankers-borde { position: fixed; inset: 0; pointer-events: none; z-index: 9999; border: 6px solid var(--color-principal); box-shadow: inset 0 0 25px var(--color-principal); display: none; animation: latido 1.5s ease-in-out infinite; }
     #frankers-cartel { position: fixed; top: 10px; left: 50%; transform: translateX(-50%); background: var(--color-principal); color: white; z-index: 10000; padding: 6px 16px; border-radius: 20px; font-weight: bold; display: none; }
     @keyframes latido { 50% { opacity: .5; } }
+    /* ---- Llamada (estilo Gemini Live) ---- */
+    .pantalla-llamada { --nivel: 0; position: fixed; inset: 0; z-index: 9000; background: radial-gradient(ellipse at 50% 30%, #1d1450, #07051a 70%); color: #fff; display: flex; flex-direction: column; overflow: hidden; opacity: 0; transform: scale(1.03); transition: opacity .35s ease, transform .35s ease; }
+    .pantalla-llamada.abierta { opacity: 1; transform: none; }
+    .pantalla-llamada[hidden] { display: none; }
+    .ll-arriba { display: flex; justify-content: space-between; align-items: center; padding: 18px 22px; font-size: .95rem; color: #cfc8ff; }
+    .ll-arriba b { font-family: "Fredoka", sans-serif; font-size: 1.25rem; color: #fff; }
+    .ll-vivo { color: #ff6b8a; font-weight: 700; animation: latido 1.6s infinite; }
+    .ll-centro { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; padding: 0 20px; position: relative; z-index: 2; text-align: center; }
+    .ll-cara { width: 150px; height: 150px; border-radius: 50%; display: grid; place-items: center; transform: scale(calc(1 + var(--nivel) * .18)); transition: transform .08s linear; box-shadow: 0 0 calc(30px + var(--nivel) * 90px) rgba(138, 92, 255, calc(.45 + var(--nivel) * .5)); }
+    .grande-cara { width: 150px !important; height: 150px !important; }
+    .grande-cara i { width: 18px !important; height: 30px !important; }
+    .pantalla-llamada[data-modo="pensando"] .ll-cara { animation: girar 1.4s linear infinite; }
+    @keyframes girar { to { filter: hue-rotate(360deg); } }
+    .ll-estado { font-size: 1rem; color: #cfc8ff; min-height: 1.3em; }
+    .ll-texto { font-family: "Fredoka", sans-serif; font-size: clamp(1.2rem, 3.6vw, 1.9rem); line-height: 1.35; max-width: 760px; min-height: 2.7em; max-height: 34vh; overflow: auto; }
+    .ll-texto.yo { color: #9fe9ff; } .ll-texto.frankers { color: #fff; }
+    .ll-aurora { position: absolute; left: -10%; right: -10%; bottom: -30%; height: calc(46% + var(--nivel) * 22%); filter: blur(46px); opacity: calc(.55 + var(--nivel) * .45); transition: height .12s linear; z-index: 1; pointer-events: none; }
+    .ll-aurora i { position: absolute; bottom: 0; width: 55%; height: 100%; border-radius: 50%; animation: flotar 7s ease-in-out infinite alternate; }
+    .ll-aurora i:nth-child(1) { left: 0; background: #4fd8ff; }
+    .ll-aurora i:nth-child(2) { left: 25%; background: #8a5cff; animation-duration: 9s; animation-delay: -3s; }
+    .ll-aurora i:nth-child(3) { right: 0; background: #c86bff; animation-duration: 6s; animation-delay: -1s; }
+    @keyframes flotar { from { transform: translate(-8%, 6%) scale(1); } to { transform: translate(8%, -4%) scale(1.15); } }
+    .pantalla-llamada[data-modo="silencio"] .ll-aurora { filter: blur(46px) grayscale(1); opacity: .25; }
+    .ll-botones { position: relative; z-index: 3; display: flex; justify-content: center; gap: clamp(18px, 6vw, 46px); padding: 18px 16px calc(28px + env(safe-area-inset-bottom)); }
+    .ll-boton { position: relative; width: 84px; height: 84px; border-radius: 50%; border: 1px solid rgba(255,255,255,.18); background: rgba(255,255,255,.1); backdrop-filter: blur(12px); color: #fff; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; transition: transform .15s ease, background .2s; }
+    .ll-boton:hover { transform: scale(1.06); background: rgba(255,255,255,.18); }
+    .ll-boton:active { transform: scale(.95); }
+    .ll-boton svg { width: 34px; height: 34px; fill: currentColor; }
+    .ll-boton small { position: absolute; bottom: -24px; font-size: .78rem; color: #cfc8ff; white-space: nowrap; }
+    .ll-emoji { font-size: 2rem; line-height: 1; }
+    .ll-boton.apagado { background: #fff; color: #1d1450; }
+    .ll-cortar { width: 96px; height: 96px; background: linear-gradient(135deg, #ff5f7a, #e5193f); border: none; box-shadow: 0 8px 30px rgba(255, 45, 85, .55); }
+    .ll-cortar:hover { background: linear-gradient(135deg, #ff7690, #ff2d55); }
+    .ll-cortar svg { width: 44px; height: 44px; }
+    .ll-medidor { position: absolute; inset: -6px; border-radius: 50%; border: 3px solid #4fd8ff; opacity: calc(var(--nivel) * 1.4); transform: scale(calc(1 + var(--nivel) * .35)); transition: transform .08s linear; pointer-events: none; }
+    @media (prefers-reduced-motion: reduce) { .ll-aurora i, .ll-vivo { animation: none; } }
+    .repasando { font-style: normal; font-size: .72rem; font-weight: 600; color: var(--celeste); background: rgba(79,216,255,.12); border: 1px solid rgba(79,216,255,.35); border-radius: 999px; padding: 2px 9px; vertical-align: middle; animation: latido 1.6s ease-in-out infinite; white-space: nowrap; max-width: 46vw; overflow: hidden; text-overflow: ellipsis; display: inline-block; }
   </style>
 </head>
 <body>
@@ -211,7 +248,7 @@
       <div class="identidad">
         <div class="cara" id="cara" aria-hidden="true"><i></i><i></i></div>
         <div class="nombre">
-          <h1><span>Frankers</span></h1>
+          <h1><span>Frankers</span> <em id="repasando" class="repasando" hidden></em></h1>
           <small id="subtitulo">Red neuronal de Franco</small>
           <small id="quienSos" class="quien-sos" hidden></small>
         </div>
@@ -243,6 +280,21 @@
     <footer>Frankers es una red neuronal bebé: inventa sus frases y se puede equivocar · <label class="voz">🔊 Voz: <select id="elegirVoz" aria-label="Voz de Frankers"><option value="mujer">Daniela (mujer, argentina)</option><option value="hombre">Hombre (mexicano)</option><option value="compu">La voz de la compu</option></select></label> <button id="probarVoz" title="Probar la voz">▶️ Probar</button> · <button id="btnCreador">modo creador</button></footer>
   </div>
   <input type="file" id="elegirCarpetaInput" webkitdirectory multiple hidden>
+  <!-- Pantalla de llamada -->
+  <section id="pantallaLlamada" class="pantalla-llamada" hidden data-modo="escuchando" aria-label="Llamada con Frankers">
+    <div class="ll-arriba"><span class="ll-vivo">● En vivo</span><b>Frankers</b><span id="llReloj">00:00</span></div>
+    <div class="ll-centro">
+      <div class="ll-cara"><div class="cara grande-cara" aria-hidden="true"><i></i><i></i></div></div>
+      <div id="llEstado" class="ll-estado" aria-live="polite">Llamando…</div>
+      <div id="llTexto" class="ll-texto" aria-live="polite"></div>
+    </div>
+    <div class="ll-aurora" aria-hidden="true"><i></i><i></i><i></i></div>
+    <div class="ll-botones">
+      <button type="button" id="llSilenciar" class="ll-boton" aria-pressed="false" title="Silenciar el micrófono"><span id="llMedidor" class="ll-medidor"></span><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><small>Micrófono</small></button>
+      <button type="button" id="llInterrumpir" class="ll-boton" title="Interrumpir a Frankers"><span class="ll-emoji">✋</span><small>Interrumpir</small></button>
+      <button type="button" id="llCortar" class="ll-boton ll-cortar" title="Cortar la llamada"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 15.5c5-4.7 13-4.7 18 0l-2.2 2.6a1 1 0 0 1-1.3.2l-2.4-1.6a1 1 0 0 1-.4-1v-1.9a12 12 0 0 0-5.4 0v1.9a1 1 0 0 1-.4 1l-2.4 1.6a1 1 0 0 1-1.3-.2z"/></svg><small>Cortar</small></button>
+    </div>
+  </section>
   <!-- Pantalla grande al entrar: ¿quién sos? -->
   <dialog id="dlgNombre" class="pantalla-nombre">
     <div class="pn-caja">
@@ -348,6 +400,7 @@
   </dialog>
 
 <script src="cerebro.js"></script>
+<script src="gramatica.js"></script>
 <script>
 "use strict";
 /* ---------- ACTIVIDAD: lo que Frankers va haciendo (se ve en vivo en el Buscafrankers) ---------- */
@@ -509,29 +562,196 @@ async function cargarTextosGrandes() {
   paso.fin(`Tengo ${textosGrandes.length.toLocaleString("es-AR")} textos para leer`, "📚");
   return textosGrandes;
 }
-// Frankers habla: la red arma la frase, y el filtro la revisa. Si no pasa, arma otra.
+/* ---------- DICCIONARIO Y GRAMÁTICA (gramatica.js + diccionario.json) ---------- */
+let gramatica = null;
+let aprendido = { palabras: {}, significados: {}, temas: {}, videos: [], ...guardado.leer("frankers-aprendido", {}) }; // lo que buscó en Wiktionary y Wikipedia
+const guardarAprendido = () => guardado.escribir("frankers-aprendido", aprendido);
+async function cargarDiccionario() {
+  const paso = actividad("📖", "Abriendo el diccionario…", true);
+  try {
+    const [d, j, pub] = await Promise.all(["diccionario.json", "juntas.json", "aprendido.json"].map(f => fetch(f).then(r => r.ok ? r.json() : null).catch(() => null)));
+    gramatica = new FrankersGramatica.Gramatica(d || { palabras: {} }, { ...(j || {}) });
+    // lo que aprendió con todos (publicado) + lo de esta compu
+    for (const fuente of [pub, aprendido]) if (fuente) {
+      for (const [w, e] of Object.entries(fuente.palabras || {})) gramatica.sumar(w, e);
+      Object.assign(gramatica.significados, fuente.significados || {});
+      if (fuente !== aprendido) { aprendido.temas = { ...(fuente.temas || {}), ...aprendido.temas }; aprendido.videos = [...new Set([...(fuente.videos || []), ...aprendido.videos])]; }
+    }
+    const juntasAca = guardado.leer("frankers-juntas", null); if (juntasAca) for (const k of ["sv", "vo", "sa"]) for (const [a, x] of Object.entries(juntasAca[k] || {})) for (const [b, n] of Object.entries(x)) { const t = (gramatica.juntas[k][a] = gramatica.juntas[k][a] || {}); t[b] = Math.max(t[b] || 0, n); }
+    paso.fin(`Diccionario abierto: ${gramatica.base.size.toLocaleString("es-AR")} palabras`, "📖");
+  } catch (e) { console.error(e); paso.fin("No pude abrir el diccionario", "⚠️"); }
+}
+const conocida = (w) => (gramatica && gramatica.conoce(w)) || (cerebro && cerebro.indice.has(w));
+// Frankers habla: la red arma varias frases, la gramática las arregla y revisa, el filtro las controla, y elige la mejor.
 function hablarConCerebro(mensaje) {
   if (!cerebro) return "Todavía me estoy despertando… 😴 Probá en un segundito.";
-  const paso = actividad("🧠", "Armando una frase palabra por palabra…", true);
-  for (let intento = 1; intento <= 8; intento++) {
-    const frase = cerebro.contestar(mensaje, { temperatura: intento === 1 ? 0.6 : 0.85 });
-    const problema = !frase ? "vacía" : revisar(frase).problema || (esFalso(frase) ? "falsa" : null);
-    if (!problema) { paso.fin(intento === 1 ? "Armé la frase palabra por palabra" : `Armé la frase (el filtro me hizo cambiar ${intento - 1})`, "🧠"); return frase; }
-    actividad("🛡️", `El filtro tiró una frase (${problema}) y armo otra`);
+  const { tokenizar, unir } = FrankersCerebro;
+  const paso = actividad("🧠", "Armando frases palabra por palabra…", true);
+  const tm = tokenizar(mensaje), vocab = cerebro.indice;
+  let mejor = null, tiradas = 0;
+  for (let intento = 0; intento < 8; intento++) {
+    let frase = cerebro.contestar(mensaje, { temperatura: intento < 2 ? 0.55 : 0.8 });
+    if (!frase) continue;
+    let tk = tokenizar(frase);
+    if (gramatica) { tk = gramatica.concordar(tk); frase = unir(tk); }
+    const g = gramatica ? gramatica.revisar(tk, vocab) : { ok: true };
+    const problema = !g.ok ? g.motivo : revisar(frase).problema || (esFalso(frase) ? "falsa" : null);
+    if (problema) { tiradas++; continue; }
+    const puntos = (gramatica ? gramatica.relacion(tk, tm) * 2 : 0) + Math.min(tk.length, 14) / 14 - (tk.length > 28 ? 1 : 0);
+    if (!mejor || puntos > mejor.puntos) mejor = { frase, puntos };
+    if (puntos >= 2.5) break;
   }
-  paso.fin("Ninguna frase pasó el filtro", "🛡️");
-  return "Mmm… no sé qué decir. 😅";
+  if (mejor) { paso.fin(`Armé la frase palabra por palabra${tiradas ? ` (tiré ${tiradas} que estaban mal escritas o no pasaban el filtro)` : ""}`, "🧠"); return mejor.frase; }
+  // Si la red no armó nada bien, arma una frase con reglas de gramática sobre el tema
+  if (gramatica) for (const n of gramatica.sustantivos(tm)) { const f = gramatica.frasePropia(n); if (f && !revisar(f).problema) { paso.fin("Armé una frase con las reglas de gramática", "📐"); return f; } }
+  paso.fin("No me salió ninguna frase bien escrita", "🛡️");
+  return "Mmm… no sé qué decir. 😅 ¿Me contás más?";
 }
-// Aprende de cada charla: lee lo que le escribiste (si pasa las reglas) y suma las palabras nuevas
+// Aprende de cada charla: palabras nuevas, qué palabras van juntas, y repasa lo que le dijiste
 function aprenderDeLaCharla(mensaje) {
   if (!cerebro || revisar(mensaje).problema || esFalso(mensaje) || mensaje.length > 300) return;
-  const nuevas = FrankersCerebro.tokenizar(mensaje).filter(p => /^[a-záéíóúüñ]{2,}$/.test(p) && !cerebro.indice.has(p));
+  const tk = FrankersCerebro.tokenizar(mensaje);
+  const nuevas = tk.filter(p => /^[a-záéíóúüñ]{2,}$/.test(p) && !cerebro.indice.has(p) && gramatica && gramatica.conoce(p));
   if (nuevas.length && cerebro.palabras.length < 8000) { cerebro.agregarPalabras(nuevas); actividad("📝", `Aprendí ${nuevas.length === 1 ? "una palabra nueva" : nuevas.length + " palabras nuevas"}: ${nuevas.slice(0, 5).join(", ")}`); }
+  if (gramatica) { gramatica.aprenderJuntas(tk); guardado.escribir("frankers-juntas", gramatica.juntas); }
   const texto = `${FrankersCerebro.YO} ${mensaje} ${FrankersCerebro.FRANKERS}`;
   cerebro.entrenar([texto], { tasa: 0.02 });
   aprendidoAca = [...aprendidoAca, texto].slice(-200); guardado.escribir("frankers-charlas-aprendidas", aprendidoAca);
-  guardarCerebro();
+  guardarCerebro(); marcarCambio();
 }
+
+/* ---------- BUSCAR LO QUE NO SABE (Wiktionary y Wikipedia) ----------
+   La primera vez que le decís una palabra que no conoce, la busca en Wiktionary.
+   Si le preguntás por un tema ("qué es un volcán"), lee el resumen de Wikipedia.
+   Lo guarda, y la próxima vez ya lo sabe. Cuando Franco publica, lo sabe todo el mundo. */
+const limpiarWiki = (t) => t.replace(/\{\{[^{}]*\}\}/g, "").replace(/\[\[(?:[^\]|]*\|)?([^\]]*)\]\]/g, "$1").replace(/'{2,}/g, "").replace(/<[^>]+>/g, "").replace(/\s+/g, " ").trim();
+const TIPOS_WIKI = [[/sustantivo femenino/, "s", "f"], [/sustantivo masculino/, "s", "m"], [/sustantivo/, "s", "m"], [/verbo/, "v"], [/adjetivo/, "a"], [/adverbio/, "d"], [/interjecci/, "i"], [/pronombre/, "p"], [/preposici/, "n"], [/conjunci/, "c"]];
+async function buscarEnWiktionary(palabra, vuelta = 0) {
+  const r = await wikiJSON(`https://es.wiktionary.org/w/api.php?action=parse&page=${encodeURIComponent(palabra)}&prop=wikitext&format=json&formatversion=2&origin=*`).catch(() => null);
+  const wt = r?.parse?.wikitext; if (!wt) return null;
+  const es = wt.split(/\n==\s*\{\{lengua\|/i).find(x => /^es\}\}/i.test(x)) || (/\{\{lengua\|es\}\}/i.test(wt) ? wt : null);
+  if (!es) return null;
+  // Formas: "perros" → plural de "perro"
+  const forma = es.match(/\{\{forma (?:sustantivo|adjetivo|verbo|verbal)[^|}]*\|(?:leng=es\|)?([^|}]+)/i) || es.match(/\{\{f\.v\|([^|}]+)/i);
+  const enc = (es.match(/===\s*\{\{([^|}]+)\|es/i) || [])[1] || "";
+  const tipo = TIPOS_WIKI.find(([re]) => re.test(enc));
+  let def = (es.match(/\n;1[^:\n]*:\s*(.+)/) || [])[1]; def = def && limpiarWiki(def).replace(/^\W+/, "");
+  if (forma && vuelta === 0 && normalizar(forma[1]) !== normalizar(palabra)) { const base = await buscarEnWiktionary(forma[1].trim(), 1); if (base) return { ...base, deForma: forma[1].trim() }; }
+  if (!tipo && !def) return null;
+  return { tipo: tipo ? tipo[1] : "s", genero: tipo && tipo[2], significado: def ? def.split(/(?<=\.)\s/)[0].slice(0, 160) : null };
+}
+async function aprenderPalabra(w) {
+  const paso = actividad("📖", `No conocía «${w}»: la busco en Wiktionary…`, true);
+  try {
+    const r = await buscarEnWiktionary(w);
+    if (!r || (r.significado && revisar(r.significado).problema)) { paso.fin(`«${w}» no está en el diccionario (¿está bien escrita?)`, "🤷"); return false; }
+    const entrada = r.tipo === "s" ? ["s", r.genero || "m"] : [r.tipo];
+    aprendido.palabras[w] = entrada; if (r.significado) aprendido.significados[w] = r.significado;
+    gramatica.sumar(w, entrada); if (r.significado) gramatica.significados[w] = r.significado;
+    if (!cerebro.indice.has(w)) cerebro.agregarPalabras([w]);
+    if (r.significado) cerebro.entrenar(Array(6).fill(FrankersCerebro.charla(`qué significa ${w}`, `"${w}" significa: ${r.significado}`)), { tasa: 0.03 });
+    guardarAprendido(); guardarCerebro(); marcarCambio();
+    paso.fin(`Aprendí «${w}»${r.deForma ? ` (viene de «${r.deForma}»)` : ""}: ${gramatica.tipos[r.tipo] || r.tipo}${r.significado ? " — " + r.significado : ""}`, "📖");
+    return true;
+  } catch { paso.fin(`No pude buscar «${w}» (¿sin internet?)`, "⚠️"); return false; }
+}
+function temaDePregunta(texto) {
+  const m = texto.trim().match(/^(?:y\s+)?(?:qu[eé]\s+(?:es|son|fue|fueron)|qui[eé]n\s+(?:es|fue|era)|contame\s+(?:de|sobre|algo de|algo sobre)|habl[aá]me\s+(?:de|sobre)|qu[eé]\s+sab[eé]s\s+(?:de|sobre)|busc[aá])\s+(?:un\s+|una\s+|el\s+|la\s+|los\s+|las\s+)?(.+?)[?¿!.\s]*$/i);
+  return m && m[1].length >= 2 && m[1].split(" ").length <= 5 ? m[1].trim() : null;
+}
+async function aprenderTema(tema, pregunta) {
+  const clave = normalizar(tema);
+  if (aprendido.temas[clave]) return;
+  const paso = actividad("🌍", `No sabía de «${tema}»: leo Wikipedia…`, true);
+  try {
+    const r1 = await wikiJSON(`${WIKI}/w/api.php?action=query&list=search&format=json&origin=*&srlimit=1&srsearch=${encodeURIComponent(tema)}`);
+    const titulo = r1.query?.search?.[0]?.title; if (!titulo) { paso.fin(`No encontré «${tema}» en Wikipedia`, "🤷"); return; }
+    const r2 = await wikiJSON(`${WIKI}/api/rest_v1/page/summary/${encodeURIComponent(titulo.replace(/ /g, "_"))}`);
+    const limpio = (r2.extract || "").replace(/\s*\([^()]*\)/g, "").replace(/\s+/g, " ").trim();
+    const oraciones = (limpio.match(/[^.!?]+[.!?]+/g) || []).map(x => x.trim()).filter(x => !revisar(x).problema && !esFalso(x)).slice(0, 3);
+    if (!oraciones.length || r2.type === "disambiguation") { paso.fin(`Lo de «${tema}» no era para chicos o no tenía resumen`, "🛡️"); return; }
+    const resumen = oraciones.slice(0, 2).join(" ");
+    aprendido.temas[clave] = resumen; guardarAprendido();
+    const nuevas = FrankersCerebro.tokenizar(oraciones.join(" ")).filter(p => /^[a-záéíóúüñ]{2,}$/.test(p) && !cerebro.indice.has(p));
+    if (nuevas.length) cerebro.agregarPalabras(nuevas);
+    for (const o of oraciones) gramatica.aprenderJuntas(FrankersCerebro.tokenizar(o));
+    // lo practica hasta que se lo sabe (así lo guarda en sus neuronas)
+    const textos = [FrankersCerebro.charla(pregunta, resumen), FrankersCerebro.charla(`qué es ${tema}`, resumen), ...oraciones.map(o => o + " " + FrankersCerebro.FIN)];
+    for (let k = 0; k < 12; k++) { cerebro.entrenar(textos, { tasa: 0.025 }); if (k % 4 === 3) await new Promise(r => setTimeout(r, 0)); }
+    aprendidoAca = [...aprendidoAca, ...textos].slice(-400); guardado.escribir("frankers-charlas-aprendidas", aprendidoAca);
+    guardarCerebro(); marcarCambio();
+    paso.fin(`Leí «${r2.titles?.normalized || titulo}» en Wikipedia y lo guardé en mis neuronas`, "🌍");
+  } catch { paso.fin("No me pude conectar a Wikipedia", "⚠️"); }
+}
+async function buscarLoQueNoSabe(texto) {
+  if (!gramatica || !cerebro || revisar(texto).problema) return;
+  const tk = FrankersCerebro.tokenizar(texto);
+  const raras = [...new Set(tk.filter(w => /^[a-záéíóúüñ]{3,}$/.test(w) && !conocida(w) && !FrankersGramatica.PALABRAS_CHICAS.has(w)))].slice(0, 3);
+  for (const w of raras) await aprenderPalabra(w);
+  const tema = temaDePregunta(texto); if (tema) await aprenderTema(tema, texto);
+}
+
+/* ---------- LEER Y REPASAR SOLO, CUANDO NADIE LE HABLA ----------
+   Si nadie escribe, Frankers repasa lo que ya leyó y lee cosas nuevas (Wikipedia, el diccionario
+   y los subtítulos de los videos de Franclips). Apenas escribís algo, para. */
+let ultimaAccion = Date.now(), repasando = false, hayCambios = false, ultimaPublicacion = Date.now();
+const marcarCambio = () => { hayCambios = true; };
+["keydown", "pointerdown", "touchstart"].forEach(ev => addEventListener(ev, () => { ultimaAccion = Date.now(); }, { passive: true }));
+function mostrarRepasando(que) { const r = $("#repasando"); if (!r) return; r.hidden = !que; if (que) r.textContent = "📚 " + que; }
+async function leerAlgoNuevo() {
+  const azar = Math.random();
+  try {
+    if (azar < 0.4) { // un tema al azar de Wikipedia
+      const r = await wikiJSON(`${WIKI}/api/rest_v1/page/random/summary`);
+      const titulo = r.titles?.normalized || r.title; if (!titulo || revisar(titulo + " " + (r.extract || "")).problema || r.type === "disambiguation") return;
+      mostrarRepasando(`leyendo «${titulo}»`);
+      await aprenderTema(titulo, `contame sobre ${titulo}`);
+    } else if (azar < 0.6) { // un video de Franclips (sus subtítulos)
+      const lista = await fetch("../franclips/videos.json").then(r => r.json()).catch(() => null);
+      const v = (lista?.videos || []).find(x => x.subtitulos && !aprendido.videos.includes(x.id)); if (!v) return;
+      mostrarRepasando(`mirando «${v.titulo}»`);
+      const vtt = await fetch("../franclips/" + v.subtitulos).then(r => r.text());
+      const texto = vtt.split("\n").filter(l => l && !/-->|^WEBVTT|^\d+$/.test(l)).join(" ");
+      const oraciones = (texto.match(/[^.!?]+[.!?]+/g) || []).map(x => x.trim()).filter(x => x.split(" ").length > 3 && !revisar(x).problema);
+      const textos = oraciones.map(o => o + " " + FrankersCerebro.FIN);
+      for (const o of oraciones) gramatica.aprenderJuntas(FrankersCerebro.tokenizar(o));
+      for (let k = 0; k < 3; k++) { cerebro.entrenar(textos, { tasa: 0.02, hasta: Date.now() + 400 }); await new Promise(r => setTimeout(r, 0)); }
+      aprendido.videos.push(v.id); guardarAprendido(); guardarCerebro(); marcarCambio();
+      actividad("📺", `Miré el video «${v.titulo}» de Franclips (leí ${oraciones.length} frases de sus subtítulos)`);
+    } else { // palabras del diccionario que todavía no usa
+      const sin = [...gramatica.base.keys()].filter(w => !cerebro.indice.has(w) && /^[a-záéíóúüñ]{3,}$/.test(w)).slice(0, 4);
+      for (const w of sin) { mostrarRepasando(`buscando «${w}» en el diccionario`); await aprenderPalabra(w); if (Date.now() - ultimaAccion < 1500) return; }
+    }
+  } catch {}
+}
+async function repasoSolo() {
+  if (repasando || !cerebro || !gramatica || entrenando || ocupado || enLlamada || document.hidden || Date.now() - ultimaAccion < 1500) return;
+  repasando = true;
+  try {
+    const textos = [...await cargarTextosGrandes(), ...aprendidoAca];
+    let vueltas = 0;
+    while (Date.now() - ultimaAccion >= 1500 && !ocupado && !enLlamada && !document.hidden) {
+      mostrarRepasando("repasando");
+      const lote = []; for (let k = 0; k < 8; k++) lote.push(textos[Math.floor(Math.random() * textos.length)]);
+      // las charlas importantes (saludos y pedidos) se repasan más
+      for (let k = 0; k < 2; k++) lote.push(textos[Math.floor(Math.random() * Math.min(textos.length, 255))]);
+      cerebro.entrenar(lote, { tasa: 0.015, hasta: Date.now() + 60 });
+      vueltas++;
+      if (vueltas % 150 === 0) { guardarCerebro(); marcarCambio(); await leerAlgoNuevo(); }
+      await new Promise(r => setTimeout(r, 25));
+    }
+    guardarCerebro(); marcarCambio();
+  } finally { repasando = false; mostrarRepasando(null); }
+}
+setInterval(repasoSolo, 1000);
+// Modo creador: cada 10 minutos, si aprendió algo, lo publica solo para todo el mundo
+setInterval(async () => {
+  if (!token || !hayCambios || Date.now() - ultimaPublicacion < 600000 || !cerebro) return;
+  hayCambios = false; ultimaPublicacion = Date.now();
+  const a = await subirAGitHub("frankers/aprendido.json", JSON.stringify(aprendido), "Frankers: lo que aprendió buscando");
+  const c = await subirAGitHub("frankers/cerebro.json", JSON.stringify(cerebro.aJSON()), "Frankers: cerebro (" + cerebro.vistas + " palabras leídas)");
+  actividad("🌎", a.ok && c.ok ? "Publiqué lo que aprendí para todo el mundo" : "No pude publicar lo que aprendí");
+}, 30000);
 
 /* ---------- RESPONDER ----------
    1) Filtro de seguridad (las reglas que nunca cambian)
@@ -1204,71 +1424,107 @@ async function hablar(texto) {
 $("#elegirVoz").value = tipoDeVoz();
 $("#elegirVoz").onchange = () => { guardado.escribir("frankers_voz", $("#elegirVoz").value); piperFallo = false; };
 $("#probarVoz").onclick = () => hablar("¡Hola! Soy Frankers. ¿Te gusta cómo hablo?");
-function estadoLlamada(txt) { $("#subtitulo").textContent = txt; }
+/* Pantalla de llamada (estilo Gemini Live): carita grande, luz que se mueve con tu voz,
+   lo que escucha y lo que dice, y botones grandes para silenciar, interrumpir y cortar. */
+let silenciado = false, relojLlamada = null, inicioLlamada = 0, medidor = null;
+function estadoLlamada(txt) { $("#llEstado").textContent = txt; }
+function textoLlamada(quien, txt) { const c = $("#llTexto"); c.className = "ll-texto " + quien; c.textContent = txt; }
+function modoLlamada(m) { $("#pantallaLlamada").dataset.modo = m; } // escuchando | pensando | hablando | silencio
+async function prenderMedidor() {
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true } });
+    const ctx = new (window.AudioContext || window.webkitAudioContext)(), fuente = ctx.createMediaStreamSource(stream), an = ctx.createAnalyser();
+    an.fftSize = 512; fuente.connect(an); const datos = new Uint8Array(an.fftSize);
+    medidor = { stream, ctx, an, datos, raf: 0 };
+    const pantalla = $("#pantallaLlamada"); let suave = 0;
+    const paso = () => {
+      if (!medidor) return;
+      an.getByteTimeDomainData(datos); let s = 0; for (const v of datos) s += (v - 128) * (v - 128);
+      let nivel = Math.min(1, Math.sqrt(s / datos.length) / 35);
+      if (silenciado) nivel = 0;
+      if (pantalla.dataset.modo === "hablando") nivel = 0.35 + Math.sin(performance.now() / 120) * 0.2 + Math.random() * 0.15; // cuando habla Frankers
+      suave += (nivel - suave) * 0.25;
+      pantalla.style.setProperty("--nivel", suave.toFixed(3));
+      $("#llMedidor").style.setProperty("--nivel", suave.toFixed(3));
+      medidor.raf = requestAnimationFrame(paso);
+    };
+    paso();
+  } catch { /* sin medidor igual anda */ }
+}
+function apagarMedidor() { if (!medidor) return; cancelAnimationFrame(medidor.raf); medidor.stream.getTracks().forEach(t => t.stop()); medidor.ctx.close().catch(() => {}); medidor = null; }
 function escuchar() {
-  if (!enLlamada) return;
-  reconocedor = new Reconocer(); reconocedor.lang = "es-AR"; reconocedor.continuous = true; reconocedor.interimResults = true; reconocedor.maxAlternatives = 3;
-  let listo = false, espera = null, parcial = "";
+  if (!enLlamada || silenciado) return;
+  try { reconocedor && reconocedor.abort(); } catch {}
+  reconocedor = new Reconocer(); reconocedor.lang = "es-AR"; reconocedor.continuous = true; reconocedor.interimResults = true; reconocedor.maxAlternatives = 1;
+  let listo = false, espera = null, parcial = "", provisorioActual = "";
   const terminar = async (dijo) => {
     if (listo) return; listo = true; clearTimeout(espera);
     try { reconocedor.abort(); } catch {}
-    $("#entrada").value = "";
     dijo = dijo.trim(); if (!dijo) return escuchar();
     actividad("👂", `Te escuché decir: «${dijo}»`);
-    cara.classList.remove("escuchando");
     if (/\b(chau|cortar|colgar|corta|colga)\b/i.test(normalizar(dijo))) { agregar({ de: "yo", texto: dijo }); return cortarLlamada("¡Chau! Fue lindo hablar con vos. 💜"); }
-    estadoLlamada("📞 Pensando…");
+    modoLlamada("pensando"); estadoLlamada("Pensando…"); textoLlamada("yo", dijo);
     const antes = historial.length;
     await enviar(dijo);
     const nuevas = historial.slice(antes).filter(m => m.de === "frankers" && m.texto).map(m => m.texto);
     if (!enLlamada) return;
-    estadoLlamada("📞 Hablando…");
-    await hablar(nuevas.join(". ") || "Mmm, no sé qué decir.");
-    escuchar();
+    const dice = nuevas.join(" ") || "Mmm, no sé qué decir.";
+    modoLlamada("hablando"); estadoLlamada("Frankers está hablando · tocá ✋ para interrumpir"); textoLlamada("frankers", dice);
+    await hablar(dice);
+    if (enLlamada) escuchar();
   };
   reconocedor.onresult = (e) => {
-    let final = "", provisorio = "";
-    for (let k = e.resultIndex; k < e.results.length; k++) {
-      const r = e.results[k];
-      // de las opciones que escuchó, elige la que Frankers entiende mejor
-      let mejor = r[0].transcript;
-      if (r.isFinal) final += mejor + " "; else provisorio += mejor + " ";
-    }
+    let final = ""; provisorioActual = "";
+    for (let k = e.resultIndex; k < e.results.length; k++) { const r = e.results[k]; if (r.isFinal) final += r[0].transcript + " "; else provisorioActual += r[0].transcript + " "; }
     if (final) parcial += final;
-    $("#entrada").value = (parcial + provisorio).trim(); // ves lo que te está escuchando
+    textoLlamada("yo", (parcial + provisorioActual).trim()); // ves lo que te está escuchando
     clearTimeout(espera);
-    // cuando hacés una pausa de 1 segundo, contesta
-    espera = setTimeout(() => terminar(parcial + provisorio), parcial && !provisorio ? 900 : 1600);
+    espera = setTimeout(() => terminar(parcial + provisorioActual), parcial && !provisorioActual ? 800 : 1500); // contesta cuando hacés una pausa
   };
   reconocedor.onerror = (e) => {
     if (e.error === "not-allowed" || e.error === "service-not-allowed") { listo = true; return cortarLlamada("No me dejaron usar el micrófono. Tocá el candadito al lado de la dirección y permití el micrófono."); }
     if (e.error === "network") { listo = true; return cortarLlamada("Este navegador no me deja escuchar (Brave no tiene esa parte). Abrí Frankers en Edge o Chrome para llamarme. 📞"); }
   };
-  reconocedor.onend = () => { if (listo || !enLlamada) return; if ((parcial + $("#entrada").value).trim()) terminar($("#entrada").value || parcial); else setTimeout(escuchar, 200); };
-  try { reconocedor.start(); cara.classList.add("escuchando"); estadoLlamada("📞 En llamada · te escucho…"); } catch { setTimeout(escuchar, 500); }
+  // Chrome deja de escuchar solo después de un rato: si no dijiste nada, vuelve a escuchar
+  reconocedor.onend = () => { if (listo || !enLlamada || silenciado) return; if ((parcial + provisorioActual).trim()) terminar(parcial + provisorioActual); else setTimeout(escuchar, 150); };
+  try { reconocedor.start(); modoLlamada("escuchando"); estadoLlamada("Te escucho…"); } catch { setTimeout(escuchar, 400); }
 }
 async function llamar() {
   if (!Reconocer || navigator.brave) {
     agregar({ de: "frankers", texto: "El modo llamada funciona en Edge o Chrome. En este navegador no puedo escucharte. 📞" }); return;
   }
-  enLlamada = true;
-  $("#btnLlamada").classList.add("en-llamada"); $("#btnLlamada").innerHTML = '🔴 <span class="txt">Cortar</span>';
+  enLlamada = true; silenciado = false;
+  const p = $("#pantallaLlamada"); p.hidden = false; requestAnimationFrame(() => p.classList.add("abierta"));
+  $("#llSilenciar").classList.remove("apagado"); $("#llSilenciar").setAttribute("aria-pressed", "false");
+  inicioLlamada = Date.now(); clearInterval(relojLlamada);
+  relojLlamada = setInterval(() => { const s = Math.floor((Date.now() - inicioLlamada) / 1000); $("#llReloj").textContent = `${String(Math.floor(s / 60)).padStart(2, "0")}:${String(s % 60).padStart(2, "0")}`; }, 500);
   const inicio = $("#inicio"); if (inicio) inicio.remove();
+  await prenderMedidor();
   const saludo = `¡Hola${memoria.nombre ? " " + memoria.nombre : ""}! Soy Frankers, te escucho.`;
   agregar({ de: "frankers", texto: saludo + " 📞" });
-  estadoLlamada("📞 Hablando…");
+  modoLlamada("hablando"); estadoLlamada("Frankers está hablando"); textoLlamada("frankers", saludo);
   await hablar(saludo);
   escuchar();
 }
 async function cortarLlamada(despedida) {
-  enLlamada = false; callar(); $("#entrada").value = "";
+  if (!enLlamada) return;
+  enLlamada = false; callar(); clearInterval(relojLlamada);
   try { reconocedor && reconocedor.abort(); } catch {}
-  cara.classList.remove("escuchando");
-  $("#btnLlamada").classList.remove("en-llamada"); $("#btnLlamada").innerHTML = '📞 <span class="txt">Llamar</span>';
-  if (despedida) { agregar({ de: "frankers", texto: despedida }); await hablar(despedida); }
+  if (despedida) { modoLlamada("hablando"); textoLlamada("frankers", despedida); agregar({ de: "frankers", texto: despedida }); await hablar(despedida); }
+  apagarMedidor();
+  const p = $("#pantallaLlamada"); p.classList.remove("abierta"); setTimeout(() => { p.hidden = true; }, 350);
   cartelActualizando(false);
 }
 $("#btnLlamada").onclick = () => enLlamada ? cortarLlamada("¡Chau!") : llamar();
+$("#llCortar").onclick = () => cortarLlamada("¡Chau!");
+$("#llInterrumpir").onclick = () => { if (!enLlamada) return; callar(); textoLlamada("frankers", ""); escuchar(); };
+$("#llSilenciar").onclick = () => {
+  silenciado = !silenciado;
+  $("#llSilenciar").classList.toggle("apagado", silenciado); $("#llSilenciar").setAttribute("aria-pressed", String(silenciado));
+  if (silenciado) { try { reconocedor && reconocedor.abort(); } catch {} modoLlamada("silencio"); estadoLlamada("Micrófono apagado"); }
+  else escuchar();
+};
+document.addEventListener("keydown", (e) => { if (e.key === "Escape" && enLlamada) cortarLlamada("¡Chau!"); });
 if (window.speechSynthesis) speechSynthesis.onvoiceschanged = () => {}; // hace que el navegador cargue las voces
 let ocupado = false;
 async function enviar(texto) {
@@ -1284,6 +1540,7 @@ async function enviar(texto) {
   let respuesta;
   try {
     const deLaCompu = await frankersUsaCompu(texto);
+    if (!deLaCompu) await buscarLoQueNoSabe(texto); // lo que no sabe, lo busca primero (una sola vez)
     respuesta = deLaCompu ? { texto: deLaCompu } : responder(texto);
   } catch (e) { console.error(e); respuesta = { texto: "Uy, se me cruzaron los cables. 😵 ¿Probás de nuevo?" }; }
   puntitos.remove(); cara.classList.remove("pensando");
@@ -1296,7 +1553,7 @@ function enviarEntrada() { const i = $("#entrada"); const t = i.value; i.value =
 $("#btnEnviar").addEventListener("click", enviarEntrada);
 $("#entrada").addEventListener("keydown", (e) => { if (e.key === "Enter" && !e.isComposing) { e.preventDefault(); enviarEntrada(); } });
 $("#sugerencias").addEventListener("click", (e) => { if (e.target.matches("button")) enviar(e.target.textContent); });
-$("#btnLimpiar").onclick = () => { historial = []; guardarHistorial(); chat.innerHTML = ""; ultimoDibujo = null; Object.assign(charla, { esperando: null, siguienteEspera: null, ultimoTema: null, ultimaFrasePersona: null }); bienvenida(); };
+$("#btnLimpiar").onclick = () => { historial = []; guardarHistorial(); chat.innerHTML = ""; ultimoDibujo = null; bienvenida(); };
 
 // Enseñar
 const dlgCreador = $("#dlgCreador");
@@ -1367,7 +1624,7 @@ pedirNombre();
 actualizarModo();
 if (historial.length) historial.forEach(mostrar); else bienvenida();
 cartelActualizando(true);
-cargarCerebro().then(() => cartelActualizando(false));
+Promise.all([cargarCerebro(), cargarDiccionario()]).then(() => cartelActualizando(false));
 mostrarQuienSos();
 $("#entrada").focus();
 </script>
