@@ -122,6 +122,7 @@
     footer { text-align: center; font-size: .75rem; color: var(--suave); padding: 0 0 10px; }
     footer button { background: none; border: none; color: var(--suave); text-decoration: underline; cursor: pointer; font-size: .75rem; padding: 0; opacity: .6; }
     footer button:hover { opacity: 1; }
+    footer .voz select { background: var(--tarjeta, #1d1640); color: var(--texto, #fff); border: 1px solid var(--borde, #3a3070); border-radius: 8px; font-size: .75rem; padding: 1px 4px; }
 
     /* Ventanas */
     dialog {
@@ -198,7 +199,7 @@
       <input id="entrada" placeholder="Escribile a Frankers…" maxlength="300" aria-label="Mensaje para Frankers" autocomplete="off" enterkeyhint="send">
       <button class="boton principal" type="button" id="btnEnviar">Enviar</button>
     </div>
-    <footer>Frankers todavía es un bebé IA y puede equivocarse · <button id="btnCreador">modo creador</button></footer>
+    <footer>Frankers todavía es un bebé IA y puede equivocarse · <label class="voz">🔊 Voz: <select id="elegirVoz" aria-label="Voz de Frankers"><option value="mujer">Daniela (mujer, argentina)</option><option value="hombre">Hombre (mexicano)</option><option value="compu">La voz de la compu</option></select></label> <button id="probarVoz" title="Probar la voz">▶️ Probar</button> · <button id="btnCreador">modo creador</button></footer>
   </div>
 
   <!-- Pantalla grande al entrar: ¿quién sos? -->
@@ -2184,29 +2185,66 @@ function vozElegida() {
   return esa || [...voces].sort((a, b) => puntajeVoz(b) - puntajeVoz(a))[0];
 }
 function cambiarVoz() {
-  const voces = vocesEnEspanol(); if (voces.length < 2) return "Tu navegador tiene una sola voz en español. En Edge hay más voces, y algunas suenan muy naturales.";
-  const actual = vozElegida(), siguiente = voces[(voces.indexOf(actual) + 1) % voces.length];
-  guardado.escribir("frankers-voz", siguiente.name);
-  return `¡Listo! Ahora hablo con la voz "${siguiente.name.replace(/^Microsoft |^Google /, "").replace(/ - .*$/, "")}". Si querés otra, decime "cambiá la voz".`;
+  const orden = ["mujer", "hombre", "compu"], nueva = orden[(orden.indexOf(tipoDeVoz()) + 1) % orden.length];
+  guardado.escribir("frankers_voz", nueva); piperFallo = false;
+  const sel = document.getElementById("elegirVoz"); if (sel) sel.value = nueva;
+  return { mujer: "¡Listo! Ahora hablo con la voz de Daniela, una voz argentina.", hombre: "¡Listo! Ahora hablo con una voz de hombre.", compu: "¡Listo! Ahora hablo con la voz que trae tu compu." }[nueva] + " Si querés otra, decime \"cambiá la voz\".";
 }
 function paraDecir(texto) {
   return texto.split("\n").filter(l => !/^📖|https?:\/\//.test(l)).join(". ")
     .replace(/[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}\u{FE0F}]/gu, "").replace(/×/g, " por ").replace(/÷/g, " dividido ").replace(/=/g, " es ").replace(/\s+/g, " ").trim();
 }
-function hablar(texto) {
+// Voces de verdad (Piper): se descargan la primera vez y después quedan guardadas en la compu.
+// Si no se pueden usar (sin internet, navegador viejo), habla con la voz que trae la compu.
+const VOCES_PIPER = { mujer: ["es_AR-daniela-high"], hombre: ["es_MX-claude-high", "es_MX-ald-medium"] };
+let piper = null, piperFallo = false, sonando = null;
+const tipoDeVoz = () => guardado.leer("frankers_voz", "mujer");
+async function hablarConPiper(frase) {
+  if (!piper) piper = await import("./piper/piper-tts-web.js");
+  for (const voiceId of VOCES_PIPER[tipoDeVoz()] || []) {
+    try {
+      const wav = await piper.predict({ text: frase, voiceId }, (p) => {
+        if (p.total > 1e6 && p.loaded < p.total) estadoLlamada(`🔊 Descargando la voz (solo la primera vez)… ${Math.round(p.loaded / p.total * 100)} %`);
+      });
+      return wav;
+    } catch (e) { console.warn("Voz", voiceId, "no anduvo:", e); }
+  }
+  return null;
+}
+function hablarConLaCompu(frase) {
   return new Promise(listo => {
     if (!window.speechSynthesis) return listo();
-    const frase = paraDecir(texto); if (!frase) return listo();
     const u = new SpeechSynthesisUtterance(frase), voz = vozElegida();
     if (voz) { u.voice = voz; u.lang = voz.lang; } else u.lang = "es-AR";
     u.pitch = 1.15; u.rate = 1.02;
-    cara.classList.add("hablando");
-    const fin = () => { cara.classList.remove("hablando"); clearTimeout(seguro); listo(); };
-    const seguro = setTimeout(fin, 4000 + frase.length * 120); // por si el navegador no avisa que terminó
-    u.onend = fin; u.onerror = fin;
+    const seguro = setTimeout(listo, 4000 + frase.length * 120); // por si el navegador no avisa que terminó
+    u.onend = u.onerror = () => { clearTimeout(seguro); listo(); };
     speechSynthesis.cancel(); speechSynthesis.speak(u);
   });
 }
+async function hablar(texto) {
+  const frase = paraDecir(texto); if (!frase) return;
+  if (sonando) { sonando.pause(); sonando = null; }
+  const antes = $("#subtitulo").textContent;
+  let wav = null;
+  if (tipoDeVoz() !== "compu" && !piperFallo) {
+    try { wav = await hablarConPiper(frase); } catch (e) { console.warn(e); }
+    if (!wav) piperFallo = true; // no insiste más en esta visita
+    $("#subtitulo").textContent = antes;
+  }
+  cara.classList.add("hablando");
+  if (wav) {
+    await new Promise(listo => {
+      sonando = new Audio(URL.createObjectURL(wav));
+      sonando.onended = sonando.onerror = () => listo();
+      sonando.play().catch(() => listo());
+    });
+  } else await hablarConLaCompu(frase);
+  cara.classList.remove("hablando");
+}
+$("#elegirVoz").value = tipoDeVoz();
+$("#elegirVoz").onchange = () => { guardado.escribir("frankers_voz", $("#elegirVoz").value); piperFallo = false; };
+$("#probarVoz").onclick = () => hablar("¡Hola! Soy Frankers. ¿Te gusta cómo hablo?");
 function estadoLlamada(txt) { $("#subtitulo").textContent = txt; }
 function escuchar() {
   if (!enLlamada) return;
