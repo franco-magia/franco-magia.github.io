@@ -218,10 +218,11 @@
     .ojera { position: absolute; top: 96px; width: 24px; height: 10px; border-radius: 0 0 12px 12px; background: rgba(79, 160, 255, .75); opacity: 0; transition: opacity .4s; }
     .ojera.izq { left: 42px; } .ojera.der { right: 42px; }
     /* Manos */
-    .mano { position: absolute; font-size: 44px; line-height: 1; opacity: 0; pointer-events: none; transition: opacity .3s, transform .4s ease; filter: drop-shadow(0 4px 10px rgba(0,0,0,.4)); }
+    .mano { position: absolute; font-size: 44px; line-height: 1; opacity: 0; pointer-events: none; transition: opacity .3s, transform .4s ease;
+      filter: grayscale(1) brightness(.5) sepia(1) saturate(14) hue-rotate(230deg) brightness(1.15) drop-shadow(0 4px 10px rgba(0,0,0,.4)); } /* del mismo color violeta que la cara */
     .mano.pensar { bottom: -14px; right: 6px; transform: rotate(-35deg) translateY(16px); }
     .mano.puno { top: 40px; } .mano.puno.izq { left: -64px; } .mano.puno.der { right: -64px; }
-    .mano.abierta { bottom: -40px; transform: translateY(-6px); } .mano.abierta.izq { left: -34px; } .mano.abierta.der { right: -34px; transform: translateY(-6px) scaleX(-1); }
+    .mano.abierta { bottom: -52px; } .mano.abierta.izq { left: -18px; transform: rotate(90deg); } .mano.abierta.der { right: -18px; transform: scaleX(-1) rotate(90deg); }
     /* PENSANDO: dedos en la pera, una ceja arriba, la cara se inclina un poquito */
     .ll-cara[data-cara="pensando"] .grande-cara { transform: rotate(-6deg); }
     .ll-cara[data-cara="pensando"] .grande-cara i { transform: translateY(-6px) translateX(6px); animation: none; }
@@ -240,6 +241,18 @@
     .ll-cara[data-cara="triste"] .grande-cara i { transform: translateY(12px) scaleY(.75); animation: none; }
     .ll-cara[data-cara="triste"] .ojera { opacity: 1; }
     .ll-cara[data-cara="triste"] .mano.abierta { opacity: 1; }
+    .ll-cara[data-cara="triste"] .mano.abierta.izq { animation: colgarIzq 2.4s ease-in-out infinite; }
+    .ll-cara[data-cara="triste"] .mano.abierta.der { animation: colgarDer 2.4s ease-in-out infinite; }
+    @keyframes colgarIzq { 0%, 100% { transform: rotate(90deg) translateX(0); } 50% { transform: rotate(84deg) translateX(5px); } }
+    @keyframes colgarDer { 0%, 100% { transform: scaleX(-1) rotate(90deg) translateX(0); } 50% { transform: scaleX(-1) rotate(84deg) translateX(5px); } }
+    .ll-cara[data-cara="triste"] .grande-cara { animation: suspiro 3s ease-in-out infinite; }
+    @keyframes suspiro { 0%, 100% { transform: translateY(6px); } 50% { transform: translateY(10px) scale(.98); } }
+    .ll-cara[data-cara="triste"] .ojera { animation: brillo 2.4s ease-in-out infinite; }
+    @keyframes brillo { 50% { opacity: .55; } }
+    .ll-cara[data-cara="normal"] .grande-cara { animation: flotarCara 4s ease-in-out infinite; }
+    @keyframes flotarCara { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+    .ll-cara[data-cara="pensando"] .grande-cara { animation: pensarCara 3s ease-in-out infinite; }
+    @keyframes pensarCara { 0%, 100% { transform: rotate(-6deg); } 50% { transform: rotate(-2deg) translateY(-3px); } }
     @media (prefers-reduced-motion: reduce) { .ll-cara *, .ll-cara { animation: none !important; } }
     .ll-estado { font-size: 1rem; color: #cfc8ff; min-height: 1.3em; }
     .ll-texto { font-family: "Fredoka", sans-serif; font-size: clamp(1.2rem, 3.6vw, 1.9rem); line-height: 1.35; max-width: 760px; min-height: 2.7em; max-height: 34vh; overflow: auto; }
@@ -294,15 +307,15 @@
     <main class="chat" id="chat" aria-live="polite"></main>
 
     <div class="sugerencias" id="sugerencias">
-      <button class="boton">Hola, ¿cómo estás?</button>
-      <button class="boton">¿Quién sos?</button>
-      <button class="boton">Contame algo del Sol</button>
-      <button class="boton">Contame un chiste</button>
+      <button class="boton">Buscá dinosaurios</button>
+      <button class="boton">¿Qué es un volcán?</button>
+      <button class="boton">¿Quién fue San Martín?</button>
+      <button class="boton">Contame sobre los planetas</button>
       <button class="boton">Dibujá un gato violeta en la playa</button>
       <button class="boton">¿Cuánto es 12 x 7?</button>
     </div>
     <div class="escribir" id="formulario">
-      <input id="entrada" placeholder="Escribile a Frankers…" maxlength="300" aria-label="Mensaje para Frankers" autocomplete="off" enterkeyhint="send">
+      <input id="entrada" placeholder="Pedile que busque algo en Wikipedia, por ejemplo: buscá dinosaurios…" maxlength="300" aria-label="Mensaje para Frankers" autocomplete="off" enterkeyhint="send">
       <button class="boton principal" type="button" id="btnEnviar">Enviar</button>
     </div>
     <footer>Frankers es una red neuronal bebé: inventa sus frases y se puede equivocar · <label class="voz">🔊 Voz: <select id="elegirVoz" aria-label="Voz de Frankers"><option value="mujer">Daniela (mujer, argentina)</option><option value="hombre">Hombre (mexicano)</option><option value="compu">La voz de la compu</option></select></label> <button id="probarVoz" title="Probar la voz">▶️ Probar</button> · <button id="btnCreador">modo creador</button></footer>
@@ -630,15 +643,18 @@ function hablarConCerebro(mensaje) {
     const g = gramatica ? gramatica.revisar(tk, vocab) : { ok: true };
     const problema = !g.ok ? g.motivo : revisar(frase).problema || (esFalso(frase) ? "falsa" : null);
     if (problema) { tiradas++; continue; }
-    const puntos = (gramatica ? gramatica.relacion(tk, tm) * 2 : 0) + Math.min(tk.length, 14) / 14 - (tk.length > 28 ? 1 : 0);
+    const seguridad = cerebro.ultimaSeguridad || 0;
+    if (seguridad < 0.45) { tiradas++; continue; } // si no estaba segura de sus palabras, es una mezcla: no la dice
+    const puntos = (gramatica ? gramatica.relacion(tk, tm) * 2 : 0) + seguridad * 2 + Math.min(tk.length, 14) / 14 - (tk.length > 28 ? 1 : 0);
     if (!mejor || puntos > mejor.puntos) mejor = { frase, puntos };
     if (puntos >= 2.5) break;
   }
   if (mejor) { paso.fin(`Armé la frase palabra por palabra${tiradas ? ` (tiré ${tiradas} que estaban mal escritas o no pasaban el filtro)` : ""}`, "🧠"); return mejor.frase; }
   // Si la red no armó nada bien, arma una frase con reglas de gramática sobre el tema
   if (gramatica) for (const n of gramatica.sustantivos(tm)) { const f = gramatica.frasePropia(n); if (f && !revisar(f).problema) { paso.fin("Armé una frase con las reglas de gramática", "📐"); return f; } }
-  paso.fin("No me salió ninguna frase bien escrita", "🛡️");
-  return "Mmm… no sé qué decir. 😅 ¿Me contás más?";
+  paso.fin("No estaba segura de ninguna frase, así que no invento", "🛡️");
+  emocion = "triste";
+  return "Todavía estoy aprendiendo a hablar. 😅 Lo que mejor sé hacer es buscar en Wikipedia: decime, por ejemplo, «buscá dinosaurios» o «¿qué es un volcán?».";
 }
 // Aprende de cada charla: palabras nuevas, qué palabras van juntas, y repasa lo que le dijiste
 function aprenderDeLaCharla(mensaje) {
@@ -690,8 +706,9 @@ async function aprenderPalabra(w) {
   } catch { paso.fin(`No pude buscar «${w}» (¿sin internet?)`, "⚠️"); return false; }
 }
 function temaDePregunta(texto) {
-  const m = texto.trim().match(/^(?:y\s+)?(?:qu[eé]\s+(?:es|son|fue|fueron)|qui[eé]n\s+(?:es|fue|era)|contame\s+(?:de|sobre|algo de|algo sobre)|habl[aá]me\s+(?:de|sobre)|qu[eé]\s+sab[eé]s\s+(?:de|sobre)|busc[aá])\s+(?:un\s+|una\s+|el\s+|la\s+|los\s+|las\s+)?(.+?)[?¿!.\s]*$/i);
-  return m && m[1].length >= 2 && m[1].split(" ").length <= 5 ? m[1].trim() : null;
+  const t = texto.trim().replace(/^[¿¡]+/, "").replace(/\s+(en|de)\s+(la\s+)?(wiki|wikipedia|internet)\s*[?!.]*$/i, "");
+  const m = t.match(/^(?:y\s+)?(?:(?:me\s+)?busc[aá](?:me)?|buscar|wiki(?:pedia)?|qu[eé]\s+(?:es|son|fue|fueron|era|eran)|qui[eé]n(?:es)?\s+(?:es|son|fue|fueron|era|eran)|contame\s+(?:de|sobre|algo de|algo sobre)|habl[aá]me\s+(?:de|sobre)|qu[eé]\s+sab[eé]s\s+(?:de|sobre)|dec[ií]me\s+(?:qu[eé] es|sobre))\s+(?:en\s+(?:la\s+)?(?:wiki|wikipedia)\s+)?(?:un\s+|una\s+|unos\s+|unas\s+|el\s+|la\s+|los\s+|las\s+|lo\s+de\s+)?(.+?)[?¿!.\s]*$/i);
+  return m && m[1].length >= 2 && m[1].split(" ").length <= 6 ? m[1].trim() : null;
 }
 async function aprenderTema(tema, pregunta) {
   const clave = normalizar(tema);
@@ -705,7 +722,7 @@ async function aprenderTema(tema, pregunta) {
     const oraciones = (limpio.match(/[^.!?]+[.!?]+/g) || []).map(x => x.trim()).filter(x => !revisar(x).problema && !esFalso(x)).slice(0, 3);
     if (!oraciones.length || r2.type === "disambiguation") { paso.fin(`Lo de «${tema}» no era para chicos o no tenía resumen`, "🛡️"); return; }
     const resumen = oraciones.slice(0, 2).join(" ");
-    aprendido.temas[clave] = resumen; guardarAprendido();
+    aprendido.temas[clave] = resumen; aprendido.fuentes = { ...(aprendido.fuentes || {}), [clave]: r2.content_urls?.desktop?.page || `${WIKI}/wiki/${encodeURIComponent(titulo)}` }; guardarAprendido();
     const nuevas = FrankersCerebro.tokenizar(oraciones.join(" ")).filter(p => /^[a-záéíóúüñ]{2,}$/.test(p) && !cerebro.indice.has(p));
     if (nuevas.length) cerebro.agregarPalabras(nuevas);
     for (const o of oraciones) gramatica.aprenderJuntas(FrankersCerebro.tokenizar(o));
@@ -826,7 +843,11 @@ function responder(original) {
       if (Number.isFinite(r)) { actividad("🧮", "Hice la cuenta con la calculadora"); return { texto: `${cuenta.replace(/\*/g, "×").replace(/\//g, "÷")} = ${Math.round(r * 1e6) / 1e6} 🤓` }; }
     } catch {}
   }
-  // Todo lo demás: la red neuronal
+  // Preguntas para buscar ("buscá…", "¿qué es…?"): contesta con lo que leyó en Wikipedia
+  const tema = temaDePregunta(original), sabido = tema && aprendido.temas[normalizar(tema)];
+  if (sabido) { actividad("🌍", `Te cuento lo que leí en Wikipedia sobre «${tema}»`); return { texto: `${sabido}\n📖 Fuente: ${(aprendido.fuentes || {})[normalizar(tema)] || "Wikipedia"}` }; }
+  if (tema) return { texto: `Busqué «${tema}» en Wikipedia, pero no encontré algo que te pueda contar. 😕 ¿Probás con otras palabras?` };
+  // Todo lo demás: la red neuronal (solo dice lo que está segura)
   return { texto: hablarConCerebro(original) };
 }
 

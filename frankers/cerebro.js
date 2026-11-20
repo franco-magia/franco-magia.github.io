@@ -166,7 +166,7 @@
     generar(inicio, { maxPalabras = 30, temperatura = 0.8, opciones = 12, azar = Math.random } = {}) {
       const tokens = tokenizar(inicio), N = this.contexto, fin = this.id(FIN);
       let ids = [...Array(N).fill(fin), ...tokens.map(t => this.id(t))].slice(-N);
-      const salida = [], prohibidas = new Set([this.id(YO), this.id(FRANKERS), this.id(RARA)]);
+      const salida = [], seguridad = [], prohibidas = new Set([this.id(YO), this.id(FRANKERS), this.id(RARA)]);
       for (let k = 0; k < maxPalabras; k++) {
         const p = this.adelante(ids).pop();
         // elige entre las palabras más probables (con un poco de azar, para no repetir siempre lo mismo)
@@ -179,10 +179,12 @@
         const pesos = mejores.map(j => Math.pow(p[j], 1 / temperatura)), total = pesos.reduce((a, b) => a + b, 0);
         let r = azar() * total, elegida = mejores[0];
         for (let i = 0; i < mejores.length; i++) { r -= pesos[i]; if (r <= 0) { elegida = mejores[i]; break; } }
+        seguridad.push(p[elegida]);
         if (elegida === fin) break;
         salida.push(this.palabras[elegida]);
         ids = [...ids.slice(1), elegida];
       }
+      this.ultimaSeguridad = seguridad.length ? seguridad.reduce((a, b) => a + b, 0) / seguridad.length : 0; // qué tan segura estaba de cada palabra
       return unir(salida);
     }
     // Lo que contesta en una charla
