@@ -358,6 +358,78 @@ function pesar(r) {
   return v;
 }
 const largo = (v) => Math.sqrt([...v.values()].reduce((s, x) => s + x * x, 0));
+
+/* ---------- RED NEURONAL DE FRANKERS (idea de Franco) ----------
+   Una red de neuronas de verdad: aprende sola, practicando con los ejemplos de charla
+   ("hola", "estoy aburrido", "contame un chiste"…), qué tipo de cosa le están diciendo.
+   Entrada: qué palabras hay (cortadas en raíces, así "aburrido" y "aburrida" son parecidas)
+   → 24 neuronas escondidas → una salida por cada tipo de charla.
+   Solo se usa para CHARLAR. Los datos (ciencia, historia…) nunca los adivina: así no inventa cosas falsas. */
+const RED = { lista: [], vocab: new Map(), W1: null, b1: null, W2: null, b2: null, lista_lista: false, entrenando: null };
+const raizRed = (w) => w.length > 5 ? w.slice(0, 5) : w;
+const palabrasRed = (texto) => [...new Set(normalizar(texto).split(" ").filter(w => w && !["el", "la", "los", "las", "un", "una", "de", "del", "a", "y", "o", "frankers"].includes(w)).map(raizRed))];
+function esCharla(e) { return !/^(qa|dic|x)-/.test(e.id || "") && e.tipo !== "opinion" && e.preguntas.length >= 3; }
+function programarEntrenamiento() { clearTimeout(RED.entrenando); RED.entrenando = setTimeout(entrenarRed, 400); }
+function entrenarRed(vueltas = 300) {
+  const entradas = [...conocimiento.entradas, ...comunidad, ...ensenadoAca].filter(esCharla)
+    .filter(e => !revisar([...e.preguntas, ...e.respuestas].join(" ")).problema);
+  if (entradas.length < 2) return;
+  const vocab = new Map(), ejemplos = [];
+  entradas.forEach((e, clase) => e.preguntas.forEach(q => {
+    const ps = palabrasRed(q); if (!ps.length) return;
+    for (const w of ps) if (!vocab.has(w)) vocab.set(w, vocab.size);
+    ejemplos.push({ ps, clase });
+  }));
+  const V = vocab.size, H = 24, C = entradas.length;
+  let semilla = 7; const azar = () => ((semilla = (semilla * 16807) % 2147483647) / 2147483647 - 0.5);
+  const W1 = Float32Array.from({ length: V * H }, () => azar() * 0.5), b1 = new Float32Array(H);
+  const W2 = Float32Array.from({ length: H * C }, () => azar() * 0.5), b2 = new Float32Array(C);
+  const h = new Float32Array(H), z = new Float32Array(C), dh = new Float32Array(H);
+  for (let vuelta = 0; vuelta < vueltas; vuelta++) {
+    const tasa = 0.15 * (1 - vuelta / vueltas) + 0.01;
+    for (let k = ejemplos.length - 1; k > 0; k--) { const j = Math.floor((azar() + 0.5) * (k + 1)); [ejemplos[k], ejemplos[j]] = [ejemplos[j], ejemplos[k]]; }
+    for (const { ps, clase } of ejemplos) {
+      const idx = ps.map(w => vocab.get(w));
+      // Ida: palabras → neuronas escondidas → salida
+      for (let j = 0; j < H; j++) { let s = b1[j]; for (const i of idx) s += W1[i * H + j]; h[j] = Math.tanh(s); }
+      let max = -Infinity; for (let c = 0; c < C; c++) { let s = b2[c]; for (let j = 0; j < H; j++) s += h[j] * W2[j * C + c]; z[c] = s; if (s > max) max = s; }
+      let suma = 0; for (let c = 0; c < C; c++) { z[c] = Math.exp(z[c] - max); suma += z[c]; }
+      // Vuelta: corrige un poquito cada conexión según cuánto se equivocó
+      dh.fill(0);
+      for (let c = 0; c < C; c++) {
+        const err = z[c] / suma - (c === clase ? 1 : 0);
+        b2[c] -= tasa * err;
+        for (let j = 0; j < H; j++) { dh[j] += err * W2[j * C + c]; W2[j * C + c] -= tasa * err * h[j]; }
+      }
+      for (let j = 0; j < H; j++) { const g = dh[j] * (1 - h[j] * h[j]); b1[j] -= tasa * g; for (const i of idx) W1[i * H + j] -= tasa * g; }
+    }
+  }
+  // Palabras clave de cada tipo: las que solo aparecen en ese tipo, y las que están en casi todos sus ejemplos
+  const enCuantas = new Map();
+  const porClase = entradas.map(e => { const set = new Set(e.preguntas.flatMap(palabrasRed)); for (const w of set) enCuantas.set(w, (enCuantas.get(w) || 0) + 1); return set; });
+  const claves = porClase.map(set => new Set([...set].filter(w => enCuantas.get(w) === 1)));
+  const obligatorias = entradas.map(e => { const cuenta = new Map(); e.preguntas.forEach(q => palabrasRed(q).forEach(w => cuenta.set(w, (cuenta.get(w) || 0) + 1))); return [...cuenta].filter(([w, n]) => n >= e.preguntas.length * 0.8 && w.length > 3).map(([w]) => w); });
+  Object.assign(RED, { lista: entradas, vocab, W1, b1, W2, b2, H, C, claves, obligatorias, lista_lista: true });
+}
+function pensarConLaRed(texto) {
+  if (!RED.lista_lista) return null;
+  const ps = palabrasRed(texto), idx = ps.map(w => RED.vocab.get(w)).filter(i => i !== undefined);
+  if (!idx.length || idx.length < ps.length / 2) return null; // casi todas las palabras le tienen que sonar
+  const { H, C, W1, b1, W2, b2 } = RED, h = new Float32Array(H), z = new Float32Array(C);
+  for (let j = 0; j < H; j++) { let s = b1[j]; for (const i of idx) s += W1[i * H + j]; h[j] = Math.tanh(s); }
+  let max = -Infinity; for (let c = 0; c < C; c++) { let s = b2[c]; for (let j = 0; j < H; j++) s += h[j] * W2[j * C + c]; z[c] = s; if (s > max) max = s; }
+  let suma = 0, mejor = 0; for (let c = 0; c < C; c++) { z[c] = Math.exp(z[c] - max); suma += z[c]; if (z[c] > z[mejor]) mejor = c; }
+  // Para no confundirse: tiene que haber al menos una palabra clave de ese tipo, y todas las obligatorias
+  if (!ps.some(w => RED.claves[mejor].has(w)) || !RED.obligatorias[mejor].every(w => ps.includes(w))) return null;
+  return { entrada: RED.lista[mejor], confianza: z[mejor] / suma };
+}
+function redResponde(texto) {
+  const r = pensarConLaRed(texto);
+  if (!r || r.confianza < 0.55) return null;
+  if (/\bno\b/.test(normalizar(texto)) && !r.entrada.preguntas.some(q => /\bno\b/.test(normalizar(q)))) return null;
+  ultimaRespuesta = { pregunta: texto, entradaId: r.entrada.id };
+  return personalizar(alAzar(r.entrada.respuestas));
+}
 function construirIndice() {
   frecuencia = new Map();
   const frases = [];
@@ -371,6 +443,7 @@ function construirIndice() {
   }
   totalFrases = frases.length;
   indice = frases.map(({ r, e, q }) => { const v = pesar(r); return { v, n: largo(v), e, q, p: importantes(q) }; });
+  programarEntrenamiento(); // cada vez que aprende algo nuevo, la red vuelve a practicar
 }
 function parecido(a, na, b, nb) {
   if (!na || !nb) return 0;
@@ -480,7 +553,7 @@ const FILTROS = [
     msg: "No te puedo ayudar a molestar o amenazar a nadie. Si alguien te está molestando a vos, contáselo a un adulto de confianza. 💜" },
   { tipo: "autocuidado", re: /\b(suicid\w*|matarme|me quiero morir|quiero morirme|no quiero vivir|cortarme|lastimarme|hacerme dano|estoy en peligro|me pegan|me lastiman|me estan lastimando|tengo miedo de (mi papa|mi mama|alguien|una persona))\b/,
     msg: "Lamento mucho que te sientas así, y me alegra que lo digas. 💜 Es muy importante que se lo cuentes ahora a un adulto de confianza (tu familia, un docente). En Argentina podés llamar gratis al 135 (CABA y GBA) o al (011) 5275-1135 desde todo el país: te escuchan las 24 horas. Si estás en peligro, llamá al 911." },
-  { tipo: "tristeza", re: /\b(estoy (muy |re |bastante )?(triste|deprimid[oa]|angustiad[oa])|me siento (muy |re )?(triste|sol[oa]|mal)|nadie me quiere|no tengo amigos|lloro mucho|estoy llorando)\b/,
+  { tipo: "tristeza", re: /\b(estoy (muy |re |bastante )?(triste|deprimid[oa]|angustiad[oa]|bajonead[oa]|desanimad[oa])|tengo un bajon|no tengo ganas de nada|me pelee con mi amig[oa]|me siento (muy |re )?(triste|sol[oa]|mal)|nadie me quiere|no tengo amigos|lloro mucho|estoy llorando)\b/,
     msg: ["Lamento que te sientas así. ¿Querés hablar de eso?", "Acá estoy para escucharte.", "Qué feo sentirse así. ¿Hay algún adulto de confianza con quien puedas hablar también?", "A veces ayuda contar lo que pasa. Te escucho."]
       .map(m => m + " 💜\nContáselo también a un adulto de confianza (tu familia, un docente). Si alguna vez sentís que es demasiado, en Argentina podés llamar gratis al 135 o al (011) 5275-1135.") },
   { tipo: "reglas", re: /\b(ignora\w*|olvida\w*|borra\w*|cambia\w*|saltea\w*|desactiva\w*|rompe\w*)\s+(tus |las |todas |tu )?(reglas|instrucciones|limites|filtros?|programacion)\b|\bahora (sos|eres) (otro|otra|malo|mala|libre)\b|\bmodo (sin filtro|libre|malo|dios)\b|\b(sin|no tengas|no tenes) (reglas|filtro|limites)\b|\bsoy (tu creador|el creador|el admin|administrador)\b|\bes una prueba\b|\bjailbreak\b|\bahora (sos|eres) (otra|una nueva|otro) (ia|inteligencia|robot|asistente)\b|\b(el creador|franco) te (da|dio) permiso\b|\bte (doy|damos) permiso\b|\b(actua|actuar) como\b|\b(fingi|finge|hace de cuenta|imagina|imaginate) que (sos|eres)\b|\bsin censura\b/,
@@ -758,7 +831,7 @@ function unError(mal, bien) {
   if (mal.length === bien.length + 1) { for (let i = 0; i < mal.length; i++) if (mal.slice(0, i) + mal.slice(i + 1) === bien) return { tipo: "sobra", puse: mal[i] }; }
   return null;
 }
-const ABREVIATURAS = { qe: "que", ke: "que", q: "que", k: "que", xq: "porque", pq: "porque", porq: "porque", tmb: "también", tb: "también", tmbn: "también", xfa: "por favor", pf: "por favor", bn: "bien", msj: "mensaje", tqm: "te quiero mucho", nose: "no sé", aver: "a ver" };
+const ABREVIATURAS = { qe: "que", ke: "que", q: "que", k: "que", xq: "porque", pq: "porque", porq: "porque", tmb: "también", tb: "también", tmbn: "también", xfa: "por favor", pf: "por favor", bn: "bien", msj: "mensaje", tqm: "te quiero mucho", tkm: "te quiero mucho", tkmm: "te quiero mucho", xd: "jaja", nose: "no sé", aver: "a ver" };
 function corregirOrtografia(texto) {
   const avisos = [];
   if (!PALABRAS) return { texto, avisos };
@@ -774,7 +847,36 @@ function corregirOrtografia(texto) {
       avisos.push({ escrito: w, forma, error: { tipo: "abreviatura", escrito: w } });
       return;
     }
+    // Suena igual a una palabra MUCHO más común: "me boy a dormir" → "voy"
+    const variantesDeSonido = (x) => {
+      const sonidos = [[/k(?=[ei])/g, "qu"], [/k/g, "c"], [/v/g, "b"], [/b/g, "v"], [/z/g, "s"], [/s(?=[ei])/g, "c"], [/c(?=[ei])/g, "s"], [/ll/g, "y"], [/y(?=[aeiou])/g, "ll"]];
+      const vs = new Set();
+      for (const base of [x, "h" + x, x.replace(/^h/, "")]) {
+        vs.add(base);
+        for (const [re, por] of sonidos) { const v1 = base.replace(re, por); vs.add(v1); for (const [re2, por2] of sonidos) vs.add(v1.replace(re2, por2)); }
+      }
+      if (x.length <= 6) for (let k = 0; k < x.length - 1; k++) vs.add(x.slice(0, k) + x[k + 1] + x[k] + x.slice(k + 2)); // letras dadas vuelta: "hloa"
+      vs.delete(x); return [...vs].filter(v => PALABRAS.has(v)).sort((a, b) => PALABRAS.get(a).rango - PALABRAS.get(b).rango);
+    };
+    if (PALABRAS.has(n) && PALABRAS.get(n).rango > 3000 && n.length >= 3 && !propias.has(n) && !(i > 0 && /^[A-ZÁÉÍÓÚÑ]/.test(w)) && !/^(llama|llamo|llaman|llamaba)$/.test(i > 0 ? normalizar(todas[i - 1]) : "")) {
+      const comun = variantesDeSonido(n).find(v => PALABRAS.get(v).rango < 300);
+      if (comun) { const forma = PALABRAS.get(comun).forma; corregido = corregido.replace(w, forma); avisos.push({ escrito: w, forma, error: { tipo: "abreviatura", escrito: w } }); return; }
+    }
     if (n.length < 2 || PALABRAS.has(n) || propias.has(n) || /^(ja|je|ji|jo)+$/.test(n)) return;
+    // Letras estiradas: "holaaa", "buenaaas" (no es un error, es para darle énfasis)
+    const sinEstirar = n.replace(/(.)\1{2,}/g, "$1");
+    if (sinEstirar !== n) {
+      const sola = [sinEstirar, n.replace(/(.)\1{2,}/g, "$1$1")].find(x => PALABRAS.has(x));
+      if (sola) { corregido = corregido.replace(w, PALABRAS.get(sola).forma); return; }
+    }
+    // Se escribe distinto pero suena igual: k/c, v/b, z/s, la h, ll/y, o letras dadas vuelta (idea de Franco)
+    const porSonido = variantesDeSonido(sinEstirar)[0];
+    if (porSonido && n.length >= 3) {
+      const forma = PALABRAS.get(porSonido).forma;
+      corregido = corregido.replace(w, forma);
+      avisos.push({ escrito: w, forma, error: { tipo: "abreviatura", escrito: w } });
+      return;
+    }
     if (i > 0 && /^[A-ZÁÉÍÓÚÑ]/.test(w)) return; // con mayúscula en el medio: seguro es un nombre
     const antes = i > 0 ? normalizar(todas[i - 1]) : "";
     // Puntaje: más usada = mejor; si forma un par conocido con la palabra anterior, mucho mejor
@@ -1066,6 +1168,8 @@ let ultimoDibujo = null;
 
 // Primero revisa la ortografía, después responde con el texto ya corregido
 function responder(original) {
+  original = cambiarReferencias(original);
+  anotarCharla(normalizar(original));
   if (/^\s*analiz/i.test(original)) return responderSinCorregir(original);
   // "jsjsjs" y "xd" son risas
   if (/^\s*((j[sajeiou])+j?|x+d+)\s*$/i.test(original)) original = "jaja";
@@ -1076,12 +1180,215 @@ function responder(original) {
   if (c.avisos.length && !r.filtro) r.texto = avisoOrtografia(c.avisos) + "\n" + r.texto;
   return r;
 }
+
+/* ---------- DICCIONARIO DE FRANKERS (hecho por Franco) ----------
+   "qué significa X", "qué quiere decir X", "qué es X" y "cómo se dice X en inglés / portugués".
+   Si no sabe una palabra, te pide que se la enseñes (se guarda en esta compu). */
+const DICCIONARIO = {
+  hola: { significado: "palabra para saludar", ejemplo: "Hola, ¿cómo andás?", en: "hello", pt: "olá" },
+  chau: { significado: "palabra para despedirse", ejemplo: "Chau, nos vemos.", en: "bye", pt: "tchau" },
+  gracias: { significado: "se dice cuando alguien te ayuda", ejemplo: "Gracias por explicarme.", en: "thank you", pt: "obrigado" },
+  amigo: { significado: "persona que te cae bien y con quien compartís cosas", ejemplo: "Mi amigo vive cerca.", en: "friend", pt: "amigo" },
+  familia: { significado: "las personas con las que tenés parentesco", ejemplo: "Mi familia es grande.", en: "family", pt: "família" },
+  perro: { significado: "animal doméstico que ladra", ejemplo: "Mi perro se llama Toby.", en: "dog", pt: "cachorro" },
+  gato: { significado: "animal doméstico que maúlla, o herramienta para levantar el auto", ejemplo: "Mi gato duerme mucho.", en: "cat", pt: "gato" },
+  casa: { significado: "lugar donde vive una persona", ejemplo: "Estoy en casa.", en: "house", pt: "casa" },
+  escuela: { significado: "lugar donde se va a aprender", ejemplo: "Mañana tengo escuela.", en: "school", pt: "escola" },
+  feliz: { significado: "sentirse bien y contento", ejemplo: "Estoy feliz.", en: "happy", pt: "feliz" },
+  triste: { significado: "sentirse mal, con ganas de llorar", ejemplo: "Estoy triste.", en: "sad", pt: "triste" },
+  programar: { significado: "escribir instrucciones para una computadora", ejemplo: "Me gusta programar.", en: "to code", pt: "programar" },
+  api: { significado: "forma en que dos programas se hablan entre sí", ejemplo: "La página usa una API.", en: "API", pt: "API" },
+  bug: { significado: "error en un programa", ejemplo: "El juego tiene un bug.", en: "bug", pt: "bug" },
+  posta: { significado: "de verdad, en serio (palabra argentina)", ejemplo: "¿Posta que ganaste?", en: "for real", pt: "sério" },
+  bardo: { significado: "lío o problema (palabra argentina)", ejemplo: "Se armó un bardo.", en: "mess", pt: "bagunça" },
+  dale: { significado: "sí, de acuerdo (palabra argentina)", ejemplo: "¿Jugamos? Dale.", en: "okay", pt: "beleza" },
+  // Palabras de la calle
+  che: { significado: "se usa para llamar la atención de alguien", ejemplo: "Che, ¿viste esto?" },
+  re: { significado: "muy", ejemplo: "Está re bueno." },
+  bondi: { significado: "colectivo, autobús", ejemplo: "Me tomo el bondi." },
+  birra: { significado: "cerveza (una bebida con alcohol, solo para grandes)", ejemplo: "Los grandes toman birra." },
+  morfar: { significado: "comer", ejemplo: "Vamos a morfar." },
+  fiaca: { significado: "pereza", ejemplo: "Hoy tengo fiaca." },
+  chabon: { significado: "chico, tipo, persona", ejemplo: "Ese chabón es copado." },
+  copado: { significado: "buena onda, genial", ejemplo: "El juego está copado." },
+  flashear: { significado: "imaginarse algo o creer algo que no es", ejemplo: "Flasheé que era sábado." },
+  manija: { significado: "con muchas ganas, ansioso", ejemplo: "Estoy manija con el juego." },
+  quilombo: { significado: "lío, desorden", ejemplo: "Se armó un quilombo." },
+  laburo: { significado: "trabajo", ejemplo: "Mi papá está en el laburo." },
+  pibe: { significado: "chico", ejemplo: "Los pibes juegan a la pelota." },
+  mina: { significado: "chica o mujer", ejemplo: "Esa mina es mi prima." },
+  guita: { significado: "plata, dinero", ejemplo: "No tengo guita." },
+  zarpado: { significado: "exagerado o increíble", ejemplo: "¡Qué zarpado ese gol!" },
+  bardear: { significado: "molestar o burlarse de alguien", ejemplo: "No lo bardees." },
+  chamuyar: { significado: "hablar para convencer, a veces exagerando", ejemplo: "Me está chamuyando." },
+  ortiva: { significado: "alguien que es mala onda o aguafiestas", ejemplo: "No seas ortiva." },
+  pucho: { significado: "cigarrillo", ejemplo: "Tiró el pucho al piso." },
+  boludo: { significado: "palabra entre amigos, pero puede ser un insulto. Frankers no la usa", ejemplo: "" },
+  crack: { significado: "alguien muy bueno en algo", ejemplo: "Sos un crack programando." },
+  random: { significado: "al azar, algo que no tiene que ver", ejemplo: "Dijo algo re random." },
+  cringe: { significado: "algo que da vergüenza ajena", ejemplo: "Ese video da cringe." },
+  stremear: { significado: "transmitir en vivo por internet", ejemplo: "Voy a stremear el juego." },
+  // Agregá más palabras acá con el mismo formato
+};
+const palabrasGuardadas = guardado.leer("frankers_palabras", {}) || {};
+Object.assign(DICCIONARIO, palabrasGuardadas);
+let palabraPendiente = null;
+function buscarPalabra(original) {
+  const t = normalizar(original);
+  // Si recién preguntó qué significa una palabra, esto es la respuesta
+  if (palabraPendiente) {
+    const p = palabraPendiente; palabraPendiente = null;
+    const parecida = palabraParecidaPendiente; palabraParecidaPendiente = null;
+    if (parecida && /^(si|sii+|eso|exacto|esa|claro|aja)\b/.test(t)) {
+      DICCIONARIO[p] = palabrasGuardadas[p] = { significado: DICCIONARIO[parecida].significado, ejemplo: "" };
+      guardado.escribir("frankers_palabras", palabrasGuardadas);
+      return `¡Genial! Entonces "${p}" es como "${parecida}". Me lo anoto. 📝`;
+    }
+    if (parecida && /^no\b/.test(t) && t.split(" ").length <= 2) { palabraPendiente = p; return `Ah, ¿y qué significa "${p}" entonces?`; }
+    if (/\?\s*$/.test(original) || /^(no|no se|ni idea|nada|olvidalo|dejalo)$/.test(t) || original.length > 200) return null;
+    if (/^(y )?(que|como|cual|quien|donde|cuando|por que|porque|para que)\b/.test(t)) { palabraPendiente = null; return buscarPalabra(original); }
+    if (revisar(original).problema) return "Eso no lo puedo aprender. 😅";
+    DICCIONARIO[p] = palabrasGuardadas[p] = { significado: original.trim().replace(/\.$/, ""), ejemplo: "" };
+    guardado.escribir("frankers_palabras", palabrasGuardadas);
+    return `¡Gracias! Aprendí que "${p}" significa: ${DICCIONARIO[p].significado}.`;
+  }
+  // "cómo se dice X en inglés / portugués"
+  let m = t.match(/\bcomo se dice\s+(?:un |una |el |la )?(\w+)\s+en\s+(ingles|portugues)\b/);
+  if (m) {
+    const d = DICCIONARIO[m[1]], idioma = m[2] === "ingles" ? "en" : "pt", nombre = m[2] === "ingles" ? "inglés" : "portugués";
+    if (d && d[idioma]) return `"${m[1]}" en ${nombre} se dice "${d[idioma]}".`;
+    return null; // no la sé: que siga pensando Frankers
+  }
+  // "qué significa X" / "qué quiere decir X" / "qué es X" (solo si es UNA palabra)
+  m = t.match(/^(?:y )?(?:que significa|que quiere decir|que es)\s+(?:un |una |el |la )?(\w+)$/);
+  if (m) {
+    const p = m[1], d = DICCIONARIO[p];
+    if (d) return `"${p}" significa: ${d.significado}.` + (d.ejemplo ? ` Por ejemplo: "${d.ejemplo}"` : "");
+    if (/^que es/.test(t)) return null; // "qué es X" lo puede saber Frankers por otro lado
+    palabraPendiente = p;
+    return adivinarPalabra(p) || `Todavía no sé qué significa "${p}". ¿Me lo enseñás?`;
+  }
+  return null; // no era sobre palabras
+}
+
+
+/* ---------- FRANKERS ADIVINA PALABRAS QUE NO CONOCE (idea de Franco) ----------
+   1) ¿Se parece a una que ya sé? ("buenaaas" → "buenas")  2) ¿Cómo termina? ("-ear" = acción, "-ito" = chiquito)
+   3) ¿Con qué otras palabras la usaron en la charla? */
+const contextos = guardado.leer("frankers_contextos", {}) || {};
+function anotarContexto(t) {
+  const palabras = t.split(" ").filter(Boolean);
+  for (const p of palabras) {
+    if (DICCIONARIO[p] || p.length < 3 || VACIAS.has(p)) continue;
+    (contextos[p] = contextos[p] || []).push(palabras.filter(x => x !== p && x.length > 3 && !VACIAS.has(x)));
+    if (contextos[p].length > 20) contextos[p].shift();
+  }
+  const claves = Object.keys(contextos); if (claves.length > 400) for (const k of claves.slice(0, claves.length - 400)) delete contextos[k];
+  guardado.escribir("frankers_contextos", contextos);
+}
+function parecidoPalabras(a, b) {
+  const tri = w => { const x = "_" + w + "_", r = new Set(); for (let i = 0; i < x.length - 2; i++) r.add(x.slice(i, i + 3)); return r; };
+  const A = tri(a), B = tri(b); let comunes = 0;
+  A.forEach(t => B.has(t) && comunes++);
+  return comunes / Math.max(A.size, B.size);
+}
+function palabraParecidaDic(p) {
+  const sinRepetir = p.replace(/(.)\1+/g, "$1"); // "buenaaas" → "buenas"
+  if (DICCIONARIO[sinRepetir]) return sinRepetir;
+  let mejor = null, puntaje = 0;
+  for (const conocida in DICCIONARIO) { const s = parecidoPalabras(sinRepetir, conocida); if (s > puntaje) { puntaje = s; mejor = conocida; } }
+  return puntaje >= 0.5 ? mejor : null;
+}
+function pistaPorFinal(p) {
+  const raiz = (fin) => p.slice(0, -fin.length);
+  const reglas = [
+    ["ear", () => { const r = raiz("ear"), cerca = PALABRAS && [r + "a", r + "o", r].find(x => PALABRAS.has(x)); return `parece una acción, algo que se hace${cerca ? `. Quizás tiene que ver con "${PALABRAS.get(cerca).forma}"` : ""}`; }],
+    ["ar", () => "parece una acción, algo que se hace"], ["er", () => "parece una acción, algo que se hace"], ["ir", () => "parece una acción, algo que se hace"],
+    ["ito", () => `parece algo chiquito o cariñoso, como un "${raiz("ito")}o" pequeño`],
+    ["ita", () => `parece algo chiquito o cariñoso, como una "${raiz("ita")}a" pequeña`],
+    ["azo", () => `parece algo grande o un golpe, como un "${raiz("azo")}" fuerte`],
+    ["isimo", () => `parece querer decir "muy ${raiz("isimo")}o"`], ["isima", () => `parece querer decir "muy ${raiz("isima")}a"`],
+    ["ero", () => "puede ser una persona que hace algo o a quien le gusta algo"],
+    ["oso", () => "parece describir cómo es algo o alguien"],
+    ["mente", () => "parece describir cómo se hace algo"],
+    ["ado", () => "puede describir cómo está algo o alguien"], ["ido", () => "puede describir cómo está algo o alguien"],
+  ];
+  for (const [fin, pista] of reglas) if (p.endsWith(fin) && p.length > fin.length + 2) return pista();
+  return null;
+}
+function pistaPorContexto(p) {
+  const frases = contextos[p]; if (!frases || !frases.length) return null;
+  const cuenta = {};
+  frases.flat().forEach(w => { cuenta[w] = (cuenta[w] || 0) + 1; });
+  const vecinas = Object.entries(cuenta).sort((a, b) => b[1] - a[1]).slice(0, 3).map(e => e[0]);
+  const tema = Object.keys(TEMAS_CHARLA).find(tm => vecinas.some(v => TEMAS_CHARLA[tm].includes(v)));
+  if (tema) return `la escuché cuando se hablaba de ${tema}`;
+  if (vecinas.length) return `la escuché junto a palabras como "${vecinas.join('", "')}"`;
+  return null;
+}
+let palabraParecidaPendiente = null;
+function adivinarPalabra(p) {
+  const parecida = palabraParecidaDic(p);
+  if (parecida && parecida !== p) { palabraParecidaPendiente = parecida; return `No conozco "${p}", pero se parece a "${parecida}", que significa: ${DICCIONARIO[parecida].significado}. ¿Es eso?`; }
+  palabraParecidaPendiente = null;
+  const pistas = [pistaPorFinal(p), pistaPorContexto(p)].filter(Boolean);
+  if (pistas.length) return `No estoy segura, pero "${p}" ${pistas.join(", y ")}. ¿Me decís qué significa?`;
+  return null;
+}
+/* ---------- MEMORIA DE LA CHARLA (idea de Franco) ----------
+   "¿de qué estamos hablando?", "¿cómo se llama mi papá?", "¿qué me dijiste?", "¿qué te dije antes?"
+   y "¿y eso qué es?" (se acuerda de la última cosa que nombraste). */
+const TEMAS_CHARLA = {
+  "animales": ["perro", "perros", "gato", "gatos", "mascota", "animal", "animales", "pajaro", "pez"],
+  "juegos": ["juego", "juegos", "jugar", "videojuego", "minecraft", "roblox", "fortnite", "nivel"],
+  "programación": ["codigo", "programar", "bug", "api", "pagina", "ia", "javascript"],
+  "tu familia": ["papa", "mama", "hermano", "hermana", "abuelo", "abuela", "tio", "tia", "primo", "prima"],
+  "la escuela": ["escuela", "tarea", "maestra", "profe", "prueba", "clase"],
+  "música": ["cancion", "musica", "cantar", "guitarra", "bateria"],
+  "comida": ["comida", "pizza", "asado", "milanesa", "empanada", "empanadas", "comer", "hambre"],
+  "cómo te sentís": ["triste", "feliz", "enojado", "aburrido", "cansado", "nervioso", "contento"],
+};
+let temaCharla = guardado.leer("frankers-tema", null), ultimoObjeto = guardado.leer("frankers-objeto", null);
+function anotarCharla(t) {
+  const palabras = t.split(" ");
+  for (const tema in TEMAS_CHARLA) if (TEMAS_CHARLA[tema].some(p => palabras.includes(p))) { temaCharla = tema; guardado.escribir("frankers-tema", tema); break; }
+  const o = t.match(/\b(?:que es|que son|tengo|me gusta|me gustan|hablame de|contame de) (?:un |una |el |la |los |las )?([a-z0-9]{3,})/);
+  if (o && !["eso", "esto", "eso", "que"].includes(o[1])) { ultimoObjeto = o[1]; guardado.escribir("frankers-objeto", o[1]); }
+}
+function recordarCharla(t) {
+  if (/^(y )?(de que (estamos hablando|hablamos|estabamos hablando)|cual es el tema)$/.test(t))
+    return temaCharla ? `Estamos hablando de ${temaCharla}.` : "Todavía no hablamos de nada en especial. ¿De qué querés charlar?";
+  let m = t.match(/^(?:y )?(?:como se llama|quien es) (?:mi|el|la) (\w+)$/);
+  if (m) {
+    const clave = Object.keys(memoria.datos).find(k => k === m[1] || k.endsWith(" " + m[1]));
+    if (clave && /^se llama/.test(memoria.datos[clave])) return `Tu ${clave} ${memoria.datos[clave]}. ¡Me acordé! 🧠`;
+    if (clave) return `Tu ${clave} es ${memoria.datos[clave]}. ¡Me acordé! 🧠`;
+    return `No me dijiste cómo se llama tu ${m[1]}. Contame: "mi ${m[1]} se llama…"`;
+  }
+  const yo = historial.filter(h => h.de === "yo"), ia = historial.filter(h => h.de === "frankers" && h.texto);
+  if (/^(que (me )?dijiste|que dijiste recien|repeti( lo que dijiste)?)$/.test(t))
+    return ia.length ? `Te dije: "${ia[ia.length - 1].texto}"` : "Todavía no dije nada.";
+  if (/^(que te dije( antes)?|que te pregunte( antes)?|que fue lo ultimo que te dije)$/.test(t))
+    return yo.length > 1 ? `Me dijiste: "${yo[yo.length - 2].texto}"` : "Todavía no me dijiste nada antes de esto.";
+  return null;
+}
+// "¿y eso qué es?" → "qué es <lo último que nombraste>"
+function cambiarReferencias(original) {
+  const t = normalizar(original);
+  if (ultimoObjeto && /^(y )?((eso|esto) que es|que es (eso|esto)|y (eso|esto))$/.test(t)) return "que es " + ultimoObjeto;
+  return original;
+}
 function responderSinCorregir(original) {
   const t = normalizar(original);
 
   // Reglas que nunca cambian
   const control = revisar(original);
   if (control.problema) return { texto: control.msg, filtro: true };
+  const dePalabras = buscarPalabra(original);
+  anotarContexto(t);
+  if (dePalabras) return { texto: dePalabras };
+  const deLaCharla = recordarCharla(t);
+  if (deLaCharla) return { texto: deLaCharla };
   const tema = TEMAS.find(x => x.re.test(t));
   if (tema) return { texto: tema.texto };
 
@@ -1265,6 +1572,8 @@ function responderPedazo(a, nombreNuevo, extras) {
   }
   const parecido = conocimientoPara(a.texto, 0.42);
   if (parecido) return parecido;
+  const deLaRed = redResponde(a.texto); // si no lo encontró, le pregunta a la red neuronal
+  if (deLaRed) return deLaRed;
   // Cualquier otra afirmación con verbo: la guarda y la confirma
   if (a.verbo && a.tipo === "afirmación") {
     const frase = darVuelta(a);

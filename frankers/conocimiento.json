@@ -1,6 +1,6 @@
 {
 "version": 1,
-"actualizado": "2026-11-12T11:11:13.589Z",
+"actualizado": "2026-11-20T16:14:22.000Z",
 "entradas": [
 {
 "id": "saludo",
@@ -13,7 +13,13 @@
 "buenas noches",
 "que onda",
 "holis",
-"hey"
+"hey",
+"ey",
+"como va eso",
+"saludos",
+"buenos dias tengas",
+"muy buenas",
+"que tal todo"
 ],
 "respuestas": [
 "¡Hola {nombre}! ¿Cómo andás?",
@@ -32,7 +38,11 @@
 "todo bien",
 "como va",
 "que tal",
-"como te sentis"
+"como te sentis",
+"como te va",
+"que tal estas",
+"todo tranqui",
+"como amaneciste"
 ],
 "respuestas": [
 "¡Muy bien! Con ganas de aprender cosas nuevas. ¿Y vos?",
@@ -67,7 +77,8 @@
 "cual es tu nombre",
 "presentate",
 "sos una ia",
-"sos un robot"
+"sos un robot",
+"de donde saliste"
 ],
 "respuestas": [
 "Soy Frankers, una IA (no una persona) que Franco está armando desde cero. Sé algunas cosas, pero no todo: si no sé algo te lo digo, y si me enseñás, aprendo."
@@ -96,7 +107,9 @@
 "ayuda",
 "para que servis",
 "que haces",
-"como funcionas"
+"como funcionas",
+"ayudame",
+"me das una mano"
 ],
 "respuestas": [
 "Puedo charlar, acordarme de lo que me contás (probá: \"mi color favorito es el azul\"), hacer cuentas y dibujar (probá: \"dibujá un gato violeta en la playa\"). Y lo mejor: aprendo cosas nuevas cuando me enseñan."
@@ -135,7 +148,10 @@
 "muchas gracias",
 "genial gracias",
 "te pasaste",
-"sos un capo"
+"sos un capo",
+"mil gracias",
+"sos un genio",
+"gracias capo"
 ],
 "respuestas": [
 "¡De nada!",
@@ -153,7 +169,13 @@
 "nos vemos",
 "hasta luego",
 "me voy",
-"bye"
+"bye",
+"me tengo que ir",
+"hablamos despues",
+"nos re vemos",
+"me retiro",
+"hasta mañana",
+"cuidate"
 ],
 "respuestas": [
 "¡Chau {nombre}! Gracias por la charla.",
@@ -170,12 +192,16 @@
 "contame un chiste",
 "decime un chiste",
 "sabes chistes",
-"hace un chiste"
+"hace un chiste",
+"haceme reir",
+"decime algo gracioso"
 ],
 "respuestas": [
 "¿Por qué la computadora fue al médico? ¡Porque tenía un bicho en el código! 🐛💻",
 "¿Qué le dijo un bit al otro? Nos vemos en el bus. 🚌",
-"¿Cuál es el animal más antiguo? La cebra, ¡porque está en blanco y negro!"
+"¿Cuál es el animal más antiguo? La cebra, ¡porque está en blanco y negro!",
+"¿Qué le dice un pez a otro? ¡Nada!",
+"¿Por qué el libro de matemática está triste? ¡Porque tiene muchos problemas!"
 ],
 "tipo": "gusto"
 },
@@ -246,10 +272,14 @@
 "preguntas": [
 "estoy aburrido",
 "me aburro",
-"que hago"
+"que hago",
+"que embole",
+"re aburrido todo"
 ],
 "respuestas": [
-"¡Pedime un dibujo! Por ejemplo: \"dibujá un cohete y un planeta en el espacio\". O pedime un chiste."
+"¡Pedime un dibujo! Por ejemplo: \"dibujá un cohete y un planeta en el espacio\". O pedime un chiste.",
+"¡Charlemos! Enseñame algo nuevo.",
+"¿Querés que te cuente un chiste?"
 ],
 "tipo": "hecho"
 },
@@ -269,13 +299,17 @@
 "que bronca",
 "estoy de mal humor",
 "estoy podrido",
-"me tiene cansado"
+"me tiene cansado",
+"estoy re caliente",
+"me saco"
 ],
 "respuestas": [
 "Uy, parece que estás enojado. ¿Querés contarme qué pasó?",
 "Te entiendo, a veces las cosas salen mal. ¿Te puedo ayudar en algo?",
 "Está bien enojarse. Si querés, respiramos y lo vemos juntos.",
-"Perdón si hice algo mal. Decime qué fue y lo corrijo."
+"Perdón si hice algo mal. Decime qué fue y lo corrijo.",
+"Uy, ¿qué pasó? Contame.",
+"Respirá hondo, lo vemos juntos."
 ]
 },
 {
@@ -293,7 +327,11 @@
 "estoy emocionado",
 "estoy emocionada",
 "gane",
-"aprobe"
+"aprobe",
+"estoy chocho",
+"estoy de diez",
+"me fue genial",
+"estoy contentisimo"
 ],
 "respuestas": [
 "¡Qué bueno! Me alegra muchísimo.",
@@ -16458,6 +16496,85 @@
 "respuestas": [
 "¡Qué bueno! Coincidimos. 😊"
 ]
+},
+{
+"id": "triste",
+"preguntas": [
+"estoy bajoneado",
+"tengo un bajon",
+"no tengo ganas de nada",
+"me siento solo",
+"estoy desanimado",
+"me pelee con mi amigo"
+],
+"respuestas": [
+"Uy, lo siento mucho. 💜 ¿Querés contarme qué pasó?",
+"A veces pasan días feos. Si estás muy triste, contáselo también a un adulto de confianza, ¿dale?"
+],
+"tipo": "hecho"
+},
+{
+"id": "amigo-de-franco",
+"preguntas": [
+"somos amigos con franco",
+"soy compañero de franco",
+"franco es mi amigo",
+"soy el mejor amigo de franco",
+"juego con franco"
+],
+"respuestas": [
+"¡Qué bueno! Cualquier amigo de Franco es amigo mío. 😄",
+"¡Hola! Franco me armó a mí, Frankers. ¿Qué querés charlar?"
+],
+"tipo": "hecho"
+},
+{
+"id": "familia-de-franco",
+"preguntas": [
+"soy el abuelo de franco",
+"soy la tia de franco",
+"soy primo de franco",
+"franco es mi hijo",
+"franco es mi nieto",
+"franco es mi hermano"
+],
+"respuestas": [
+"¡Hola! Qué lindo que la familia de Franco venga a charlar conmigo. 💜",
+"¡Qué bueno conocerte! Soy Frankers, la IA que hizo Franco."
+],
+"tipo": "hecho"
+},
+{
+"id": "hambre",
+"preguntas": [
+"me muero de hambre",
+"que como hoy",
+"quiero comer",
+"tengo mucha hambre",
+"estoy muerto de hambre",
+"que hay para comer"
+],
+"respuestas": [
+"¡Una milanesa con puré nunca falla!",
+"¿Unas empanadas?"
+],
+"tipo": "hecho"
+},
+{
+"id": "sueno",
+"preguntas": [
+"tengo sueño",
+"estoy muerto de cansancio",
+"tengo mucho sueño",
+"me quiero ir a dormir",
+"me estoy durmiendo",
+"me voy a acostar"
+],
+"respuestas": [
+"¡A descansar! Que duermas bien.",
+"Dormir es re importante. ¡Hasta mañana!"
+],
+"tipo": "hecho"
 }
 ]
 }
