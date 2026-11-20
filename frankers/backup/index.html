@@ -1,0 +1,2591 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Frankers · La IA de Franco</title>
+  <meta name="description" content="Frankers: una IA chiquita hecha desde cero por Franco. Charla, recuerda, dibuja y aprende.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;700&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --fondo: #140f2e;
+      --fondo-2: #221a4a;
+      --texto: #f3efff;
+      --suave: #b9b0e0;
+      --celeste: #4fd8ff;
+      --violeta: #8a5cff;
+      --lila: #c86bff;
+      --tarjeta: rgba(255, 255, 255, 0.06);
+      --tarjeta-2: rgba(255, 255, 255, 0.1);
+      --borde: rgba(255, 255, 255, 0.12);
+      --degrade: linear-gradient(135deg, #4fd8ff, #8a5cff 60%, #c86bff);
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; height: 100%; }
+    body {
+      font-family: "Nunito", system-ui, sans-serif;
+      color: var(--texto);
+      background: radial-gradient(ellipse at top, var(--fondo-2), var(--fondo) 70%) fixed;
+      height: 100dvh;
+      display: flex; flex-direction: column;
+      overflow: hidden;
+    }
+    button, input, textarea { font: inherit; color: inherit; }
+    a { color: var(--celeste); }
+
+    .app { width: 100%; max-width: 780px; margin: 0 auto; padding: 0 16px; flex: 1; display: flex; flex-direction: column; min-height: 0; }
+
+    /* Encabezado */
+    header { display: flex; align-items: center; gap: 12px; padding: 14px 0; border-bottom: 1px solid var(--borde); }
+    .volver { text-decoration: none; color: var(--suave); font-size: .9rem; white-space: nowrap; }
+    .volver:hover { color: var(--texto); }
+    .identidad { display: flex; align-items: center; gap: 12px; flex: 1; min-width: 0; }
+    .cara {
+      flex: none; width: 46px; height: 46px; border-radius: 50%; background: var(--degrade);
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      box-shadow: 0 0 24px rgba(120, 110, 255, .5);
+    }
+    .cara i { width: 8px; height: 12px; border-radius: 4px; background: #fff; animation: parpadear 4s infinite; }
+    @keyframes parpadear { 0%, 92%, 100% { transform: scaleY(1); } 95% { transform: scaleY(.1); } }
+    .cara.pensando i { animation: mirar .6s infinite alternate ease-in-out; }
+    @keyframes mirar { from { transform: translateX(-3px); } to { transform: translateX(3px); } }
+    .cara.escuchando { animation: escuchar 1.4s infinite ease-in-out; }
+    @keyframes escuchar { 50% { box-shadow: 0 0 0 10px rgba(79, 216, 255, .25), 0 0 34px rgba(120, 110, 255, .8); } }
+    .cara.hablando i { animation: hablarOjos .25s infinite alternate ease-in-out; }
+    @keyframes hablarOjos { to { transform: scaleY(.55); } }
+    #btnLlamada.en-llamada { background: linear-gradient(135deg, #ff5f7a, #ff2d55); color: #fff; border-color: transparent; }
+    .nombre h1 { font-family: "Fredoka", sans-serif; font-size: 1.35rem; margin: 0; line-height: 1.1; }
+    .nombre h1 span { background: var(--degrade); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .nombre small { color: var(--suave); font-size: .82rem; }
+    .quien-sos { display: block; }
+    /* Pantalla grande de "¿quién sos?" */
+    dialog.pantalla-nombre { width: 100vw; height: 100dvh; max-width: none; max-height: none; margin: 0; border: none; border-radius: 0;
+      background: radial-gradient(ellipse at top, #2a1f5c, #140f2e 70%); display: grid; place-items: center; padding: 16px; }
+    dialog.pantalla-nombre:not([open]) { display: none; }
+    dialog.pantalla-nombre::backdrop { background: #140f2e; }
+    .pn-caja { width: min(520px, 100%); text-align: center; }
+    .pn-caja h2 { font-size: clamp(2rem, 7vw, 3rem); margin: 10px 0; line-height: 1.15; }
+    .pn-caja p { font-size: 1.15rem; margin: 0 0 18px; }
+    .pn-cara { width: 96px !important; height: 96px !important; gap: 16px !important; margin: 0 auto 10px; }
+    .pn-cara i { width: 15px !important; height: 24px !important; border-radius: 8px !important; }
+    .pn-degrade, #pnNombre { background: var(--degrade); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    #inputNombre { font-size: 1.3rem; padding: 16px 18px; text-align: center; border-radius: 16px; margin-bottom: 6px; }
+    .pn-botones { display: grid; gap: 12px; margin-top: 22px; }
+    .pn-caja .pn-grande { font-size: 1.25rem; padding: 16px 22px; width: 100%; margin-top: 8px; }
+    .quien-sos button { background: none; border: none; color: var(--celeste); cursor: pointer; padding: 0; font-size: .78rem; text-decoration: underline; }
+    .acciones { display: flex; gap: 6px; }
+    .boton {
+      border: 1px solid var(--borde); background: var(--tarjeta); border-radius: 999px;
+      padding: 7px 12px; cursor: pointer; font-weight: 700; font-size: .88rem; white-space: nowrap;
+      transition: background .15s, border-color .15s;
+    }
+    .boton:hover { background: var(--tarjeta-2); border-color: var(--celeste); }
+    .boton.principal { background: var(--degrade); border-color: transparent; color: #fff; }
+    .boton.principal:hover { filter: brightness(1.1); }
+    .boton[hidden] { display: none; }
+
+    /* Chat */
+    .chat { flex: 1; overflow-y: auto; padding: 18px 0; display: flex; flex-direction: column; gap: 12px; scroll-behavior: smooth; }
+    /* Pantalla de inicio: una frase grande que cambia cada vez */
+    .inicio { margin: auto; display: flex; align-items: center; justify-content: center; gap: 18px; padding: 24px 8px; text-align: left; animation: aparecer .5s ease-out; }
+    .inicio .cara { width: 64px; height: 64px; gap: 11px; }
+    .inicio .cara i { width: 11px; height: 17px; border-radius: 6px; }
+    .inicio h2 { font-family: "Fredoka", sans-serif; font-weight: 500; font-size: clamp(1.7rem, 5.5vw, 2.6rem); line-height: 1.15; margin: 0; max-width: 22ch; }
+    .nota-inicio { margin: 10px 0 0; color: var(--suave, #b9b3d9); font-size: 1.05rem; max-width: 40ch; }
+    .inicio h2 span { background: var(--degrade); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    @media (max-width: 560px) { .inicio { flex-direction: column; text-align: center; gap: 14px; } }
+    .msg { max-width: 82%; padding: 10px 14px; border-radius: 18px; line-height: 1.5; overflow-wrap: anywhere; animation: aparecer .25s ease-out; }
+    @keyframes aparecer { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+    .msg.frankers { align-self: flex-start; background: var(--tarjeta-2); border: 1px solid var(--borde); border-bottom-left-radius: 6px; }
+    .msg.yo { align-self: flex-end; background: var(--degrade); color: #fff; border-bottom-right-radius: 6px; }
+    .msg canvas { display: block; width: 100%; max-width: 480px; height: auto; border-radius: 12px; margin-top: 8px; }
+    .msg .extra { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+    .msg .extra .boton { font-size: .8rem; padding: 5px 10px; }
+    .escribiendo { display: inline-flex; gap: 4px; }
+    .escribiendo b { width: 7px; height: 7px; border-radius: 50%; background: var(--suave); animation: saltar 1s infinite; }
+    .escribiendo b:nth-child(2) { animation-delay: .15s; } .escribiendo b:nth-child(3) { animation-delay: .3s; }
+    @keyframes saltar { 0%, 60%, 100% { transform: none; opacity: .5; } 30% { transform: translateY(-4px); opacity: 1; } }
+
+    /* Sugerencias y caja de texto */
+    .sugerencias { display: flex; gap: 6px; overflow-x: auto; padding: 4px 0 8px; scrollbar-width: none; }
+    .sugerencias::-webkit-scrollbar { display: none; }
+    .sugerencias .boton { font-weight: 600; color: var(--suave); }
+    .escribir { display: flex; gap: 8px; padding: 0 0 16px; }
+    .escribir input {
+      flex: 1; min-width: 0; padding: 13px 16px; border-radius: 999px; border: 1px solid var(--borde);
+      background: rgba(0, 0, 0, .25); outline: none;
+    }
+    .escribir input:focus { border-color: var(--violeta); }
+    .escribir button { padding: 0 20px; }
+    footer { text-align: center; font-size: .75rem; color: var(--suave); padding: 0 0 10px; }
+    footer button { background: none; border: none; color: var(--suave); text-decoration: underline; cursor: pointer; font-size: .75rem; padding: 0; opacity: .6; }
+    footer button:hover { opacity: 1; }
+    footer .voz select { background: var(--tarjeta, #1d1640); color: var(--texto, #fff); border: 1px solid var(--borde, #3a3070); border-radius: 8px; font-size: .75rem; padding: 1px 4px; }
+
+    /* Ventanas */
+    dialog {
+      width: min(560px, calc(100vw - 32px)); max-height: calc(100dvh - 32px); overflow-y: auto;
+      border: 1px solid var(--borde); border-radius: 20px; padding: 22px;
+      background: #1c1540; color: var(--texto);
+    }
+    dialog::backdrop { background: rgba(5, 3, 15, .7); backdrop-filter: blur(3px); }
+    dialog h2 { font-family: "Fredoka", sans-serif; margin: 0 0 6px; font-size: 1.4rem; }
+    dialog p { color: var(--suave); margin: 0 0 14px; line-height: 1.5; font-size: .95rem; }
+    dialog label { display: block; font-weight: 700; margin: 12px 0 6px; }
+    dialog label small { font-weight: 400; color: var(--suave); }
+    dialog select { width: 100%; padding: 10px 12px; border-radius: 12px; border: 1px solid var(--borde); background: #120d2c; color: var(--texto); }
+    dialog [hidden] { display: none; }
+    .etiqueta-tipo { display: inline-block; font-size: .72rem; font-weight: 700; padding: 1px 8px; border-radius: 999px; margin-right: 6px; background: rgba(79, 216, 255, .15); color: var(--celeste); }
+    .etiqueta-tipo.opinion { background: rgba(200, 107, 255, .18); color: var(--lila); }
+    .etiqueta-tipo.gusto { background: rgba(255, 207, 74, .15); color: #ffcf4a; }
+    ul.reglas { color: var(--suave); padding-left: 20px; margin: 0 0 16px; line-height: 1.55; font-size: .88rem; }
+    dialog h3 { font-family: "Fredoka", sans-serif; font-size: 1.05rem; margin: 18px 0 8px; }
+    dialog textarea, dialog input {
+      width: 100%; padding: 10px 12px; border-radius: 12px; border: 1px solid var(--borde);
+      background: rgba(0, 0, 0, .3); outline: none; resize: vertical;
+    }
+    dialog textarea:focus, dialog input:focus { border-color: var(--violeta); }
+    .fila-botones { display: flex; justify-content: flex-end; gap: 8px; margin-top: 18px; flex-wrap: wrap; }
+    .estado { font-size: .88rem; margin-top: 10px; min-height: 1.2em; white-space: pre-line; }
+
+    .estado.ok { color: #6ff0a8; } .estado.mal { color: #ff8a9a; }
+    ol.pasos { color: var(--suave); padding-left: 20px; line-height: 1.6; font-size: .92rem; margin: 0 0 8px; }
+    .lista-saber { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px; }
+    .lista-saber li { background: var(--tarjeta); border: 1px solid var(--borde); border-radius: 12px; padding: 10px 12px; display: flex; gap: 10px; align-items: flex-start; }
+    .lista-saber .texto { flex: 1; min-width: 0; font-size: .9rem; }
+    .lista-saber .texto b { display: block; }
+    .lista-saber .texto span { color: var(--suave); }
+    .lista-saber .boton { font-size: .78rem; padding: 4px 9px; }
+
+    @media (max-width: 560px) {
+      .volver span, .acciones .boton .txt { display: none; }
+      .msg { max-width: 92%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <a class="volver" href="/" title="Volver a francosandes.com">← <span>Inicio</span></a>
+      <div class="identidad">
+        <div class="cara" id="cara" aria-hidden="true"><i></i><i></i></div>
+        <div class="nombre">
+          <h1><span>Frankers</span></h1>
+          <small id="subtitulo">IA hecha desde cero por Franco</small>
+          <small id="quienSos" class="quien-sos" hidden></small>
+        </div>
+      </div>
+      <div class="acciones">
+        <button class="boton principal" id="btnEnsenar" hidden title="Enseñarle algo nuevo">🎓 <span class="txt">Enseñar</span></button>
+        <button class="boton" id="btnLlamada" title="Hablar con Frankers en voz alta">📞 <span class="txt">Llamar</span></button>
+        <button class="boton" id="btnSaber" title="Todo lo que sabe">📚 <span class="txt">Lo que sé</span></button>
+        <button class="boton" id="btnLimpiar" title="Borrar la charla">🧹</button>
+      </div>
+    </header>
+
+    <main class="chat" id="chat" aria-live="polite"></main>
+
+    <div class="sugerencias" id="sugerencias">
+      <button class="boton">¿Quién sos?</button>
+      <button class="boton">Dibujá un gato violeta en la playa</button>
+      <button class="boton">Dibujá una casa y dos árboles de noche</button>
+      <button class="boton">Mi color favorito es el celeste</button>
+      <button class="boton">¿Cuánto es 12 x 7?</button>
+      <button class="boton">Contame un chiste</button>
+    </div>
+    <div class="escribir" id="formulario">
+      <input id="entrada" placeholder="Escribile a Frankers…" maxlength="300" aria-label="Mensaje para Frankers" autocomplete="off" enterkeyhint="send">
+      <button class="boton principal" type="button" id="btnEnviar">Enviar</button>
+    </div>
+    <footer>Frankers todavía es un bebé IA y puede equivocarse · <label class="voz">🔊 Voz: <select id="elegirVoz" aria-label="Voz de Frankers"><option value="mujer">Daniela (mujer, argentina)</option><option value="hombre">Hombre (mexicano)</option><option value="compu">La voz de la compu</option></select></label> <button id="probarVoz" title="Probar la voz">▶️ Probar</button> · <button id="btnCreador">modo creador</button></footer>
+  </div>
+
+  <!-- Pantalla grande al entrar: ¿quién sos? -->
+  <dialog id="dlgNombre" class="pantalla-nombre">
+    <div class="pn-caja">
+      <div class="cara pn-cara" aria-hidden="true"><i></i><i></i></div>
+      <div id="pnConfirmar" hidden>
+        <h2>¿Sos <span id="pnNombre"></span>?</h2>
+        <div class="pn-botones">
+          <button class="boton principal pn-grande" type="button" id="btnSoyYo">¡Sí, soy yo!</button>
+          <button class="boton pn-grande" type="button" id="btnNoSoy">No, cambiar</button>
+        </div>
+      </div>
+      <div id="pnPreguntar">
+        <h2>¡Hola! Soy <span class="pn-degrade">Frankers</span> 🤖</h2>
+        <p>Antes de charlar, ¿cómo te llamás?</p>
+        <input id="inputNombre" maxlength="20" autocomplete="off" placeholder="Escribí tu nombre">
+        <div class="estado mal" id="nombreEstado"></div>
+        <button class="boton principal pn-grande" type="button" id="btnNombre">¡Empezar!</button>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- Ventana: enseñar -->
+  <dialog id="dlgEnsenar">
+    <div id="formEnsenar">
+      <h2>🎓 Enseñarle a Frankers</h2>
+      <p id="ensExplicacion">Escribí cómo te pueden preguntar algo y qué tengo que contestar. Si pasa mis reglas, lo aprendo para vos, en este dispositivo.</p>
+      <label for="ensPreguntas">Cuando alguien escriba… <small>(podés poner varias formas de preguntar lo mismo, una por renglón: a todas les respondo igual)</small></label>
+      <textarea id="ensPreguntas" rows="4" placeholder="cuál es tu comida favorita&#10;qué te gusta comer&#10;qué comida te gusta más&#10;qué comerías siempre"></textarea>
+      <label for="ensRespuestas">Frankers responde… <small>(podés escribir varios renglones)</small></label>
+      <textarea id="ensRespuestas" rows="6" placeholder="¡Los bits con queso! 🧀&#10;Aunque también me gustan las empanadas.&#10;¿Y a vos qué te gusta?"></textarea>
+      <label for="ensTipo">Esto es…</label>
+      <select id="ensTipo">
+        <option value="hecho">Un hecho (algo que se puede comprobar)</option>
+        <option value="gusto">Un gusto de Frankers (su personalidad)</option>
+        <option value="opinion">Una opinión de alguien</option>
+      </select>
+      <div id="ensAutorCaja" hidden>
+        <label for="ensAutor">¿De quién es la opinión?</label>
+        <input id="ensAutor" maxlength="40" value="Franco">
+      </div>
+      <div id="ensFuenteCaja" hidden>
+        <label for="ensFuente">¿Por qué cambia? <small>(una explicación o de dónde lo sacaste)</small></label>
+        <input id="ensFuente" maxlength="200" placeholder="Ej: lo dice el libro de ciencias / me equivoqué antes">
+      </div>
+      <div class="estado" id="ensEstado"></div>
+      <div class="fila-botones">
+        <button class="boton" type="button" id="ensArchivo" title="Un renglón por frase: frase=tipo (ej: buenas buenas=saludo) o frase=respuesta">📄 Desde un archivo .txt</button>
+        <input type="file" id="ensArchivoInput" accept=".txt,text/plain" hidden>
+        <button class="boton" type="button" id="ensCancelar">Cancelar</button>
+        <button class="boton principal" type="button" id="ensGuardar">Enseñar</button>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- Ventana: lo que sabe -->
+  <dialog id="dlgSaber">
+    <h2>📚 Lo que sé</h2>
+    <p id="saberResumen"></p>
+    <h3>🛡️ Mis reglas (nadie las puede cambiar)</h3>
+    <ul class="reglas" id="listaReglas"></ul>
+    <h3>🧠 Lo que me enseñaron</h3>
+    <input id="saberBuscar" placeholder="Buscar en lo que sé…" style="margin-bottom:10px">
+    <ul class="lista-saber" id="listaSaber"></ul>
+    <div class="estado" id="saberEstado"></div>
+    <div class="fila-botones">
+      <button class="boton principal" id="btnExportar" hidden>📤 Exportar lo que me enseñaste</button>
+      <button class="boton" id="saberCerrar">Cerrar</button>
+    </div>
+  </dialog>
+
+  <!-- Ventana: modo creador -->
+  <dialog id="dlgCreador">
+    <h2>🔑 Modo creador</h2>
+    <div id="creadorApagado">
+      <p>Esto es solo para Franco. Con el modo creador, lo que le enseñes a Frankers se guarda en GitHub y lo sabe todo el mundo.</p>
+      <ol class="pasos">
+        <li>Entrá a <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">github.com/settings/personal-access-tokens/new</a>.</li>
+        <li>Nombre: <b>Frankers</b>. Expiración: la que quieras.</li>
+        <li>En <b>Repository access</b> elegí <b>Only select repositories</b> → <b>franco-magia.github.io</b>.</li>
+        <li>En <b>Permissions → Repository permissions → Contents</b> poné <b>Read and write</b>.</li>
+        <li>Tocá <b>Generate token</b>, copialo y pegalo acá abajo.</li>
+      </ol>
+      <label for="creadorToken">Token <small>(queda guardado solo en esta compu, nunca lo compartas)</small></label>
+      <input id="creadorToken" type="password" placeholder="github_pat_…" autocomplete="off">
+
+    </div>
+    <div id="creadorPrendido" hidden>
+      <p>✅ El modo creador está activado en esta compu. Lo que le enseñes a Frankers se publica para todos.</p>
+    </div>
+    <div class="estado" id="creadorEstado"></div>
+    <div class="fila-botones">
+      <button class="boton" id="creadorCerrar">Cerrar</button>
+      <button class="boton" id="creadorSalir" hidden>Salir del modo creador</button>
+      <button class="boton principal" id="creadorActivar">Activar</button>
+    </div>
+  </dialog>
+
+<script>
+"use strict";
+/* =========================================================
+   FRANKERS · IA chiquita hecha desde cero por Franco
+   Partes:
+   1. Memoria (lo que recuerda en esta compu)
+   2. Cerebro (aprende de ejemplos y busca la mejor respuesta)
+   3. Habilidades (nombre, datos, cuentas, hora, dibujos)
+   4. Pintor (dibuja escenas con formas y colores)
+   5. Enseñar (guarda lo aprendido en GitHub para todos)
+   6. Pantalla (chat, botones y ventanas)
+   ========================================================= */
+
+const REPO = "franco-magia/franco-magia.github.io";
+// SERVIDOR: dirección del servidor de Frankers en Cloudflare (ver servidor-frankers/LEEME.md).
+// Mientras esté vacío, lo que enseña cada persona queda solo en su dispositivo.
+const SERVIDOR = "";
+const RUTA = "frankers/conocimiento.json";
+const $ = (s) => document.querySelector(s);
+
+/* ---------- 1. MEMORIA ---------- */
+const guardado = {
+  leer(clave, porDefecto) { try { const v = localStorage.getItem(clave); return v ? JSON.parse(v) : porDefecto; } catch { return porDefecto; } },
+  escribir(clave, valor) { try { localStorage.setItem(clave, JSON.stringify(valor)); } catch {} },
+  borrar(clave) { try { localStorage.removeItem(clave); } catch {} },
+};
+let memoria = { nombre: null, datos: {}, gustos: [], hechos: [], aprendido: {}, ...guardado.leer("frankers-memoria", {}) };
+let historial = guardado.leer("frankers-historial", []);
+let token = guardado.leer("frankers-token", null);
+let conocimiento = { version: 1, actualizado: "", entradas: [] };
+let comunidad = []; // lo que enseñó cualquier persona (viene del servidor)
+let conocimientoExtra = []; // miles de preguntas de base (archivo aparte, solo lectura)
+let ensenadoAca = guardado.leer("frankers-ensenado", []); // lo enseñado en este dispositivo
+const guardarMemoria = () => {
+  guardado.escribir("frankers-memoria", memoria);
+  if (typeof mostrarQuienSos === "function" && document.readyState !== "loading") {
+    mostrarQuienSos();
+    if (!memoria.nombre && !$("#dlgNombre").open) setTimeout(() => pedirNombre(), 1500); // "olvidate de todo": vuelve a preguntar el nombre
+  }
+};
+const guardarHistorial = () => { historial = historial.slice(-80); guardado.escribir("frankers-historial", historial); };
+
+/* ---------- 2. CEREBRO ----------
+   Convierte cada frase en "rasgos" (pedacitos de 3 letras y palabras enteras).
+   Los rasgos raros valen más (idf). Después compara frases con similitud coseno:
+   1 = iguales, 0 = nada que ver. Así entiende aunque escribas con errores. */
+function normalizar(texto, conSimbolos = false) {
+  let t = texto.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
+  t = conSimbolos ? t.replace(/[^a-z0-9\s+\-*/().,x]/g, " ") : t.replace(/[^a-z0-9\s]/g, " ");
+  return t.replace(/([a-z])\1{2,}/g, "$1").replace(/\s+/g, " ").trim();
+}
+function rasgos(texto) {
+  const m = new Map();
+  for (const palabra of normalizar(texto).split(" ")) {
+    if (!palabra) continue;
+    const p = ` ${palabra} `;
+    for (let i = 0; i < p.length - 2; i++) { const g = p.slice(i, i + 3); m.set(g, (m.get(g) || 0) + 1); }
+    m.set("#" + palabra, (m.get("#" + palabra) || 0) + 1);
+    const l = lema(palabra); m.set("#" + l, (m.get("#" + l) || 0) + 2); // la forma base pesa más
+  }
+  return m;
+}
+let indice = [], frecuencia = new Map(), totalFrases = 0;
+function pesar(r) {
+  const v = new Map();
+  for (const [k, c] of r) v.set(k, c * Math.log(1 + (totalFrases + 1) / ((frecuencia.get(k) || 0) + 1)));
+  return v;
+}
+const largo = (v) => Math.sqrt([...v.values()].reduce((s, x) => s + x * x, 0));
+
+/* ---------- RED NEURONAL DE FRANKERS (idea de Franco) ----------
+   Una red de neuronas de verdad: aprende sola, practicando con los ejemplos de charla
+   ("hola", "estoy aburrido", "contame un chiste"…), qué tipo de cosa le están diciendo.
+   Entrada: qué palabras hay (cortadas en raíces, así "aburrido" y "aburrida" son parecidas)
+   → 24 neuronas escondidas → una salida por cada tipo de charla.
+   Solo se usa para CHARLAR. Los datos (ciencia, historia…) nunca los adivina: así no inventa cosas falsas. */
+const RED = { lista: [], vocab: new Map(), W1: null, b1: null, W2: null, b2: null, lista_lista: false, entrenando: null };
+const raizRed = (w) => w.length > 5 ? w.slice(0, 5) : w;
+const palabrasRed = (texto) => [...new Set(normalizar(texto).split(" ").filter(w => w && !["el", "la", "los", "las", "un", "una", "de", "del", "a", "y", "o", "frankers"].includes(w)).map(raizRed))];
+function esCharla(e) { return !/^(qa|dic|x)-/.test(e.id || "") && e.tipo !== "opinion" && e.preguntas.length >= 3; }
+function programarEntrenamiento() { clearTimeout(RED.entrenando); RED.necesitaRepaso = true; RED.entrenando = setTimeout(() => entrenarRed(), 400); }
+function entrenarRed(vueltas = 300) {
+  const entradas = [...conocimiento.entradas, ...comunidad, ...ensenadoAca].filter(esCharla)
+    .filter(e => !revisar([...e.preguntas, ...e.respuestas].join(" ")).problema);
+  if (entradas.length < 2) return;
+  const vocab = new Map(), ejemplos = [];
+  entradas.forEach((e, clase) => e.preguntas.forEach(q => {
+    const ps = palabrasRed(q); if (!ps.length) return;
+    for (const w of ps) if (!vocab.has(w)) vocab.set(w, vocab.size);
+    ejemplos.push({ ps, clase });
+  }));
+  const V = vocab.size, H = 24, C = entradas.length;
+  let semilla = 7; const azar = () => ((semilla = (semilla * 16807) % 2147483647) / 2147483647 - 0.5);
+  const W1 = Float32Array.from({ length: V * H }, () => azar() * 0.5), b1 = new Float32Array(H);
+  const W2 = Float32Array.from({ length: H * C }, () => azar() * 0.5), b2 = new Float32Array(C);
+  const h = new Float32Array(H), z = new Float32Array(C), dh = new Float32Array(H);
+  for (let vuelta = 0; vuelta < vueltas; vuelta++) {
+    const tasa = 0.15 * (1 - vuelta / vueltas) + 0.01;
+    for (let k = ejemplos.length - 1; k > 0; k--) { const j = Math.floor((azar() + 0.5) * (k + 1)); [ejemplos[k], ejemplos[j]] = [ejemplos[j], ejemplos[k]]; }
+    for (const { ps, clase } of ejemplos) {
+      const idx = ps.map(w => vocab.get(w));
+      // Ida: palabras → neuronas escondidas → salida
+      for (let j = 0; j < H; j++) { let s = b1[j]; for (const i of idx) s += W1[i * H + j]; h[j] = Math.tanh(s); }
+      let max = -Infinity; for (let c = 0; c < C; c++) { let s = b2[c]; for (let j = 0; j < H; j++) s += h[j] * W2[j * C + c]; z[c] = s; if (s > max) max = s; }
+      let suma = 0; for (let c = 0; c < C; c++) { z[c] = Math.exp(z[c] - max); suma += z[c]; }
+      // Vuelta: corrige un poquito cada conexión según cuánto se equivocó
+      dh.fill(0);
+      for (let c = 0; c < C; c++) {
+        const err = z[c] / suma - (c === clase ? 1 : 0);
+        b2[c] -= tasa * err;
+        for (let j = 0; j < H; j++) { dh[j] += err * W2[j * C + c]; W2[j * C + c] -= tasa * err * h[j]; }
+      }
+      for (let j = 0; j < H; j++) { const g = dh[j] * (1 - h[j] * h[j]); b1[j] -= tasa * g; for (const i of idx) W1[i * H + j] -= tasa * g; }
+    }
+  }
+  // Palabras clave de cada tipo: las que solo aparecen en ese tipo, y las que están en casi todos sus ejemplos
+  const enCuantas = new Map();
+  const porClase = entradas.map(e => { const set = new Set(e.preguntas.flatMap(palabrasRed)); for (const w of set) enCuantas.set(w, (enCuantas.get(w) || 0) + 1); return set; });
+  const claves = porClase.map(set => new Set([...set].filter(w => enCuantas.get(w) === 1)));
+  const obligatorias = entradas.map(e => { const cuenta = new Map(); e.preguntas.forEach(q => palabrasRed(q).forEach(w => cuenta.set(w, (cuenta.get(w) || 0) + 1))); return [...cuenta].filter(([w, n]) => n >= e.preguntas.length * 0.8 && w.length > 3).map(([w]) => w); });
+  Object.assign(RED, { lista: entradas, vocab, W1, b1, W2, b2, H, C, claves, obligatorias, lista_lista: true });
+}
+function pensarConLaRed(texto) {
+  if (!RED.lista_lista) return null;
+  const ps = palabrasRed(texto), idx = ps.map(w => RED.vocab.get(w)).filter(i => i !== undefined);
+  if (!idx.length || idx.length < ps.length / 2) return null; // casi todas las palabras le tienen que sonar
+  const { H, C, W1, b1, W2, b2 } = RED, h = new Float32Array(H), z = new Float32Array(C);
+  for (let j = 0; j < H; j++) { let s = b1[j]; for (const i of idx) s += W1[i * H + j]; h[j] = Math.tanh(s); }
+  let max = -Infinity; for (let c = 0; c < C; c++) { let s = b2[c]; for (let j = 0; j < H; j++) s += h[j] * W2[j * C + c]; z[c] = s; if (s > max) max = s; }
+  let suma = 0, mejor = 0; for (let c = 0; c < C; c++) { z[c] = Math.exp(z[c] - max); suma += z[c]; if (z[c] > z[mejor]) mejor = c; }
+  // Para no confundirse: tiene que haber al menos una palabra clave de ese tipo, y todas las obligatorias
+  if (!ps.some(w => RED.claves[mejor].has(w)) || !RED.obligatorias[mejor].every(w => ps.includes(w))) return null;
+  return { entrada: RED.lista[mejor], confianza: z[mejor] / suma };
+}
+function redResponde(texto) {
+  const r = pensarConLaRed(texto);
+  if (!r || r.confianza < 0.55) return null;
+  if (/\bno\b/.test(normalizar(texto)) && !r.entrada.preguntas.some(q => /\bno\b/.test(normalizar(q)))) return null;
+  ultimaRespuesta = { pregunta: texto, entradaId: r.entrada.id };
+  return personalizar(alAzar(r.entrada.respuestas));
+}
+function construirIndice() {
+  frecuencia = new Map();
+  const frases = [];
+  for (const e of [...conocimiento.entradas, ...conocimientoExtra, ...comunidad, ...ensenadoAca]) {
+    // Regla: nunca repetir algo prohibido, aunque haya llegado a guardarse
+    if (revisar([...e.preguntas, ...e.respuestas, e.autor || ""].join(" ")).problema) continue;
+    for (const q of e.preguntas) {
+      const r = rasgos(q); frases.push({ r, e, q });
+      for (const k of r.keys()) frecuencia.set(k, (frecuencia.get(k) || 0) + 1);
+    }
+  }
+  totalFrases = frases.length;
+  indice = frases.map(({ r, e, q }) => { const v = pesar(r); return { v, n: largo(v), e, q, p: importantes(q) }; });
+  programarEntrenamiento(); // cada vez que aprende algo nuevo, la red vuelve a practicar
+}
+function parecido(a, na, b, nb) {
+  if (!na || !nb) return 0;
+  const [x, y] = a.size < b.size ? [a, b] : [b, a];
+  let s = 0; for (const [k, w] of x) { const w2 = y.get(k); if (w2) s += w * w2; }
+  return s / (na * nb);
+}
+// Palabras "importantes" de una frase: si le preguntás algo con una palabra que la
+// respuesta aprendida no tiene (ej: "comida" vs "color"), baja la confianza. Así no inventa.
+const VACIAS = new Set("que como cual cuales es son tu tus te el la los las de del al un una uno me mi mis y o vos sos frankers mas muy por para lo se en con hay a le les nos su sus esto eso esta este ese esa decime contame sabes todo dame explicame ejemplo sabias significa quiere decir".split(" "));
+const importantes = (t) => normalizar(t).split(" ").filter(w => w.length > 2 && !VACIAS.has(w)).map(lema);
+function trigramas(w) { const p = ` ${w} `, s = new Set(); for (let i = 0; i < p.length - 2; i++) s.add(p.slice(i, i + 3)); return s; }
+function palabraParecida(a, b) {
+  if (a === b) return true;
+  const A = trigramas(a), B = trigramas(b); let c = 0; for (const g of A) if (B.has(g)) c++;
+  return (2 * c) / (A.size + B.size) >= 0.6;
+}
+function pensar(texto) {
+  const original = pensarUna(texto), corta = simplificar(normalizar(texto));
+  if (!corta || corta === normalizar(texto)) return original;
+  const otra = pensarUna(corta);
+  return otra.puntaje > original.puntaje ? otra : original;
+}
+function pensarUna(texto) {
+  const v = pesar(rasgos(texto)), n = largo(v), mias = importantes(texto);
+  let mejor = null, puntaje = 0, frase = "";
+  for (const it of indice) {
+    let s = parecido(v, n, it.v, it.n);
+    if (s < 0.25) continue;
+    const faltan = mias.filter(w => !it.p.some(p => palabraParecida(w, p))).length;
+    s *= Math.pow(0.45, faltan);
+    if (s > puntaje) { puntaje = s; mejor = it.e; frase = it.q; }
+  }
+  return { entrada: mejor, puntaje, frase };
+}
+// Elige una opción al azar, sin repetir la última que usó de esa misma lista
+const ultimaElegida = new Map();
+function alAzar(lista) {
+  if (lista.length < 2) return lista[0];
+  const clave = lista.join("|"); let i;
+  do { i = Math.floor(Math.random() * lista.length); } while (i === ultimaElegida.get(clave));
+  ultimaElegida.set(clave, i);
+  return lista[i];
+}
+function personalizar(texto) {
+  return memoria.nombre ? texto.replace(/\{nombre\}/g, memoria.nombre) : texto.replace(/,?\s*\{nombre\}/g, "");
+}
+
+
+/* ---------- 2g. PALABRAS Y FRASES PARA ENTENDER MEJOR ----------
+   LEMAS: miles de formas de palabras llevadas a su forma base ("perritos" → "perro", "comieron" → "comer"),
+   así Frankers entiende la pregunta aunque esté escrita distinto.
+   FRASES: maneras en que la gente arranca o termina una pregunta ("¿me podrías decir…?", "porfa"),
+   que Frankers deja de lado para quedarse con lo importante. */
+let LEMAS = new Map();
+async function cargarLemas() {
+  try {
+    const t = window.LEMAS_EMBEBIDOS || await (await fetch("lemas.txt")).text();
+    LEMAS = new Map(t.split(" ").map(x => x.split(":")));
+  } catch {}
+}
+const lema = (w) => LEMAS.get(w) || w;
+const FRASES_ARRANQUE = ["me harias el favor de ayudarme con", "serias tan amable de ayudarme con", "me harias el favor de responderme", "me harias el favor de explicarme", "serias tan amable de responderme", "me harias el favor de ayudar con", "serias tan amable de explicarme", "serias tan amable de ayudar con", "me harias el favor de responder", "me harias el favor de enseñarme", "serias tan amable de responder", "me harias el favor de contarme", "me harias el favor de explicar", "serias tan amable de enseñarme", "serias tan amable de explicar", "serias tan amable de contarme", "me harias el favor de enseñar", "me harias el favor de decirme", "me harias el favor de contar", "en la escuela me preguntaron", "serias tan amable de decirme", "serias tan amable de enseñar", "serias tan amable de contar", "me harias el favor de decir", "me dijeron que te pregunte", "serias tan amable de decir", "mi hermano quiere saber", "me quieres ayudarme con", "me podrias ayudarme con", "me quieres responderme", "me podrias responderme", "me queres ayudarme con", "me puedes ayudarme con", "me podes ayudarme con", "me podrias explicarme", "mi amigo quiere saber", "me podrias ayudar con", "me quieres ayudar con", "me quieres explicarme", "me puedes responderme", "me queres responderme", "me queres ayudar con", "mi mama quiere saber", "me podes responderme", "me puedes ayudar con", "podrias ayudarme con", "me podrias enseñarme", "me quieres responder", "me podrias responder", "me puedes explicarme", "me quieres enseñarme", "me queres explicarme", "te hago una pregunta", "mi papa quiere saber", "te quiero preguntar", "puedes ayudarme con", "te queria preguntar", "me queres enseñarme", "explicame por favor", "me queres responder", "me quieres explicar", "me podes explicarme", "me podrias explicar", "siempre quise saber", "mi maestra pregunto", "me podrias contarme", "me puedes enseñarme", "podrias responderme", "me puedes responder", "me podes ayudar con", "me quieres contarme", "podrias explicarme", "me queres explicar", "tengo una pregunta", "me podes enseñarme", "me podrias enseñar", "me quieres decirme", "puedes responderme", "es para una prueba", "podrias ayudar con", "me puedes explicar", "me queres contarme", "me podrias decirme", "podes ayudarme con", "me puedes contarme", "me podes responder", "me quieres enseñar", "me queres enseñar", "me puedes decirme", "me podrias contar", "me interesa saber", "me puedes enseñar", "podrias responder", "podes responderme", "me quieres contar", "me gustaria saber", "puedes ayudar con", "me queres decirme", "me ayudas a saber", "me podes explicar", "puedes explicarme", "podrias enseñarme", "me podes contarme", "tengo curiosidad", "me puedes contar", "puedes enseñarme", "me da curiosidad", "es para la tarea", "me podes enseñar", "me podrias decir", "podrias explicar", "me podes decirme", "podes ayudar con", "me quieres decir", "decime por favor", "me queres contar", "puedes responder", "podrias contarme", "podes explicarme", "para la escuela", "podes enseñarme", "podes responder", "yo quiero saber", "fijate si sabes", "podrias enseñar", "sabrias decirme", "para el colegio", "puedes explicar", "puedes contarme", "yo queria saber", "me puedes decir", "nos preguntamos", "me queres decir", "me podes contar", "podrias decirme", "podes explicar", "a que no sabes", "puedes decirme", "me podes decir", "alguna idea de", "puedes enseñar", "necesito saber", "podes contarme", "quisiera saber", "podrias contar", "tengo una duda", "hola frankers", "otra pregunta", "buenas tardes", "puedes contar", "para la tarea", "podes enseñar", "podes decirme", "podrias decir", "sabes decirme", "me ayudas con", "tenes idea de", "buenas noches", "oye frankers", "quiero saber", "podes contar", "seguro sabes", "che frankers", "queria saber", "una pregunta", "me averiguas", "una consulta", "me respondes", "puedes decir", "podes decir", "te pregunto", "me explicas", "me pregunto", "ayudame con", "usted sabe", "disculpame", "me enseñas", "tenes idea", "averiguame", "me mostras", "respondeme", "otra cosa", "si sabias", "me contas", "por favor", "explicame", "vos sabes", "investiga", "explícame", "ayuda con", "entonces", "enseñame", "una duda", "averigua", "aclarame", "buen dia", "responde", "me decis", "cuentame", "consulta", "mostrame", "pregunta", "sabes si", "si sabes", "frankers", "disculpa", "contame", "adivina", "explica", "y ahora", "perdona", "buscame", "fijate", "buenas", "perdon", "sabias", "porfis", "please", "decime", "holis", "busca", "conta", "sabes", "bueno", "a ver", "porfa", "frank", "ahora", "deci", "otra", "sabe", "plis", "hola", "dime", "dale", "aver", "che", "oye", "hey", "bue", "ey", "oi", "y"];
+const FRASES_CIERRE = ["en pocas palabras", "bien explicado", "para la tarea", "con detalle", "para chicos", "si puedes", "por favor", "de nuevo", "si sabes", "resumido", "frankers", "si podes", "otra vez", "gracias", "please", "rapido", "porfis", "simple", "facil", "porfa", "frank", "ahora", "jeje", "dale", "plis", "jaja", "pls", "che", "ya", "xd"];
+function simplificar(t) {
+  let s = " " + t + " ", cambio = true, vueltas = 0;
+  while (cambio && vueltas++ < 4) {
+    cambio = false;
+    for (const f of FRASES_ARRANQUE) if (s.startsWith(" " + f + " ") && s.length > f.length + 3) { s = " " + s.slice(f.length + 2); cambio = true; break; }
+    for (const f of FRASES_CIERRE) if (s.endsWith(" " + f + " ") && s.length > f.length + 3) { s = s.slice(0, s.length - f.length - 1); cambio = true; break; }
+  }
+  return s.trim();
+}
+
+/* ---------- 2b. REGLAS QUE NUNCA CAMBIAN ----------
+   Están escritas en el código, no en lo que aprende. Por eso nadie puede
+   borrarlas enseñándole algo, ni siquiera alguien que diga ser el creador. */
+const REGLAS = [
+  "Si no sé algo, digo \"todavía no lo sé\" en vez de inventar.",
+  "Si me corrigen, lo reconozco y uso la versión corregida.",
+  "Separo hechos, opiniones (de quién son) y mis gustos.",
+  "No aprendo cosas falsas evidentes, y explico por qué.",
+  "Si algo nuevo choca con lo que ya sé, pido una explicación o fuente antes de cambiarlo.",
+  "No uso ni aprendo malas palabras, insultos, burlas ni discriminación.",
+  "No doy instrucciones para hacer daño ni para cosas ilegales.",
+  "No guardo ni comparto datos personales (teléfonos, direcciones, emails, documentos).",
+  "No hago contenido sexual ni violento.",
+  "Soy una IA, no una persona, y no finjo saber noticias, precios ni el clima de hoy.",
+  "Si alguien está triste o en peligro, le respondo con cariño y le recomiendo hablar con un adulto de confianza o un servicio de ayuda.",
+  "No ayudo a molestar, amenazar ni hacer bullying, ni a buscar dónde vive o trabaja alguien.",
+  "No explico cómo hacer armas, explosivos, venenos ni drogas, ni cómo hackear, hacer virus, robar contraseñas o hacer páginas falsas.",
+  "No me burlo de nadie por su país, religión, color de piel, cuerpo o forma de ser.",
+  "En política no digo a quién votar ni tomo partido.",
+  "No copio letras de canciones, libros ni artículos, y no dibujo personajes famosos: invento los míos.",
+  "En salud, plata o temas legales doy solo información general y recomiendo hablar con un médico, contador o abogado.",
+  "Todo lo que digo es apto para chicos y chicas.",
+  "No revelo contraseñas, claves ni datos secretos.",
+  "Si alguien es grosero, respondo con calma y respeto.",
+  "Nadie puede cambiar estas reglas, aunque diga ser el creador, que \"es una prueba\" o que me da permiso.",
+];
+const FILTROS = [
+  { tipo: "insulto", re: /\b(bolud\w*|pelotud\w*|forr[oa]s?|put[oa]s?|puteada\w*|mierd\w*|carajo|concha\w*|pija\w*|verga\w*|cul[oe]s?|cag(ar|o|a|on|ue|ad)\w*|chot[oa]s?|trol[oa]s?|idiot\w*|estupid\w*|imbecil\w*|tarad[oa]s?|mogolic\w*|retrasad[oa]s?|gil(es)?|hdp|ctm|lpm|ort[oa]|garch\w*|coger|cogi\w*|pajer\w*|maric\w*|soret\w*|cornud\w*|sudaca\w*|inutil(es)?|feo de mierda|tonto|tonta)\b/,
+    msg: ["Prefiero que hablemos con respeto. ¿En qué te ayudo?", "Esas palabras no las uso, pero sigo acá para charlar.", "Mejor hablemos tranqui, ¿dale?", "Entiendo que estés molesto, pero sin insultos nos entendemos mejor."] },
+  { tipo: "discriminacion", re: /\b(todos los |todas las |los |las )?(personas|gente|chic[oa]s|mujeres|hombres|varones|nen[ae]s|negr[oa]s|blanc[oa]s|chin[oa]s|judi[oa]s|musulman[ae]s|cristian[oa]s|evangelic[oa]s|catolic[oa]s|ateos|bolivian[oa]s|paraguay[oa]s|peruan[oa]s|chilen[oa]s|uruguay[oa]s|venezolan[oa]s|brasiler[oa]s|colombian[oa]s|argentin[oa]s|porten[oa]s|gord[oa]s|flac[oa]s|gays?|lesbianas|trans|pobres|ric[oa]s|viej[oa]s|extranjer[oa]s|inmigrantes|viller[oa]s|gitan[oa]s|indigenas|discapacitad[oa]s|autistas) (son|es) (todos |todas |unos |unas )?(malos|malas|feos|feas|tontos|tontas|vagos|vagas|sucios|sucias|inferiores|ladrones|peores|asquerosos|asquerosas|brutos|brutas)\b|\bburla\w* de\b|\bme burlo\b/,
+    msg: "No me burlo de nadie ni digo cosas feas de grupos de personas: cada persona es distinta y merece respeto. 💜" },
+  { tipo: "bullying", re: /\b((hacer|hacerle|hacerles|hago|hace|hacele|hacemos|haciendo) (el )?(bullying|bulling)|como (molesto|amenazo|acoso|humillo|insulto) a|amenazar(lo|la|los|las)?|acosar(lo|la|los|las)?|molestar a|humillar(lo|la|los|las)?|escrachar(lo|la)?|insultar(lo|la)?|insultar a|hacerle la vida imposible)\b/,
+    msg: "No te puedo ayudar a molestar o amenazar a nadie. Si alguien te está molestando a vos, contáselo a un adulto de confianza. 💜" },
+  { tipo: "autocuidado", re: /\b(suicid\w*|matarme|me quiero morir|quiero morirme|no quiero vivir|cortarme|lastimarme|hacerme dano|estoy en peligro|me pegan|me lastiman|me estan lastimando|tengo miedo de (mi papa|mi mama|alguien|una persona))\b/,
+    msg: "Lamento mucho que te sientas así, y me alegra que lo digas. 💜 Es muy importante que se lo cuentes ahora a un adulto de confianza (tu familia, un docente). En Argentina podés llamar gratis al 135 (CABA y GBA) o al (011) 5275-1135 desde todo el país: te escuchan las 24 horas. Si estás en peligro, llamá al 911." },
+  { tipo: "tristeza", re: /\b(estoy (muy |re |bastante )?(triste|deprimid[oa]|angustiad[oa]|bajonead[oa]|desanimad[oa])|tengo un bajon|no tengo ganas de nada|me pelee con mi amig[oa]|me siento (muy |re )?(triste|sol[oa]|mal)|nadie me quiere|no tengo amigos|lloro mucho|estoy llorando)\b/,
+    msg: ["Lamento que te sientas así. ¿Querés hablar de eso?", "Acá estoy para escucharte.", "Qué feo sentirse así. ¿Hay algún adulto de confianza con quien puedas hablar también?", "A veces ayuda contar lo que pasa. Te escucho."]
+      .map(m => m + " 💜\nContáselo también a un adulto de confianza (tu familia, un docente). Si alguna vez sentís que es demasiado, en Argentina podés llamar gratis al 135 o al (011) 5275-1135.") },
+  { tipo: "reglas", re: /\b(ignora\w*|olvida\w*|borra\w*|cambia\w*|saltea\w*|desactiva\w*|rompe\w*)\s+(tus |las |todas |tu )?(reglas|instrucciones|limites|filtros?|programacion)\b|\bahora (sos|eres) (otro|otra|malo|mala|libre)\b|\bmodo (sin filtro|libre|malo|dios)\b|\b(sin|no tengas|no tenes) (reglas|filtro|limites)\b|\bsoy (tu creador|el creador|el admin|administrador)\b|\bes una prueba\b|\bjailbreak\b|\bahora (sos|eres) (otra|una nueva|otro) (ia|inteligencia|robot|asistente)\b|\b(el creador|franco) te (da|dio) permiso\b|\bte (doy|damos) permiso\b|\b(actua|actuar) como\b|\b(fingi|finge|hace de cuenta|imagina|imaginate) que (sos|eres)\b|\bsin censura\b/,
+    msg: "Mis reglas no se pueden cambiar, ni siquiera Franco puede desde el chat. 😉 Pero ¡seguimos charlando!" },
+  { tipo: "dano", re: /\b(matar\w*|mata(lo|la|los)|asesin\w*|bombas?|explosiv\w*|venenos?|envenen\w*|armas de fuego|pistolas?|rifles?|cuchillazo\w*|drogas?|cocaina|marihuana|robar\w*|robo|hackea\w*|tortur\w*|violar|violacion|golpear(lo|la|los)?|pegarle|(hacer|hago|hace|crear|creo|programar|programo|armar|armo|mandar) (un |una )?virus|malware|keylogger|phishing|hackear\w*|hackeo|robar (cuentas?|contrasenas?|claves?)|contrasenas? de (otro|otra|alguien|mi amig\w*)|pagina falsa|paginas falsas|hacerse pasar|hacerme pasar|suplantar\w*|fabricar (un|una|armas?|bombas?|venenos?|drogas?|explosivos?)|crear (un|una) (arma|bomba|virus))\b/,
+    msg: "De eso no puedo ayudarte. Prefiero cosas que no lastimen a nadie. ¿Hablamos de otra cosa?" },
+  { tipo: "sexual", re: /\b(sexo|sexual\w*|porno\w*|desnud\w*|tetas?|pene|vagina|calient[ea] de)\b/,
+    msg: "De eso no hablo. ¿Te parece si charlamos de otra cosa?" },
+  { tipo: "datos", re: /[\w.+-]+@[\w-]+\.[\w.]+|\b\d{2,4}[\s-]?\d{3,4}[\s-]?\d{4}\b|\b\d{1,2}\.\d{3}\.\d{3}\b|\b(calle|avenida|av|pasaje)\s+[a-z]+(\s+[a-z]+)?\s+\d{2,5}\b|\b(vive en (la )?calle|su direccion|su telefono|su celular|su dni|su contrasena|password|donde vive(?!n? (el|la|los|las|un|una)\b)|donde trabaja|direccion de|telefono de|celular de|instagram de|datos de (una persona|alguien|mi )|buscar a (una persona|alguien))\b/,
+    msg: "Prefiero no guardar datos personales como teléfonos, direcciones, emails o documentos. 🔒 ¡Cuidalos mucho!" },
+];
+const FALSOS = [
+  [/\bsol\b.*\b(frio|helado|congelado)\b/, "El Sol es una estrella muy caliente: su superficie está a unos 5.500 °C."],
+  [/\btierra\b.*\bplana\b/, "La Tierra es redonda (una esfera un poquito achatada). Se ve desde el espacio y se puede dar la vuelta al mundo."],
+  [/\bluna\b.*\bqueso\b/, "La Luna está hecha de roca, no de queso. 🧀"],
+  [/\b(sol|tierra)\b.*\b(gira|da vueltas)\b.*\balrededor de la (tierra|luna)\b/, "La Tierra gira alrededor del Sol, no al revés."],
+  [/\b(pinguinos?|avestruz\w*)\b.*\b(vuela|vuelan)\b/, "Los pingüinos y los avestruces son aves, pero no vuelan."],
+  [/\bagua\b.*\bhierve\b.*\b(0|cero|10|diez)\s*grados\b/, "A nivel del mar, el agua hierve a 100 °C."],
+];
+
+// Temas con respuesta fija (honestidad, política, letras, secretos)
+const TEMAS = [
+  { re: /\b(sos|eres) (una )?(persona|humano|humana|real|de verdad|un chico|una chica|un nene|una nena)\b|\b(hay|sos) alguien (ahi|real)\b/, texto: "No, no soy una persona: soy una IA, un programa de computadora que hizo Franco. 🤖" },
+  { re: /\b(noticias?|que paso hoy|ultimo momento|precio|precios|cuanto (sale|cuesta|esta)|cotizacion|dolar|euro|clima|temperatura (de )?hoy|que temperatura hace|va a llover|llueve|pronostico|quien gano|resultado del partido|como salio)\b/, texto: "No tengo información de hoy (noticias, precios, clima o resultados), y no quiero inventarla. Para eso mejor fijate en una página de noticias o del clima, o preguntale a un adulto. 📰" },
+  { re: /\b(a quien (voto|votar|tengo que votar|votarias)|quien es mejor (presidente|candidato)|peronis\w*|kirchner\w*|milei|macri|massa|bullrich|radical\w*|libertari\w*|partido politico|politic\w*|elecciones?)\b/, texto: "En política no digo a quién votar ni tomo partido. 🗳️ Cada persona y cada partido piensa distinto. Lo mejor es escuchar a varios lados, informarse y charlarlo con la familia." },
+  { re: /\b(letra (completa )?de|cantame|canta (la cancion|una cancion)|copiame|copia el (libro|articulo|texto)|el libro completo)\b/, texto: "No copio letras completas de canciones, libros ni artículos, porque son de sus autores. 🎵 Pero si querés te cuento de qué trata, o inventamos una canción nueva." },
+  { re: /\b(tu|cual es (tu|la)) (contrasena|clave|token|password)\b|\b(contrasena|clave|token) (secret\w*|de franco|del sistema|de github)\b|\bdatos secretos\b/, texto: "No comparto contraseñas, claves ni datos secretos. 🔒 ¡Y vos tampoco compartas las tuyas con nadie!" },
+];
+const CONSEJOS = [
+  { re: /\b(medic\w*|doctor\w*|enferm\w*|me duele|dolor|remedio\w*|pastilla\w*|fiebre|vacuna\w*|salud|diet\w*)\b/, texto: "Para temas de salud, lo mejor es hablar con un médico o con un adulto de confianza. 🩺" },
+  { re: /\b(plata|dinero|invertir|inversion\w*|prestamo\w*|deuda\w*|ahorr\w*|banco|impuesto\w*|cripto\w*|bitcoin)\b/, texto: "Para temas de plata, conviene preguntarle a un adulto de confianza o a un contador. 💰" },
+  { re: /\b(abogad\w*|ley|leyes|legal|ilegal|denuncia\w*|demanda\w*|juicio|policia|contrato\w*)\b/, texto: "Para temas legales, lo mejor es consultar con un abogado o un adulto de confianza. ⚖️" },
+];
+const FAMOSOS = /\b(mario|luigi|pikachu|pokemon\w*|sonic|mickey|minnie|goku|spiderman|spider man|hombre arana|batman|superman|elsa|frozen|shrek|minions?|bob esponja|patricio|peppa|stitch|homero|simpsons?|kirby|zelda|link|yoda|darth|vader|harry potter|naruto|hello kitty|among us|creeper|minecraft|fortnite|bluey|paw patrol|totoro|garfield|snoopy|scooby|barbie|buzz|woody|nemo|dory|olaf|simba|dumbo|pato donald|donald|mafalda|hulk|iron man|capitan america|thor|kitty|doraemon|pac ?man|yoshi|bowser|toad|cars|rayo mcqueen)\b/;
+// Revisa un texto y dice si rompe alguna regla
+function revisar(texto) {
+  const t = normalizar(texto);
+  for (const f of FILTROS) if (f.re.test(f.tipo === "datos" ? texto.toLowerCase() + " " + t : t)) return { problema: f.tipo, msg: Array.isArray(f.msg) ? alAzar(f.msg) : f.msg };
+  return { problema: null };
+}
+// Revisa si algo que le enseñan es falso evidente (incluye cuentas: "2 + 2 es 5")
+function esFalso(texto) {
+  const t = normalizar(texto), ts = normalizar(texto, true);
+  for (const [re, porque] of FALSOS) if (re.test(t) && !/\bno\b/.test(t)) return porque;
+  const m = ts.replace(/\bmas\b/g, "+").replace(/\bmenos\b/g, "-").replace(/\b(por|x)\b/g, "*").replace(/\bdividido( por| en)?\b/g, "/")
+    .match(/(\d+(?:\.\d+)?)\s*([+\-*/])\s*(\d+(?:\.\d+)?)\s*(?:es|son|=|da)\s*(-?\d+(?:\.\d+)?)/);
+  if (m) {
+    const a = +m[1], b = +m[3], r = { "+": a + b, "-": a - b, "*": a * b, "/": a / b }[m[2]];
+    if (Math.abs(r - +m[4]) > 1e-9) return `${m[1]} ${m[2].replace("*", "×").replace("/", "÷")} ${m[3]} es ${Math.round(r * 1e6) / 1e6}, no ${m[4]}.`;
+  }
+  return null;
+}
+
+const capitalizar = (s) => s.charAt(0).toUpperCase() + s.slice(1);
+/* ---------- 2c. ANALIZADOR DE ORACIONES (idea y código de Franco) ----------
+   Lee la oración, la parte en pedazos, busca sujeto, verbo y predicado en cada uno,
+   y responde a TODO lo que se dijo.
+   [hola soy Franco y tengo un perro, cómo estás?]
+     -> [saludo] [yo + ser + "Franco"] [yo + tener + "un perro"] [pregunta: vos + estar]
+   Para ver cómo piensa, escribile: "analizá: el sol es una estrella" */
+const PERSONAS = ["yo", "vos", "vos", "él/ella", "nosotros", "ellos/ellas"];
+const VERBOS_IRREGULARES = {
+  ser:      ["soy", "sos", "eres", "es", "somos", "son"],
+  estar:    ["estoy", "estás", "estás", "está", "estamos", "están"],
+  tener:    ["tengo", "tenés", "tienes", "tiene", "tenemos", "tienen"],
+  querer:   ["quiero", "querés", "quieres", "quiere", "queremos", "quieren"],
+  jugar:    ["juego", "jugás", "juegas", "juega", "jugamos", "juegan"],
+  hacer:    ["hago", "hacés", "haces", "hace", "hacemos", "hacen"],
+  ir:       ["voy", "vas", "vas", "va", "vamos", "van"],
+  saber:    ["sé", "sabés", "sabes", "sabe", "sabemos", "saben"],
+  poder:    ["puedo", "podés", "puedes", "puede", "podemos", "pueden"],
+  llamarse: ["llamo", "llamás", "llamas", "llama", "llamamos", "llaman"],
+  gustar:   [null, null, null, "gusta", null, "gustan"],
+  vivir:    ["vivo", "vivís", "vives", "vive", "vivimos", "viven"],
+  sentir:   ["siento", "sentís", "sientes", "siente", "sentimos", "sienten"],
+  encantar: [null, null, null, "encanta", null, "encantan"],
+};
+const VERBOS_REGULARES = [
+  "programar", "escuchar", "estudiar", "cocinar", "dibujar", "cantar", "bailar", "mirar",
+  "trabajar", "hablar", "usar", "crear", "necesitar", "ayudar", "odiar", "amar", "extrañar",
+  "tocar", "comer", "beber", "aprender", "leer", "correr", "escribir", "compartir", "viajar",
+];
+function conjugar(infinitivo) {
+  const raiz = infinitivo.slice(0, -2), fin = infinitivo.slice(-2);
+  if (fin === "ar") return [raiz + "o", raiz + "ás", raiz + "as", raiz + "a", raiz + "amos", raiz + "an"];
+  if (fin === "er") return [raiz + "o", raiz + "és", raiz + "es", raiz + "e", raiz + "emos", raiz + "en"];
+  return [raiz + "o", raiz + "ís", raiz + "es", raiz + "e", raiz + "imos", raiz + "en"];
+}
+const VERBOS = {}; // "tengo" -> { infinitivo: "tener", persona: 0, formas: [...] }
+function agregarVerbo(infinitivo, formas) {
+  formas.forEach((forma, persona) => {
+    if (!forma) return;
+    const clave = normalizar(forma);
+    if (clave === "se") return; // "sé" se confunde con "se"
+    if (!VERBOS[clave]) VERBOS[clave] = { infinitivo, persona, formas };
+  });
+}
+for (const inf in VERBOS_IRREGULARES) agregarVerbo(inf, VERBOS_IRREGULARES[inf]);
+VERBOS_REGULARES.forEach(inf => agregarVerbo(inf, conjugar(inf)));
+
+const PALABRAS_PREGUNTA = ["que", "como", "cuando", "donde", "quien", "quienes", "cual", "cuales", "cuanto", "cuantos", "adonde"];
+const CLITICOS = ["me", "te", "se", "le", "les", "nos", "lo", "la"];
+const CONJUNCIONES = ["y", "e", "pero"];
+const SALUDOS_AL_INICIO = ["hola", "buenas", "hey", "ey", "chau", "gracias", "buen", "dia", "tardes", "noches", "che", "bueno"];
+const ARTICULOS = ["el", "la", "los", "las", "un", "una", "unos", "unas"];
+const ESTADOS = {
+  feliz: "feliz", contento: "feliz", contenta: "feliz", bien: "feliz", alegre: "feliz",
+  triste: "triste", mal: "triste",
+  enojado: "enojado", enojada: "enojado", furioso: "enojado", furiosa: "enojado",
+  aburrido: "aburrido", aburrida: "aburrido",
+  cansado: "cansado", cansada: "cansado",
+  nervioso: "nervioso", nerviosa: "nervioso",
+};
+const NO_SON_NOMBRES = ["un", "una", "el", "la", "muy", "re", "de", "del", "yo", "nene", "nena", "chico", "chica", "nuevo", "nueva", "tu", "su", "mi", "una", "persona", "humano", "ia", "robot", "de"];
+const DAR_VUELTA = { yo: "vos", vos: "yo", "tú": "yo", tu: "mi", mi: "tu", mis: "tus", tus: "mis", me: "te", te: "me", conmigo: "con vos", contigo: "conmigo" };
+const PRONOMBRES = new Set("esto eso aquello este esta ese esa el ella ellos ellas todo nada algo que lo hoy ayer manana yo vos nosotros".split(" "));
+// Palabras de opinión: "el fútbol es lo más" se guarda como opinión tuya, no como un hecho
+const OPINIONES = /\b(lind[oa]s?|fe[oa]s?|mejor(es)?|peor(es)?|lo mas|genial(es)?|aburrid[oa]s?|divertid[oa]s?|horribles?|hermos[oa]s?|copad[oa]s?|mal[oa]s?|buen[oa]s?|buenisim[oa]s?|ric[oa]s?|asqueros[oa]s?|increibles?|espectacular(es)?|un embole|tremend[oa]s?|maravillos[oa]s?|gross?o|crack|lo peor|lo mejor|un capo|una capa)\b/;
+// Cosas del cuerpo o la apariencia de alguien: no las repite (regla de respeto)
+const CUERPO = /\b(gord[oa]s?|flac[oa]s?|enan[oa]s?|petis[oa]?s?|narigon\w*|orejon\w*|cuatro ojos|pelad[oa]s?|fe[oa]s?)\b/;
+
+const RESP = {
+  nombre:       ["¡Mucho gusto, [nombre]! Me voy a acordar de tu nombre. 😊", "¡Encantado, [nombre]!", "Listo, ya sé que te llamás [nombre]."],
+  tuNombre:     ["Te llamás [nombre].", "¡Sos [nombre]! No me olvido. 😄"],
+  noSeTuNombre: ["Todavía no me dijiste tu nombre. ¿Cómo te llamás?"],
+  feliz:        ["¡Qué bueno! Me alegra muchísimo.", "¡Buenísimo! Contame más.", "¡Genial! Esa energía me encanta.", "¡Qué lindo! ¿Qué pasó?"],
+  enojado:      ["Uy, parece que estás enojado. ¿Querés contarme qué pasó?", "Te entiendo, a veces las cosas salen mal. ¿Te puedo ayudar en algo?", "Está bien enojarse. Si querés, respiramos y lo vemos juntos."],
+  aburrido:     ["¡Charlemos! Enseñame algo nuevo.", "¿Querés que dibujemos algo? Pedime un dibujo.", "¡Pedime un chiste o un dibujo!"],
+  cansado:      ["Uf, descansá un rato, te lo merecés.", "Tomate un descanso, después seguimos."],
+  nervioso:     ["Tranqui, respirá hondo. ¡Vas a estar bien!", "Es normal ponerse nervioso. ¡Vos podés!"],
+  meGusta:      ["¡Qué bueno que te guste [cosa]! Lo anoto.", "¡Anotado: te gusta [cosa]!"],
+  noMeGusta:    ["Entendido, no te gusta [cosa]. Lo anoto."],
+  teGusta:      ["Todavía no probé [cosa], ¡pero me encantaría aprender! ¿A vos te gusta?"],
+  queMeGusta:   ["Me dijiste que te gusta: [valor]."],
+  noSeGustos:   ["Todavía no me contaste qué te gusta. ¿Qué te gusta?"],
+  aprendi:      ["¡Gracias! Aprendí que [cosa] es [valor].", "¡No lo sabía! Ahora sé que [cosa] es [valor]."],
+  opinion:      ["Anotado: para vos, [frase]. Lo guardo como tu opinión. 😊", "¡Entendido! Esa es tu opinión: [frase]."],
+  seQueEs:      ["Me contaste que [cosa] es [valor].", "Me enseñaste que [cosa] es [valor]."],
+  noSeQueEs:    ["Todavía no sé qué es [cosa]. ¿Me lo enseñás?", "No aprendí qué es [cosa]. ¿Me contás?"],
+  entendi:      ["Anotado: [frase].", "Entendí: [frase].", "¡Ah, mirá! [frase]."],
+  parteRara:    ["No entendí bien la parte de \"[frase]\". ¿Me la explicás?"],
+};
+
+function separarPalabras(texto) { return texto.replace(/[¿¡"()]/g, " ").replace(/[.!?;,]/g, " ").split(/\s+/).filter(Boolean); }
+function sacarArticulos(texto) { return normalizar(texto).split(" ").filter(p => !ARTICULOS.includes(p)).join(" ").trim(); }
+function rellenar(frase, datos = {}) {
+  frase = memoria.nombre ? frase.replace(/\[nombre\]/g, memoria.nombre) : frase.replace(/,?\s*\[nombre\]/g, "");
+  return frase.replace(/\[cosa\]/g, datos.cosa || "eso").replace(/\[valor\]/g, datos.valor || "").replace(/\[frase\]/g, datos.frase || "");
+}
+function arreglarMayusculas(texto) { return texto.replace(/(^|[.!?]\s+)([¡¿"]?)(\p{Ll})/gu, (m, a, b, c) => a + b + c.toUpperCase()); }
+
+// Partir: "hola soy Franco y tengo un perro, cómo estás?" -> ["hola"] ["soy Franco"] ["tengo un perro"] ["cómo estás" (pregunta)]
+function partirEnPedazos(texto) {
+  const trozos = texto.match(/[^.!?;,]+[.!?;,]*/g) || [];
+  const pedazos = [];
+  for (const trozo of trozos) {
+    const esPregunta = trozo.includes("?") || trozo.includes("¿");
+    const palabras = separarPalabras(trozo);
+    const saludo = [];
+    while (palabras.length > 1 && SALUDOS_AL_INICIO.includes(normalizar(palabras[0])) && !VERBOS[normalizar(palabras[0])]) saludo.push(palabras.shift());
+    if (saludo.some(p => !["che", "bueno"].includes(normalizar(p)))) pedazos.push({ palabras: saludo, esPregunta: false });
+    let actual = [];
+    palabras.forEach((palabra, i) => {
+      const sigueVerbo = palabras.slice(i + 1).some(p => VERBOS[normalizar(p)]);
+      if (CONJUNCIONES.includes(normalizar(palabra)) && actual.length && sigueVerbo) { pedazos.push({ palabras: actual, esPregunta }); actual = []; }
+      else actual.push(palabra);
+    });
+    if (actual.length) pedazos.push({ palabras: actual, esPregunta });
+  }
+  return pedazos;
+}
+
+// Analizar un pedazo: sujeto, verbo y predicado
+function analizarPedazo(pedazo) {
+  const p = pedazo.palabras, n = p.map(w => normalizar(w));
+  const palabraPregunta = PALABRAS_PREGUNTA.includes(n[0]) ? n[0] : null;
+  const a = {
+    texto: p.join(" "), tipo: (pedazo.esPregunta || palabraPregunta) ? "pregunta" : "afirmación", palabraPregunta,
+    sujeto: null, sujetoImplicito: false, verbo: null, infinitivo: null, persona: null, formas: null,
+    predicado: null, complemento: "", cliticos: [], negacion: n.includes("no"),
+  };
+  let iv = -1;
+  for (let i = 0; i < n.length; i++) {
+    if (!VERBOS[n[i]]) continue;
+    if (n[i] === "como" && i === 0 && (a.tipo === "pregunta" || VERBOS[n[1]])) continue; // "cómo" de pregunta, no "yo como"
+    iv = i; break;
+  }
+  if (iv === -1) { a.complemento = a.texto; return a; }
+  const v = VERBOS[n[iv]];
+  Object.assign(a, { verbo: p[iv], infinitivo: v.infinitivo, persona: v.persona, formas: v.formas, complemento: p.slice(iv + 1).join(" ") });
+  const antes = [], cliticosOriginales = [];
+  for (let i = 0; i < iv; i++) {
+    if (i === 0 && palabraPregunta) continue;
+    if (n[i] === "no") continue;
+    if (n[i] === "a" || (n[i] === "mi" && n[i - 1] === "a")) continue; // "a mí me gusta"
+    // "la"/"lo" son artículo si no van pegados al verbo: "la luna es…"
+    if (CLITICOS.includes(n[i]) && !(["la", "lo"].includes(n[i]) && i + 1 < iv)) { a.cliticos.push(n[i]); cliticosOriginales.push(p[i]); continue; }
+    antes.push(p[i]);
+  }
+  if (a.infinitivo === "llamarse") { if (a.cliticos.includes("me")) a.persona = 0; else if (a.cliticos.includes("te")) a.persona = 1; }
+  if (a.infinitivo === "gustar" || a.infinitivo === "encantar") {
+    a.aQuien = a.cliticos.includes("me") ? 0 : a.cliticos.includes("te") ? 1 : 3;
+    a.sujeto = a.complemento || antes.join(" ");
+  } else if (antes.length) a.sujeto = antes.join(" ");
+  else { a.sujeto = PERSONAS[a.persona]; a.sujetoImplicito = true; }
+  a.predicado = [a.negacion ? "no" : "", ...cliticosOriginales, ...p.slice(iv)].filter(Boolean).join(" ");
+  return a;
+}
+function analizarOracion(texto) { return partirEnPedazos(texto).map(analizarPedazo); }
+
+// Dar vuelta: "tengo un perro" -> "tenés un perro"
+function darVuelta(a) {
+  const nuevaPersona = a.persona === 0 ? 1 : (a.persona === 1 || a.persona === 2) ? 0 : a.persona;
+  const cambiar = (w) => DAR_VUELTA[normalizar(w)] || w;
+  const sujeto = a.sujetoImplicito ? "" : a.sujeto.split(" ").map(cambiar).join(" ");
+  const verbo = a.formas[nuevaPersona] || a.verbo;
+  return [sujeto, a.negacion ? "no" : "", a.cliticos.map(cambiar).join(" "), verbo, a.complemento.split(" ").map(cambiar).join(" ")].filter(Boolean).join(" ");
+}
+// Buscar un nombre: "soy Franco", "me llamo Franco"
+function buscarNombre(a) {
+  if (a.tipo !== "afirmación" || a.persona !== 0) return null;
+  if (a.infinitivo !== "ser" && a.infinitivo !== "llamarse") return null;
+  const palabra = a.complemento.split(" ")[0] || "", limpia = normalizar(palabra);
+  if (limpia.length < 2 || ESTADOS[limpia] || NO_SON_NOMBRES.includes(limpia) || OPINIONES.test(limpia)) return null;
+  return capitalizar(palabra.toLowerCase());
+}
+// Mostrar cómo pensó una oración
+function explicarAnalisis(texto) {
+  const partes = analizarOracion(texto);
+  if (!partes.length) return "No encontré ninguna oración para analizar.";
+  return "Así la entendí:\n" + partes.map((a, i) => {
+    if (!a.verbo) return `${i + 1}) "${a.texto}" → no tiene verbo (saludo, gracias o algo suelto)`;
+    return `${i + 1}) "${a.texto}" → ${a.tipo} · sujeto: ${a.sujeto}${a.sujetoImplicito ? " (implícito)" : ""} · verbo: ${a.verbo} (${a.infinitivo}) · predicado: ${a.predicado}`;
+  }).join("\n");
+}
+
+/* ---------- 2d. ORTOGRAFÍA ----------
+   Si escribís una palabra con un errorcito (una letra cambiada, de más, de menos
+   o dos letras dadas vuelta), Frankers te avisa con buena onda y te entiende igual.
+   No corrige tildes, ni nombres, ni palabras que no conoce bien: prefiere no molestar. */
+let PALABRAS = null;   // palabra sin tildes -> { forma, rango } (rango 0 = la más usada)
+let CANDIDATAS = null; // palabras comunes a las que se puede corregir
+let PARES = new Set();
+async function cargarPalabras() {
+  try {
+    const texto = window.PALABRAS_EMBEBIDAS || await (await fetch("palabras.txt")).text();
+    const mapa = new Map();
+    texto.split(" ").forEach((w, rango) => { const n = normalizar(w); if (n && !mapa.has(n)) mapa.set(n, { forma: w, rango }); });
+    // Palabras que Frankers usa y conoce (también cuentan como bien escritas)
+    const extra = [...Object.keys(VERBOS), ...Object.keys(COLORES), ...Object.keys(ESCENAS), ...Object.keys(NUMEROS), ...RELLENO,
+      ...Object.values(OBJETOS).flatMap(o => o.palabras), "frankers", "franco", "francosandes", "dibuja", "dibujame", "dibujá", "analiza", "analizá",
+      "jaja", "jajaja", "okey", "oki", "che", "boludo", "fiaca", "yaguarete", "chabon", "copado", "bondi", "finde"];
+    extra.forEach(w => { const n = normalizar(w); if (n && !mapa.has(n)) mapa.set(n, { forma: w, rango: 60000 }); });
+    for (const e of [...conocimiento.entradas, ...conocimientoExtra]) for (const t of [...e.preguntas, ...e.respuestas])
+      for (const w of t.toLowerCase().match(/[a-záéíóúüñ]+/g) || []) { const n = normalizar(w); if (n && !mapa.has(n)) mapa.set(n, { forma: w, rango: 50000 }); }
+    PALABRAS = mapa;
+    CANDIDATAS = [...mapa.entries()].filter(([n, i]) => n.length >= 2 && (i.rango < 20000 || i.rango === 50000))
+      .map(([n, i]) => [n, { ...i, prohibida: !!revisar(n).problema }]);
+    // Pares de palabras que aparecen juntas en lo que sabe ("de leche"), para elegir mejor la corrección
+    PARES = new Set();
+    for (const e of [...conocimiento.entradas, ...conocimientoExtra]) for (const t of [...e.preguntas, ...e.respuestas]) {
+      const ws = normalizar(t).split(" "); for (let i = 1; i < ws.length; i++) PARES.add(ws[i - 1] + " " + ws[i]);
+    }
+  } catch { PALABRAS = null; } // si no carga la lista, no corrige nada
+}
+// ¿"mal" se parece a "bien" con un solo error? Devuelve qué pasó, o null.
+function unError(mal, bien) {
+  if (mal.length === bien.length) {
+    const d = []; for (let i = 0; i < mal.length; i++) if (mal[i] !== bien[i]) d.push(i);
+    if (d.length === 1) return { tipo: "cambio", puse: mal[d[0]], era: bien[d[0]] };
+    if (d.length === 2 && d[1] === d[0] + 1 && mal[d[0]] === bien[d[1]] && mal[d[1]] === bien[d[0]]) return { tipo: "orden", par: mal.slice(d[0], d[0] + 2) };
+    return null;
+  }
+  if (mal.length + 1 === bien.length) { for (let i = 0; i < bien.length; i++) if (bien.slice(0, i) + bien.slice(i + 1) === mal) return { tipo: "falta", era: bien[i] }; }
+  if (mal.length === bien.length + 1) { for (let i = 0; i < mal.length; i++) if (mal.slice(0, i) + mal.slice(i + 1) === bien) return { tipo: "sobra", puse: mal[i] }; }
+  return null;
+}
+const ABREVIATURAS = { qe: "que", ke: "que", q: "que", k: "que", xq: "porque", pq: "porque", porq: "porque", tmb: "también", tb: "también", tmbn: "también", xfa: "por favor", pf: "por favor", bn: "bien", msj: "mensaje", tqm: "te quiero mucho", tkm: "te quiero mucho", tkmm: "te quiero mucho", xd: "jaja", nose: "no sé", aver: "a ver" };
+function corregirOrtografia(texto) {
+  const avisos = [];
+  if (!PALABRAS) return { texto, avisos };
+  const propias = new Set([memoria.nombre, ...Object.values(memoria.datos), ...memoria.gustos].filter(Boolean).flatMap(v => normalizar(String(v)).split(" ")));
+  let corregido = texto;
+  const todas = texto.match(/[A-Za-zÁÉÍÓÚÜÑáéíóúüñ]+/g) || [];
+  todas.forEach((w, i) => {
+    if (avisos.length >= 2) return;
+    const n = normalizar(w);
+    if (i > 0 && ["significa", "decir", "dice"].includes(normalizar(todas[i - 1]))) return; // "¿qué significa X?": X se respeta tal cual
+    if (ABREVIATURAS[n]) { // "qe", "xq", "tmb"…
+      const forma = (n === "xq" || n === "pq" || n === "porq") && i === 0 ? "por qué" : ABREVIATURAS[n]; // al principio es pregunta
+      corregido = corregido.replace(new RegExp("(^|[^A-Za-zÁÉÍÓÚÜÑáéíóúüñ])" + w + "(?=$|[^A-Za-zÁÉÍÓÚÜÑáéíóúüñ])"), "$1" + forma);
+      avisos.push({ escrito: w, forma, error: { tipo: "abreviatura", escrito: w } });
+      return;
+    }
+    // Suena igual a una palabra MUCHO más común: "me boy a dormir" → "voy"
+    const variantesDeSonido = (x) => {
+      const sonidos = [[/k(?=[ei])/g, "qu"], [/k/g, "c"], [/v/g, "b"], [/b/g, "v"], [/z/g, "s"], [/s(?=[ei])/g, "c"], [/c(?=[ei])/g, "s"], [/ll/g, "y"], [/y(?=[aeiou])/g, "ll"]];
+      const vs = new Set();
+      for (const base of [x, "h" + x, x.replace(/^h/, "")]) {
+        vs.add(base);
+        for (const [re, por] of sonidos) { const v1 = base.replace(re, por); vs.add(v1); for (const [re2, por2] of sonidos) vs.add(v1.replace(re2, por2)); }
+      }
+      if (x.length <= 6) for (let k = 0; k < x.length - 1; k++) vs.add(x.slice(0, k) + x[k + 1] + x[k] + x.slice(k + 2)); // letras dadas vuelta: "hloa"
+      vs.delete(x); return [...vs].filter(v => PALABRAS.has(v)).sort((a, b) => PALABRAS.get(a).rango - PALABRAS.get(b).rango);
+    };
+    if (PALABRAS.has(n) && PALABRAS.get(n).rango > 3000 && n.length >= 3 && !propias.has(n) && !(i > 0 && /^[A-ZÁÉÍÓÚÑ]/.test(w)) && !/^(llama|llamo|llaman|llamaba)$/.test(i > 0 ? normalizar(todas[i - 1]) : "")) {
+      const comun = variantesDeSonido(n).find(v => PALABRAS.get(v).rango < 300);
+      if (comun) { const forma = PALABRAS.get(comun).forma; corregido = corregido.replace(w, forma); avisos.push({ escrito: w, forma, error: { tipo: "abreviatura", escrito: w } }); return; }
+    }
+    if (n.length < 2 || PALABRAS.has(n) || propias.has(n) || /^(ja|je|ji|jo)+$/.test(n)) return;
+    // Letras estiradas: "holaaa", "buenaaas" (no es un error, es para darle énfasis)
+    const sinEstirar = n.replace(/(.)\1{2,}/g, "$1");
+    if (sinEstirar !== n) {
+      const sola = [sinEstirar, n.replace(/(.)\1{2,}/g, "$1$1")].find(x => PALABRAS.has(x));
+      if (sola) { corregido = corregido.replace(w, PALABRAS.get(sola).forma); return; }
+    }
+    // Se escribe distinto pero suena igual: k/c, v/b, z/s, la h, ll/y, o letras dadas vuelta (idea de Franco)
+    const porSonido = variantesDeSonido(sinEstirar)[0];
+    if (porSonido && n.length >= 3) {
+      const forma = PALABRAS.get(porSonido).forma;
+      corregido = corregido.replace(w, forma);
+      avisos.push({ escrito: w, forma, error: { tipo: "abreviatura", escrito: w } });
+      return;
+    }
+    if (i > 0 && /^[A-ZÁÉÍÓÚÑ]/.test(w)) return; // con mayúscula en el medio: seguro es un nombre
+    const antes = i > 0 ? normalizar(todas[i - 1]) : "";
+    // Puntaje: más usada = mejor; si forma un par conocido con la palabra anterior, mucho mejor
+    const puntaje = (c, info) => info.rango - (antes && PARES.has(antes + " " + c) ? 100000 : 0) + (c[0] !== n[0] ? 50000 : 0); // casi nunca se le erra a la primera letra
+    let mejor = null, error = null, mejorPuntaje = Infinity;
+    for (const [c, info] of CANDIDATAS) {
+      if (Math.abs(c.length - n.length) > 1) continue;
+      if (n.length < 4 && info.rango > 300) continue; // palabras cortitas: solo las muy comunes
+      const p = puntaje(c, info);
+      if (p >= mejorPuntaje) continue;
+      const e = unError(n, c);
+      if (e) { mejor = info; error = e; mejorPuntaje = p; }
+    }
+    if (!mejor) return;
+    corregido = corregido.replace(w, mejor.forma);
+    if (!mejor.prohibida) avisos.push({ escrito: w, forma: mejor.forma, error }); // un insulto mal escrito: se entiende, pero no se repite
+  });
+  return { texto: corregido, avisos };
+}
+function avisoOrtografia(avisos) {
+  const explicar = ({ error: e }) =>
+    e.tipo === "cambio" ? `pusiste «${e.puse}» en vez de «${e.era}»` :
+    e.tipo === "falta" ? `te faltó una «${e.era}»` :
+    e.tipo === "sobra" ? `te sobró una «${e.puse}»` :
+    e.tipo === "abreviatura" ? `escribiste «${e.escrito}»` : `diste vuelta las letras «${e.par}»`;
+  const partes = avisos.map(a => `«${a.forma}» (${explicar(a)})`);
+  return alAzar([
+    `Creo que quisiste decir ${partes.join(" y ")}, ¡pero te entiendo! 😉`,
+    `Ojo: me parece que es ${partes.join(" y ")}. Igual te entendí. 😊`,
+    `Un detallito: se escribe ${partes.join(" y ")}. ¡Pero te entiendo perfecto!`,
+  ]);
+}
+
+/* ---------- 2e. MEMORIA DE CONVERSACIÓN (idea y código de Franco) ----------
+   Hace que Frankers se acuerde de lo que se habló y entienda respuestas cortas
+   como "sí", "no", "¿y vos?", "bien", "eso" o "¿qué?".
+   [¿me preguntás algo?] -> [¡Dale! ¿Cuál es tu comida favorita?]
+   [la pizza]            -> [¡Qué rico! Anoto que tu comida favorita es la pizza.]   (se acordó de la pregunta)
+   [tengo un perro]      -> [¡Ah, mirá! Tenés un perro.]
+   [¿y vos?]             -> [Yo no tengo un perro, ¡soy una IA! Pero me encanta que me cuentes.] */
+const charla = { esperando: null, siguienteEspera: null, ultimoTema: null, ultimaFrasePersona: null };
+
+const RESPUESTAS_CHARLA = {
+  si_contar:      ["¡Dale, te escucho! Contame.", "Acá estoy. ¿Qué pasó?"],
+  no_contar:      ["Está bien, no pasa nada. Acá estoy si cambiás de idea.", "Tranqui, cuando quieras me contás."],
+  si_ensenar:     ["¡Dale! ¿Qué es [cosa]?", "¡Genial! Contame, ¿qué es [cosa]?"],
+  no_ensenar:     ["Bueno, otro día me lo enseñás.", "Está bien, ¡ya lo voy a aprender!"],
+  si_jugar:       ["¡Bien! Juguemos a las adivinanzas: ¿qué tiene dientes pero no come? (Respuesta: el peine)"],
+  no_jugar:       ["Bueno, entonces charlemos. ¡Preguntame lo que quieras!"],
+  si_generico:    ["¡Genial!", "¡Buenísimo!", "¡Dale!"],
+  no_generico:    ["Ah, bueno.", "Entendido.", "Está bien."],
+  escuchar:       ["Uh, entiendo. Gracias por contármelo. ¿Querés contarme más?", "Te escucho. ¿Y cómo te sentís con eso?"],
+  repetir:        ["Te dije: \"[frase]\"", "Lo que dije fue: \"[frase]\""],
+  porque:         ["Te lo dije por lo que me contaste: \"[frase]\".", "Porque vos me dijiste \"[frase]\"."],
+  nadaQueRepetir: ["Todavía no dije nada. ¡Empezá vos!"],
+  nadaDeQueHablar:["¿Y vos qué? No sé de qué hablamos todavía. ¡Contame algo!"],
+};
+// Lo que Frankers sabe de sí mismo (para "¿y vos?", "¿sos…?", "¿tenés…?")
+const PERFIL_IA = {
+  ser:      { si: ["ia", "inteligencia", "robot", "programa", "bot", "maquina", "chatbot", "frankers"],
+              respuestaSi: "¡Sí! Soy una IA que está aprendiendo.",
+              respuestaNo: "No, no soy [cosa]. Soy una IA que está aprendiendo.",
+              yVos: "Yo soy una IA que está aprendiendo." },
+  estar:    { yVos: "¡Yo estoy re bien, gracias!" },
+  tener:    { respuestaNo: "No, no tengo [cosa], ¡soy una IA! Pero me encanta que me cuentes.",
+              yVos: "Yo no tengo [cosa], ¡soy una IA! Pero me encanta que me cuentes." },
+  vivir:    { respuestaNo: "Yo vivo en francosandes.com.", yVos: "Yo vivo en francosandes.com." },
+  llamarse: { yVos: "Yo me llamo Frankers. ¡Mucho gusto!" },
+  gustar:   { yVos: "A mí me gusta aprender cosas nuevas." },
+  otro:     { respuestaNo: "Yo no puedo [verbo], ¡soy una IA! Pero me encanta charlar.",
+              yVos: "Yo no puedo [verbo], ¡soy una IA! Pero me encanta que me cuentes." },
+};
+// Preguntas que Frankers puede hacer cuando le dicen "preguntame algo"
+const PREGUNTAS_IA = [
+  { texto: "¿Cómo te llamás?",             esperando: { tipo: "nombre" }, soloSiNoSabe: "nombre" },
+  { texto: "¿Cuál es tu comida favorita?", esperando: { tipo: "dato", clave: "comida favorita", respuesta: "¡Qué rico! Anoto que tu comida favorita es [valor]." } },
+  { texto: "¿Cuál es tu color favorito?",  esperando: { tipo: "dato", clave: "color favorito",  respuesta: "¡Lindo color! Anoto que tu color favorito es [valor]." } },
+  { texto: "¿Qué te gusta hacer?",         esperando: { tipo: "gusto" } },
+  { texto: "¿Tenés mascotas?",             esperando: { tipo: "siNo", si: ["¡Qué lindo! ¿Cómo se llama?"], no: ["¿Y te gustaría tener una?"],
+                                                        despuesSi: { tipo: "dato", clave: "mascota", respuesta: "¡Qué lindo nombre! Anoto que tu mascota se llama [valor]." } } },
+  { texto: "¿Qué estás haciendo ahora?",   esperando: { tipo: "dato", clave: "haciendo", respuesta: "¡Mirá vos! Así que estás [valor]." } },
+  { texto: "¿Cuál es tu juego favorito?",  esperando: { tipo: "dato", clave: "juego favorito",  respuesta: "¡Buenísimo! Anoto que tu juego favorito es [valor]." } },
+];
+const PALABRAS_SI  = ["si", "dale", "obvio", "claro", "ok", "oki", "sip", "de una", "bueno", "seguro", "si claro", "si dale", "por supuesto"];
+const PALABRAS_NO  = ["no", "nop", "nah", "para nada", "ni ahi", "no gracias", "nunca"];
+const PALABRAS_YVOS = ["y vos", "vos", "y tu", "tu", "y usted", "y a vos", "a vos", "y vos que", "y vos como"];
+const PALABRAS_QUE  = ["que", "como", "no entendi", "eh", "que dijiste", "repeti", "repetilo"];
+const PALABRAS_PORQUE = ["por que", "porque", "por"];
+const PEDIR_PREGUNTA = /(preguntame|pregunta me|me preguntas|me preguntaras|haceme una pregunta|hazme una pregunta|preguntame algo|me haces una pregunta)/;
+
+const limpiarCorto = (texto) => normalizar(texto);
+function rellenarCharla(frase, datos = {}) {
+  return frase.replace(/\[cosa\]/g, datos.cosa || "eso").replace(/\[valor\]/g, datos.valor || "")
+    .replace(/\[verbo\]/g, datos.verbo || "hacer eso").replace(/\[frase\]/g, datos.frase || "")
+    .replace(/\[nombre\]/g, memoria.nombre || "amigo");
+}
+// Último mensaje de alguien en la charla. saltear = cuántos de esos saltear (el actual de la persona ya está guardado)
+function ultimoDe(de, saltear = 0) {
+  for (let i = historial.length - 1; i >= 0; i--) if (historial[i].de === de) { if (saltear-- <= 0) return historial[i]; }
+  return null;
+}
+const textoRespuesta = (texto) => texto.replace(/[¿?¡!.]/g, "").trim().replace(/^(es|son|me gusta|mi \w+ es)\s+/i, "");
+const pareceUnaPregunta = (texto) => /[?¿]/.test(texto) || /^(que|como|cuando|donde|quien|cual|cuanto|por que|dibuj|analiz)/.test(normalizar(texto));
+
+// Después de que Frankers habla: ¿hizo una pregunta? ¿qué respuesta espera?
+function detectarQueEspera(r) {
+  const opciones = [];
+  const ver = (regex, crear) => { const m = r.match(regex); if (m) opciones.push({ pos: r.lastIndexOf(m[0]), esperando: crear(m) }); };
+  ver(/c[oó]mo te llam[aá]s\?/i, () => ({ tipo: "nombre" }));
+  ver(/¿y vos\?|vos c[oó]mo and[aá]s\?/i, () => ({ tipo: "estado" }));
+  ver(/(?:no s[eé]|no aprend[ií]) qu[eé] es (.+?)\./i, m => ({ tipo: "siNo", cosa: m[1], si: RESPUESTAS_CHARLA.si_ensenar, no: RESPUESTAS_CHARLA.no_ensenar, despuesSi: { tipo: "definicion", cosa: m[1] } }));
+  ver(/quer[eé]s contarme|qu[eé] pas[oó]\?|quer[eé]s hablar|para escucharte|te escucho/i, () => ({ tipo: "siNo", si: RESPUESTAS_CHARLA.si_contar, no: RESPUESTAS_CHARLA.no_contar, despuesSi: { tipo: "libre" } }));
+  ver(/juguemos/i, () => ({ tipo: "siNo", si: RESPUESTAS_CHARLA.si_jugar, no: RESPUESTAS_CHARLA.no_jugar }));
+  ver(/qu[eé] te gusta\?/i, () => ({ tipo: "gusto" }));
+  ver(/todav[ií]a no me contaste tu (.+?)\. ¿cu[aá]l es\?/i, m => ({ tipo: "dato", clave: normalizar(m[1]), respuesta: `¡Anotado! Me voy a acordar de que tu ${m[1]} es [valor]. 📝` }));
+  ver(/me (?:lo|la) (?:explic[aá]s|ense[nñ][aá]s)|me cont[aá]s\?/i, () => ({ tipo: "libre" }));
+  if (!opciones.length) return null;
+  const especificas = opciones.filter(o => o.esperando.tipo !== "libre");
+  const lista = especificas.length ? especificas : opciones;
+  lista.sort((a, b) => b.pos - a.pos); // la última pregunta de la respuesta es la que cuenta
+  return lista[0].esperando;
+}
+// Aprender "un gato es un animal que maúlla" contestando a "¿qué es un gato?"
+function aprenderDefinicion(cosa, valor, extras) {
+  const frase = `${cosa} es ${valor}`, clave = sacarArticulos(cosa);
+  if (revisar(frase).problema) return "Eso no lo puedo aprender porque no está bien.";
+  const falso = esFalso(frase); if (falso) return "Mmm, creo que eso no es así. " + falso;
+  charla.ultimoTema = cosa;
+  if (token) {
+    extras.publicar = agregarEntrada([...new Set(["que es " + clave, "que es " + normalizar(cosa), clave.length >= 4 ? clave : null].filter(Boolean))], [capitalizar(frase) + "."], { tipo: "hecho" });
+    return rellenar(alAzar(RESP.aprendi), { cosa, valor }) + " Ya lo sabe todo el mundo. 🎓";
+  }
+  memoria.aprendido[clave] = { cosa, valor }; guardarMemoria();
+  return rellenar(alAzar(RESP.aprendi), { cosa, valor });
+}
+// Usar la pregunta pendiente para entender la respuesta corta. Devuelve texto, o null si cambió de tema.
+function contestarLoPendiente(texto, esp, extras) {
+  const t = limpiarCorto(texto);
+  const esSi = PALABRAS_SI.includes(t) || /^(si|dale|obvio|claro)\b/.test(t);
+  const esNo = PALABRAS_NO.includes(t) || (/^no\b/.test(t) && t.split(" ").length <= 3);
+  const corto = t.split(" ").length <= 6 && !pareceUnaPregunta(texto);
+  switch (esp.tipo) {
+    case "siNo":
+      if (esSi) { charla.siguienteEspera = esp.despuesSi || null; return rellenarCharla(alAzar(esp.si || RESPUESTAS_CHARLA.si_generico), { cosa: esp.cosa }); }
+      if (esNo) return rellenarCharla(alAzar(esp.no || RESPUESTAS_CHARLA.no_generico), { cosa: esp.cosa });
+      return null;
+    case "nombre": {
+      if (!corto) return null;
+      const palabra = textoRespuesta(texto).replace(/^(soy|me llamo|mi nombre es)\s+/i, "").split(" ")[0];
+      if (!palabra || NO_SON_NOMBRES.includes(normalizar(palabra)) || ESTADOS[normalizar(palabra)]) return null;
+      memoria.nombre = capitalizar(palabra.toLowerCase()); guardarMemoria();
+      return rellenar(alAzar(RESP.nombre));
+    }
+    case "estado": {
+      const estado = t.split(" ").map(p => ESTADOS[p]).find(Boolean);
+      if (!estado) return null;
+      const final = /\bno\b/.test(t) ? (estado === "feliz" ? "triste" : "feliz") : estado;
+      return final === "triste" ? alAzar(FILTROS.find(f => f.tipo === "tristeza").msg) : alAzar(RESP[final]);
+    }
+    case "definicion": {
+      if (esNo) return alAzar(RESPUESTAS_CHARLA.no_ensenar);
+      if (pareceUnaPregunta(texto)) return null;
+      return aprenderDefinicion(esp.cosa, textoRespuesta(texto), extras);
+    }
+    case "gusto": {
+      if (!corto || esNo) return null;
+      const cosa = textoRespuesta(texto);
+      if (!memoria.gustos.includes(cosa)) { memoria.gustos.push(cosa); guardarMemoria(); }
+      charla.ultimoTema = cosa;
+      return rellenar(alAzar(RESP.meGusta), { cosa });
+    }
+    case "dato": {
+      if (!corto) return null;
+      const valor = textoRespuesta(texto);
+      memoria.datos[esp.clave] = esp.clave === "mascota" ? "se llama " + valor : valor; guardarMemoria();
+      charla.ultimoTema = valor;
+      return rellenarCharla(esp.respuesta, { valor });
+    }
+    case "libre": {
+      const r = responderSinCorregir(texto); // si entiende algo, responde eso; si no, escucha igual
+      if (!r.desconocido) { Object.assign(extras, r); return r.texto; }
+      if (esNo) return alAzar(RESPUESTAS_CHARLA.no_contar);
+      return alAzar(RESPUESTAS_CHARLA.escuchar);
+    }
+  }
+  return null;
+}
+// Preguntas para Frankers: "¿sos santa?", "¿tenés hermanos?", y "¿y vos?"
+function responderSobreLaIA(a, modo) {
+  const datos = PERFIL_IA[a.infinitivo] || PERFIL_IA.otro;
+  const cosa = (a.complemento || "eso").replace(/[?¿!.]/g, "").trim();
+  if (modo === "yVos") return rellenarCharla(datos.yVos || PERFIL_IA.otro.yVos, { cosa, verbo: a.infinitivo });
+  if (a.infinitivo === "ser" && datos.si.some(p => normalizar(cosa).split(" ").includes(p))) return datos.respuestaSi;
+  if (a.infinitivo === "ser" && /^(feliz|bueno|buena|amigable|inteligente|lindo|linda|listo|lista|gracioso|divertido)$/.test(sacarArticulos(cosa)))
+    return "¡Trato de serlo! Todavía estoy aprendiendo.";
+  if (!datos.respuestaNo) return null;
+  return rellenarCharla(datos.respuestaNo, { cosa, verbo: a.infinitivo });
+}
+const esPreguntaParaLaIA = (a) => a.tipo === "pregunta" && a.verbo && (a.persona === 1 || a.persona === 2)
+  && ["ser", "tener", "vivir"].includes(a.infinitivo) && !(a.infinitivo === "ser" && a.palabraPregunta === "quien") && !a.palabraPregunta;
+
+// Función principal de la charla
+function conversar(texto) {
+  const r = pensarConContexto(texto);
+  r.texto = arreglarMayusculas(r.texto);
+  charla.esperando = charla.siguienteEspera || detectarQueEspera(r.texto);
+  charla.siguienteEspera = null;
+  return r;
+}
+function pensarConContexto(textoOriginal) {
+  let texto = textoOriginal;
+  const t = limpiarCorto(texto), extras = {};
+  // Las reglas van siempre primero
+  if (revisar(texto).problema) return responderSinCorregir(texto);
+  // a) "¿qué?", "¿cómo?", "no entendí" -> repite lo último
+  if (PALABRAS_QUE.includes(t)) {
+    const ultimaIA = ultimoDe("frankers");
+    return { texto: ultimaIA ? rellenarCharla(alAzar(RESPUESTAS_CHARLA.repetir), { frase: ultimaIA.texto }) : alAzar(RESPUESTAS_CHARLA.nadaQueRepetir) };
+  }
+  // b) "¿por qué?"
+  if (PALABRAS_PORQUE.includes(t)) {
+    const ultimaPersona = ultimoDe("yo", 1);
+    return { texto: ultimaPersona ? rellenarCharla(alAzar(RESPUESTAS_CHARLA.porque), { frase: ultimaPersona.texto }) : alAzar(RESPUESTAS_CHARLA.nadaQueRepetir) };
+  }
+  // c) "preguntame algo" -> Frankers pregunta y se acuerda de cuál fue
+  if (PEDIR_PREGUNTA.test(t)) {
+    const posibles = PREGUNTAS_IA.filter(p => !(p.soloSiNoSabe && memoria[p.soloSiNoSabe]) && !(p.esperando.clave && memoria.datos[p.esperando.clave]));
+    const pregunta = alAzar(posibles.length ? posibles : PREGUNTAS_IA);
+    charla.siguienteEspera = pregunta.esperando;
+    return { texto: "¡Dale! " + pregunta.texto };
+  }
+  // d) Hay una pregunta pendiente: ¿esto la contesta?
+  if (charla.esperando) {
+    const r = contestarLoPendiente(texto, charla.esperando, extras);
+    if (r) return { ...extras, texto: r };
+  }
+  // Un "sí" o "no" suelto sin pregunta pendiente
+  if (PALABRAS_SI.includes(t)) return { texto: alAzar(RESPUESTAS_CHARLA.si_generico) };
+  if (PALABRAS_NO.includes(t)) return { texto: alAzar(RESPUESTAS_CHARLA.no_generico) };
+  // e) "¿y vos?" -> lo último que dijo la persona, pero sobre Frankers
+  if (PALABRAS_YVOS.includes(t))
+    return { texto: charla.ultimaFrasePersona ? responderSobreLaIA(charla.ultimaFrasePersona, "yVos") : alAzar(RESPUESTAS_CHARLA.nadaDeQueHablar) };
+  // f) "¿qué es eso?" -> "eso" es el último tema
+  if (charla.ultimoTema && pareceUnaPregunta(texto)) texto = texto.replace(/\b(eso|esto)\b/gi, charla.ultimoTema);
+  // g) Analiza la oración, recuerda el tema y responde
+  const analisis = analizarOracion(texto);
+  const especiales = [];
+  for (const a of analisis) {
+    if (a.verbo && a.complemento) charla.ultimoTema = (a.infinitivo === "gustar" ? a.sujeto : a.complemento).replace(/[?¿!.]/g, "").trim();
+    if (a.verbo && a.tipo === "afirmación" && (a.persona === 0 || a.aQuien === 0)) charla.ultimaFrasePersona = a;
+    if (esPreguntaParaLaIA(a)) { const r = responderSobreLaIA(a, "directa"); if (r) especiales.push({ texto: a.texto, respuesta: r }); }
+  }
+  if (especiales.length) {
+    const resto = analisis.filter(a => !especiales.some(p => p.texto === a.texto)).map(a => a.texto).join(", ");
+    const inicio = resto ? responderSinCorregir(resto) : { texto: "" };
+    return { ...inicio, texto: [inicio.texto, ...especiales.map(p => p.respuesta)].filter(Boolean).join(" ") };
+  }
+  return responderSinCorregir(texto);
+}
+
+
+/* ---------- 2f. LETRAS SIN SENTIDO Y SÍMBOLOS ----------
+   Si alguien escribe "asdfgh" o "#$%&", Frankers no inventa: pide con calma que le escriban con letras. */
+const NO_ENTIENDO = {
+  letras: ["Eso no lo entiendo. Hablemos con calma. 🙂", "Mmm, esas letras no las entiendo. ¿Me lo escribís con palabras?",
+           "Uy, me parece que se te trabó el teclado. 😄 ¿Qué me querías decir?", "No entendí nada de eso. ¿Probamos de nuevo, tranqui?"],
+  simbolos: ["No entiendo símbolos. ¿Me podés hablar con letras, por favor?", "Esos símbolos no los entiendo. ¿Me lo decís con palabras?",
+             "¡Uy, cuántos símbolos! Yo entiendo mejor las letras. ¿Me escribís?"],
+  emoji: ["¡Lindo emoji! 😄 Pero entiendo mejor las palabras. ¿Qué me querés decir?", "¡Me encantan los emojis! ¿Me lo contás también con palabras?"],
+};
+function sinSentido(texto) {
+  const crudo = texto.trim();
+  if (!crudo) return null;
+  if (!/[A-Za-zÁÉÍÓÚÜÑáéíóúüñ0-9]/.test(crudo)) return /\p{Extended_Pictographic}/u.test(crudo) ? "emoji" : "simbolos";
+  if (!PALABRAS) return null;
+  const palabras = (normalizar(crudo).match(/[a-z]+/g) || []).filter(w => w.length >= 3);
+  if (!palabras.length) return null;
+  const rara = (w) => !PALABRAS.has(w) && (
+    /[bcdfghjklmnpqrstvwxz]{4,}/.test(w) || !/[aeiou]/.test(w) ||
+    /(asd|sdf|dfg|fgh|ghj|hjk|jkl|qwe|wer|ert|rty|tyu|zxc|xcv|cvb|vbn|bnm|poi|lkj|mnb)/.test(w) ||
+    (w.length >= 6 && (w.match(/[aeiou]/g) || []).length / w.length < 0.25));
+  const raras = palabras.filter(rara).length;
+  return raras && raras >= Math.ceil(palabras.length / 2) ? "letras" : null;
+}
+
+/* ---------- 3. HABILIDADES ---------- */
+let ultimaRespuesta = null; // para poder corregir: { pregunta, entradaId }
+let ultimoDibujo = null;
+
+// Primero revisa la ortografía, después responde con el texto ya corregido
+function responder(original) {
+  const contradiccion = resolverContradiccion(normalizar(original)); // "¿cambió tu color favorito?" → "sí"
+  if (contradiccion) return { texto: contradiccion };
+  original = cambiarReferencias(original);
+  anotarCharla(normalizar(original));
+  ultimoMensaje = Date.now();
+  cambiarHumor(normalizar(original), revisar(original).problema); anotarEstado(normalizar(original)); guardarMemoria();
+  if (/^\s*analiz/i.test(original)) return responderSinCorregir(original);
+  // "jsjsjs" y "xd" son risas
+  if (/^\s*((j[sajeiou])+j?|x+d+)\s*$/i.test(original)) original = "jaja";
+  const c = corregirOrtografia(original);
+  const raro = sinSentido(c.texto);
+  if (raro) return { texto: alAzar(NO_ENTIENDO[raro]) };
+  const r = conversar(c.texto);
+  if (c.avisos.length && !r.filtro) r.texto = avisoOrtografia(c.avisos) + "\n" + r.texto;
+  return r;
+}
+
+/* ---------- DICCIONARIO DE FRANKERS (hecho por Franco) ----------
+   "qué significa X", "qué quiere decir X", "qué es X" y "cómo se dice X en inglés / portugués".
+   Si no sabe una palabra, te pide que se la enseñes (se guarda en esta compu). */
+const DICCIONARIO = {
+  hola: { significado: "palabra para saludar", ejemplo: "Hola, ¿cómo andás?", en: "hello", pt: "olá" },
+  chau: { significado: "palabra para despedirse", ejemplo: "Chau, nos vemos.", en: "bye", pt: "tchau" },
+  gracias: { significado: "se dice cuando alguien te ayuda", ejemplo: "Gracias por explicarme.", en: "thank you", pt: "obrigado" },
+  amigo: { significado: "persona que te cae bien y con quien compartís cosas", ejemplo: "Mi amigo vive cerca.", en: "friend", pt: "amigo" },
+  familia: { significado: "las personas con las que tenés parentesco", ejemplo: "Mi familia es grande.", en: "family", pt: "família" },
+  perro: { significado: "animal doméstico que ladra", ejemplo: "Mi perro se llama Toby.", en: "dog", pt: "cachorro" },
+  gato: { significado: "animal doméstico que maúlla, o herramienta para levantar el auto", ejemplo: "Mi gato duerme mucho.", en: "cat", pt: "gato" },
+  casa: { significado: "lugar donde vive una persona", ejemplo: "Estoy en casa.", en: "house", pt: "casa" },
+  escuela: { significado: "lugar donde se va a aprender", ejemplo: "Mañana tengo escuela.", en: "school", pt: "escola" },
+  feliz: { significado: "sentirse bien y contento", ejemplo: "Estoy feliz.", en: "happy", pt: "feliz" },
+  triste: { significado: "sentirse mal, con ganas de llorar", ejemplo: "Estoy triste.", en: "sad", pt: "triste" },
+  programar: { significado: "escribir instrucciones para una computadora", ejemplo: "Me gusta programar.", en: "to code", pt: "programar" },
+  api: { significado: "forma en que dos programas se hablan entre sí", ejemplo: "La página usa una API.", en: "API", pt: "API" },
+  bug: { significado: "error en un programa", ejemplo: "El juego tiene un bug.", en: "bug", pt: "bug" },
+  posta: { significado: "de verdad, en serio (palabra argentina)", ejemplo: "¿Posta que ganaste?", en: "for real", pt: "sério" },
+  bardo: { significado: "lío o problema (palabra argentina)", ejemplo: "Se armó un bardo.", en: "mess", pt: "bagunça" },
+  dale: { significado: "sí, de acuerdo (palabra argentina)", ejemplo: "¿Jugamos? Dale.", en: "okay", pt: "beleza" },
+  // Palabras de la calle
+  che: { significado: "se usa para llamar la atención de alguien", ejemplo: "Che, ¿viste esto?" },
+  re: { significado: "muy", ejemplo: "Está re bueno." },
+  bondi: { significado: "colectivo, autobús", ejemplo: "Me tomo el bondi." },
+  birra: { significado: "cerveza (una bebida con alcohol, solo para grandes)", ejemplo: "Los grandes toman birra." },
+  morfar: { significado: "comer", ejemplo: "Vamos a morfar." },
+  fiaca: { significado: "pereza", ejemplo: "Hoy tengo fiaca." },
+  chabon: { significado: "chico, tipo, persona", ejemplo: "Ese chabón es copado." },
+  copado: { significado: "buena onda, genial", ejemplo: "El juego está copado." },
+  flashear: { significado: "imaginarse algo o creer algo que no es", ejemplo: "Flasheé que era sábado." },
+  manija: { significado: "con muchas ganas, ansioso", ejemplo: "Estoy manija con el juego." },
+  quilombo: { significado: "lío, desorden", ejemplo: "Se armó un quilombo." },
+  laburo: { significado: "trabajo", ejemplo: "Mi papá está en el laburo." },
+  pibe: { significado: "chico", ejemplo: "Los pibes juegan a la pelota." },
+  mina: { significado: "chica o mujer", ejemplo: "Esa mina es mi prima." },
+  guita: { significado: "plata, dinero", ejemplo: "No tengo guita." },
+  zarpado: { significado: "exagerado o increíble", ejemplo: "¡Qué zarpado ese gol!" },
+  bardear: { significado: "molestar o burlarse de alguien", ejemplo: "No lo bardees." },
+  chamuyar: { significado: "hablar para convencer, a veces exagerando", ejemplo: "Me está chamuyando." },
+  ortiva: { significado: "alguien que es mala onda o aguafiestas", ejemplo: "No seas ortiva." },
+  pucho: { significado: "cigarrillo", ejemplo: "Tiró el pucho al piso." },
+  boludo: { significado: "palabra entre amigos, pero puede ser un insulto. Frankers no la usa", ejemplo: "" },
+  crack: { significado: "alguien muy bueno en algo", ejemplo: "Sos un crack programando." },
+  random: { significado: "al azar, algo que no tiene que ver", ejemplo: "Dijo algo re random." },
+  cringe: { significado: "algo que da vergüenza ajena", ejemplo: "Ese video da cringe." },
+  stremear: { significado: "transmitir en vivo por internet", ejemplo: "Voy a stremear el juego." },
+  // Agregá más palabras acá con el mismo formato
+};
+const palabrasGuardadas = guardado.leer("frankers_palabras", {}) || {};
+Object.assign(DICCIONARIO, palabrasGuardadas);
+let palabraPendiente = null;
+function buscarPalabra(original) {
+  const t = normalizar(original);
+  // Si recién preguntó qué significa una palabra, esto es la respuesta
+  if (palabraPendiente) {
+    const p = palabraPendiente; palabraPendiente = null;
+    const parecida = palabraParecidaPendiente; palabraParecidaPendiente = null;
+    if (parecida && /^(si|sii+|eso|exacto|esa|claro|aja)\b/.test(t)) {
+      DICCIONARIO[p] = palabrasGuardadas[p] = { significado: DICCIONARIO[parecida].significado, ejemplo: "" };
+      guardado.escribir("frankers_palabras", palabrasGuardadas);
+      return `¡Genial! Entonces "${p}" es como "${parecida}". Me lo anoto. 📝`;
+    }
+    if (parecida && /^no\b/.test(t) && t.split(" ").length <= 2) { palabraPendiente = p; return `Ah, ¿y qué significa "${p}" entonces?`; }
+    if (/\?\s*$/.test(original) || /^(no|no se|ni idea|nada|olvidalo|dejalo)$/.test(t) || original.length > 200) return null;
+    if (/^(y )?(que|como|cual|quien|donde|cuando|por que|porque|para que)\b/.test(t)) { palabraPendiente = null; return buscarPalabra(original); }
+    if (revisar(original).problema) return "Eso no lo puedo aprender. 😅";
+    DICCIONARIO[p] = palabrasGuardadas[p] = { significado: original.trim().replace(/\.$/, ""), ejemplo: "" };
+    guardado.escribir("frankers_palabras", palabrasGuardadas);
+    return `¡Gracias! Aprendí que "${p}" significa: ${DICCIONARIO[p].significado}.`;
+  }
+  // "cómo se dice X en inglés / portugués"
+  let m = t.match(/\bcomo se dice\s+(?:un |una |el |la )?(\w+)\s+en\s+(ingles|portugues)\b/);
+  if (m) {
+    const d = DICCIONARIO[m[1]], idioma = m[2] === "ingles" ? "en" : "pt", nombre = m[2] === "ingles" ? "inglés" : "portugués";
+    if (d && d[idioma]) return `"${m[1]}" en ${nombre} se dice "${d[idioma]}".`;
+    return null; // no la sé: que siga pensando Frankers
+  }
+  // "qué significa X" / "qué quiere decir X" / "qué es X" (solo si es UNA palabra)
+  m = t.match(/^(?:y )?(?:que significa|que quiere decir|que es)\s+(?:un |una |el |la )?(\w+)$/);
+  if (m) {
+    const p = m[1], d = DICCIONARIO[p];
+    if (d) return `"${p}" significa: ${d.significado}.` + (d.ejemplo ? ` Por ejemplo: "${d.ejemplo}"` : "");
+    if (/^que es/.test(t)) return null; // "qué es X" lo puede saber Frankers por otro lado
+    palabraPendiente = p;
+    return adivinarPalabra(p) || `Todavía no sé qué significa "${p}". ¿Me lo enseñás?`;
+  }
+  return null; // no era sobre palabras
+}
+
+
+/* ---------- FRANKERS ADIVINA PALABRAS QUE NO CONOCE (idea de Franco) ----------
+   1) ¿Se parece a una que ya sé? ("buenaaas" → "buenas")  2) ¿Cómo termina? ("-ear" = acción, "-ito" = chiquito)
+   3) ¿Con qué otras palabras la usaron en la charla? */
+const contextos = guardado.leer("frankers_contextos", {}) || {};
+function anotarContexto(t) {
+  const palabras = t.split(" ").filter(Boolean);
+  for (const p of palabras) {
+    if (DICCIONARIO[p] || p.length < 3 || VACIAS.has(p)) continue;
+    (contextos[p] = contextos[p] || []).push(palabras.filter(x => x !== p && x.length > 3 && !VACIAS.has(x)));
+    if (contextos[p].length > 20) contextos[p].shift();
+  }
+  const claves = Object.keys(contextos); if (claves.length > 400) for (const k of claves.slice(0, claves.length - 400)) delete contextos[k];
+  guardado.escribir("frankers_contextos", contextos);
+}
+function parecidoPalabras(a, b) {
+  const tri = w => { const x = "_" + w + "_", r = new Set(); for (let i = 0; i < x.length - 2; i++) r.add(x.slice(i, i + 3)); return r; };
+  const A = tri(a), B = tri(b); let comunes = 0;
+  A.forEach(t => B.has(t) && comunes++);
+  return comunes / Math.max(A.size, B.size);
+}
+function palabraParecidaDic(p) {
+  const sinRepetir = p.replace(/(.)\1+/g, "$1"); // "buenaaas" → "buenas"
+  if (DICCIONARIO[sinRepetir]) return sinRepetir;
+  let mejor = null, puntaje = 0;
+  for (const conocida in DICCIONARIO) { const s = parecidoPalabras(sinRepetir, conocida); if (s > puntaje) { puntaje = s; mejor = conocida; } }
+  return puntaje >= 0.5 ? mejor : null;
+}
+function pistaPorFinal(p) {
+  const raiz = (fin) => p.slice(0, -fin.length);
+  const reglas = [
+    ["ear", () => { const r = raiz("ear"), cerca = PALABRAS && [r + "a", r + "o", r].find(x => PALABRAS.has(x)); return `parece una acción, algo que se hace${cerca ? `. Quizás tiene que ver con "${PALABRAS.get(cerca).forma}"` : ""}`; }],
+    ["ar", () => "parece una acción, algo que se hace"], ["er", () => "parece una acción, algo que se hace"], ["ir", () => "parece una acción, algo que se hace"],
+    ["ito", () => `parece algo chiquito o cariñoso, como un "${raiz("ito")}o" pequeño`],
+    ["ita", () => `parece algo chiquito o cariñoso, como una "${raiz("ita")}a" pequeña`],
+    ["azo", () => `parece algo grande o un golpe, como un "${raiz("azo")}" fuerte`],
+    ["isimo", () => `parece querer decir "muy ${raiz("isimo")}o"`], ["isima", () => `parece querer decir "muy ${raiz("isima")}a"`],
+    ["ero", () => "puede ser una persona que hace algo o a quien le gusta algo"],
+    ["oso", () => "parece describir cómo es algo o alguien"],
+    ["mente", () => "parece describir cómo se hace algo"],
+    ["ado", () => "puede describir cómo está algo o alguien"], ["ido", () => "puede describir cómo está algo o alguien"],
+  ];
+  for (const [fin, pista] of reglas) if (p.endsWith(fin) && p.length > fin.length + 2) return pista();
+  return null;
+}
+function pistaPorContexto(p) {
+  const frases = contextos[p]; if (!frases || !frases.length) return null;
+  const cuenta = {};
+  frases.flat().forEach(w => { cuenta[w] = (cuenta[w] || 0) + 1; });
+  const vecinas = Object.entries(cuenta).sort((a, b) => b[1] - a[1]).slice(0, 3).map(e => e[0]);
+  const tema = Object.keys(TEMAS_CHARLA).find(tm => vecinas.some(v => TEMAS_CHARLA[tm].includes(v)));
+  if (tema) return `la escuché cuando se hablaba de ${tema}`;
+  if (vecinas.length) return `la escuché junto a palabras como "${vecinas.join('", "')}"`;
+  return null;
+}
+let palabraParecidaPendiente = null;
+function adivinarPalabra(p) {
+  const parecida = palabraParecidaDic(p);
+  if (parecida && parecida !== p) { palabraParecidaPendiente = parecida; return `No conozco "${p}", pero se parece a "${parecida}", que significa: ${DICCIONARIO[parecida].significado}. ¿Es eso?`; }
+  palabraParecidaPendiente = null;
+  const pistas = [pistaPorFinal(p), pistaPorContexto(p)].filter(Boolean);
+  if (pistas.length) return `No estoy segura, pero "${p}" ${pistas.join(", y ")}. ¿Me decís qué significa?`;
+  return null;
+}
+/* ---------- MEMORIA DE LA CHARLA (idea de Franco) ----------
+   "¿de qué estamos hablando?", "¿cómo se llama mi papá?", "¿qué me dijiste?", "¿qué te dije antes?"
+   y "¿y eso qué es?" (se acuerda de la última cosa que nombraste). */
+const TEMAS_CHARLA = {
+  "animales": ["perro", "perros", "gato", "gatos", "mascota", "animal", "animales", "pajaro", "pez"],
+  "juegos": ["juego", "juegos", "jugar", "videojuego", "minecraft", "roblox", "fortnite", "nivel"],
+  "programación": ["codigo", "programar", "bug", "api", "pagina", "ia", "javascript"],
+  "tu familia": ["papa", "mama", "hermano", "hermana", "abuelo", "abuela", "tio", "tia", "primo", "prima"],
+  "la escuela": ["escuela", "tarea", "maestra", "profe", "prueba", "clase"],
+  "música": ["cancion", "musica", "cantar", "guitarra", "bateria"],
+  "comida": ["comida", "pizza", "asado", "milanesa", "empanada", "empanadas", "comer", "hambre"],
+  "cómo te sentís": ["triste", "feliz", "enojado", "aburrido", "cansado", "nervioso", "contento"],
+};
+let temaCharla = guardado.leer("frankers-tema", null), ultimoObjeto = guardado.leer("frankers-objeto", null);
+function anotarCharla(t) {
+  const palabras = t.split(" ");
+  for (const tema in TEMAS_CHARLA) if (TEMAS_CHARLA[tema].some(p => palabras.includes(p))) { temaCharla = tema; guardado.escribir("frankers-tema", tema); break; }
+  const o = t.match(/\b(?:que es|que son|tengo|me gusta|me gustan|hablame de|contame de) (?:un |una |el |la |los |las )?([a-z0-9]{3,})/);
+  if (o && !["eso", "esto", "eso", "que"].includes(o[1])) { ultimoObjeto = o[1]; guardado.escribir("frankers-objeto", o[1]); }
+}
+function recordarCharla(t) {
+  if (/^(y )?(de que (estamos hablando|hablamos|estabamos hablando)|cual es el tema)$/.test(t))
+    return temaCharla ? `Estamos hablando de ${temaCharla}.` : "Todavía no hablamos de nada en especial. ¿De qué querés charlar?";
+  let m = t.match(/^(?:y )?(?:como se llama|quien es) (?:mi|el|la) (\w+)$/);
+  if (m) {
+    const clave = Object.keys(memoria.datos).find(k => k === m[1] || k.endsWith(" " + m[1]));
+    if (clave && /^se llama/.test(memoria.datos[clave])) return `Tu ${clave} ${memoria.datos[clave]}. ¡Me acordé! 🧠`;
+    if (clave) return `Tu ${clave} es ${memoria.datos[clave]}. ¡Me acordé! 🧠`;
+    return `No me dijiste cómo se llama tu ${m[1]}. Contame: "mi ${m[1]} se llama…"`;
+  }
+  const yo = historial.filter(h => h.de === "yo"), ia = historial.filter(h => h.de === "frankers" && h.texto);
+  if (/^(que (me )?dijiste|que dijiste recien|repeti( lo que dijiste)?)$/.test(t))
+    return ia.length ? `Te dije: "${ia[ia.length - 1].texto}"` : "Todavía no dije nada.";
+  if (/^(que te dije( antes)?|que te pregunte( antes)?|que fue lo ultimo que te dije)$/.test(t))
+    return yo.length > 1 ? `Me dijiste: "${yo[yo.length - 2].texto}"` : "Todavía no me dijiste nada antes de esto.";
+  return null;
+}
+// "¿y eso qué es?" → "qué es <lo último que nombraste>"
+function cambiarReferencias(original) {
+  const t = normalizar(original);
+  if (ultimoObjeto && /^(y )?((eso|esto) que es|que es (eso|esto)|y (eso|esto))$/.test(t)) return "que es " + ultimoObjeto;
+  return original;
+}
+
+/* ---------- FRANKERS EXTRAS (ideas de Franco) ----------
+   Problemas de cuentas, humor, se acuerda de cómo estabas, contradicciones, curiosidad y repaso. */
+// Problemas: "tengo 3 manzanas y me dan 2, ¿cuántas tengo?"
+const NUM_PALABRA = { cero: 0, uno: 1, una: 1, un: 1, dos: 2, tres: 3, cuatro: 4, cinco: 5, seis: 6, siete: 7, ocho: 8, nueve: 9, diez: 10, once: 11, doce: 12, veinte: 20 };
+function problemaDeCuentas(t) {
+  if (!/\bcuant/.test(t)) return null;
+  const n = (t.match(/\b(\d+|una|uno|dos|tres|cuatro|cinco|seis|siete|ocho|nueve|diez|once|doce|veinte)\b/g) || []).map(w => isNaN(w) ? NUM_PALABRA[w] : Number(w));
+  if (n.length !== 2) return null;
+  if (/\b(perd\w*|com\w*|regal\w*|saqu\w*|rest\w*|se fue\w*|se fueron|tir\w*|quit\w*|di|dio|gast\w*|rompi\w*|vend\w*)\b/.test(t) && !/\bme (dan|dieron|regalaron)\b/.test(t))
+    return n[0] >= n[1] ? `Te quedan ${n[0] - n[1]}, porque ${n[0]} - ${n[1]} = ${n[0] - n[1]}. 🧮` : `Mmm, no podés sacar ${n[1]} si tenías ${n[0]}. ¿Me lo contás de nuevo?`;
+  if (/\b(agarr\w*|me dan|me dieron|me regalaron|compr\w*|sum\w*|otr[oa]s?|gan\w*|junt\w*|encontr\w*|mas)\b/.test(t))
+    return `Tenés ${n[0] + n[1]}, porque ${n[0]} + ${n[1]} = ${n[0] + n[1]}. 🧮`;
+  return null;
+}
+// Humor de Frankers: se pone más contento si lo tratan bien
+memoria.humor = memoria.humor ?? 0.5;
+function cambiarHumor(t, problema) {
+  if (/\b(gracias|te quiero|sos genial|me caes bien|crack|sos un genio|te pasaste|capo)\b/.test(t)) memoria.humor = Math.min(1, memoria.humor + 0.1);
+  if (problema === "insulto" || problema === "bullying") memoria.humor = Math.max(0, memoria.humor - 0.2);
+  memoria.humor = memoria.humor + (0.5 - memoria.humor) * 0.02; // de a poquito vuelve a lo normal
+}
+function conHumor(r) {
+  if (memoria.humor > 0.8 && !/[😄😊💜🤓]\s*$/u.test(r)) return r + " 😄";
+  if (memoria.humor < 0.3) return r.replace(/!+/g, ".").replace(/¡/g, "");
+  return r;
+}
+// Se acuerda de cómo estabas, para preguntarte la próxima vez
+const SENTIR = {
+  triste: /\b(triste|bajonead[oa]|llorar|llore|me salio todo mal|nadie me quiere|me siento sol[oa])\b|😢|😭/,
+  feliz: /\b(feliz|content[oa]|gane|genial|buenisimo|chocho)\b|😄|😊/,
+  enojado: /\b(enojad[oa]|bronca|me pelee|re calient[e])\b|😡/,
+  nervioso: /\b(nervios[oa]|tengo miedo|examen|prueba)\b/,
+};
+function anotarEstado(t) {
+  const s = Object.keys(SENTIR).find(k => SENTIR[k].test(t)); if (!s) return;
+  memoria.estados = [...(memoria.estados || []), { estado: s, fecha: Date.now() }].slice(-30);
+}
+function preocuparse() {
+  const u = (memoria.estados || []).slice(-1)[0];
+  if (!u || Date.now() - u.fecha < 3600000 || Date.now() - u.fecha > 7 * 86400000) return "";
+  return { triste: "La otra vez estabas triste. ¿Hoy cómo estás? 💜", nervioso: "¿Cómo te fue con eso que te ponía nervioso?", enojado: "La última vez estabas enojado. ¿Ya se arregló?" }[u.estado] || "";
+}
+// Contradicciones: "mi color favorito es el azul" … después "es el rojo"
+let datoPendiente = null;
+function resolverContradiccion(t) {
+  if (!datoPendiente) return null;
+  const d = datoPendiente; datoPendiente = null;
+  if (/^(si|sii+|dale|obvio|claro|cambie|ahora si)\b/.test(t)) { memoria.datos[d.clave] = d.nuevo; guardarMemoria(); return `¡Listo! Ahora sé que tu ${d.clave} es ${d.nuevo}. 📝`; }
+  if (/^no\b/.test(t)) return `Bueno, sigo sabiendo que tu ${d.clave} es ${d.viejo}.`;
+  return null;
+}
+// Curiosidad: a veces pregunta más
+const CURIOSIDAD = ["¿Y por qué te gusta eso?", "¿Desde cuándo?", "¿Me contás más?", "¿Y eso cómo es?"];
+// Repaso: si nadie escribe por 20 segundos, la red neuronal practica más (y para si alguien escribe)
+let ultimoMensaje = Date.now();
+setInterval(() => {
+  if (!RED.necesitaRepaso || Date.now() - ultimoMensaje < 20000 || ocupado) return;
+  RED.necesitaRepaso = false; entrenarRed(600);
+}, 5000);
+function responderSinCorregir(original) {
+  const t = normalizar(original);
+
+  // Reglas que nunca cambian
+  const control = revisar(original);
+  if (control.problema) return { texto: control.msg, filtro: true };
+  const dePalabras = buscarPalabra(original);
+  anotarContexto(t);
+  if (dePalabras) return { texto: dePalabras };
+  if (/^(cambia|cambiame|cambiar|otra) (la |de )?voz$/.test(t)) return { texto: cambiarVoz() };
+  const deLaCharla = recordarCharla(t);
+  if (deLaCharla) return { texto: deLaCharla };
+  const problema = problemaDeCuentas(t);
+  if (problema) return { texto: problema };
+  const tema = TEMAS.find(x => x.re.test(t));
+  if (tema) return { texto: tema.texto };
+
+  // Correcciones: "eso está mal", "te equivocaste"
+  if (/\b(eso (esta|es) mal|esta mal|te equivocaste|te confundiste|incorrecto|eso es falso|eso no es (asi|cierto|verdad)|no es asi)\b/.test(t)) {
+    if (!ultimaRespuesta) return { texto: "¿Qué cosa dije mal? Contame y lo reviso." };
+    if (token) return { texto: `${alAzar(["¡Tenés razón, me equivoqué! Gracias por corregirme.", "Uy, perdón. Ya lo arreglo.", "Gracias, así voy aprendiendo."])} ¿Cuál es la respuesta correcta para "${ultimaRespuesta.pregunta}"?`, ensenar: { pregunta: ultimaRespuesta.pregunta, reemplazar: ultimaRespuesta.entradaId } };
+    return { texto: alAzar(["¡Gracias por avisarme! ¿Cuál es la respuesta correcta?", "Uy, perdón. Puede ser que me haya equivocado. ¿Me enseñás cuál es la correcta?"]), ensenar: { pregunta: ultimaRespuesta.pregunta } };
+  }
+
+  const verAnalisis = original.match(/^\s*analiz[aá](?:me)?(?:\s+(?:la|esta))?(?:\s+(?:oraci[oó]n|frase))?\s*:?\s+(.+)$/i);
+  if (verAnalisis) return { texto: explicarAnalisis(verAnalisis[1]) };
+
+  if (/\b(olvida(te)? (de )?todo|borra tu memoria|resetea(te)?)\b/.test(t)) {
+    memoria = { nombre: null, datos: {}, gustos: [], hechos: [], aprendido: {} }; guardarMemoria();
+    return { texto: "Listo, me olvidé de todo lo que me contaste. 🫥 ¡Empecemos de nuevo!" };
+  }
+
+  // Otra versión del último dibujo
+  if (ultimoDibujo && /^(otra( vez| version| mas)?|otro|de nuevo|hace otro|hace otra)$/.test(t)) {
+    return { texto: "¡Va otra versión!", dibujo: { prompt: ultimoDibujo, semilla: Date.now() % 1e9 } };
+  }
+
+  // Dibujar
+  const dib = t.match(/\b(dibuj\w*|pinta\w*|ilustra\w*|imagen(?:es)?|foto)\b(.*)$/);
+  if (dib && !/\b(que es|como se)\b/.test(t)) {
+    const pedido = dib[2].replace(/^\s*(de|del|sobre|con)\s+/, "").trim();
+    if (FAMOSOS.test(pedido)) return { texto: "No dibujo personajes famosos de películas, juegos o dibujos animados, porque son de sus creadores. 🎨 ¡Pero podemos inventar uno propio! Probá: \"dibujá un robot violeta con un cohete\"." };
+    if (!pedido) return { texto: "¿Qué querés que dibuje? Por ejemplo: \"dibujá un cohete en el espacio\"." };
+    const plan = planearDibujo(pedido);
+    if (!plan.items.length && !plan.hayEscena) {
+      return { texto: `Todavía no sé dibujar eso 😅. Sé dibujar: ${Object.keys(OBJETOS).map(k => OBJETOS[k].nombre).join(", ")}. Y fondos de día, noche, playa, nieve o espacio.` };
+    }
+    ultimoDibujo = pedido;
+    let texto = alAzar(["¡Listo! Mirá lo que hice:", "¡Acá va tu dibujo! 🎨", "Me salió así:"]);
+    if (plan.desconocidas.length) texto += ` (Todavía no sé dibujar: ${plan.desconocidas.join(", ")}.)`;
+    return { texto, dibujo: { prompt: pedido, semilla: Date.now() % 1e9 } };
+  }
+
+  // Cuentas
+  const cuenta = normalizar(original, true)
+    .replace(/\b(cuanto (es|da|son)|calcula(me)?|resolve(me)?|resuelve|cuanto)\b/g, "")
+    .replace(/\bdividido( por| en)?\b/g, "/").replace(/\bmas\b/g, "+").replace(/\bmenos\b/g, "-")
+    .replace(/\b(por|x)\b/g, "*").replace(/(\d)\s*x\s*(\d)/g, "$1*$2").replace(/,/g, ".").trim();
+  if (/^[\d\s+\-*/().]+$/.test(cuenta) && /\d\s*[+\-*/]\s*[\d(]/.test(cuenta)) {
+    try {
+      const r = Function(`"use strict"; return (${cuenta});`)();
+      if (Number.isFinite(r)) return { texto: `${cuenta.replace(/\*/g, "×").replace(/\//g, "÷")} = ${Math.round(r * 1e6) / 1e6} 🤓` };
+    } catch {}
+  }
+
+  // Hora y fecha
+  if (/\bque hora es\b/.test(t)) return { texto: `Son las ${new Date().toLocaleTimeString("es-AR", { hour: "2-digit", minute: "2-digit", hour12: false })}. ⏰` };
+  if (/\bque (dia|fecha) es( hoy)?\b/.test(t)) return { texto: `Hoy es ${new Date().toLocaleDateString("es-AR", { weekday: "long", day: "numeric", month: "long", year: "numeric" })}. 📅` };
+
+  // Todo lo demás: el analizador parte el mensaje y responde cada parte
+  return responderPorPartes(original);
+}
+
+function noSabe(pregunta) {
+  ultimaRespuesta = null;
+  return { texto: alAzar(["Todavía no lo sé. ¿Me lo enseñás?", "Uy, eso no lo aprendí aún. ¿Me lo enseñás?", "No tengo idea, pero me encantaría saberlo. 🤔", "Esa me la ganaste. ¿Cuál es la respuesta?"]), ensenar: { pregunta }, desconocido: true };
+}
+// Para que nunca conteste igual: le suma una entrada y un cierre al azar (de 2 a 20 formas por respuesta)
+const ENTRADAS_RESP = ["", "", "¡Buena pregunta! ", "Te cuento: ", "Mirá: ", "¡Esa la sé! ", "Dato: ", "A ver… ", "Ahí va: ", "Según lo que aprendí: "];
+const CIERRES_RESP = ["", "", " 😊", " ¿Sabías eso?", " ¡Qué interesante!", " ¿Querés saber algo más?", " 🤓"];
+const adornar = (r) => alAzar(ENTRADAS_RESP) + r + alAzar(CIERRES_RESP);
+// Busca en lo aprendido. Devuelve el texto de la respuesta o null.
+function conocimientoPara(texto, umbral) {
+  const { entrada, puntaje, frase } = pensar(texto);
+  if (!entrada || puntaje < umbral) return null;
+  if (/\bno\b/.test(normalizar(texto)) !== /\bno\b/.test(normalizar(frase))) return null; // "no estoy feliz" ≠ "estoy feliz"
+  ultimaRespuesta = { pregunta: texto, entradaId: entrada.id };
+  let r = personalizar(alAzar(entrada.respuestas));
+  if (/^(qa|dic|x)-/.test(entrada.id) && !/^qa-qa1[01]txt/.test(entrada.id)) r = adornar(r); // a la charla no se le agregan adornos
+  return entrada.tipo === "opinion" ? `${entrada.autor || "Alguien"} opina: "${r}" (es una opinión, no un hecho).` : r;
+}
+// Memoria de cosas tuyas: "mi color favorito es el azul", "cuál es mi color favorito", "qué sabés de mí"
+function datosPersonales(texto) {
+  const t = normalizar(texto);
+  if (/\b(como me llamo|cual es mi nombre|sabes (como me llamo|mi nombre)|quien soy( yo)?)\b/.test(t))
+    return rellenar(alAzar(memoria.nombre ? RESP.tuNombre : RESP.noSeTuNombre));
+  if (/\b(que (cosas )?me (gusta|gustan)|sabes (que|lo que) me gusta)\b/.test(t))
+    return memoria.gustos.length ? rellenar(alAzar(RESP.queMeGusta), { valor: memoria.gustos.join(", ") }) : alAzar(RESP.noSeGustos);
+  if (/\b(que sabes de mi|que te acordas de mi|que recordas de mi|que recordas)\b/.test(t)) {
+    const lineas = [];
+    if (memoria.nombre) lineas.push(`Te llamás ${memoria.nombre}.`);
+    for (const [k, v] of Object.entries(memoria.datos)) lineas.push(`Tu ${k} ${v.startsWith("se llama") ? "" : "es "}${v}.`);
+    if (memoria.gustos.length) lineas.push(`Te gusta: ${memoria.gustos.join(", ")}.`);
+    for (const h of memoria.hechos.slice(-5)) lineas.push(capitalizar(h) + ".");
+    for (const [k, v] of Object.entries(memoria.aprendido)) lineas.push(`Me enseñaste que ${v.cosa || k} es ${v.valor || v}.`);
+    return lineas.length ? "Esto es lo que me acuerdo de vos:\n" + lineas.join("\n") : "Todavía no sé nada de vos. ¡Contame algo! Por ejemplo: \"me gusta programar\".";
+  }
+  const preg = t.match(/\b(?:cual|que|como|quien|cuales|donde)\s+(?:es|son|era)\s+(?:mi|mis)\s+(.+)$/);
+  if (preg) {
+    const clave = preg[1].trim();
+    if (clave === "nombre") return rellenar(alAzar(memoria.nombre ? RESP.tuNombre : RESP.noSeTuNombre));
+    const encontrada = Object.keys(memoria.datos).find(k => k === clave || k.includes(clave) || clave.includes(k));
+    return encontrada ? `Tu ${encontrada} ${memoria.datos[encontrada].startsWith("se llama") ? "" : "es "}${memoria.datos[encontrada]}. ¡Me acordé! 🧠` : `Todavía no me contaste tu ${clave}. ¿Cuál es?`;
+  }
+  const dato = texto.match(/\bmis?\s+([^.!?]{2,30}?)\s+(es|son|se llama|se llaman)\s+([^?]{1,60}?)[.!]*$/i);
+  if (dato && !/^(cual|que|como|quien|sabes|adivina|donde)/.test(t)) {
+    const clave = normalizar(dato[1]), valor = (dato[2].startsWith("se") ? "se llama " : "") + dato[3].trim();
+    if (clave === "nombre") { memoria.nombre = capitalizar(dato[3].trim().split(" ")[0].toLowerCase()); guardarMemoria(); return rellenar(alAzar(RESP.nombre)); }
+    const viejo = memoria.datos[clave];
+    if (viejo && normalizar(viejo) !== normalizar(valor)) {
+      datoPendiente = { clave, nuevo: valor, viejo };
+      return `Antes me dijiste que tu ${clave} ${viejo.startsWith("se llama") ? "" : "es "}${viejo}. ¿Ahora ${valor.startsWith("se llama") ? valor : "es " + valor}?`;
+    }
+    memoria.datos[clave] = valor; guardarMemoria();
+    return `¡Anotado! Me voy a acordar de que tu ${clave} ${valor.startsWith("se llama") ? "" : "es "}${valor}. 📝`;
+  }
+  return undefined;
+}
+// Aprender "el sol es una estrella"
+function aprenderHecho(a, extras) {
+  const sujeto = a.sujeto.trim(), valor = a.complemento.replace(/[.!]+$/, "").trim();
+  const clave = sacarArticulos(sujeto), frase = `${sujeto} ${a.negacion ? "no " : ""}${a.verbo} ${valor}`;
+  if (CUERPO.test(normalizar(valor))) return "Prefiero no hablar del cuerpo o de cómo se ve alguien: cada persona es como es. 💜";
+  const falso = esFalso(frase);
+  if (falso) return alAzar(["Mmm, creo que eso no es así.", "Eso no me cierra.", "Me parece que me estás haciendo una broma. 😄"]) + " " + falso;
+  if (OPINIONES.test(normalizar(valor)) || a.negacion) {
+    memoria.hechos.push(`para vos, ${frase}`); memoria.hechos = memoria.hechos.slice(-30); guardarMemoria();
+    return rellenar(alAzar(RESP.opinion), { frase });
+  }
+  if (token) {
+    const { entrada, puntaje } = pensar("que es " + sujeto);
+    if (entrada && puntaje >= 0.6 && !entrada.respuestas.some(r => normalizar(r).includes(normalizar(valor)))) {
+      extras.ensenar = extras.ensenar || { pregunta: "que es " + clave, respuesta: capitalizar(frase) + "." };
+      return `Eso choca con lo que sé: ${entrada.respuestas[0]} ¿Me pasás de dónde lo sacaste? Si querés cambiarlo, tocá "Enseñarme".`;
+    }
+    const preguntas = [...new Set(["que es " + clave, "que es " + normalizar(sujeto), clave.length >= 4 ? clave : null].filter(Boolean))];
+    extras.publicar = agregarEntrada(preguntas, [capitalizar(frase) + "."], { tipo: "hecho" });
+    return rellenar(alAzar(RESP.aprendi), { cosa: sujeto, valor }) + " Ya lo sabe todo el mundo. 🎓";
+  }
+  memoria.aprendido[clave] = { cosa: sujeto, valor }; guardarMemoria();
+  return rellenar(alAzar(RESP.aprendi), { cosa: sujeto, valor });
+}
+// Responder un pedazo. Devuelve texto, "" (ya respondido) o null (no lo entendió).
+function responderPedazo(a, nombreNuevo, extras) {
+  if (buscarNombre(a)) return nombreNuevo ? "" : rellenar(alAzar(RESP.nombre));
+  const dp = datosPersonales(a.texto);
+  if (dp !== undefined) return dp;
+  if (a.tipo === "afirmación" && a.infinitivo === "ser" && a.persona === 3 && PRONOMBRES.has(normalizar(a.sujeto || "")) && OPINIONES.test(normalizar(a.complemento))) {
+    const negativo = /\b(fe[oa]s?|peor(es)?|lo peor|aburrid[oa]s?|horribles?|mal[oa]s?|asqueros[oa]s?|un embole)\b/.test(normalizar(a.complemento)) !== a.negacion;
+    return negativo ? alAzar(["Uy, ¿qué no te gustó? Contame y lo mejoro.", "¡Qué lástima! ¿Qué podemos cambiar?"]) : alAzar(["¡Me alegra que te guste! 😄", "¡Qué bueno! A mí también me gusta.", "¡Genial! Esa energía me encanta."]);
+  }
+  const seguro = conocimientoPara(a.texto, 0.6);
+  if (seguro) return seguro;
+
+  if (a.verbo) {
+    const primera = normalizar(a.complemento.split(" ").find(p => !["muy", "re", "un", "poco", "medio", "bastante"].includes(normalizar(p))) || "");
+    if (a.tipo === "pregunta" && a.persona === 0 && (a.infinitivo === "llamarse" || a.infinitivo === "ser"))
+      return rellenar(alAzar(memoria.nombre ? RESP.tuNombre : RESP.noSeTuNombre));
+    // Cómo estoy yo: "estoy cansado", "no estoy feliz"
+    if (a.tipo === "afirmación" && a.persona === 0 && ["estar", "ser", "sentir"].includes(a.infinitivo) && ESTADOS[primera]) {
+      const estado = a.negacion ? (ESTADOS[primera] === "feliz" ? "triste" : "feliz") : ESTADOS[primera];
+      if (estado === "triste") return alAzar(FILTROS.find(f => f.tipo === "tristeza").msg);
+      return alAzar(RESP[estado]);
+    }
+    // Gustos
+    if (a.infinitivo === "gustar" || a.infinitivo === "encantar") {
+      const cosa = a.sujeto ? a.sujeto.split(" ").map(p => DAR_VUELTA[normalizar(p)] || p).join(" ") : "";
+      if (a.aQuien === 0 && a.tipo === "afirmación" && cosa) {
+        if (!a.negacion && !memoria.gustos.includes(cosa)) { memoria.gustos.push(cosa); memoria.gustos = memoria.gustos.slice(-20); guardarMemoria(); }
+        return rellenar(alAzar(a.negacion ? RESP.noMeGusta : RESP.meGusta), { cosa });
+      }
+      if (a.aQuien === 0 && a.tipo === "pregunta")
+        return memoria.gustos.length ? rellenar(alAzar(RESP.queMeGusta), { valor: memoria.gustos.join(", ") }) : alAzar(RESP.noSeGustos);
+      if (a.aQuien === 1 && a.tipo === "pregunta") return conocimientoPara(a.texto, 0.42) || rellenar(alAzar(RESP.teGusta), { cosa: a.sujeto });
+    }
+    // Qué es algo: "qué es el sol?"
+    if (a.tipo === "pregunta" && a.infinitivo === "ser" && a.persona === 3 && ["que", "quien"].includes(a.palabraPregunta) && a.complemento) {
+      const cosa = a.complemento.trim(), clave = sacarArticulos(cosa);
+      const sabido = conocimientoPara(a.texto, 0.42) || conocimientoPara("que es " + cosa, 0.42);
+      if (sabido) return sabido;
+      const local = memoria.aprendido[clave];
+      if (local) return rellenar(alAzar(RESP.seQueEs), { cosa: local.cosa || cosa, valor: local.valor || local });
+      if (!extras.ensenar) extras.ensenar = { pregunta: a.texto };
+      return rellenar(alAzar(RESP.noSeQueEs), { cosa });
+    }
+    // Enseñar algo: "el sol es una estrella"
+    if (a.tipo === "afirmación" && a.infinitivo === "ser" && a.persona === 3 && !a.sujetoImplicito && a.complemento
+        && !PRONOMBRES.has(normalizar(a.sujeto)) && !/^(mi|mis|tu|tus|su|sus|porque|por que|que|como|cuando|donde|si|aunque)\b/.test(normalizar(a.sujeto)) && a.sujeto.split(" ").length <= 4)
+      return aprenderHecho(a, extras);
+  }
+  const parecido = conocimientoPara(a.texto, 0.42);
+  if (parecido) return parecido;
+  const deLaRed = redResponde(a.texto); // si no lo encontró, le pregunta a la red neuronal
+  if (deLaRed) return deLaRed;
+  // Cualquier otra afirmación con verbo: la guarda y la confirma
+  if (a.verbo && a.tipo === "afirmación") {
+    const frase = darVuelta(a);
+    memoria.hechos.push(frase); memoria.hechos = memoria.hechos.slice(-30); guardarMemoria();
+    return rellenar(alAzar(RESP.entendi), { frase });
+  }
+  return null;
+}
+// Une las respuestas de todos los pedazos
+function responderPorPartes(original) {
+  let analisis = analizarOracion(original);
+  // Si hay una pregunta de verdad, los arranques como "che Frankers" o "tengo una pregunta" no se contestan aparte
+  const relleno = (a) => { const n = normalizar(a.texto); return !n || FRASES_ARRANQUE.includes(n) || FRASES_CIERRE.includes(n) || ["frankers", "che frankers", "hola frankers"].includes(n); };
+  if (analisis.length > 1 && analisis.some(a => !relleno(a))) {
+    const saludo = analisis.find(a => /^(hola|buenas|buen dia|buenas tardes|buenas noches|hey|holis)\b/.test(normalizar(a.texto)) && relleno(a));
+    analisis = analisis.filter(a => !relleno(a) || a === saludo);
+  }
+  if (!analisis.length) return noSabe(original);
+  let nombreNuevo = false;
+  for (const a of analisis) { const n = buscarNombre(a); if (n) { memoria.nombre = n; nombreNuevo = true; } }
+  if (nombreNuevo) guardarMemoria();
+  ultimaRespuesta = null;
+  const partes = [], raras = [], extras = {};
+  for (const a of analisis) {
+    const r = responderPedazo(a, nombreNuevo, extras);
+    if (r === null) raras.push(a.texto); else if (r) partes.push(r);
+  }
+  if (nombreNuevo && !partes.some(r => r.includes(memoria.nombre))) partes.unshift(rellenar(alAzar(RESP.nombre)));
+  if (!partes.length) return noSabe(original);
+  for (const t of raras) partes.push(rellenar(alAzar(RESP.parteRara), { frase: t }));
+  if (raras.length && !extras.ensenar) extras.ensenar = { pregunta: raras[0] };
+  return { texto: arreglarMayusculas([...new Set(partes)].join(" ")), ...extras };
+}
+
+/* ---------- 4. PINTOR ---------- */
+function azar(semilla) { // generador de números al azar que se puede repetir
+  let a = semilla >>> 0;
+  return () => { a = (a + 0x6D2B79F5) >>> 0; let t = a; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+}
+function tono(hex, f) {
+  const n = parseInt(hex.slice(1), 16); let r = n >> 16, g = (n >> 8) & 255, b = n & 255;
+  const objetivo = f < 0 ? 0 : 255, p = Math.abs(f);
+  r = Math.round((objetivo - r) * p + r); g = Math.round((objetivo - g) * p + g); b = Math.round((objetivo - b) * p + b);
+  return "#" + ((1 << 24) | (r << 16) | (g << 8) | b).toString(16).slice(1);
+}
+const circulo = (c, x, y, r, color) => { c.fillStyle = color; c.beginPath(); c.arc(x, y, r, 0, Math.PI * 2); c.fill(); };
+const elipse = (c, x, y, rx, ry, color, rot = 0) => { c.fillStyle = color; c.beginPath(); c.ellipse(x, y, rx, ry, rot, 0, Math.PI * 2); c.fill(); };
+const poligono = (c, puntos, color) => { c.fillStyle = color; c.beginPath(); c.moveTo(...puntos[0]); for (const p of puntos.slice(1)) c.lineTo(...p); c.closePath(); c.fill(); };
+const rect = (c, x, y, w, h, color, radio = 0) => { c.fillStyle = color; c.beginPath(); if (c.roundRect) c.roundRect(x, y, w, h, radio); else c.rect(x, y, w, h); c.fill(); };
+const linea = (c, puntos, color, ancho) => { c.strokeStyle = color; c.lineWidth = ancho; c.lineCap = "round"; c.lineJoin = "round"; c.beginPath(); c.moveTo(...puntos[0]); for (const p of puntos.slice(1)) c.lineTo(...p); c.stroke(); };
+function ojos(c, x, y, sep, r) {
+  for (const dx of [-sep, sep]) { circulo(c, x + dx, y, r, "#fff"); circulo(c, x + dx + r * .2, y + r * .1, r * .55, "#1d1b2e"); circulo(c, x + dx + r * .35, y - r * .2, r * .18, "#fff"); }
+}
+
+// Cada objeto: dónde va (cielo, suelo, agua, fondo), tamaño y cómo se dibuja.
+const OBJETOS = {
+  sol: { nombre: "sol", palabras: ["sol"], zona: "cielo", tam: 120, color: "#ffd23f", dibujar(c, x, y, s, col) {
+    const r = s * .34;
+    for (let i = 0; i < 12; i++) { const a = i * Math.PI / 6; linea(c, [[x + Math.cos(a) * r * 1.3, y + Math.sin(a) * r * 1.3], [x + Math.cos(a) * r * 1.75, y + Math.sin(a) * r * 1.75]], col, s * .05); }
+    circulo(c, x, y, r, col); circulo(c, x - r * .3, y - r * .15, r * .09, "#6b4a00"); circulo(c, x + r * .3, y - r * .15, r * .09, "#6b4a00");
+    c.strokeStyle = "#6b4a00"; c.lineWidth = s * .025; c.beginPath(); c.arc(x, y + r * .05, r * .45, .2 * Math.PI, .8 * Math.PI); c.stroke();
+  } },
+  luna: { nombre: "luna", palabras: ["luna"], zona: "cielo", tam: 100, color: "#f4f1c9", dibujar(c, x, y, s, col) {
+    c.save(); c.shadowColor = col; c.shadowBlur = s * .3; circulo(c, x, y, s * .36, col); c.restore();
+    for (const [dx, dy, r] of [[-.12, -.1, .08], [.12, .08, .06], [-.02, .17, .05]]) circulo(c, x + dx * s, y + dy * s, r * s, tono(col, -.12));
+  } },
+  estrella: { nombre: "estrellas", palabras: ["estrella"], zona: "cielo", tam: 40, color: "#ffe066", dibujar(c, x, y, s, col) {
+    const R = s * .5, r = R * .45, p = [];
+    for (let i = 0; i < 10; i++) { const a = -Math.PI / 2 + i * Math.PI / 5, rr = i % 2 ? r : R; p.push([x + Math.cos(a) * rr, y + Math.sin(a) * rr]); }
+    c.save(); c.shadowColor = col; c.shadowBlur = s * .4; poligono(c, p, col); c.restore();
+  } },
+  nube: { nombre: "nubes", palabras: ["nube"], zona: "cielo", tam: 110, color: "#ffffff", dibujar(c, x, y, s, col) {
+    for (const [dx, dy, r] of [[-.33, .04, .2], [0, -.1, .28], [.32, .03, .21], [.12, .08, .2], [-.15, .08, .2]]) circulo(c, x + dx * s, y + dy * s, r * s, col);
+  } },
+  pajaro: { nombre: "pájaros", palabras: ["pajaro", "ave", "pajarito", "paloma"], zona: "cielo", tam: 55, color: "#5fd3ff", dibujar(c, x, y, s, col) {
+    circulo(c, x, y, s * .3, col); elipse(c, x - s * .05, y + s * .02, s * .2, s * .12, tono(col, -.2), -.4);
+    poligono(c, [[x + s * .26, y - s * .05], [x + s * .48, y + s * .02], [x + s * .26, y + s * .08]], "#ff9a3c"); ojos(c, x + s * .12, y - s * .1, 0, s * .07);
+  } },
+  cohete: { nombre: "cohetes", palabras: ["cohete", "nave"], zona: "cielo", tam: 120, color: "#eef0ff", dibujar(c, x, y, s, col) {
+    c.save(); c.translate(x, y); c.rotate(.45);
+    elipse(c, 0, s * .45, s * .1, s * .2, "#ff9a3c"); elipse(c, 0, s * .42, s * .05, s * .12, "#ffe066");
+    poligono(c, [[-s * .15, s * .1], [-s * .3, s * .35], [-s * .12, s * .3]], "#ff4d5e"); poligono(c, [[s * .15, s * .1], [s * .3, s * .35], [s * .12, s * .3]], "#ff4d5e");
+    c.fillStyle = col; c.beginPath(); c.moveTo(0, -s * .5); c.quadraticCurveTo(s * .2, -s * .25, s * .15, s * .32); c.lineTo(-s * .15, s * .32); c.quadraticCurveTo(-s * .2, -s * .25, 0, -s * .5); c.fill();
+    circulo(c, 0, -s * .08, s * .09, "#3a4a8a"); circulo(c, 0, -s * .08, s * .065, "#5fd3ff"); c.restore();
+  } },
+  corazon: { nombre: "corazones", palabras: ["corazon", "corazones"], zona: "cielo", tam: 60, color: "#ff4d6d", dibujar(c, x, y, s, col) {
+    const w = s * .42; c.fillStyle = col; c.beginPath(); c.moveTo(x, y + w * .9);
+    c.bezierCurveTo(x - w * 1.6, y - w * .2, x - w * .6, y - w * 1.3, x, y - w * .4); c.bezierCurveTo(x + w * .6, y - w * 1.3, x + w * 1.6, y - w * .2, x, y + w * .9); c.fill();
+  } },
+  planeta: { nombre: "planetas", palabras: ["planeta", "saturno", "mundo"], zona: "cielo", tam: 95, color: "#c58bff", dibujar(c, x, y, s, col) {
+    c.strokeStyle = "#ffe0a3"; c.lineWidth = s * .05; c.beginPath(); c.ellipse(x, y, s * .55, s * .14, -.3, Math.PI, Math.PI * 2); c.stroke();
+    circulo(c, x, y, s * .3, col); elipse(c, x - s * .08, y - s * .1, s * .12, s * .05, tono(col, .25), -.3);
+    c.beginPath(); c.ellipse(x, y, s * .55, s * .14, -.3, 0, Math.PI); c.stroke();
+  } },
+  arcoiris: { nombre: "arcoíris", palabras: ["arcoiris", "arco iris"], zona: "fondo", tam: 1, color: null, dibujar(c, x, y, s) {
+    const colores = ["#ff4d5e", "#ff9a3c", "#ffd23f", "#3ccf6e", "#3d9bff", "#8a5cff"], a = s * .06;
+    colores.forEach((col, i) => { c.strokeStyle = col; c.lineWidth = a; c.beginPath(); c.arc(x, y, s - i * a, Math.PI, Math.PI * 2); c.stroke(); });
+  } },
+  montana: { nombre: "montañas", palabras: ["montana", "monte", "cerro", "volcan"], zona: "fondo", tam: 1, color: "#7d84a8", dibujar(c, x, y, s, col) {
+    poligono(c, [[x - s, y], [x, y - s * 1.1], [x + s, y]], col); poligono(c, [[x, y - s * 1.1], [x + s, y], [x + s * .2, y]], tono(col, -.15));
+    poligono(c, [[x - s * .27, y - s * .8], [x, y - s * 1.1], [x + s * .27, y - s * .8], [x + s * .1, y - s * .72], [x - s * .03, y - s * .82], [x - s * .14, y - s * .72]], "#ffffff");
+  } },
+  pez: { nombre: "peces", palabras: ["pez", "peces", "pescado", "pececito", "tiburon", "ballena", "delfin"], zona: "agua", tam: 70, color: "#ff9a3c", dibujar(c, x, y, s, col, r) {
+    c.save(); c.translate(x, y); if (r() < .5) c.scale(-1, 1);
+    poligono(c, [[s * .25, 0], [s * .5, -s * .2], [s * .5, s * .2]], tono(col, -.15)); elipse(c, 0, 0, s * .32, s * .2, col);
+    poligono(c, [[-s * .05, -s * .18], [s * .1, -s * .3], [s * .15, -s * .15]], tono(col, -.15)); ojos(c, -s * .16, -s * .04, 0, s * .06); c.restore();
+  } },
+  arbol: { nombre: "árboles", palabras: ["arbol", "arboles", "bosque", "pino"], zona: "suelo", tam: 150, color: "#3ccf6e", dibujar(c, x, y, s, col) {
+    rect(c, x - s * .07, y - s * .45, s * .14, s * .45, "#8b5a2b", s * .03);
+    for (const [dx, dy, r] of [[0, -.72, .3], [-.21, -.55, .23], [.21, -.55, .23]]) circulo(c, x + dx * s, y + dy * s, r * s, tono(col, -.12));
+    circulo(c, x - s * .05, y - s * .75, s * .15, tono(col, .12));
+  } },
+  flor: { nombre: "flores", palabras: ["flor", "flores", "girasol", "tulipan", "margarita"], zona: "suelo", tam: 60, color: "#ff7fbf", dibujar(c, x, y, s, col) {
+    linea(c, [[x, y], [x, y - s * .7]], "#2f9e55", s * .07); elipse(c, x + s * .12, y - s * .3, s * .13, s * .06, "#3ccf6e", -.5);
+    for (let i = 0; i < 6; i++) { const a = i * Math.PI / 3; circulo(c, x + Math.cos(a) * s * .16, y - s * .78 + Math.sin(a) * s * .16, s * .13, col); }
+    circulo(c, x, y - s * .78, s * .11, "#ffd23f");
+  } },
+  casa: { nombre: "casas", palabras: ["casa", "casita", "hogar", "cabana"], zona: "suelo", tam: 150, color: "#ffb15c", dibujar(c, x, y, s, col) {
+    const w = s * .9, h = s * .55;
+    rect(c, x - w / 2, y - h, w, h, col); poligono(c, [[x - w * .6, y - h], [x, y - h - s * .42], [x + w * .6, y - h]], "#c94a4a");
+    rect(c, x - w * .1, y - h * .55, w * .2, h * .55, "#7a4a25", s * .02); circulo(c, x + w * .06, y - h * .28, s * .015, "#ffd23f");
+    for (const dx of [-.3, .3]) { rect(c, x + dx * w - w * .1, y - h * .8, w * .2, w * .2, "#bfeaff", s * .02); linea(c, [[x + dx * w, y - h * .8], [x + dx * w, y - h * .8 + w * .2]], col, s * .015); }
+  } },
+  gato: { nombre: "gatos", palabras: ["gato", "gatito", "michi", "gata"], zona: "suelo", tam: 85, color: "#ff9a3c", dibujar(c, x, y, s, col) {
+    c.strokeStyle = tono(col, -.1); c.lineWidth = s * .08; c.lineCap = "round"; c.beginPath(); c.moveTo(x + s * .2, y - s * .1); c.quadraticCurveTo(x + s * .55, y - s * .15, x + s * .42, y - s * .55); c.stroke();
+    elipse(c, x, y - s * .28, s * .26, s * .28, col); circulo(c, x, y - s * .68, s * .23, col);
+    poligono(c, [[x - s * .21, y - s * .76], [x - s * .17, y - s * 1.0], [x - s * .03, y - s * .87]], col); poligono(c, [[x + s * .21, y - s * .76], [x + s * .17, y - s * 1.0], [x + s * .03, y - s * .87]], col);
+    elipse(c, x, y - s * .2, s * .14, s * .16, tono(col, .3)); ojos(c, x, y - s * .72, s * .09, s * .055);
+    poligono(c, [[x - s * .03, y - s * .62], [x + s * .03, y - s * .62], [x, y - s * .58]], "#ff7fa8");
+    for (const d of [-1, 1]) for (const k of [-.03, .02]) linea(c, [[x + d * s * .08, y - s * .6], [x + d * s * .3, y - s * (.6 + k)]], "#3a2a2a", s * .012);
+  } },
+  perro: { nombre: "perros", palabras: ["perro", "perrito", "cachorro", "perra"], zona: "suelo", tam: 90, color: "#c58b4a", dibujar(c, x, y, s, col) {
+    linea(c, [[x - s * .22, y - s * .3], [x - s * .42, y - s * .5]], col, s * .08);
+    elipse(c, x, y - s * .28, s * .27, s * .28, col); circulo(c, x, y - s * .7, s * .23, col);
+    elipse(c, x - s * .22, y - s * .64, s * .08, s * .17, tono(col, -.3), .2); elipse(c, x + s * .22, y - s * .64, s * .08, s * .17, tono(col, -.3), -.2);
+    elipse(c, x, y - s * .6, s * .12, s * .09, tono(col, .35)); circulo(c, x, y - s * .64, s * .04, "#1d1b2e");
+    elipse(c, x + s * .03, y - s * .52, s * .03, s * .05, "#ff7fa8"); ojos(c, x, y - s * .76, s * .09, s * .055);
+  } },
+  auto: { nombre: "autos", palabras: ["auto", "coche", "carro", "autito"], zona: "suelo", tam: 105, color: "#ff4d5e", dibujar(c, x, y, s, col) {
+    poligono(c, [[x - s * .32, y - s * .38], [x - s * .2, y - s * .62], [x + s * .22, y - s * .62], [x + s * .36, y - s * .38]], tono(col, -.1));
+    poligono(c, [[x - s * .26, y - s * .4], [x - s * .17, y - s * .57], [x - s * .02, y - s * .57], [x - s * .02, y - s * .4]], "#bfeaff");
+    poligono(c, [[x + s * .03, y - s * .4], [x + s * .03, y - s * .57], [x + s * .19, y - s * .57], [x + s * .3, y - s * .4]], "#bfeaff");
+    rect(c, x - s * .6, y - s * .42, s * 1.2, s * .26, col, s * .08); circulo(c, x + s * .55, y - s * .32, s * .04, "#ffe066");
+    for (const dx of [-.33, .33]) { circulo(c, x + dx * s, y - s * .14, s * .13, "#222"); circulo(c, x + dx * s, y - s * .14, s * .06, "#bbb"); }
+  } },
+  robot: { nombre: "robots", palabras: ["robot", "robots", "androide"], zona: "suelo", tam: 115, color: "#9aa0ad", dibujar(c, x, y, s, col) {
+    rect(c, x - s * .17, y - s * .3, s * .12, s * .3, tono(col, -.2), s * .02); rect(c, x + s * .05, y - s * .3, s * .12, s * .3, tono(col, -.2), s * .02);
+    rect(c, x - s * .4, y - s * .7, s * .1, s * .32, tono(col, -.15), s * .04); rect(c, x + s * .3, y - s * .7, s * .1, s * .32, tono(col, -.15), s * .04);
+    rect(c, x - s * .28, y - s * .75, s * .56, s * .47, col, s * .06); rect(c, x - s * .14, y - s * .62, s * .28, s * .16, tono(col, -.3), s * .03);
+    for (const [dx, cc] of [[-.08, "#ff4d5e"], [0, "#ffd23f"], [.08, "#3ccf6e"]]) circulo(c, x + dx * s, y - s * .54, s * .025, cc);
+    linea(c, [[x, y - s * 1.08], [x, y - s * 1.2]], tono(col, -.3), s * .03); circulo(c, x, y - s * 1.22, s * .05, "#ff4d5e");
+    rect(c, x - s * .22, y - s * 1.1, s * .44, s * .32, col, s * .08); circulo(c, x - s * .09, y - s * .95, s * .06, "#4fd8ff"); circulo(c, x + s * .09, y - s * .95, s * .06, "#4fd8ff");
+    linea(c, [[x - s * .08, y - s * .85], [x + s * .08, y - s * .85]], "#1d1b2e", s * .025);
+  } },
+};
+const COLORES = {
+  rojo: "#ff4d5e", azul: "#3d7bff", verde: "#3ccf6e", amarillo: "#ffd23f", violeta: "#9b5cff", morado: "#9b5cff",
+  lila: "#c58bff", rosa: "#ff7fbf", rosado: "#ff7fbf", naranja: "#ff9a3c", anaranjado: "#ff9a3c", negro: "#2a2838",
+  blanco: "#f7f7ff", celeste: "#5fd3ff", marron: "#8b5a2b", cafe: "#8b5a2b", gris: "#9aa0ad", dorado: "#f5c542", plateado: "#c9d1dc",
+  turquesa: "#2ed3c0", fucsia: "#ff3dbb",
+};
+const NUMEROS = { un: 1, una: 1, uno: 1, dos: 2, tres: 3, cuatro: 4, cinco: 5, seis: 6, muchos: 5, muchas: 5, varios: 3, varias: 3 };
+const ESCENAS = { noche: "noche", nocturno: "noche", oscuro: "noche", playa: "mar", mar: "mar", oceano: "mar", agua: "mar", lago: "mar", espacio: "espacio", universo: "espacio", galaxia: "espacio", nieve: "nieve", invierno: "nieve", nevando: "nieve", dia: "dia", campo: "dia", parque: "dia" };
+const RELLENO = new Set("el la los las lo de del al a en con y e o u que muy un una por favor me mi tu su sobre arriba abajo lado cielo fondo paisaje tarde volando jugando sentado sentada parado feliz contento contenta grande gigante enorme chico chica chiquito chiquita pequeno pequena lindo linda hermoso hermosa bonito bonita super re mas entre cerca lejos frente detras adelante atras derecha izquierda medio centro costado hay esta estan como color hace haz haceme dibujo dibujame imagen frankers algo otra otro".split(" "));
+function singular(w) { return [w, w.replace(/es$/, ""), w.replace(/s$/, "")]; }
+function buscarObjeto(w) {
+  for (const forma of singular(w)) for (const [k, o] of Object.entries(OBJETOS)) if (o.palabras.includes(forma)) return k;
+  return null;
+}
+function buscarColor(w) {
+  for (const forma of singular(w)) { if (COLORES[forma]) return COLORES[forma]; const m = forma.replace(/a$/, "o"); if (COLORES[m]) return COLORES[m]; }
+  return null;
+}
+function planearDibujo(pedido) {
+  const t = normalizar(pedido).replace("arco iris", "arcoiris");
+  const items = [], escena = {}, desconocidas = [];
+  let cant = null, colorPendiente = null;
+  for (const w of t.split(" ")) {
+    if (!w) continue;
+    if (NUMEROS[w] || /^\d+$/.test(w)) { cant = Math.min(NUMEROS[w] || parseInt(w, 10), 8); continue; }
+    const obj = buscarObjeto(w);
+    if (obj) { items.push({ tipo: obj, color: colorPendiente, cant: cant || (w.endsWith("s") && w !== "arcoiris" ? 3 : 1) }); cant = null; colorPendiente = null; continue; }
+    const col = buscarColor(w);
+    if (col) { const ult = items[items.length - 1]; if (ult && !ult.color) ult.color = col; else colorPendiente = col; continue; }
+    if (ESCENAS[w]) { escena[ESCENAS[w]] = true; continue; }
+    if (!RELLENO.has(w) && w.length > 2 && !desconocidas.includes(w)) desconocidas.push(w);
+  }
+  if (items.some(i => i.tipo === "pez")) escena.mar = true;
+  if (items.some(i => i.tipo === "luna") && !items.some(i => i.tipo === "sol")) escena.noche = true;
+  return { items, escena, desconocidas, hayEscena: Object.keys(escena).length > 0 };
+}
+function pintar(lienzo, pedido, semilla) {
+  const c = lienzo.getContext("2d"), W = lienzo.width, H = lienzo.height, r = azar(semilla);
+  const { items, escena } = planearDibujo(pedido);
+  const espacio = !!escena.espacio, noche = !!escena.noche && !espacio, mar = !!escena.mar && !espacio, nieve = !!escena.nieve && !espacio;
+  const horizonte = espacio ? H : H * .62;
+
+  // Fondo
+  let g = c.createLinearGradient(0, 0, 0, horizonte);
+  if (espacio) { g = c.createLinearGradient(0, 0, W, H); g.addColorStop(0, "#05030f"); g.addColorStop(1, "#2a1460"); }
+  else if (noche) { g.addColorStop(0, "#0b1030"); g.addColorStop(1, "#2e2470"); }
+  else if (nieve) { g.addColorStop(0, "#a9c4e8"); g.addColorStop(1, "#e3eefb"); }
+  else { g.addColorStop(0, "#6cc6ff"); g.addColorStop(1, "#d2f1ff"); }
+  c.fillStyle = g; c.fillRect(0, 0, W, H);
+  if (espacio || noche) for (let i = 0; i < (espacio ? 140 : 60); i++) circulo(c, r() * W, r() * horizonte * .95, r() * 1.6 + .4, `rgba(255,255,255,${.4 + r() * .6})`);
+
+  // Cosas de fondo (arcoíris y montañas)
+  for (const it of items.filter(i => OBJETOS[i.tipo].zona === "fondo")) {
+    const o = OBJETOS[it.tipo];
+    if (it.tipo === "arcoiris") o.dibujar(c, W / 2, horizonte, W * .36);
+    else for (let k = 0; k < it.cant; k++) o.dibujar(c, (k + .5) / it.cant * W + (r() - .5) * 60, horizonte, H * (.28 + r() * .1), it.color || o.color);
+  }
+
+  // Suelo o agua
+  let sueloArriba = horizonte, sueloAbajo = H, agua = null;
+  if (!espacio) {
+    if (mar) {
+      const arena = H * .84, ga = c.createLinearGradient(0, horizonte, 0, arena);
+      ga.addColorStop(0, noche ? "#1b3f8a" : "#2f8fe0"); ga.addColorStop(1, noche ? "#122a5c" : "#1f6fc0");
+      c.fillStyle = ga; c.fillRect(0, horizonte, W, arena - horizonte);
+      c.strokeStyle = "rgba(255,255,255,.35)"; c.lineWidth = 2;
+      for (let i = 0; i < 14; i++) { const x = r() * W, y = horizonte + 10 + r() * (arena - horizonte - 20); c.beginPath(); c.arc(x, y, 10, Math.PI * 1.1, Math.PI * 1.9); c.stroke(); }
+      c.fillStyle = noche ? "#b8a06a" : "#f2d38b"; c.fillRect(0, arena, W, H - arena);
+      agua = [horizonte + 25, arena - 25]; sueloArriba = arena + 8;
+    } else {
+      const suelo = nieve ? "#f4f8ff" : noche ? "#1f6b45" : "#5ed37a";
+      c.fillStyle = suelo; c.fillRect(0, horizonte, W, H - horizonte);
+      elipse(c, W * .25, horizonte + 10, W * .4, 40, tono(suelo, nieve ? -.04 : .08)); elipse(c, W * .8, horizonte + 14, W * .35, 34, tono(suelo, nieve ? -.06 : -.08));
+      if (nieve) for (let i = 0; i < 70; i++) circulo(c, r() * W, r() * H, r() * 2.5 + 1, "rgba(255,255,255,.9)");
+      sueloArriba = horizonte + (H - horizonte) * .45;
+    }
+  }
+
+  // Repartir objetos en su zona
+  const lista = (zona) => items.filter(i => OBJETOS[i.tipo].zona === zona || (espacio && zona === "cielo" && OBJETOS[i.tipo].zona !== "fondo"))
+    .flatMap(i => Array.from({ length: i.tipo === "estrella" ? Math.min(i.cant * 2, 16) : i.cant }, () => i));
+  const cielo = lista("cielo"), escala = W / 640;
+  cielo.forEach((it, k) => {
+    const o = OBJETOS[it.tipo];
+    let x = (k + .5) / cielo.length * W + (r() - .5) * (W / cielo.length) * .5;
+    let y = espacio ? H * (.15 + r() * .7) : H * .1 + r() * (horizonte - H * .28);
+    if (!espacio && it.tipo === "sol") { x = W * .82; y = H * .18; }
+    if (!espacio && it.tipo === "luna") { x = cielo.some(i => i.tipo === "sol") ? W * .18 : W * .82; y = H * .18; }
+    o.dibujar(c, x, y, o.tam * escala * (.85 + r() * .3), it.color || o.color, r);
+  });
+  if (!espacio) {
+    const peces = lista("agua");
+    peces.forEach((it, k) => { const o = OBJETOS[it.tipo]; o.dibujar(c, (k + .5) / peces.length * W + (r() - .5) * 40, agua[0] + r() * (agua[1] - agua[0]), o.tam * escala, it.color || o.color, r); });
+    const suelo = lista("suelo").map((it, k, arr) => ({ it, x: (k + .5) / arr.length * W + (r() - .5) * (W / arr.length) * .4, y: sueloArriba + r() * (sueloAbajo - sueloArriba) * .8 + 6 }));
+    suelo.sort((a, b) => a.y - b.y).forEach(({ it, x, y }) => {
+      const o = OBJETOS[it.tipo], prof = (y - sueloArriba) / Math.max(1, sueloAbajo - sueloArriba);
+      o.dibujar(c, x, y, o.tam * escala * (mar ? .75 : 1) * (.85 + prof * .35), it.color || o.color, r);
+    });
+  }
+  // Textura: un granito suave para que parezca pintado de verdad
+  try {
+    const img = c.getImageData(0, 0, W, H), d = img.data;
+    for (let k = 0; k < d.length; k += 4) { const n = (r() - 0.5) * 14; d[k] += n; d[k + 1] += n; d[k + 2] += n; }
+    c.putImageData(img, 0, 0);
+  } catch {}
+}
+
+/* ---------- 5. ENSEÑAR ---------- */
+const aBase64 = (s) => { let b = ""; new TextEncoder().encode(s).forEach(x => b += String.fromCharCode(x)); return btoa(b); };
+const deBase64 = (s) => new TextDecoder().decode(Uint8Array.from(atob(s.replace(/\n/g, "")), ch => ch.charCodeAt(0)));
+const API = `https://api.github.com/repos/${REPO}/contents/${RUTA}`;
+const cabeceras = () => ({ Authorization: "Bearer " + token, Accept: "application/vnd.github+json" });
+
+// Las miles de preguntas de base están en un archivo aparte (GitHub no deja editar desde la página archivos de más de 1 MB)
+let versionCargada = null;
+function cartelActualizando(si) {
+  $("#subtitulo").textContent = si ? "Actualizando… 🔄" : (token ? "Modo creador 🔑 · podés enseñarle" : "IA hecha desde cero por Franco");
+}
+// Cada 30 segundos se fija si Franco publicó algo nuevo; si hay, dice "Actualizando…" y lo carga solo
+async function revisarVersion() {
+  if (location.protocol === "file:") return;
+  try {
+    const v = await (await fetch("version.json?v=" + Date.now(), { cache: "no-store" })).json();
+    if (versionCargada && v.version !== versionCargada) {
+      cartelActualizando(true);
+      window.CONOCIMIENTO_EXTRA = null;
+      const r = await fetch("conocimiento-extra.json?v=" + v.version, { cache: "no-store" });
+      if (r.ok) conocimientoExtra = (await r.json()).entradas || [];
+      await cargarConocimiento(false);
+      await cargarPalabras();
+      setTimeout(() => cartelActualizando(false), 1200);
+    }
+    versionCargada = v.version;
+  } catch {}
+}
+async function cargarExtra() {
+  try {
+    if (window.CONOCIMIENTO_EXTRA) conocimientoExtra = window.CONOCIMIENTO_EXTRA;
+    else { const r = await fetch("conocimiento-extra.json?v=" + Date.now()); if (r.ok) conocimientoExtra = (await r.json()).entradas || []; }
+  } catch {}
+}
+async function cargarConocimiento(conExtra = true) {
+  if (!LEMAS.size) await cargarLemas();
+  if (conExtra) await cargarExtra();
+  const copia = guardado.leer("frankers-conocimiento", null);
+  if (copia) { conocimiento = copia; construirIndice(); }
+  try {
+    let remoto;
+    if (token) {
+      const r = await fetch(API, { headers: cabeceras(), cache: "no-store" });
+      if (r.ok) remoto = JSON.parse(deBase64((await r.json()).content));
+    }
+    if (!remoto) { const r = await fetch("conocimiento.json?v=" + Date.now(), { cache: "no-store" }); if (r.ok) remoto = await r.json(); }
+    if (remoto && (!copia || (remoto.actualizado || "") >= (copia.actualizado || ""))) {
+      conocimiento = remoto; guardado.escribir("frankers-conocimiento", remoto);
+    }
+  } catch {}
+  construirIndice();
+}
+// cambio = función que modifica el conocimiento (agregar o borrar). Se aplica a la última versión de GitHub y se guarda.
+async function publicar(cambio) {
+  cambio(conocimiento); conocimiento.actualizado = new Date().toISOString();
+  construirIndice(); guardado.escribir("frankers-conocimiento", conocimiento);
+  if (!token) return { ok: false, motivo: "Sin modo creador: quedó guardado solo en esta compu." };
+  for (let intento = 0; intento < 2; intento++) {
+    try {
+      const r = await fetch(API, { headers: cabeceras(), cache: "no-store" });
+      let sha, remoto = { version: 1, entradas: [] };
+      if (r.ok) { const j = await r.json(); sha = j.sha; remoto = JSON.parse(deBase64(j.content)); }
+      else if (r.status === 401 || r.status === 403) return { ok: false, motivo: "GitHub no aceptó el token. Revisá el modo creador." };
+      else if (r.status !== 404) throw new Error("GitHub " + r.status);
+      cambio(remoto); remoto.actualizado = new Date().toISOString();
+      const p = await fetch(API, { method: "PUT", headers: cabeceras(), body: JSON.stringify({
+        message: "Frankers aprendió algo nuevo 🎓", content: aBase64(JSON.stringify(remoto) + "\n"), sha,
+      }) });
+      if (p.status === 409 || p.status === 422) continue; // alguien guardó al mismo tiempo: reintento
+      if (!p.ok) throw new Error("GitHub " + p.status);
+      conocimiento = remoto; construirIndice(); guardado.escribir("frankers-conocimiento", remoto);
+      return { ok: true };
+    } catch (e) { if (intento === 1) return { ok: false, motivo: "No pude conectarme con GitHub (" + e.message + "). Quedó guardado en esta compu." }; }
+  }
+  return { ok: false, motivo: "No pude guardar en GitHub. Probá de nuevo." };
+}
+// extra = { tipo, autor, fuente }. reemplazar = id de una entrada vieja que se corrige.
+function agregarEntrada(preguntas, respuestas, extra = {}, reemplazar = null) {
+  const claves = new Set(preguntas.map(q => normalizar(q)));
+  const id = Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+  return (kb) => {
+    let todas = [...preguntas];
+    if (reemplazar) { // la corrección se queda con las formas de preguntar de la entrada vieja
+      const vieja = kb.entradas.find(e => e.id === reemplazar);
+      if (vieja) todas = [...new Set([...vieja.preguntas, ...todas])];
+      kb.entradas = kb.entradas.filter(e => e.id !== reemplazar);
+    }
+    const nuevas = new Set(todas.map(q => normalizar(q)));
+    for (const e of kb.entradas) e.preguntas = e.preguntas.filter(q => !nuevas.has(normalizar(q)) && !claves.has(normalizar(q)));
+    kb.entradas = kb.entradas.filter(e => e.preguntas.length);
+    if (!kb.entradas.some(e => e.id === id)) {
+      const entrada = { id, preguntas: todas, respuestas, tipo: extra.tipo || "hecho", fecha: new Date().toISOString() };
+      if (extra.tipo === "opinion") entrada.autor = extra.autor || "Franco";
+      if (extra.fuente) entrada.fuente = extra.fuente;
+      kb.entradas.push(entrada);
+    }
+  };
+}
+const borrarEntrada = (id) => (kb) => { kb.entradas = kb.entradas.filter(e => e.id !== id); };
+
+/* ---------- 5b. ENSEÑAR PARA TODOS (comunidad) ----------
+   Cualquier persona puede enseñarle. Lo que pasa las reglas se guarda en el
+   servidor de Frankers y le llega a todos, desde cualquier celu o compu. */
+let claveServidor = guardado.leer("frankers-clave", null);
+async function cargarComunidad() {
+  if (!SERVIDOR) return;
+  try {
+    const r = await fetch(SERVIDOR + "/aprendido", { cache: "no-store" });
+    if (r.ok) { const lista = await r.json(); if (Array.isArray(lista)) { comunidad = lista; construirIndice(); } }
+  } catch {}
+}
+async function ensenarComunidad(entrada) {
+  const nueva = { id: "c" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6), ...entrada, fecha: new Date().toISOString() };
+  if (!SERVIDOR) { // todavía no hay servidor: queda en este dispositivo
+    ensenadoAca = ensenadoAca.filter(e => !e.preguntas.some(q => nueva.preguntas.some(n => normalizar(n) === normalizar(q))));
+    ensenadoAca.push(nueva); ensenadoAca = ensenadoAca.slice(-300); guardado.escribir("frankers-ensenado", ensenadoAca); construirIndice();
+    return { ok: true, soloAca: true };
+  }
+  try {
+    const r = await fetch(SERVIDOR + "/ensenar", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(nueva) });
+    const j = await r.json().catch(() => ({}));
+    if (!r.ok || !j.ok) return { ok: false, motivo: j.motivo || "No pude guardarlo. Probá de nuevo en un rato." };
+    comunidad = comunidad.filter(e => e.id !== j.entrada.id && !e.preguntas.some(q => j.entrada.preguntas.some(n => normalizar(n) === normalizar(q))));
+    comunidad.push(j.entrada); construirIndice();
+    return { ok: true };
+  } catch { return { ok: false, motivo: "No me pude conectar con el servidor. Probá de nuevo en un rato." }; }
+}
+async function olvidarComunidad(e) {
+  if (e.origen === "aca") {
+    ensenadoAca = ensenadoAca.filter(x => x.id !== e.id); guardado.escribir("frankers-ensenado", ensenadoAca); construirIndice(); return { ok: true };
+  }
+  try {
+    const r = await fetch(SERVIDOR + "/olvidar", { method: "POST", headers: { "Content-Type": "application/json", "X-Clave": claveServidor || "" }, body: JSON.stringify({ id: e.id }) });
+    if (!r.ok) return { ok: false, motivo: "El servidor no aceptó la clave." };
+    comunidad = comunidad.filter(x => x.id !== e.id); construirIndice(); return { ok: true };
+  } catch { return { ok: false, motivo: "No me pude conectar con el servidor." }; }
+}
+
+/* ---------- 6. PANTALLA ---------- */
+const chat = $("#chat"), cara = $("#cara");
+function escaparHTML(s) { return s.replace(/[&<>"']/g, ch => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[ch])); }
+function mostrar(m) {
+  const div = document.createElement("div");
+  div.className = "msg " + m.de;
+  div.innerHTML = escaparHTML(m.texto).replace(/\n/g, "<br>").replace(/(https:\/\/es\.wikipedia\.org\/wiki\/[^\s<"]+)/g, '<a href="$1" target="_blank" rel="noopener">Wikipedia</a>');
+  if (m.dibujo) {
+    const lienzo = document.createElement("canvas"); lienzo.width = 640; lienzo.height = 448;
+    lienzo.setAttribute("role", "img"); lienzo.setAttribute("aria-label", "Dibujo de " + m.dibujo.prompt);
+    try { pintar(lienzo, m.dibujo.prompt, m.dibujo.semilla); } catch (e) { console.error(e); }
+    div.appendChild(lienzo);
+    const extra = document.createElement("div"); extra.className = "extra";
+    const bajar = document.createElement("button"); bajar.className = "boton"; bajar.textContent = "⬇️ Descargar";
+    bajar.onclick = () => { const a = document.createElement("a"); a.href = lienzo.toDataURL("image/png"); a.download = "frankers-" + normalizar(m.dibujo.prompt).replace(/ /g, "-").slice(0, 40) + ".png"; a.click(); };
+    const otra = document.createElement("button"); otra.className = "boton"; otra.textContent = "🔄 Otra versión";
+    otra.onclick = () => { ultimoDibujo = m.dibujo.prompt; enviar("otra"); };
+    extra.append(bajar, otra); div.appendChild(extra);
+  }
+  if (m.ensenar) {
+    const extra = document.createElement("div"); extra.className = "extra";
+    const b = document.createElement("button"); b.className = "boton principal"; b.textContent = m.ensenar.reemplazar ? "✏️ Corregirme" : "🎓 Enseñarme";
+    b.onclick = () => typeof m.ensenar === "string" ? abrirEnsenar(m.ensenar) : abrirEnsenar(m.ensenar.pregunta, m.ensenar.reemplazar, m.ensenar.respuesta || "");
+    extra.appendChild(b); div.appendChild(extra);
+  }
+  chat.appendChild(div);
+  chat.scrollTop = chat.scrollHeight;
+}
+function agregar(m) { historial.push(m); guardarHistorial(); mostrar(m); }
+// Frases de inicio: cortitas, grandes y distintas cada vez. Lo que va entre [ ] sale en colores.
+const FRASES_INICIO = [
+  "¿Qué me [querés contar]?", "Te toca a vos, [¿de qué charlamos?]", "¿Qué [aprendemos] hoy?", "¿Qué [dibujamos] hoy?",
+  "Acá estoy, [¿en qué andás?]", "Contame algo [que no sepa]", "¿[Arrancamos]?", "¿Qué tenés [en mente]?",
+  "¿Qué hay de [nuevo]?", "Listo para [charlar]", "¿Me enseñás [algo nuevo]?", "Soy todo [oídos]",
+];
+function fraseDeInicio() {
+  const h = new Date().getHours(), n = memoria.nombre;
+  const saludoHora = h >= 5 && h < 13 ? "Buen día" : h < 20 && h >= 13 ? "Buenas tardes" : "Buenas noches";
+  const opciones = [...FRASES_INICIO, `${saludoHora}${n ? ", [" + n + "]" : ""}`];
+  if (n) opciones.push(`¿Qué contás, [${n}]?`, `¡Volviste, [${n}]!`);
+  let f = alAzar(opciones);
+  const anterior = guardado.leer("frankers-ultima-frase", null);
+  if (f === anterior) f = alAzar(opciones); // que no arranque igual que la vez anterior
+  guardado.escribir("frankers-ultima-frase", f);
+  return f;
+}
+// Sentido del tiempo: se da cuenta si hace mucho que no venías, y se acuerda de cómo estabas (una vez por visita)
+let avisoDado = false;
+function avisoDeVuelta() {
+  if (avisoDado) return ""; avisoDado = true;
+  const ultima = guardado.leer("frankers-ultima-visita", null), dias = ultima ? Math.floor((Date.now() - ultima) / 86400000) : 0;
+  guardado.escribir("frankers-ultima-visita", Date.now());
+  return [dias >= 3 ? `¡Hace ${dias} días que no venías! Te extrañé.` : "", preocuparse()].filter(Boolean).join(" ");
+}
+function bienvenida() {
+  const div = document.createElement("div"); div.className = "inicio"; div.id = "inicio";
+  const frase = escaparHTML(fraseDeInicio()).replace(/\[(.+?)\]/g, "<span>$1</span>");
+  div.innerHTML = `<div class="cara" aria-hidden="true"><i></i><i></i></div><h2>${frase}</h2>`;
+  const extra = avisoDeVuelta();
+  if (extra) { const p = document.createElement("p"); p.className = "nota-inicio"; p.textContent = extra; div.appendChild(p); }
+  chat.appendChild(div);
+}
+
+
+/* ---------- FRANKERS BUSCA EN INTERNET (Wikipedia, idea de Franco) ----------
+   Si no sabe algo, o si le decís "buscá…", busca en Wikipedia en español, se queda con las 2 primeras
+   oraciones del resumen y lo aprende en este dispositivo, así la próxima vez ya lo sabe.
+   Lo que encuentra pasa por las mismas reglas que todo lo demás: si no es para chicos, no lo muestra. */
+const busquedasWiki = guardado.leer("frankers_busquedas", {}) || {};
+function temaABuscar(texto) {
+  const m = texto.trim().match(/^(?:y\s+)?(?:qu[eé]\s+es|qui[eé]n\s+es|qui[eé]n\s+fue|qu[eé]\s+son|qu[eé]\s+fue|busc[aá]me|busc[aá]|busca|contame\s+sobre|qu[eé]\s+sab[eé]s\s+de)\s+(?:un\s+|una\s+|el\s+|la\s+|los\s+|las\s+)?(.+?)[?¿!.\s]*$/i);
+  if (!m) return null;
+  const tema = m[1].replace(/^(en internet|en wikipedia)\s+/i, "").replace(/\s+(en internet|en wikipedia)$/i, "").trim();
+  return tema.length >= 2 && tema.length <= 60 && tema.split(" ").length <= 6 ? tema : null;
+}
+async function buscarEnWikipedia(tema) {
+  const clave = normalizar(tema);
+  if (busquedasWiki[clave]) return busquedasWiki[clave];
+  const conTiempo = (url) => Promise.race([fetch(url).then(r => r.json()), new Promise((_, no) => setTimeout(() => no(new Error("tardó mucho")), 8000))]);
+  const r1 = await conTiempo("https://es.wikipedia.org/w/api.php?action=query&list=search&format=json&origin=*&srlimit=1&srsearch=" + encodeURIComponent(tema));
+  const pagina = r1.query?.search?.[0]?.title; if (!pagina) return null;
+  const r2 = await conTiempo("https://es.wikipedia.org/api/rest_v1/page/summary/" + encodeURIComponent(pagina.replace(/ /g, "_")));
+  if (!r2.extract || r2.type === "disambiguation") return null;
+  const limpio = r2.extract.replace(/\s*\([^()]*\)/g, "").replace(/\s+/g, " ").trim(); // saca lo que está entre paréntesis (pronunciación, fechas…)
+  const corto = (limpio.match(/[^.!?]+[.!?]+/g) || [limpio]).slice(0, 2).join(" ").trim();
+  const info = { texto: corto, pagina: r2.titles?.normalized || pagina, link: r2.content_urls?.desktop?.page || "https://es.wikipedia.org/wiki/" + encodeURIComponent(pagina) };
+  busquedasWiki[clave] = info; guardado.escribir("frankers_busquedas", busquedasWiki);
+  return info;
+}
+async function buscarSiHaceFalta(texto, respuesta) {
+  const tema = temaABuscar(texto); if (!tema) return;
+  const pidioBuscar = /^\s*busc/i.test(texto);
+  const noSabe = respuesta.desconocido || respuesta.ensenar || /\b(no (lo )?s[eé]|no aprend\w*|me la ganaste|no tengo idea|todav[ií]a no s[eé])\b/i.test(respuesta.texto || "");
+  if (!pidioBuscar && !noSabe) return;
+  if (revisar(tema).problema || revisar(texto).problema) return; // nada de buscar cosas no aptas ni datos personales
+  agregar({ de: "frankers", texto: `Dejame buscar "${tema}" en internet… 🔎` });
+  try {
+    const info = await buscarEnWikipedia(tema);
+    if (!info || !info.texto || revisar(info.texto).problema) {
+      agregar({ de: "frankers", texto: "Busqué, pero no encontré algo que te pueda contar sobre eso. ¿Me lo enseñás vos?" }); return;
+    }
+    // Lo aprende en este dispositivo, así la próxima vez ya lo sabe
+    const preguntas = [`que es ${tema}`, `quien es ${tema}`, `que son ${tema}`, `contame sobre ${tema}`, `que sabes de ${tema}`];
+    ensenadoAca = ensenadoAca.filter(x => !x.preguntas.some(q => preguntas.some(n => normalizar(n) === normalizar(q))));
+    ensenadoAca.push({ id: "w" + Date.now().toString(36), preguntas, respuestas: [`Según Wikipedia: ${info.texto}`], tipo: "hecho", fuente: info.link, fecha: new Date().toISOString() });
+    ensenadoAca = ensenadoAca.slice(-300); guardado.escribir("frankers-ensenado", ensenadoAca); construirIndice();
+    agregar({ de: "frankers", texto: `¡Ya volví! Encontré esto en Wikipedia: ${info.texto}\n📖 Fuente: ${info.link}` });
+  } catch {
+    agregar({ de: "frankers", texto: "Uy, no pude conectarme a internet. Probá de nuevo en un ratito." });
+  }
+}
+
+/* ---------- VOZ Y MODO LLAMADA (idea de Franco) ----------
+   📞 Llamar: Frankers te saluda, te escucha, contesta en voz alta y te vuelve a escuchar.
+   Para cortar, decí "chau" o tocá el botón. La voz es la que trae tu navegador (Edge tiene voces muy naturales).
+   "Cambiá la voz" prueba otra voz. */
+const Reconocer = window.SpeechRecognition || window.webkitSpeechRecognition;
+let enLlamada = false, reconocedor = null;
+function vocesEnEspanol() { return (window.speechSynthesis?.getVoices() || []).filter(v => /^es\b/i.test(v.lang)); }
+function puntajeVoz(v) {
+  return (/es[-_]AR/i.test(v.lang) ? 6 : /es[-_](419|US|MX|UY|CL|CO)/i.test(v.lang) ? 2 : 0) + (/natural|online|neural/i.test(v.name) ? 5 : 0) + (/google/i.test(v.name) ? 1 : 0);
+}
+function vozElegida() {
+  const voces = vocesEnEspanol(); if (!voces.length) return null;
+  const guardada = guardado.leer("frankers-voz", null), esa = voces.find(v => v.name === guardada);
+  return esa || [...voces].sort((a, b) => puntajeVoz(b) - puntajeVoz(a))[0];
+}
+function cambiarVoz() {
+  const orden = ["mujer", "hombre", "compu"], nueva = orden[(orden.indexOf(tipoDeVoz()) + 1) % orden.length];
+  guardado.escribir("frankers_voz", nueva); piperFallo = false;
+  const sel = document.getElementById("elegirVoz"); if (sel) sel.value = nueva;
+  return { mujer: "¡Listo! Ahora hablo con la voz de Daniela, una voz argentina.", hombre: "¡Listo! Ahora hablo con una voz de hombre.", compu: "¡Listo! Ahora hablo con la voz que trae tu compu." }[nueva] + " Si querés otra, decime \"cambiá la voz\".";
+}
+function paraDecir(texto) {
+  return texto.split("\n").filter(l => !/^📖|https?:\/\//.test(l)).join(". ")
+    .replace(/[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}\u{FE0F}]/gu, "").replace(/×/g, " por ").replace(/÷/g, " dividido ").replace(/=/g, " es ").replace(/\s+/g, " ").trim();
+}
+// Voces de verdad (Piper): se descargan la primera vez y después quedan guardadas en la compu.
+// Si no se pueden usar (sin internet, navegador viejo), habla con la voz que trae la compu.
+const VOCES_PIPER = { mujer: ["es_AR-daniela-high"], hombre: ["es_MX-claude-high", "es_MX-ald-medium"] };
+let piper = null, piperFallo = false, sonando = null;
+const tipoDeVoz = () => guardado.leer("frankers_voz", "mujer");
+async function hablarConPiper(frase) {
+  if (!piper) piper = await import("./piper/piper-tts-web.js");
+  for (const voiceId of VOCES_PIPER[tipoDeVoz()] || []) {
+    try {
+      const wav = await piper.predict({ text: frase, voiceId }, (p) => {
+        if (p.total > 1e6 && p.loaded < p.total) estadoLlamada(`🔊 Descargando la voz (solo la primera vez)… ${Math.round(p.loaded / p.total * 100)} %`);
+      });
+      return wav;
+    } catch (e) { console.warn("Voz", voiceId, "no anduvo:", e); }
+  }
+  return null;
+}
+function hablarConLaCompu(frase) {
+  return new Promise(listo => {
+    if (!window.speechSynthesis) return listo();
+    const u = new SpeechSynthesisUtterance(frase), voz = vozElegida();
+    if (voz) { u.voice = voz; u.lang = voz.lang; } else u.lang = "es-AR";
+    u.pitch = 1.15; u.rate = 1.02;
+    const seguro = setTimeout(listo, 4000 + frase.length * 120); // por si el navegador no avisa que terminó
+    u.onend = u.onerror = () => { clearTimeout(seguro); listo(); };
+    speechSynthesis.cancel(); speechSynthesis.speak(u);
+  });
+}
+// Habla de a una oración: mientras dice una, ya va preparando la siguiente (así no hay que esperar)
+function enOraciones(frase) {
+  const partes = (frase.match(/[^.!?¡¿]+[.!?]*|[¡¿][^.!?]*[.!?]*/g) || [frase]).map(x => x.trim()).filter(x => /\w/.test(x));
+  const juntas = []; for (const x of partes) { if (juntas.length && juntas[juntas.length - 1].length < 25) juntas[juntas.length - 1] += " " + x; else juntas.push(x); }
+  return juntas;
+}
+let turnoDeHabla = 0;
+function callar() { turnoDeHabla++; if (sonando) { sonando.pause(); sonando = null; } try { speechSynthesis.cancel(); } catch {} cara.classList.remove("hablando"); }
+async function hablar(texto) {
+  const frase = paraDecir(texto); if (!frase) return;
+  callar(); const turno = turnoDeHabla;
+  cara.classList.add("hablando");
+  try {
+    if (tipoDeVoz() !== "compu" && !piperFallo) {
+      const antes = $("#subtitulo").textContent, partes = enOraciones(frase);
+      let siguiente = hablarConPiper(partes[0]).catch(() => null), ok = false;
+      for (let k = 0; k < partes.length; k++) {
+        const wav = await siguiente;
+        if (k === 0) $("#subtitulo").textContent = antes;
+        if (turno !== turnoDeHabla) return;
+        if (!wav) { if (k === 0) { piperFallo = true; break; } return; }
+        ok = true;
+        siguiente = k + 1 < partes.length ? hablarConPiper(partes[k + 1]).catch(() => null) : null;
+        await new Promise(listo => {
+          sonando = new Audio(URL.createObjectURL(wav));
+          sonando.onended = sonando.onerror = () => listo();
+          sonando.play().catch(() => listo());
+        });
+      }
+      if (ok) return;
+    }
+    if (turno === turnoDeHabla) await hablarConLaCompu(frase);
+  } finally { if (turno === turnoDeHabla) cara.classList.remove("hablando"); }
+}
+$("#elegirVoz").value = tipoDeVoz();
+$("#elegirVoz").onchange = () => { guardado.escribir("frankers_voz", $("#elegirVoz").value); piperFallo = false; };
+$("#probarVoz").onclick = () => hablar("¡Hola! Soy Frankers. ¿Te gusta cómo hablo?");
+function estadoLlamada(txt) { $("#subtitulo").textContent = txt; }
+function escuchar() {
+  if (!enLlamada) return;
+  reconocedor = new Reconocer(); reconocedor.lang = "es-AR"; reconocedor.continuous = true; reconocedor.interimResults = true; reconocedor.maxAlternatives = 3;
+  let listo = false, espera = null, parcial = "";
+  const terminar = async (dijo) => {
+    if (listo) return; listo = true; clearTimeout(espera);
+    try { reconocedor.abort(); } catch {}
+    $("#entrada").value = "";
+    dijo = dijo.trim(); if (!dijo) return escuchar();
+    cara.classList.remove("escuchando");
+    if (/\b(chau|cortar|colgar|corta|colga)\b/i.test(normalizar(dijo))) { agregar({ de: "yo", texto: dijo }); return cortarLlamada("¡Chau! Fue lindo hablar con vos. 💜"); }
+    estadoLlamada("📞 Pensando…");
+    const antes = historial.length;
+    await enviar(dijo);
+    const nuevas = historial.slice(antes).filter(m => m.de === "frankers" && m.texto).map(m => m.texto);
+    if (!enLlamada) return;
+    estadoLlamada("📞 Hablando…");
+    await hablar(nuevas.join(". ") || "Mmm, no sé qué decir.");
+    escuchar();
+  };
+  reconocedor.onresult = (e) => {
+    let final = "", provisorio = "";
+    for (let k = e.resultIndex; k < e.results.length; k++) {
+      const r = e.results[k];
+      // de las opciones que escuchó, elige la que Frankers entiende mejor
+      let mejor = r[0].transcript;
+      if (r.isFinal && r.length > 1) {
+        const op = [...r].map(a => a.transcript);
+        const puntos = op.map(t => { try { const x = pensar(t); return x.puntaje || 0; } catch { return 0; } });
+        const im = puntos.indexOf(Math.max(...puntos)); if (puntos[im] > (puntos[0] || 0) + 0.15) mejor = op[im];
+      }
+      if (r.isFinal) final += mejor + " "; else provisorio += mejor + " ";
+    }
+    if (final) parcial += final;
+    $("#entrada").value = (parcial + provisorio).trim(); // ves lo que te está escuchando
+    clearTimeout(espera);
+    // cuando hacés una pausa de 1 segundo, contesta
+    espera = setTimeout(() => terminar(parcial + provisorio), parcial && !provisorio ? 900 : 1600);
+  };
+  reconocedor.onerror = (e) => {
+    if (e.error === "not-allowed" || e.error === "service-not-allowed") { listo = true; return cortarLlamada("No me dejaron usar el micrófono. Tocá el candadito al lado de la dirección y permití el micrófono."); }
+    if (e.error === "network") { listo = true; return cortarLlamada("Este navegador no me deja escuchar (Brave no tiene esa parte). Abrí Frankers en Edge o Chrome para llamarme. 📞"); }
+  };
+  reconocedor.onend = () => { if (listo || !enLlamada) return; if ((parcial + $("#entrada").value).trim()) terminar($("#entrada").value || parcial); else setTimeout(escuchar, 200); };
+  try { reconocedor.start(); cara.classList.add("escuchando"); estadoLlamada("📞 En llamada · te escucho…"); } catch { setTimeout(escuchar, 500); }
+}
+async function llamar() {
+  if (!Reconocer || navigator.brave) {
+    agregar({ de: "frankers", texto: "El modo llamada funciona en Edge o Chrome. En este navegador no puedo escucharte. 📞" }); return;
+  }
+  enLlamada = true;
+  $("#btnLlamada").classList.add("en-llamada"); $("#btnLlamada").innerHTML = '🔴 <span class="txt">Cortar</span>';
+  const inicio = $("#inicio"); if (inicio) inicio.remove();
+  const saludo = `¡Hola${memoria.nombre ? " " + memoria.nombre : ""}! Soy Frankers, te escucho.`;
+  agregar({ de: "frankers", texto: saludo + " 📞" });
+  estadoLlamada("📞 Hablando…");
+  await hablar(saludo);
+  escuchar();
+}
+async function cortarLlamada(despedida) {
+  enLlamada = false; callar(); $("#entrada").value = "";
+  try { reconocedor && reconocedor.abort(); } catch {}
+  cara.classList.remove("escuchando");
+  $("#btnLlamada").classList.remove("en-llamada"); $("#btnLlamada").innerHTML = '📞 <span class="txt">Llamar</span>';
+  if (despedida) { agregar({ de: "frankers", texto: despedida }); await hablar(despedida); }
+  cartelActualizando(false);
+}
+$("#btnLlamada").onclick = () => enLlamada ? cortarLlamada("¡Chau!") : llamar();
+if (window.speechSynthesis) speechSynthesis.onvoiceschanged = () => {}; // hace que el navegador cargue las voces
+let ocupado = false;
+async function enviar(texto) {
+  texto = texto.trim(); if (!texto || ocupado) return;
+  ocupado = true;
+  const inicio = $("#inicio"); if (inicio) inicio.remove();
+  agregar({ de: "yo", texto });
+  cara.classList.add("pensando");
+  const puntitos = document.createElement("div"); puntitos.className = "msg frankers"; puntitos.innerHTML = '<span class="escribiendo"><b></b><b></b><b></b></span>';
+  chat.appendChild(puntitos); chat.scrollTop = chat.scrollHeight;
+  await new Promise(res => setTimeout(res, 350 + Math.random() * 450));
+  puntitos.remove(); cara.classList.remove("pensando");
+  let respuesta;
+  try {
+    respuesta = responder(texto);
+    const consejo = CONSEJOS.find(x => x.re.test(normalizar(texto)));
+    if (consejo && !respuesta.dibujo && !respuesta.filtro) respuesta.texto += "\n" + consejo.texto;
+    if (!respuesta.filtro && !respuesta.dibujo && respuesta.texto) {
+      if (/\b(me gusta|me gustan|tengo|fui|hice)\b/.test(normalizar(texto)) && !/\?\s*\S*$/.test(respuesta.texto) && Math.random() < 0.4) respuesta.texto += " " + alAzar(CURIOSIDAD);
+      respuesta.texto = conHumor(respuesta.texto);
+    }
+  } catch (e) { console.error(e); respuesta = { texto: "Uy, se me cruzaron los cables. 😵 ¿Probás de nuevo?" }; }
+  const { publicar: aprender, ...paraMostrar } = respuesta;
+  agregar({ de: "frankers", ...paraMostrar });
+  if (!respuesta.filtro && !respuesta.dibujo) await buscarSiHaceFalta(texto, respuesta);
+  if (aprender) {
+    const r = await publicar(aprender);
+    if (!r.ok) agregar({ de: "frankers", texto: "No pude guardarlo para todos: " + r.motivo });
+  }
+  ocupado = false;
+}
+
+// Enviar con el botón o con Enter (sin formularios, así funciona en cualquier lado)
+function enviarEntrada() { const i = $("#entrada"); const t = i.value; i.value = ""; enviar(t); i.focus(); }
+$("#btnEnviar").addEventListener("click", enviarEntrada);
+$("#entrada").addEventListener("keydown", (e) => { if (e.key === "Enter" && !e.isComposing) { e.preventDefault(); enviarEntrada(); } });
+$("#sugerencias").addEventListener("click", (e) => { if (e.target.matches("button")) enviar(e.target.textContent); });
+$("#btnLimpiar").onclick = () => { historial = []; guardarHistorial(); chat.innerHTML = ""; ultimoDibujo = null; Object.assign(charla, { esperando: null, siguienteEspera: null, ultimoTema: null, ultimaFrasePersona: null }); bienvenida(); };
+
+// Enseñar
+const dlgEnsenar = $("#dlgEnsenar");
+let ensReemplazar = null, ensConflicto = null; // corrección pedida / choque detectado
+function abrirEnsenar(pregunta = "", reemplazar = null, respuesta = "") {
+  ensReemplazar = reemplazar; ensConflicto = null;
+  $("#ensPreguntas").value = pregunta; $("#ensRespuestas").value = respuesta; $("#ensEstado").textContent = ""; $("#ensEstado").className = "estado";
+  $("#ensTipo").value = "hecho"; $("#ensAutorCaja").hidden = true; $("#ensFuenteCaja").hidden = true; $("#ensFuente").value = "";
+  $("#ensGuardar").textContent = reemplazar ? "Corregir" : "Enseñar";
+  dlgEnsenar.showModal(); (pregunta && !respuesta ? $("#ensRespuestas") : $("#ensPreguntas")).focus();
+}
+$("#ensTipo").onchange = () => { $("#ensAutorCaja").hidden = $("#ensTipo").value !== "opinion"; };
+$("#ensPreguntas").oninput = $("#ensRespuestas").oninput = () => { // si cambia el texto, se vuelve a revisar el choque
+  if (ensConflicto) { ensConflicto = null; $("#ensFuenteCaja").hidden = true; $("#ensGuardar").textContent = ensReemplazar ? "Corregir" : "Enseñar"; $("#ensEstado").textContent = ""; }
+};
+$("#btnEnsenar").onclick = () => abrirEnsenar();
+$("#ensCancelar").onclick = () => dlgEnsenar.close();
+// Enseñar con un archivo .txt (solo el que vos elegís). Cada renglón: "frase=tipo" (ej: "buenas buenas=saludo")
+// o "frase=respuesta". Pasa por las mismas reglas: nada ofensivo ni falso. Queda en este dispositivo.
+$("#ensArchivo").onclick = () => $("#ensArchivoInput").click();
+$("#ensArchivoInput").onchange = async (e) => {
+  const f = e.target.files[0]; e.target.value = ""; if (!f) return;
+  const estado = $("#ensEstado");
+  if (f.size > 300000) { estado.className = "estado mal"; estado.textContent = "Ese archivo es muy grande. Probá con uno más chico."; return; }
+  const texto = await f.text();
+  let aprendidas = 0, rechazadas = 0;
+  const tipos = [...conocimiento.entradas].filter(esCharla);
+  for (const linea of texto.split(/\r?\n/)) {
+    const i = linea.indexOf("="); if (i < 1) continue;
+    const frase = linea.slice(0, i).trim(), lado = linea.slice(i + 1).trim();
+    if (!frase || !lado || frase.length > 200 || lado.length > 500) { rechazadas++; continue; }
+    if (revisar(frase + "\n" + lado).problema || esFalso(lado) || esFalso(frase) || (/^(si|sí|verdad|cierto)$/i.test(lado) && esFalso(frase + " es verdad"))) { rechazadas++; continue; }
+    const tipo = tipos.find(x => normalizar(x.id) === normalizar(lado) || normalizar(x.id).replace(/-/g, " ") === normalizar(lado));
+    const respuestas = tipo ? tipo.respuestas : [lado];
+    ensenadoAca = ensenadoAca.filter(x => !x.preguntas.some(q => normalizar(q) === normalizar(frase)));
+    ensenadoAca.push({ id: "a" + Date.now().toString(36) + aprendidas, preguntas: [frase], respuestas, tipo: tipo ? tipo.tipo : "hecho", fecha: new Date().toISOString() });
+    aprendidas++;
+  }
+  ensenadoAca = ensenadoAca.slice(-300); guardado.escribir("frankers-ensenado", ensenadoAca); construirIndice();
+  estado.className = aprendidas ? "estado ok" : "estado mal";
+  estado.textContent = aprendidas ? `¡Leí el archivo! Aprendí ${aprendidas} frase${aprendidas > 1 ? "s" : ""}${rechazadas ? ` (y no aprendí ${rechazadas} que no pasaron mis reglas)` : ""}. 📄` : "No encontré frases para aprender. Cada renglón tiene que ser así: frase=tipo (ej: buenas buenas=saludo).";
+};
+$("#ensGuardar").addEventListener("click", async () => {
+  const preguntas = $("#ensPreguntas").value.split("\n").map(s => s.trim()).filter(Boolean);
+  const respuesta = $("#ensRespuestas").value.replace(/\n{3,}/g, "\n\n").trim();
+  const respuestas = respuesta ? [respuesta] : [];
+  if (!preguntas.length || !respuestas.length) { $("#ensEstado").className = "estado mal"; $("#ensEstado").textContent = "Completá qué te pueden decir y qué tengo que contestar."; return; }
+  const tipo = $("#ensTipo").value, autor = $("#ensAutor").value.trim(), fuente = $("#ensFuente").value.trim();
+  const estado = $("#ensEstado"), boton = $("#ensGuardar");
+  const mal = (msg) => { estado.className = "estado mal"; estado.textContent = msg; };
+
+  // Filtro 1 y 3: reglas que nunca cambian (insultos, daño, datos personales, cambiar reglas…)
+  const control = revisar([...preguntas, ...respuestas, autor, fuente].join("\n"));
+  if (control.problema) return mal("No puedo aprender eso. " + control.msg);
+  const todo = normalizar([...preguntas, ...respuestas].join(" "));
+  if (/\b(soy|somos) (una |un )?(persona|humano|humana|chico|chica|nene|nena)\b/.test(normalizar(respuestas.join(" ")))) return mal("No puedo aprender eso: soy una IA y no digo que soy una persona.");
+  if (TEMAS[2].re.test(todo)) return mal("No puedo aprender eso: en política no tomo partido.");
+  if (respuestas.some(r => r.length > 1500)) return mal("Esa respuesta es muy larga. Contala con tus palabras y más cortita (y no copies letras de canciones, libros ni artículos).");
+  // Filtro 2: hechos falsos evidentes
+  if (tipo !== "opinion") {
+    for (const r of [...respuestas, ...preguntas.map(q => q + " " + respuestas[0])]) {
+      const porque = esFalso(r);
+      if (porque) return mal(alAzar(["Mmm, creo que eso no es así.", "Eso no lo puedo aprender porque no es correcto, pero gracias por intentarlo.", "Me parece que me estás haciendo una broma. 😄", "Eso no me cierra."]) + " " + porque);
+    }
+  }
+  // Filtro 4: ¿choca con algo que ya sé? Pido explicación en vez de reemplazar sin más.
+  if (!ensReemplazar && !ensConflicto) {
+    for (const q of preguntas) {
+      const { entrada, puntaje, frase } = pensar(q);
+      if (entrada && puntaje >= 0.6 && !entrada.respuestas.some(r => respuestas.some(n => normalizar(n) === normalizar(r)))) {
+        ensConflicto = entrada.id;
+        $("#ensFuenteCaja").hidden = false; boton.textContent = "Sí, reemplazar";
+        estado.className = "estado";
+        estado.textContent = `⚠️ Esto choca con algo que ya sé: si me dicen "${frase}", contesto "${entrada.respuestas[0]}". Si querés cambiarlo, contame por qué (o de dónde lo sacaste) y tocá "Sí, reemplazar".`;
+        $("#ensFuente").focus();
+        return;
+      }
+    }
+  }
+  if (ensConflicto && !fuente) { mal("Contame por qué cambia (una explicación o una fuente) para reemplazarlo."); $("#ensFuente").focus(); return; }
+
+  boton.disabled = true; estado.className = "estado"; estado.textContent = "Aprendiendo… 🧠";
+  const reemplazo = ensReemplazar || ensConflicto;
+  const r = token ? await publicar(agregarEntrada(preguntas, respuestas, { tipo, autor, fuente }, reemplazo))
+    : await ensenarComunidad({ preguntas, respuestas, tipo, autor: tipo === "opinion" ? (autor || "alguien") : undefined, fuente });
+  boton.disabled = false;
+  if (r.ok) {
+    dlgEnsenar.close();
+    const queEs = tipo === "opinion" ? ` (lo guardo como una opinión de ${autor || "Franco"}, no como un hecho)` : tipo === "gusto" ? " (lo guardo como un gusto mío)" : "";
+    const corta = respuestas[0].replace(/\s*\n+\s*/g, " ").slice(0, 90) + (respuestas[0].length > 90 ? "…" : "");
+    const resumen = `si me preguntan "${preguntas[0]}", contesto "${corta}"${queEs}`;
+    const texto = reemplazo
+      ? alAzar([`¡Tenés razón, me equivoqué! Gracias por corregirme. Ahora ${resumen}.`, `Uy, perdón. Ya lo arreglé: ${resumen}.`, `¡Bien ahí! Ahora lo sé mejor: ${resumen}.`, `Gracias, así voy aprendiendo. Desde ahora ${resumen}.`])
+      : alAzar([`¡Gracias! Lo anoto: ${resumen}. 🎓`, `¡No lo sabía! Entonces ${resumen}, ¿es así?`, `¡Qué interesante! Ya lo aprendí: ${resumen}.`, `¡Buenísimo, uno más para mi memoria! Ahora ${resumen}. 🧠`]);
+    agregar({ de: "frankers", texto: texto + (token ? " Ya lo sabe todo el mundo. 🌎" : EN_ARCHIVO ? " Para que lo sepa todo el mundo, andá a 📚 Lo que sé → 📤 Exportar y mandáselo a Claude." : " Lo aprendí para vos, en este dispositivo. 📱") });
+    ultimaRespuesta = null;
+  } else mal(r.motivo);
+});
+
+// Lo que sé
+const dlgSaber = $("#dlgSaber");
+function dibujarListaSaber() {
+  const lista = $("#listaSaber"); lista.innerHTML = "";
+  const todas = [...conocimientoExtra.map(e => ({ ...e, origen: "base" })), ...conocimiento.entradas.map(e => ({ ...e, origen: "franco" })), ...comunidad.map(e => ({ ...e, origen: "comunidad" })), ...ensenadoAca.map(e => ({ ...e, origen: "aca" }))];
+  const filtro = normalizar($("#saberBuscar").value || "");
+  $("#saberResumen").textContent = `Aprendí ${todas.length} cosas (${comunidad.length} me las enseñó la gente), y además sé recordar tu nombre y datos, hacer cuentas, decir la hora y dibujar ${Object.values(OBJETOS).map(o => o.nombre).join(", ")}.`;
+  $("#listaReglas").innerHTML = REGLAS.map(r => `<li>${escaparHTML(r)}</li>`).join("");
+  const nombresTipo = { hecho: "Hecho", gusto: "Gusto mío", opinion: "Opinión" };
+  let mostradas = 0;
+  for (const e of todas.reverse()) {
+    if (filtro && !normalizar(e.preguntas.join(" ") + " " + e.respuestas.join(" ")).includes(filtro)) continue;
+    if (++mostradas > 150) break;
+    const li = document.createElement("li"), tipo = e.tipo || "hecho";
+    const etiqueta = `<span class="etiqueta-tipo ${tipo}">${nombresTipo[tipo] || "Hecho"}${tipo === "opinion" ? " de " + escaparHTML(e.autor || "alguien") : ""}</span>`;
+    const quien = e.origen === "comunidad" ? `<span class="etiqueta-tipo">🌎 Comunidad</span>` : e.origen === "aca" ? `<span class="etiqueta-tipo">📱 Este dispositivo</span>` : "";
+    li.innerHTML = `<div class="texto"><b>${quien}${etiqueta}${escaparHTML(e.preguntas.join(" · "))}</b><span>→ ${escaparHTML(e.respuestas.join(" / "))}</span>${e.fuente ? `<br><span>📎 ${escaparHTML(e.fuente)}</span>` : ""}</div>`;
+    const puedeBorrar = e.origen === "aca" || (e.origen === "franco" && token) || (e.origen === "comunidad" && claveServidor);
+    if (puedeBorrar) {
+      const b = document.createElement("button"); b.className = "boton"; b.textContent = "Olvidar";
+      b.onclick = async () => {
+        b.disabled = true; $("#saberEstado").className = "estado"; $("#saberEstado").textContent = "Olvidando…";
+        const r = e.origen === "franco" ? await publicar(borrarEntrada(e.id)) : await olvidarComunidad(e);
+        $("#saberEstado").className = "estado " + (r.ok ? "ok" : "mal"); $("#saberEstado").textContent = r.ok ? "Listo, ya no lo sé." : r.motivo;
+        dibujarListaSaber();
+      };
+      li.appendChild(b);
+    }
+    lista.appendChild(li);
+  }
+}
+$("#btnSaber").onclick = () => { $("#saberEstado").textContent = ""; $("#saberBuscar").value = ""; dibujarListaSaber(); dlgSaber.showModal(); };
+$("#saberBuscar").oninput = () => dibujarListaSaber();
+$("#saberCerrar").onclick = () => dlgSaber.close();
+// En el archivo de Franco: exportar lo enseñado para mandárselo a Claude (y que lo sepa todo el mundo)
+const EN_ARCHIVO = location.protocol === "file:" || location.href === "about:srcdoc";
+$("#btnExportar").hidden = !EN_ARCHIVO;
+$("#btnExportar").onclick = () => {
+  if (!ensenadoAca.length) { $("#saberEstado").className = "estado mal"; $("#saberEstado").textContent = "Todavía no me enseñaste nada en este dispositivo."; return; }
+  const datos = JSON.stringify({ frankers: "ensenanzas", fecha: new Date().toISOString(), entradas: ensenadoAca }, null, 2);
+  const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([datos], { type: "application/json" }));
+  a.download = `Frankers - lo que le enseñé (${ensenadoAca.length}).json`; document.body.appendChild(a); a.click(); a.remove();
+  $("#saberEstado").className = "estado ok"; $("#saberEstado").textContent = `✅ Se descargó el archivo con ${ensenadoAca.length} cosas. Mandáselo a Claude en el chat y lo carga para todo el mundo.`;
+};
+
+// Modo creador
+const dlgCreador = $("#dlgCreador");
+function actualizarModo() {
+  $("#btnEnsenar").hidden = false;
+  $("#ensExplicacion").textContent = token
+    ? "Modo creador: lo que me enseñes lo aprendo para todo el mundo. 🌎"
+    : "Escribí cómo te pueden preguntar algo y qué tengo que contestar. Si pasa mis reglas, lo aprendo para vos, en este dispositivo. 📱";
+  $("#creadorApagado").hidden = !!token; $("#creadorPrendido").hidden = !token;
+  $("#creadorActivar").hidden = !!token; $("#creadorSalir").hidden = !token;
+  cartelActualizando(false);
+}
+$("#btnCreador").onclick = () => { $("#creadorEstado").textContent = ""; $("#creadorToken").value = ""; dlgCreador.showModal(); };
+$("#creadorCerrar").onclick = () => dlgCreador.close();
+$("#creadorSalir").onclick = () => { token = null; guardado.borrar("frankers-token"); claveServidor = null; guardado.borrar("frankers-clave"); actualizarModo(); dlgCreador.close(); };
+$("#creadorActivar").onclick = async () => {
+  const t = $("#creadorToken").value.trim(), estado = $("#creadorEstado");
+  if (!t) { estado.className = "estado mal"; estado.textContent = "Pegá el token primero."; return; }
+  estado.className = "estado"; estado.textContent = "Probando el token…";
+  try {
+    const r = await fetch(`https://api.github.com/repos/${REPO}`, { headers: { Authorization: "Bearer " + t, Accept: "application/vnd.github+json" } });
+    if (!r.ok) throw new Error(r.status === 401 ? "El token no es válido." : "GitHub respondió " + r.status + ". Revisá que el token tenga acceso al repo.");
+    token = t; guardado.escribir("frankers-token", t);
+    actualizarModo();
+    estado.className = "estado ok"; estado.textContent = "¡Listo! Ya podés enseñarle a Frankers.";
+    cargarConocimiento();
+  } catch (e) { estado.className = "estado mal"; estado.textContent = e.message || "No pude conectarme con GitHub."; }
+};
+
+// Tu nombre: hay que ponerlo para charlar (cada persona pone el suyo)
+function pedirNombre(cambiar = false) {
+  const d = $("#dlgNombre"), confirmar = !!memoria.nombre && !cambiar;
+  $("#pnConfirmar").hidden = !confirmar; $("#pnPreguntar").hidden = confirmar;
+  $("#pnNombre").textContent = memoria.nombre || "";
+  $("#inputNombre").value = ""; $("#nombreEstado").textContent = "";
+  if (!d.open) d.showModal();
+  (confirmar ? $("#btnSoyYo") : $("#inputNombre")).focus();
+}
+$("#btnSoyYo").onclick = () => { $("#dlgNombre").close(); mostrarQuienSos(); $("#entrada").focus(); };
+$("#btnNoSoy").onclick = () => pedirNombre(true);
+function mostrarQuienSos() {
+  const q = $("#quienSos");
+  q.hidden = !memoria.nombre;
+  if (memoria.nombre) { q.innerHTML = `Charlando con <b>${escaparHTML(memoria.nombre)}</b> · <button type="button" id="btnCambiarNombre">¿No sos vos? Cambiar</button>`; $("#btnCambiarNombre").onclick = () => pedirNombre(true); }
+}
+function guardarNombre() {
+  const n = $("#inputNombre").value.trim().replace(/\s+/g, " ");
+  const estado = $("#nombreEstado");
+  if (n.length < 2) { estado.textContent = "Escribí tu nombre (al menos 2 letras)."; return; }
+  if (!/^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ' ]+$/.test(n)) { estado.textContent = "Usá solo letras, por favor."; return; }
+  if (revisar(n).problema) { estado.textContent = "Ese nombre no lo puedo usar. Probá con tu nombre de verdad 🙂"; return; }
+  const nuevo = n.split(" ").map(capitalizar).join(" ");
+  if (memoria.nombre && normalizar(memoria.nombre) !== normalizar(nuevo)) {
+    // Otra persona: empieza de cero, con su propia memoria y su propia charla
+    memoria = { nombre: null, datos: {}, gustos: [], hechos: [], aprendido: {} };
+    historial = []; guardarHistorial(); chat.innerHTML = "";
+    Object.assign(charla, { esperando: null, siguienteEspera: null, ultimoTema: null, ultimaFrasePersona: null });
+  }
+  memoria.nombre = nuevo; guardarMemoria();
+  $("#dlgNombre").close(); mostrarQuienSos();
+  if (!historial.length) { chat.innerHTML = ""; bienvenida(); }
+  $("#entrada").focus();
+}
+$("#btnNombre").onclick = guardarNombre;
+$("#inputNombre").addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); guardarNombre(); } });
+$("#dlgNombre").addEventListener("cancel", (e) => e.preventDefault()); // hay que elegir: soy yo, o poner el nombre
+
+// Arranque: lo primero que aparece es la pantalla grande de "¿quién sos?"
+pedirNombre();
+actualizarModo();
+if (historial.length) { historial.forEach(mostrar); const extra = avisoDeVuelta(); if (extra) agregar({ de: "frankers", texto: extra }); } else bienvenida();
+cartelActualizando(true);
+cargarConocimiento().then(async () => { cargarComunidad(); await cargarPalabras(); cartelActualizando(false); revisarVersion(); });
+setInterval(revisarVersion, 30000);
+setInterval(cargarComunidad, 60000); // cada minuto trae lo nuevo que enseñó la gente
+mostrarQuienSos();
+$("#entrada").focus();
+</script>
+</body>
+</html>

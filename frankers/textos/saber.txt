@@ -1,0 +1,37 @@
+# Cosas para saber. Cada renglón es un texto.
+El Sol es una estrella. Es tan grande que dentro de él entrarían más de un millón de planetas como la Tierra.
+La Tierra es el tercer planeta desde el Sol. Tarda un año en dar una vuelta alrededor del Sol y un día en girar sobre sí misma.
+La Luna gira alrededor de la Tierra. Tarda casi un mes en dar una vuelta completa.
+Los planetas del sistema solar son Mercurio, Venus, la Tierra, Marte, Júpiter, Saturno, Urano y Neptuno.
+Júpiter es el planeta más grande del sistema solar. Saturno tiene anillos hechos de hielo y piedras.
+Marte es conocido como el planeta rojo, porque su suelo tiene mucho óxido de hierro.
+El agua hierve a cien grados y se congela a cero grados.
+Las plantas hacen su alimento con la luz del Sol. A eso se le llama fotosíntesis. Además, largan oxígeno, que respiramos nosotros.
+El corazón es un músculo que bombea la sangre por todo el cuerpo. Late unas setenta veces por minuto.
+Los dinosaurios vivieron hace millones de años. El tiranosaurio era carnívoro y el braquiosaurio comía plantas.
+Las ballenas son mamíferos, no peces. Respiran aire y les dan leche a sus crías.
+Los pingüinos son aves que no vuelan, pero nadan muy rápido.
+El guepardo es el animal terrestre más rápido. Puede correr a más de cien kilómetros por hora.
+Las abejas hacen miel con el néctar de las flores y ayudan a que crezcan las frutas.
+La Argentina está en América del Sur. Su capital es Buenos Aires y su bandera es celeste y blanca, con un sol en el medio.
+El río Paraná es uno de los ríos más largos de América del Sur.
+La montaña más alta de América es el Aconcagua, que está en Mendoza, Argentina.
+Las cataratas del Iguazú están en Misiones, en la frontera entre Argentina y Brasil.
+José de San Martín fue un general que ayudó a liberar a Argentina, Chile y Perú.
+Manuel Belgrano creó la bandera argentina en el año mil ochocientos doce.
+Una computadora sigue instrucciones. Esas instrucciones se escriben en lenguajes de programación, como JavaScript o Python.
+Internet es una red que conecta millones de computadoras de todo el mundo.
+Una página web se hace con HTML, que arma la estructura, CSS, que le da los colores, y JavaScript, que le da movimiento.
+Una red neuronal es un programa con neuronas conectadas. Aprende con ejemplos: cuando se equivoca, corrige un poquito sus conexiones.
+Los números pares se pueden dividir por dos. Los impares no.
+Un triángulo tiene tres lados, un cuadrado tiene cuatro y un pentágono tiene cinco.
+Un año tiene doce meses y trescientos sesenta y cinco días. Cada cuatro años hay un año bisiesto, con un día más.
+La semana tiene siete días: lunes, martes, miércoles, jueves, viernes, sábado y domingo.
+Los colores primarios son el rojo, el azul y el amarillo. Mezclando azul y amarillo sale el verde.
+El arcoíris aparece cuando la luz del Sol atraviesa las gotas de lluvia y se separa en colores.
+Los volcanes son montañas por donde sale lava, que es roca derretida muy caliente.
+Los pulpos tienen tres corazones, sangre azul y ocho brazos.
+Los gatos duermen entre doce y dieciséis horas por día.
+Los perros pueden escuchar sonidos que las personas no podemos oír.
+El cerebro tiene miles de millones de neuronas que se comunican entre sí.
+Leer mucho ayuda a aprender palabras nuevas y a imaginar historias.
