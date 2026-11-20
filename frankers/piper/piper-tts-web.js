@@ -263,7 +263,8 @@ const _TtsSession = class _TtsSession {
     // @ts-ignore-next-line
     __privateAdd(this, _logger);
     var _a;
-    if (_TtsSession._instance) {
+    // Frankers: reusar la sesión SOLO si es la misma voz y no falló (si no, cambiar de voz no hacía nada)
+    if (_TtsSession._instance && !_TtsSession._instance.fallo && (!voiceId || _TtsSession._instance.voiceId === voiceId)) {
       logger == null ? void 0 : logger("Reusing session for TTS!");
       _TtsSession._instance.voiceId = voiceId ?? _TtsSession._instance.voiceId;
       __privateSet(_TtsSession._instance, _progressCallback, progress ?? __privateGet(_TtsSession._instance, _progressCallback));
@@ -274,6 +275,7 @@ const _TtsSession = class _TtsSession {
     this.voiceId = voiceId;
     __privateSet(this, _progressCallback, progress);
     this.waitReady = this.init();
+    this.waitReady.catch(() => { this.fallo = true; if (_TtsSession._instance === this) _TtsSession._instance = null; });
     __privateSet(this, _wasmPaths, wasmPaths ?? DEFAULT_WASM_PATHS);
     (_a = __privateGet(this, _logger)) == null ? void 0 : _a.call(this, `Loaded WASMPaths at: ${JSON.stringify(__privateGet(this, _wasmPaths))}`);
     _TtsSession._instance = this;

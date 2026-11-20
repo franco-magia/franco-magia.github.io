@@ -2222,25 +2222,39 @@ function hablarConLaCompu(frase) {
     speechSynthesis.cancel(); speechSynthesis.speak(u);
   });
 }
+// Habla de a una oración: mientras dice una, ya va preparando la siguiente (así no hay que esperar)
+function enOraciones(frase) {
+  const partes = (frase.match(/[^.!?¡¿]+[.!?]*|[¡¿][^.!?]*[.!?]*/g) || [frase]).map(x => x.trim()).filter(x => /\w/.test(x));
+  const juntas = []; for (const x of partes) { if (juntas.length && juntas[juntas.length - 1].length < 25) juntas[juntas.length - 1] += " " + x; else juntas.push(x); }
+  return juntas;
+}
+let turnoDeHabla = 0;
+function callar() { turnoDeHabla++; if (sonando) { sonando.pause(); sonando = null; } try { speechSynthesis.cancel(); } catch {} cara.classList.remove("hablando"); }
 async function hablar(texto) {
   const frase = paraDecir(texto); if (!frase) return;
-  if (sonando) { sonando.pause(); sonando = null; }
-  const antes = $("#subtitulo").textContent;
-  let wav = null;
-  if (tipoDeVoz() !== "compu" && !piperFallo) {
-    try { wav = await hablarConPiper(frase); } catch (e) { console.warn(e); }
-    if (!wav) piperFallo = true; // no insiste más en esta visita
-    $("#subtitulo").textContent = antes;
-  }
+  callar(); const turno = turnoDeHabla;
   cara.classList.add("hablando");
-  if (wav) {
-    await new Promise(listo => {
-      sonando = new Audio(URL.createObjectURL(wav));
-      sonando.onended = sonando.onerror = () => listo();
-      sonando.play().catch(() => listo());
-    });
-  } else await hablarConLaCompu(frase);
-  cara.classList.remove("hablando");
+  try {
+    if (tipoDeVoz() !== "compu" && !piperFallo) {
+      const antes = $("#subtitulo").textContent, partes = enOraciones(frase);
+      let siguiente = hablarConPiper(partes[0]).catch(() => null), ok = false;
+      for (let k = 0; k < partes.length; k++) {
+        const wav = await siguiente;
+        if (k === 0) $("#subtitulo").textContent = antes;
+        if (turno !== turnoDeHabla) return;
+        if (!wav) { if (k === 0) { piperFallo = true; break; } return; }
+        ok = true;
+        siguiente = k + 1 < partes.length ? hablarConPiper(partes[k + 1]).catch(() => null) : null;
+        await new Promise(listo => {
+          sonando = new Audio(URL.createObjectURL(wav));
+          sonando.onended = sonando.onerror = () => listo();
+          sonando.play().catch(() => listo());
+        });
+      }
+      if (ok) return;
+    }
+    if (turno === turnoDeHabla) await hablarConLaCompu(frase);
+  } finally { if (turno === turnoDeHabla) cara.classList.remove("hablando"); }
 }
 $("#elegirVoz").value = tipoDeVoz();
 $("#elegirVoz").onchange = () => { guardado.escribir("frankers_voz", $("#elegirVoz").value); piperFallo = false; };
@@ -2248,11 +2262,13 @@ $("#probarVoz").onclick = () => hablar("¡Hola! Soy Frankers. ¿Te gusta cómo h
 function estadoLlamada(txt) { $("#subtitulo").textContent = txt; }
 function escuchar() {
   if (!enLlamada) return;
-  reconocedor = new Reconocer(); reconocedor.lang = "es-AR"; reconocedor.interimResults = false; reconocedor.maxAlternatives = 1;
-  let entendio = false;
-  reconocedor.onresult = async (e) => {
-    entendio = true;
-    const dijo = e.results[0][0].transcript.trim(); if (!dijo) return escuchar();
+  reconocedor = new Reconocer(); reconocedor.lang = "es-AR"; reconocedor.continuous = true; reconocedor.interimResults = true; reconocedor.maxAlternatives = 3;
+  let listo = false, espera = null, parcial = "";
+  const terminar = async (dijo) => {
+    if (listo) return; listo = true; clearTimeout(espera);
+    try { reconocedor.abort(); } catch {}
+    $("#entrada").value = "";
+    dijo = dijo.trim(); if (!dijo) return escuchar();
     cara.classList.remove("escuchando");
     if (/\b(chau|cortar|colgar|corta|colga)\b/i.test(normalizar(dijo))) { agregar({ de: "yo", texto: dijo }); return cortarLlamada("¡Chau! Fue lindo hablar con vos. 💜"); }
     estadoLlamada("📞 Pensando…");
@@ -2264,11 +2280,30 @@ function escuchar() {
     await hablar(nuevas.join(". ") || "Mmm, no sé qué decir.");
     escuchar();
   };
-  reconocedor.onerror = (e) => {
-    if (e.error === "not-allowed" || e.error === "service-not-allowed") { entendio = true; return cortarLlamada("No me dejaron usar el micrófono. Tocá el candadito o el ícono de la cámara, al lado de la dirección, y permití el micrófono."); }
-    if (e.error === "network") { entendio = true; return cortarLlamada("Este navegador no me deja escuchar (Brave no tiene esa parte). Abrí Frankers en Edge o Chrome para llamarme. 📞"); }
+  reconocedor.onresult = (e) => {
+    let final = "", provisorio = "";
+    for (let k = e.resultIndex; k < e.results.length; k++) {
+      const r = e.results[k];
+      // de las opciones que escuchó, elige la que Frankers entiende mejor
+      let mejor = r[0].transcript;
+      if (r.isFinal && r.length > 1) {
+        const op = [...r].map(a => a.transcript);
+        const puntos = op.map(t => { try { const x = pensar(t); return x.puntaje || 0; } catch { return 0; } });
+        const im = puntos.indexOf(Math.max(...puntos)); if (puntos[im] > (puntos[0] || 0) + 0.15) mejor = op[im];
+      }
+      if (r.isFinal) final += mejor + " "; else provisorio += mejor + " ";
+    }
+    if (final) parcial += final;
+    $("#entrada").value = (parcial + provisorio).trim(); // ves lo que te está escuchando
+    clearTimeout(espera);
+    // cuando hacés una pausa de 1 segundo, contesta
+    espera = setTimeout(() => terminar(parcial + provisorio), parcial && !provisorio ? 900 : 1600);
   };
-  reconocedor.onend = () => { if (!entendio && enLlamada) setTimeout(escuchar, 250); }; // si no dijiste nada, sigue escuchando
+  reconocedor.onerror = (e) => {
+    if (e.error === "not-allowed" || e.error === "service-not-allowed") { listo = true; return cortarLlamada("No me dejaron usar el micrófono. Tocá el candadito al lado de la dirección y permití el micrófono."); }
+    if (e.error === "network") { listo = true; return cortarLlamada("Este navegador no me deja escuchar (Brave no tiene esa parte). Abrí Frankers en Edge o Chrome para llamarme. 📞"); }
+  };
+  reconocedor.onend = () => { if (listo || !enLlamada) return; if ((parcial + $("#entrada").value).trim()) terminar($("#entrada").value || parcial); else setTimeout(escuchar, 200); };
   try { reconocedor.start(); cara.classList.add("escuchando"); estadoLlamada("📞 En llamada · te escucho…"); } catch { setTimeout(escuchar, 500); }
 }
 async function llamar() {
@@ -2285,7 +2320,7 @@ async function llamar() {
   escuchar();
 }
 async function cortarLlamada(despedida) {
-  enLlamada = false;
+  enLlamada = false; callar(); $("#entrada").value = "";
   try { reconocedor && reconocedor.abort(); } catch {}
   cara.classList.remove("escuchando");
   $("#btnLlamada").classList.remove("en-llamada"); $("#btnLlamada").innerHTML = '📞 <span class="txt">Llamar</span>';
