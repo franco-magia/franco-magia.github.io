@@ -733,8 +733,9 @@ async function repasoSolo() {
     while (Date.now() - ultimaAccion >= 1500 && !ocupado && !enLlamada && !document.hidden) {
       mostrarRepasando("repasando");
       const lote = []; for (let k = 0; k < 8; k++) lote.push(textos[Math.floor(Math.random() * textos.length)]);
-      // las charlas importantes (saludos y pedidos) se repasan más
-      for (let k = 0; k < 2; k++) lote.push(textos[Math.floor(Math.random() * Math.min(textos.length, 255))]);
+      // las charlas importantes (saludos, "cómo estás", pedidos) se repasan más; si nunca le hablaron, casi solo esas
+      const importantes = historial.some(m => m.de === "yo") ? 2 : 7;
+      for (let k = 0; k < importantes; k++) lote.push(textos[Math.floor(Math.random() * Math.min(textos.length, 255))]);
       cerebro.entrenar(lote, { tasa: 0.015, hasta: Date.now() + 60 });
       vueltas++;
       if (vueltas % 150 === 0) { guardarCerebro(); marcarCambio(); await leerAlgoNuevo(); }
