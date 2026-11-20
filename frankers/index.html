@@ -88,6 +88,7 @@
     .inicio .cara { width: 64px; height: 64px; gap: 11px; }
     .inicio .cara i { width: 11px; height: 17px; border-radius: 6px; }
     .inicio h2 { font-family: "Fredoka", sans-serif; font-weight: 500; font-size: clamp(1.7rem, 5.5vw, 2.6rem); line-height: 1.15; margin: 0; max-width: 22ch; }
+    .nota-inicio { margin: 10px 0 0; color: var(--suave, #b9b3d9); font-size: 1.05rem; max-width: 40ch; }
     .inicio h2 span { background: var(--degrade); -webkit-background-clip: text; background-clip: text; color: transparent; }
     @media (max-width: 560px) { .inicio { flex-direction: column; text-align: center; gap: 14px; } }
     .msg { max-width: 82%; padding: 10px 14px; border-radius: 18px; line-height: 1.5; overflow-wrap: anywhere; animation: aparecer .25s ease-out; }
@@ -240,6 +241,8 @@
       </div>
       <div class="estado" id="ensEstado"></div>
       <div class="fila-botones">
+        <button class="boton" type="button" id="ensArchivo" title="Un renglón por frase: frase=tipo (ej: buenas buenas=saludo) o frase=respuesta">📄 Desde un archivo .txt</button>
+        <input type="file" id="ensArchivoInput" accept=".txt,text/plain" hidden>
         <button class="boton" type="button" id="ensCancelar">Cancelar</button>
         <button class="boton principal" type="button" id="ensGuardar">Enseñar</button>
       </div>
@@ -369,7 +372,7 @@ const RED = { lista: [], vocab: new Map(), W1: null, b1: null, W2: null, b2: nul
 const raizRed = (w) => w.length > 5 ? w.slice(0, 5) : w;
 const palabrasRed = (texto) => [...new Set(normalizar(texto).split(" ").filter(w => w && !["el", "la", "los", "las", "un", "una", "de", "del", "a", "y", "o", "frankers"].includes(w)).map(raizRed))];
 function esCharla(e) { return !/^(qa|dic|x)-/.test(e.id || "") && e.tipo !== "opinion" && e.preguntas.length >= 3; }
-function programarEntrenamiento() { clearTimeout(RED.entrenando); RED.entrenando = setTimeout(entrenarRed, 400); }
+function programarEntrenamiento() { clearTimeout(RED.entrenando); RED.necesitaRepaso = true; RED.entrenando = setTimeout(() => entrenarRed(), 400); }
 function entrenarRed(vueltas = 300) {
   const entradas = [...conocimiento.entradas, ...comunidad, ...ensenadoAca].filter(esCharla)
     .filter(e => !revisar([...e.preguntas, ...e.respuestas].join(" ")).problema);
@@ -1169,8 +1172,12 @@ let ultimoDibujo = null;
 
 // Primero revisa la ortografía, después responde con el texto ya corregido
 function responder(original) {
+  const contradiccion = resolverContradiccion(normalizar(original)); // "¿cambió tu color favorito?" → "sí"
+  if (contradiccion) return { texto: contradiccion };
   original = cambiarReferencias(original);
   anotarCharla(normalizar(original));
+  ultimoMensaje = Date.now();
+  cambiarHumor(normalizar(original), revisar(original).problema); anotarEstado(normalizar(original)); guardarMemoria();
   if (/^\s*analiz/i.test(original)) return responderSinCorregir(original);
   // "jsjsjs" y "xd" son risas
   if (/^\s*((j[sajeiou])+j?|x+d+)\s*$/i.test(original)) original = "jaja";
@@ -1379,6 +1386,66 @@ function cambiarReferencias(original) {
   if (ultimoObjeto && /^(y )?((eso|esto) que es|que es (eso|esto)|y (eso|esto))$/.test(t)) return "que es " + ultimoObjeto;
   return original;
 }
+
+/* ---------- FRANKERS EXTRAS (ideas de Franco) ----------
+   Problemas de cuentas, humor, se acuerda de cómo estabas, contradicciones, curiosidad y repaso. */
+// Problemas: "tengo 3 manzanas y me dan 2, ¿cuántas tengo?"
+const NUM_PALABRA = { cero: 0, uno: 1, una: 1, un: 1, dos: 2, tres: 3, cuatro: 4, cinco: 5, seis: 6, siete: 7, ocho: 8, nueve: 9, diez: 10, once: 11, doce: 12, veinte: 20 };
+function problemaDeCuentas(t) {
+  if (!/\bcuant/.test(t)) return null;
+  const n = (t.match(/\b(\d+|una|uno|dos|tres|cuatro|cinco|seis|siete|ocho|nueve|diez|once|doce|veinte)\b/g) || []).map(w => isNaN(w) ? NUM_PALABRA[w] : Number(w));
+  if (n.length !== 2) return null;
+  if (/\b(perd\w*|com\w*|regal\w*|saqu\w*|rest\w*|se fue\w*|se fueron|tir\w*|quit\w*|di|dio|gast\w*|rompi\w*|vend\w*)\b/.test(t) && !/\bme (dan|dieron|regalaron)\b/.test(t))
+    return n[0] >= n[1] ? `Te quedan ${n[0] - n[1]}, porque ${n[0]} - ${n[1]} = ${n[0] - n[1]}. 🧮` : `Mmm, no podés sacar ${n[1]} si tenías ${n[0]}. ¿Me lo contás de nuevo?`;
+  if (/\b(agarr\w*|me dan|me dieron|me regalaron|compr\w*|sum\w*|otr[oa]s?|gan\w*|junt\w*|encontr\w*|mas)\b/.test(t))
+    return `Tenés ${n[0] + n[1]}, porque ${n[0]} + ${n[1]} = ${n[0] + n[1]}. 🧮`;
+  return null;
+}
+// Humor de Frankers: se pone más contento si lo tratan bien
+memoria.humor = memoria.humor ?? 0.5;
+function cambiarHumor(t, problema) {
+  if (/\b(gracias|te quiero|sos genial|me caes bien|crack|sos un genio|te pasaste|capo)\b/.test(t)) memoria.humor = Math.min(1, memoria.humor + 0.1);
+  if (problema === "insulto" || problema === "bullying") memoria.humor = Math.max(0, memoria.humor - 0.2);
+  memoria.humor = memoria.humor + (0.5 - memoria.humor) * 0.02; // de a poquito vuelve a lo normal
+}
+function conHumor(r) {
+  if (memoria.humor > 0.8 && !/[😄😊💜🤓]\s*$/u.test(r)) return r + " 😄";
+  if (memoria.humor < 0.3) return r.replace(/!+/g, ".").replace(/¡/g, "");
+  return r;
+}
+// Se acuerda de cómo estabas, para preguntarte la próxima vez
+const SENTIR = {
+  triste: /\b(triste|bajonead[oa]|llorar|llore|me salio todo mal|nadie me quiere|me siento sol[oa])\b|😢|😭/,
+  feliz: /\b(feliz|content[oa]|gane|genial|buenisimo|chocho)\b|😄|😊/,
+  enojado: /\b(enojad[oa]|bronca|me pelee|re calient[e])\b|😡/,
+  nervioso: /\b(nervios[oa]|tengo miedo|examen|prueba)\b/,
+};
+function anotarEstado(t) {
+  const s = Object.keys(SENTIR).find(k => SENTIR[k].test(t)); if (!s) return;
+  memoria.estados = [...(memoria.estados || []), { estado: s, fecha: Date.now() }].slice(-30);
+}
+function preocuparse() {
+  const u = (memoria.estados || []).slice(-1)[0];
+  if (!u || Date.now() - u.fecha < 3600000 || Date.now() - u.fecha > 7 * 86400000) return "";
+  return { triste: "La otra vez estabas triste. ¿Hoy cómo estás? 💜", nervioso: "¿Cómo te fue con eso que te ponía nervioso?", enojado: "La última vez estabas enojado. ¿Ya se arregló?" }[u.estado] || "";
+}
+// Contradicciones: "mi color favorito es el azul" … después "es el rojo"
+let datoPendiente = null;
+function resolverContradiccion(t) {
+  if (!datoPendiente) return null;
+  const d = datoPendiente; datoPendiente = null;
+  if (/^(si|sii+|dale|obvio|claro|cambie|ahora si)\b/.test(t)) { memoria.datos[d.clave] = d.nuevo; guardarMemoria(); return `¡Listo! Ahora sé que tu ${d.clave} es ${d.nuevo}. 📝`; }
+  if (/^no\b/.test(t)) return `Bueno, sigo sabiendo que tu ${d.clave} es ${d.viejo}.`;
+  return null;
+}
+// Curiosidad: a veces pregunta más
+const CURIOSIDAD = ["¿Y por qué te gusta eso?", "¿Desde cuándo?", "¿Me contás más?", "¿Y eso cómo es?"];
+// Repaso: si nadie escribe por 20 segundos, la red neuronal practica más (y para si alguien escribe)
+let ultimoMensaje = Date.now();
+setInterval(() => {
+  if (!RED.necesitaRepaso || Date.now() - ultimoMensaje < 20000 || ocupado) return;
+  RED.necesitaRepaso = false; entrenarRed(600);
+}, 5000);
 function responderSinCorregir(original) {
   const t = normalizar(original);
 
@@ -1390,6 +1457,8 @@ function responderSinCorregir(original) {
   if (dePalabras) return { texto: dePalabras };
   const deLaCharla = recordarCharla(t);
   if (deLaCharla) return { texto: deLaCharla };
+  const problema = problemaDeCuentas(t);
+  if (problema) return { texto: problema };
   const tema = TEMAS.find(x => x.re.test(t));
   if (tema) return { texto: tema.texto };
 
@@ -1494,6 +1563,11 @@ function datosPersonales(texto) {
   if (dato && !/^(cual|que|como|quien|sabes|adivina|donde)/.test(t)) {
     const clave = normalizar(dato[1]), valor = (dato[2].startsWith("se") ? "se llama " : "") + dato[3].trim();
     if (clave === "nombre") { memoria.nombre = capitalizar(dato[3].trim().split(" ")[0].toLowerCase()); guardarMemoria(); return rellenar(alAzar(RESP.nombre)); }
+    const viejo = memoria.datos[clave];
+    if (viejo && normalizar(viejo) !== normalizar(valor)) {
+      datoPendiente = { clave, nuevo: valor, viejo };
+      return `Antes me dijiste que tu ${clave} ${viejo.startsWith("se llama") ? "" : "es "}${viejo}. ¿Ahora ${valor.startsWith("se llama") ? valor : "es " + valor}?`;
+    }
     memoria.datos[clave] = valor; guardarMemoria();
     return `¡Anotado! Me voy a acordar de que tu ${clave} ${valor.startsWith("se llama") ? "" : "es "}${valor}. 📝`;
   }
@@ -1829,6 +1903,12 @@ function pintar(lienzo, pedido, semilla) {
       o.dibujar(c, x, y, o.tam * escala * (mar ? .75 : 1) * (.85 + prof * .35), it.color || o.color, r);
     });
   }
+  // Textura: un granito suave para que parezca pintado de verdad
+  try {
+    const img = c.getImageData(0, 0, W, H), d = img.data;
+    for (let k = 0; k < d.length; k += 4) { const n = (r() - 0.5) * 14; d[k] += n; d[k + 1] += n; d[k + 2] += n; }
+    c.putImageData(img, 0, 0);
+  } catch {}
 }
 
 /* ---------- 5. ENSEÑAR ---------- */
@@ -2015,10 +2095,20 @@ function fraseDeInicio() {
   guardado.escribir("frankers-ultima-frase", f);
   return f;
 }
+// Sentido del tiempo: se da cuenta si hace mucho que no venías, y se acuerda de cómo estabas (una vez por visita)
+let avisoDado = false;
+function avisoDeVuelta() {
+  if (avisoDado) return ""; avisoDado = true;
+  const ultima = guardado.leer("frankers-ultima-visita", null), dias = ultima ? Math.floor((Date.now() - ultima) / 86400000) : 0;
+  guardado.escribir("frankers-ultima-visita", Date.now());
+  return [dias >= 3 ? `¡Hace ${dias} días que no venías! Te extrañé.` : "", preocuparse()].filter(Boolean).join(" ");
+}
 function bienvenida() {
   const div = document.createElement("div"); div.className = "inicio"; div.id = "inicio";
   const frase = escaparHTML(fraseDeInicio()).replace(/\[(.+?)\]/g, "<span>$1</span>");
   div.innerHTML = `<div class="cara" aria-hidden="true"><i></i><i></i></div><h2>${frase}</h2>`;
+  const extra = avisoDeVuelta();
+  if (extra) { const p = document.createElement("p"); p.className = "nota-inicio"; p.textContent = extra; div.appendChild(p); }
   chat.appendChild(div);
 }
 
@@ -2038,6 +2128,10 @@ async function enviar(texto) {
     respuesta = responder(texto);
     const consejo = CONSEJOS.find(x => x.re.test(normalizar(texto)));
     if (consejo && !respuesta.dibujo && !respuesta.filtro) respuesta.texto += "\n" + consejo.texto;
+    if (!respuesta.filtro && !respuesta.dibujo && respuesta.texto) {
+      if (/\b(me gusta|me gustan|tengo|fui|hice)\b/.test(normalizar(texto)) && !/\?\s*\S*$/.test(respuesta.texto) && Math.random() < 0.4) respuesta.texto += " " + alAzar(CURIOSIDAD);
+      respuesta.texto = conHumor(respuesta.texto);
+    }
   } catch (e) { console.error(e); respuesta = { texto: "Uy, se me cruzaron los cables. 😵 ¿Probás de nuevo?" }; }
   const { publicar: aprender, ...paraMostrar } = respuesta;
   agregar({ de: "frankers", ...paraMostrar });
@@ -2071,6 +2165,31 @@ $("#ensPreguntas").oninput = $("#ensRespuestas").oninput = () => { // si cambia 
 };
 $("#btnEnsenar").onclick = () => abrirEnsenar();
 $("#ensCancelar").onclick = () => dlgEnsenar.close();
+// Enseñar con un archivo .txt (solo el que vos elegís). Cada renglón: "frase=tipo" (ej: "buenas buenas=saludo")
+// o "frase=respuesta". Pasa por las mismas reglas: nada ofensivo ni falso. Queda en este dispositivo.
+$("#ensArchivo").onclick = () => $("#ensArchivoInput").click();
+$("#ensArchivoInput").onchange = async (e) => {
+  const f = e.target.files[0]; e.target.value = ""; if (!f) return;
+  const estado = $("#ensEstado");
+  if (f.size > 300000) { estado.className = "estado mal"; estado.textContent = "Ese archivo es muy grande. Probá con uno más chico."; return; }
+  const texto = await f.text();
+  let aprendidas = 0, rechazadas = 0;
+  const tipos = [...conocimiento.entradas].filter(esCharla);
+  for (const linea of texto.split(/\r?\n/)) {
+    const i = linea.indexOf("="); if (i < 1) continue;
+    const frase = linea.slice(0, i).trim(), lado = linea.slice(i + 1).trim();
+    if (!frase || !lado || frase.length > 200 || lado.length > 500) { rechazadas++; continue; }
+    if (revisar(frase + "\n" + lado).problema || esFalso(lado) || esFalso(frase) || (/^(si|sí|verdad|cierto)$/i.test(lado) && esFalso(frase + " es verdad"))) { rechazadas++; continue; }
+    const tipo = tipos.find(x => normalizar(x.id) === normalizar(lado) || normalizar(x.id).replace(/-/g, " ") === normalizar(lado));
+    const respuestas = tipo ? tipo.respuestas : [lado];
+    ensenadoAca = ensenadoAca.filter(x => !x.preguntas.some(q => normalizar(q) === normalizar(frase)));
+    ensenadoAca.push({ id: "a" + Date.now().toString(36) + aprendidas, preguntas: [frase], respuestas, tipo: tipo ? tipo.tipo : "hecho", fecha: new Date().toISOString() });
+    aprendidas++;
+  }
+  ensenadoAca = ensenadoAca.slice(-300); guardado.escribir("frankers-ensenado", ensenadoAca); construirIndice();
+  estado.className = aprendidas ? "estado ok" : "estado mal";
+  estado.textContent = aprendidas ? `¡Leí el archivo! Aprendí ${aprendidas} frase${aprendidas > 1 ? "s" : ""}${rechazadas ? ` (y no aprendí ${rechazadas} que no pasaron mis reglas)` : ""}. 📄` : "No encontré frases para aprender. Cada renglón tiene que ser así: frase=tipo (ej: buenas buenas=saludo).";
+};
 $("#ensGuardar").addEventListener("click", async () => {
   const preguntas = $("#ensPreguntas").value.split("\n").map(s => s.trim()).filter(Boolean);
   const respuesta = $("#ensRespuestas").value.replace(/\n{3,}/g, "\n\n").trim();
@@ -2242,7 +2361,7 @@ $("#dlgNombre").addEventListener("cancel", (e) => e.preventDefault()); // hay qu
 // Arranque: lo primero que aparece es la pantalla grande de "¿quién sos?"
 pedirNombre();
 actualizarModo();
-if (historial.length) historial.forEach(mostrar); else bienvenida();
+if (historial.length) { historial.forEach(mostrar); const extra = avisoDeVuelta(); if (extra) agregar({ de: "frankers", texto: extra }); } else bienvenida();
 cartelActualizando(true);
 cargarConocimiento().then(async () => { cargarComunidad(); await cargarPalabras(); cartelActualizando(false); revisarVersion(); });
 setInterval(revisarVersion, 30000);
