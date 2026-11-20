@@ -841,6 +841,7 @@ function corregirOrtografia(texto) {
   todas.forEach((w, i) => {
     if (avisos.length >= 2) return;
     const n = normalizar(w);
+    if (i > 0 && ["significa", "decir", "dice"].includes(normalizar(todas[i - 1]))) return; // "¿qué significa X?": X se respeta tal cual
     if (ABREVIATURAS[n]) { // "qe", "xq", "tmb"…
       const forma = (n === "xq" || n === "pq" || n === "porq") && i === 0 ? "por qué" : ABREVIATURAS[n]; // al principio es pregunta
       corregido = corregido.replace(new RegExp("(^|[^A-Za-zÁÉÍÓÚÜÑáéíóúüñ])" + w + "(?=$|[^A-Za-zÁÉÍÓÚÜÑáéíóúüñ])"), "$1" + forma);
