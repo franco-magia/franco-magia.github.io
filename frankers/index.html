@@ -2055,7 +2055,7 @@ function escaparHTML(s) { return s.replace(/[&<>"']/g, ch => ({ "&": "&amp;", "<
 function mostrar(m) {
   const div = document.createElement("div");
   div.className = "msg " + m.de;
-  div.innerHTML = escaparHTML(m.texto).replace(/\n/g, "<br>");
+  div.innerHTML = escaparHTML(m.texto).replace(/\n/g, "<br>").replace(/(https:\/\/es\.wikipedia\.org\/wiki\/[^\s<"]+)/g, '<a href="$1" target="_blank" rel="noopener">Wikipedia</a>');
   if (m.dibujo) {
     const lienzo = document.createElement("canvas"); lienzo.width = 640; lienzo.height = 448;
     lienzo.setAttribute("role", "img"); lienzo.setAttribute("aria-label", "Dibujo de " + m.dibujo.prompt);
@@ -2112,6 +2112,54 @@ function bienvenida() {
   chat.appendChild(div);
 }
 
+
+/* ---------- FRANKERS BUSCA EN INTERNET (Wikipedia, idea de Franco) ----------
+   Si no sabe algo, o si le decís "buscá…", busca en Wikipedia en español, se queda con las 2 primeras
+   oraciones del resumen y lo aprende en este dispositivo, así la próxima vez ya lo sabe.
+   Lo que encuentra pasa por las mismas reglas que todo lo demás: si no es para chicos, no lo muestra. */
+const busquedasWiki = guardado.leer("frankers_busquedas", {}) || {};
+function temaABuscar(texto) {
+  const m = texto.trim().match(/^(?:y\s+)?(?:qu[eé]\s+es|qui[eé]n\s+es|qui[eé]n\s+fue|qu[eé]\s+son|qu[eé]\s+fue|busc[aá]me|busc[aá]|busca|contame\s+sobre|qu[eé]\s+sab[eé]s\s+de)\s+(?:un\s+|una\s+|el\s+|la\s+|los\s+|las\s+)?(.+?)[?¿!.\s]*$/i);
+  if (!m) return null;
+  const tema = m[1].replace(/^(en internet|en wikipedia)\s+/i, "").replace(/\s+(en internet|en wikipedia)$/i, "").trim();
+  return tema.length >= 2 && tema.length <= 60 && tema.split(" ").length <= 6 ? tema : null;
+}
+async function buscarEnWikipedia(tema) {
+  const clave = normalizar(tema);
+  if (busquedasWiki[clave]) return busquedasWiki[clave];
+  const conTiempo = (url) => Promise.race([fetch(url).then(r => r.json()), new Promise((_, no) => setTimeout(() => no(new Error("tardó mucho")), 8000))]);
+  const r1 = await conTiempo("https://es.wikipedia.org/w/api.php?action=query&list=search&format=json&origin=*&srlimit=1&srsearch=" + encodeURIComponent(tema));
+  const pagina = r1.query?.search?.[0]?.title; if (!pagina) return null;
+  const r2 = await conTiempo("https://es.wikipedia.org/api/rest_v1/page/summary/" + encodeURIComponent(pagina.replace(/ /g, "_")));
+  if (!r2.extract || r2.type === "disambiguation") return null;
+  const limpio = r2.extract.replace(/\s*\([^()]*\)/g, "").replace(/\s+/g, " ").trim(); // saca lo que está entre paréntesis (pronunciación, fechas…)
+  const corto = (limpio.match(/[^.!?]+[.!?]+/g) || [limpio]).slice(0, 2).join(" ").trim();
+  const info = { texto: corto, pagina: r2.titles?.normalized || pagina, link: r2.content_urls?.desktop?.page || "https://es.wikipedia.org/wiki/" + encodeURIComponent(pagina) };
+  busquedasWiki[clave] = info; guardado.escribir("frankers_busquedas", busquedasWiki);
+  return info;
+}
+async function buscarSiHaceFalta(texto, respuesta) {
+  const tema = temaABuscar(texto); if (!tema) return;
+  const pidioBuscar = /^\s*busc/i.test(texto);
+  const noSabe = respuesta.desconocido || respuesta.ensenar || /\b(no (lo )?s[eé]|no aprend\w*|me la ganaste|no tengo idea|todav[ií]a no s[eé])\b/i.test(respuesta.texto || "");
+  if (!pidioBuscar && !noSabe) return;
+  if (revisar(tema).problema || revisar(texto).problema) return; // nada de buscar cosas no aptas ni datos personales
+  agregar({ de: "frankers", texto: `Dejame buscar "${tema}" en internet… 🔎` });
+  try {
+    const info = await buscarEnWikipedia(tema);
+    if (!info || !info.texto || revisar(info.texto).problema) {
+      agregar({ de: "frankers", texto: "Busqué, pero no encontré algo que te pueda contar sobre eso. ¿Me lo enseñás vos?" }); return;
+    }
+    // Lo aprende en este dispositivo, así la próxima vez ya lo sabe
+    const preguntas = [`que es ${tema}`, `quien es ${tema}`, `que son ${tema}`, `contame sobre ${tema}`, `que sabes de ${tema}`];
+    ensenadoAca = ensenadoAca.filter(x => !x.preguntas.some(q => preguntas.some(n => normalizar(n) === normalizar(q))));
+    ensenadoAca.push({ id: "w" + Date.now().toString(36), preguntas, respuestas: [`Según Wikipedia: ${info.texto}`], tipo: "hecho", fuente: info.link, fecha: new Date().toISOString() });
+    ensenadoAca = ensenadoAca.slice(-300); guardado.escribir("frankers-ensenado", ensenadoAca); construirIndice();
+    agregar({ de: "frankers", texto: `¡Ya volví! Encontré esto en Wikipedia: ${info.texto}\n📖 Fuente: ${info.link}` });
+  } catch {
+    agregar({ de: "frankers", texto: "Uy, no pude conectarme a internet. Probá de nuevo en un ratito." });
+  }
+}
 let ocupado = false;
 async function enviar(texto) {
   texto = texto.trim(); if (!texto || ocupado) return;
@@ -2135,6 +2183,7 @@ async function enviar(texto) {
   } catch (e) { console.error(e); respuesta = { texto: "Uy, se me cruzaron los cables. 😵 ¿Probás de nuevo?" }; }
   const { publicar: aprender, ...paraMostrar } = respuesta;
   agregar({ de: "frankers", ...paraMostrar });
+  if (!respuesta.filtro && !respuesta.dibujo) await buscarSiHaceFalta(texto, respuesta);
   if (aprender) {
     const r = await publicar(aprender);
     if (!r.ok) agregar({ de: "frankers", texto: "No pude guardarlo para todos: " + r.motivo });
