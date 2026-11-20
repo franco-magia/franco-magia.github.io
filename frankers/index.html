@@ -51,6 +51,11 @@
     @keyframes parpadear { 0%, 92%, 100% { transform: scaleY(1); } 95% { transform: scaleY(.1); } }
     .cara.pensando i { animation: mirar .6s infinite alternate ease-in-out; }
     @keyframes mirar { from { transform: translateX(-3px); } to { transform: translateX(3px); } }
+    .cara.escuchando { animation: escuchar 1.4s infinite ease-in-out; }
+    @keyframes escuchar { 50% { box-shadow: 0 0 0 10px rgba(79, 216, 255, .25), 0 0 34px rgba(120, 110, 255, .8); } }
+    .cara.hablando i { animation: hablarOjos .25s infinite alternate ease-in-out; }
+    @keyframes hablarOjos { to { transform: scaleY(.55); } }
+    #btnLlamada.en-llamada { background: linear-gradient(135deg, #ff5f7a, #ff2d55); color: #fff; border-color: transparent; }
     .nombre h1 { font-family: "Fredoka", sans-serif; font-size: 1.35rem; margin: 0; line-height: 1.1; }
     .nombre h1 span { background: var(--degrade); -webkit-background-clip: text; background-clip: text; color: transparent; }
     .nombre small { color: var(--suave); font-size: .82rem; }
@@ -173,6 +178,7 @@
       </div>
       <div class="acciones">
         <button class="boton principal" id="btnEnsenar" hidden title="Enseñarle algo nuevo">🎓 <span class="txt">Enseñar</span></button>
+        <button class="boton" id="btnLlamada" title="Hablar con Frankers en voz alta">📞 <span class="txt">Llamar</span></button>
         <button class="boton" id="btnSaber" title="Todo lo que sabe">📚 <span class="txt">Lo que sé</span></button>
         <button class="boton" id="btnLimpiar" title="Borrar la charla">🧹</button>
       </div>
@@ -1455,6 +1461,7 @@ function responderSinCorregir(original) {
   const dePalabras = buscarPalabra(original);
   anotarContexto(t);
   if (dePalabras) return { texto: dePalabras };
+  if (/^(cambia|cambiame|cambiar|otra) (la |de )?voz$/.test(t)) return { texto: cambiarVoz() };
   const deLaCharla = recordarCharla(t);
   if (deLaCharla) return { texto: deLaCharla };
   const problema = problemaDeCuentas(t);
@@ -2160,6 +2167,95 @@ async function buscarSiHaceFalta(texto, respuesta) {
     agregar({ de: "frankers", texto: "Uy, no pude conectarme a internet. Probá de nuevo en un ratito." });
   }
 }
+
+/* ---------- VOZ Y MODO LLAMADA (idea de Franco) ----------
+   📞 Llamar: Frankers te saluda, te escucha, contesta en voz alta y te vuelve a escuchar.
+   Para cortar, decí "chau" o tocá el botón. La voz es la que trae tu navegador (Edge tiene voces muy naturales).
+   "Cambiá la voz" prueba otra voz. */
+const Reconocer = window.SpeechRecognition || window.webkitSpeechRecognition;
+let enLlamada = false, reconocedor = null;
+function vocesEnEspanol() { return (window.speechSynthesis?.getVoices() || []).filter(v => /^es\b/i.test(v.lang)); }
+function puntajeVoz(v) {
+  return (/es[-_]AR/i.test(v.lang) ? 6 : /es[-_](419|US|MX|UY|CL|CO)/i.test(v.lang) ? 2 : 0) + (/natural|online|neural/i.test(v.name) ? 5 : 0) + (/google/i.test(v.name) ? 1 : 0);
+}
+function vozElegida() {
+  const voces = vocesEnEspanol(); if (!voces.length) return null;
+  const guardada = guardado.leer("frankers-voz", null), esa = voces.find(v => v.name === guardada);
+  return esa || [...voces].sort((a, b) => puntajeVoz(b) - puntajeVoz(a))[0];
+}
+function cambiarVoz() {
+  const voces = vocesEnEspanol(); if (voces.length < 2) return "Tu navegador tiene una sola voz en español. En Edge hay más voces, y algunas suenan muy naturales.";
+  const actual = vozElegida(), siguiente = voces[(voces.indexOf(actual) + 1) % voces.length];
+  guardado.escribir("frankers-voz", siguiente.name);
+  return `¡Listo! Ahora hablo con la voz "${siguiente.name.replace(/^Microsoft |^Google /, "").replace(/ - .*$/, "")}". Si querés otra, decime "cambiá la voz".`;
+}
+function paraDecir(texto) {
+  return texto.split("\n").filter(l => !/^📖|https?:\/\//.test(l)).join(". ")
+    .replace(/[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}\u{FE0F}]/gu, "").replace(/×/g, " por ").replace(/÷/g, " dividido ").replace(/=/g, " es ").replace(/\s+/g, " ").trim();
+}
+function hablar(texto) {
+  return new Promise(listo => {
+    if (!window.speechSynthesis) return listo();
+    const frase = paraDecir(texto); if (!frase) return listo();
+    const u = new SpeechSynthesisUtterance(frase), voz = vozElegida();
+    if (voz) { u.voice = voz; u.lang = voz.lang; } else u.lang = "es-AR";
+    u.pitch = 1.15; u.rate = 1.02;
+    cara.classList.add("hablando");
+    const fin = () => { cara.classList.remove("hablando"); clearTimeout(seguro); listo(); };
+    const seguro = setTimeout(fin, 4000 + frase.length * 120); // por si el navegador no avisa que terminó
+    u.onend = fin; u.onerror = fin;
+    speechSynthesis.cancel(); speechSynthesis.speak(u);
+  });
+}
+function estadoLlamada(txt) { $("#subtitulo").textContent = txt; }
+function escuchar() {
+  if (!enLlamada) return;
+  reconocedor = new Reconocer(); reconocedor.lang = "es-AR"; reconocedor.interimResults = false; reconocedor.maxAlternatives = 1;
+  let entendio = false;
+  reconocedor.onresult = async (e) => {
+    entendio = true;
+    const dijo = e.results[0][0].transcript.trim(); if (!dijo) return escuchar();
+    cara.classList.remove("escuchando");
+    if (/\b(chau|cortar|colgar|corta|colga)\b/i.test(normalizar(dijo))) { agregar({ de: "yo", texto: dijo }); return cortarLlamada("¡Chau! Fue lindo hablar con vos. 💜"); }
+    estadoLlamada("📞 Pensando…");
+    const antes = historial.length;
+    await enviar(dijo);
+    const nuevas = historial.slice(antes).filter(m => m.de === "frankers" && m.texto).map(m => m.texto);
+    if (!enLlamada) return;
+    estadoLlamada("📞 Hablando…");
+    await hablar(nuevas.join(". ") || "Mmm, no sé qué decir.");
+    escuchar();
+  };
+  reconocedor.onerror = (e) => {
+    if (e.error === "not-allowed" || e.error === "service-not-allowed") { entendio = true; return cortarLlamada("No me dejaron usar el micrófono. Tocá el candadito o el ícono de la cámara, al lado de la dirección, y permití el micrófono."); }
+    if (e.error === "network") { entendio = true; return cortarLlamada("Este navegador no me deja escuchar (Brave no tiene esa parte). Abrí Frankers en Edge o Chrome para llamarme. 📞"); }
+  };
+  reconocedor.onend = () => { if (!entendio && enLlamada) setTimeout(escuchar, 250); }; // si no dijiste nada, sigue escuchando
+  try { reconocedor.start(); cara.classList.add("escuchando"); estadoLlamada("📞 En llamada · te escucho…"); } catch { setTimeout(escuchar, 500); }
+}
+async function llamar() {
+  if (!Reconocer || navigator.brave) {
+    agregar({ de: "frankers", texto: "El modo llamada funciona en Edge o Chrome. En este navegador no puedo escucharte. 📞" }); return;
+  }
+  enLlamada = true;
+  $("#btnLlamada").classList.add("en-llamada"); $("#btnLlamada").innerHTML = '🔴 <span class="txt">Cortar</span>';
+  const inicio = $("#inicio"); if (inicio) inicio.remove();
+  const saludo = `¡Hola${memoria.nombre ? " " + memoria.nombre : ""}! Soy Frankers, te escucho.`;
+  agregar({ de: "frankers", texto: saludo + " 📞" });
+  estadoLlamada("📞 Hablando…");
+  await hablar(saludo);
+  escuchar();
+}
+async function cortarLlamada(despedida) {
+  enLlamada = false;
+  try { reconocedor && reconocedor.abort(); } catch {}
+  cara.classList.remove("escuchando");
+  $("#btnLlamada").classList.remove("en-llamada"); $("#btnLlamada").innerHTML = '📞 <span class="txt">Llamar</span>';
+  if (despedida) { agregar({ de: "frankers", texto: despedida }); await hablar(despedida); }
+  cartelActualizando(false);
+}
+$("#btnLlamada").onclick = () => enLlamada ? cortarLlamada("¡Chau!") : llamar();
+if (window.speechSynthesis) speechSynthesis.onvoiceschanged = () => {}; // hace que el navegador cargue las voces
 let ocupado = false;
 async function enviar(texto) {
   texto = texto.trim(); if (!texto || ocupado) return;
