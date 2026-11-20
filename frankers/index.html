@@ -774,17 +774,17 @@ async function leerAlgoNuevo() {
       actividad("📺", `Miré el video «${v.titulo}» de Franclips (leí ${oraciones.length} frases de sus subtítulos)`);
     } else { // palabras del diccionario que todavía no usa
       const sin = [...gramatica.base.keys()].filter(w => !cerebro.indice.has(w) && /^[a-záéíóúüñ]{3,}$/.test(w)).slice(0, 4);
-      for (const w of sin) { mostrarRepasando(`buscando «${w}» en el diccionario`); await aprenderPalabra(w); if (Date.now() - ultimaAccion < 1500) return; }
+      for (const w of sin) { mostrarRepasando(`buscando «${w}» en el diccionario`); await aprenderPalabra(w); if (Date.now() - ultimaAccion < 1000) return; }
     }
   } catch {}
 }
 async function repasoSolo() {
-  if (repasando || !cerebro || !gramatica || entrenando || ocupado || enLlamada || document.hidden || Date.now() - ultimaAccion < 1500) return;
+  if (repasando || !cerebro || !gramatica || entrenando || ocupado || enLlamada || document.hidden || Date.now() - ultimaAccion < 1000) return;
   repasando = true;
   try {
     const textos = [...await cargarTextosGrandes(), ...aprendidoAca];
     let vueltas = 0;
-    while (Date.now() - ultimaAccion >= 1500 && !ocupado && !enLlamada && !document.hidden) {
+    while (Date.now() - ultimaAccion >= 1000 && !ocupado && !enLlamada && !document.hidden) {
       mostrarRepasando("repasando");
       const lote = []; for (let k = 0; k < 8; k++) lote.push(textos[Math.floor(Math.random() * textos.length)]);
       // las charlas importantes (saludos, "cómo estás", pedidos) se repasan más; si nunca le hablaron, casi solo esas
@@ -798,7 +798,7 @@ async function repasoSolo() {
     guardarCerebro(); marcarCambio();
   } finally { repasando = false; mostrarRepasando(null); }
 }
-setInterval(repasoSolo, 1000);
+setInterval(repasoSolo, 250); // apenas pasa 1 segundo sin que le hables, se pone a aprender
 // Modo creador: cada 10 minutos, si aprendió algo, lo publica solo para todo el mundo
 setInterval(async () => {
   if (!token || !hayCambios || Date.now() - ultimaPublicacion < 600000 || !cerebro) return;
