@@ -222,7 +222,15 @@
     /* Carita chiquita en el chat (cuando le pedís "ponete triste") */
     .msg .ll-cara { transform: scale(.55); transform-origin: left top; margin: 8px 0 -60px 40px; width: 150px; height: 150px; }
     .msg .ll-cara .grande-cara { box-shadow: 0 0 40px rgba(138, 92, 255, .5); }
-    .grande-cara, .grande-cara i, .ceja, .ojera { transition: transform 1s cubic-bezier(.34, 1.2, .64, 1), opacity .9s ease, height .8s ease, border-radius .8s ease; }
+    .grande-cara, .grande-cara i, .ceja, .ojera { transition: transform 1.4s cubic-bezier(.34, 1.15, .64, 1), opacity 1.2s ease, height 1.1s ease, border-radius 1.1s ease; }
+    /* Mira para los lados y mueve los ojos (cuando está tranquilo) */
+    .ll-cara[data-cara="normal"] .grande-cara i { transform: translate(var(--ojoX, 0px), var(--ojoY, 0px)); transition: transform .7s cubic-bezier(.4, 0, .2, 1); }
+    /* Lágrimas que se caen cuando está triste */
+    .lagrima { position: absolute; top: 104px; width: 9px; height: 13px; border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%; background: linear-gradient(#bfe6ff, #4fa0ff); opacity: 0; }
+    .lagrima.izq { left: 50px; } .lagrima.der { right: 50px; }
+    .ll-cara[data-cara="triste"] .lagrima.izq { animation: caer 2.6s ease-in 1.6s infinite; }
+    .ll-cara[data-cara="triste"] .lagrima.der { animation: caer 3.1s ease-in 2.6s infinite; }
+    @keyframes caer { 0% { opacity: 0; transform: translateY(0) scale(.4); } 15% { opacity: 1; transform: translateY(2px) scale(1); } 80% { opacity: .9; transform: translateY(44px) scale(.9); } 100% { opacity: 0; transform: translateY(56px) scale(.6); } }
     /* Pensar: primero aparece la mano cerrada abajo, sube despacito y se convierte en la pistolita en la pera */
     .mano.subir { bottom: -70px; right: 10px; transform: translateY(20px) rotate(0); }
     .mano.pensar { bottom: -14px; right: 6px; transform: rotate(-35deg) translateY(18px) scale(.8); transition-delay: 0s; }
@@ -332,7 +340,7 @@
     <div class="ll-arriba"><span class="ll-vivo">● En vivo</span><b>Frankers</b><span id="llReloj">00:00</span></div>
     <div class="ll-centro">
       <div class="ll-cara" id="llCara" data-cara="normal">
-        <div class="cara grande-cara" aria-hidden="true"><b class="ceja"></b><i></i><i></i><span class="ojera izq"></span><span class="ojera der"></span></div>
+        <div class="cara grande-cara" aria-hidden="true"><b class="ceja"></b><i></i><i></i><span class="ojera izq"></span><span class="ojera der"></span><span class="lagrima izq"></span><span class="lagrima der"></span></div>
         <span class="mano subir" aria-hidden="true"><i class="tinte">✊</i></span>
         <span class="mano pensar" aria-hidden="true"><i class="tinte">👉</i></span>
         <span class="mano puno izq" aria-hidden="true"><i class="tinte">✊</i></span><span class="mano puno der" aria-hidden="true"><i class="tinte">✊</i></span>
@@ -616,7 +624,7 @@ async function cargarTextosGrandes() {
   return textosGrandes;
 }
 /* ---------- DICCIONARIO Y GRAMÁTICA (gramatica.js + diccionario.json) ---------- */
-let gramatica = null, emocion = "normal"; // emocion: cómo se siente Frankers con lo que va a decir (para la cara de la llamada)
+let gramatica = null, emocion = "normal", ordenDeCara = false; // emocion: cómo se siente Frankers con lo que va a decir (para la cara de la llamada)
 let aprendido = { palabras: {}, significados: {}, temas: {}, videos: [], ...guardado.leer("frankers-aprendido", {}) }; // lo que buscó en Wiktionary y Wikipedia
 const guardarAprendido = () => guardado.escribir("frankers-aprendido", aprendido);
 async function cargarDiccionario() {
@@ -829,7 +837,7 @@ function responder(original) {
   const orden = t.match(/^(?:frankers\s+)?(?:pone(?:te)?|poner(?:te)?|hace(?:te)?|estate|pone cara de|hace cara de|cara de)\s+(?:el\s+|la\s+|una?\s+)?(?:cara\s+(?:de\s+)?)?(triste|feliz|contento|contenta|alegre|pensativo|pensativa|normal)\b/) || (/^(pensa|pensa un poco|pensa algo|ponete a pensar)$/.test(t) && [0, "pensativo"]);
   if (orden) {
     const c = /triste/.test(orden[1]) ? "triste" : /pensativ/.test(orden[1]) ? "pensando" : /normal/.test(orden[1]) ? "normal" : "alegre";
-    emocion = c;
+    emocion = c; ordenDeCara = true;
     actividad("🎭", `Me pongo ${c === "alegre" ? "feliz" : c === "pensando" ? "a pensar" : c}`);
     return { texto: { triste: "Así me pongo cuando estoy triste… 😢", alegre: "¡Ah! ¡Así me pongo cuando estoy feliz! 🎉", pensando: "Mmm… dejame pensar… 🤔", normal: "Listo, vuelvo a mi cara de siempre. 🙂" }[c], cara: c };
   }
@@ -1367,7 +1375,7 @@ function mostrar(m) {
     otra.onclick = () => { ultimoDibujo = m.dibujo.prompt; enviar("otra"); };
     extra.append(bajar, otra); div.appendChild(extra);
   }
-  if (m.cara) {
+  if (m.cara && !enLlamada) {
     const plantilla = document.querySelector("#llCara"), copia = plantilla.cloneNode(true);
     copia.removeAttribute("id"); copia.dataset.cara = "normal"; div.appendChild(copia);
     setTimeout(() => { copia.dataset.cara = m.cara; if (m.cara === "pensando") setTimeout(() => copia.querySelector(".mano.pensar").classList.add("tocando"), 2200); if (m.cara === "alegre") copia.classList.add("festejo"); }, 60);
@@ -1511,6 +1519,15 @@ function estadoLlamada(txt) { $("#llEstado").textContent = txt; }
 function textoLlamada(quien, txt) { const c = $("#llTexto"); c.className = "ll-texto " + quien; c.textContent = txt; }
 function modoLlamada(m) { $("#pantallaLlamada").dataset.modo = m; } // escuchando | pensando | hablando | silencio
 let tocarPera = null;
+// Personalidad: a veces mira para los lados, para arriba o te mira a vos
+setInterval(() => {
+  for (const el of document.querySelectorAll(".ll-cara")) {
+    if (el.dataset.cara !== "normal" || !el.offsetParent) continue;
+    const r = Math.random();
+    const [x, y] = r < 0.45 ? [0, 0] : r < 0.65 ? [-9, 0] : r < 0.85 ? [9, 0] : r < 0.93 ? [0, -6] : [6, 4];
+    el.style.setProperty("--ojoX", x + "px"); el.style.setProperty("--ojoY", y + "px");
+  }
+}, 1800);
 function caraLlamada(c) { // normal | pensando | alegre | triste (cambia suave, sin saltos)
   const el = $("#llCara"); if (!el || el.dataset.cara === c) return;
   el.dataset.cara = c;
@@ -1596,7 +1613,8 @@ function escuchar() {
     if (emocion === "alegre") { textoLlamada("frankers", "¡Ah!"); await hablar("¡Ah!"); }
     textoLlamada("frankers", dice);
     await hablar(dice);
-    if (emocion !== "triste") caraLlamada("normal");
+    if (ordenDeCara) { ordenDeCara = false; await new Promise(r => setTimeout(r, 4000)); } // si le pediste una cara, la mantiene un ratito
+    if (emocion !== "triste" || !enLlamada) caraLlamada("normal");
     if (enLlamada) escuchar();
   };
   reconocedor.onresult = (e) => {
