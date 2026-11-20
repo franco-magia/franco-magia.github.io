@@ -297,8 +297,9 @@
     .extra.ondas i { position: absolute; top: 50%; right: 0; border: 4px solid #4fd8ff; border-color: transparent transparent transparent #4fd8ff; border-radius: 50%; transform: translateY(-50%); opacity: .8; animation: onda 1.4s ease-out infinite; }
     .extra.ondas i:nth-child(1) { width: 20px; height: 26px; } .extra.ondas i:nth-child(2) { width: 34px; height: 46px; animation-delay: .25s; } .extra.ondas i:nth-child(3) { width: 48px; height: 66px; animation-delay: .5s; }
     @keyframes onda { 0% { opacity: 0; } 30% { opacity: .9; } 100% { opacity: 0; } }
-    .mano.emo { top: 110px; } .mano.emo.izq { left: -58px; } .mano.emo.der { right: -58px; }
-    .mano.emo.solo { left: 50%; right: auto; margin-left: -22px; top: 150px; }
+    .mano.emo { top: 110px; transition: opacity .7s ease; }
+    .mano.emo.aplaude .tinte { animation: arcoiris 4s linear infinite, aplaudir .32s ease-in-out infinite !important; }
+    @keyframes aplaudir { 50% { transform: translateX(11px); } }
     .ll-cara[data-emo] .mano.emo.activa { opacity: 1; }
     .ll-cara[data-emo] .grande-cara i { transition: transform .5s ease, height .5s ease, border-radius .5s ease; }
     /* 1. Enojada */
@@ -312,7 +313,6 @@
     .ll-cara[data-emo="sorprendida"] .boca { opacity: 1; width: 18px; height: 20px; margin-left: -9px; border: 4px solid #fff; border-radius: 50%; }
     .ll-cara[data-emo="sorprendida"] { animation: saltoChico .7s ease; }
     @keyframes saltoChico { 40% { transform: translateY(-18px); } 70% { transform: translateY(2px); } }
-    .ll-cara[data-emo="sorprendida"] .mano.emo { top: -20px; }
     /* 3. Asustada */
     .ll-cara[data-emo="asustada"] .grande-cara { animation: temblar .12s linear infinite; transform: scale(.88); }
     @keyframes temblar { 25% { margin-left: -2px; } 75% { margin-left: 2px; } }
@@ -344,7 +344,6 @@
     .ll-cara[data-emo="confundida"] .boca { opacity: 1; height: 0; width: 22px; margin-left: -8px; border-width: 4px 0 0 0; border-radius: 0; transform: rotate(-12deg); }
     .ll-cara[data-emo="confundida"] .signo { opacity: 1; animation: signo 1.8s ease-in-out; }
     @keyframes signo { 0% { transform: translateY(10px) scale(.5); } 30% { transform: translateY(0) scale(1.1); } 60% { transform: rotate(-10deg); } 100% { transform: rotate(8deg); } }
-    .ll-cara[data-emo="confundida"] .mano.emo { top: 140px; }
     /* 9. Emocionada */
     .ll-cara[data-emo="emocionada"] { animation: saltitos 1.8s ease; }
     @keyframes saltitos { 15%, 45%, 75% { transform: translateY(-20px); } 30%, 60%, 90% { transform: translateY(0); } }
@@ -352,14 +351,11 @@
     .ll-cara[data-emo="emocionada"] .boca { opacity: 1; width: 34px; height: 16px; margin-left: -17px; }
     .ll-cara[data-emo="emocionada"] .brillos { opacity: 1; } .ll-cara[data-emo="emocionada"] .brillos i { animation: brillar .6s ease-in-out infinite alternate; }
     @keyframes brillar { from { transform: scale(.4) rotate(0); opacity: .4; } to { transform: scale(1.2) rotate(45deg); opacity: 1; } }
-    .ll-cara[data-emo="emocionada"] .mano.emo { top: -20px; }
     /* 10. Riéndose */
     .ll-cara[data-emo="riendose"] .grande-cara i { height: 12px !important; background: transparent !important; border: 4px solid #fff; border-bottom: 0; border-radius: 14px 14px 0 0; width: 22px !important; }
     .ll-cara[data-emo="riendose"] .boca { opacity: 1; width: 36px; height: 18px; margin-left: -18px; background: rgba(255,255,255,.25); }
     .ll-cara[data-emo="riendose"] .grande-cara { animation: reir .3s ease-in-out 6; }
     @keyframes reir { 50% { transform: translateY(-7px); } }
-    .ll-cara[data-emo="riendose"] .mano.emo .tinte { animation: arcoiris 4s linear infinite, aplaudir .3s ease-in-out infinite; }
-    @keyframes aplaudir { 50% { transform: scale(.8); } }
     /* 11. Orgullosa */
     .ll-cara[data-emo="orgullosa"] .grande-cara { transform: translateY(-8px) rotate(-4deg); box-shadow: 0 0 60px rgba(255, 220, 120, .7); }
     .ll-cara[data-emo="orgullosa"] .boca { opacity: 1; width: 40px; height: 18px; margin-left: -20px; }
@@ -406,14 +402,12 @@
     @keyframes prender { 0% { opacity: 0; transform: scale(.4); } 30% { opacity: 1; transform: scale(1.15); } 100% { transform: scale(1); } }
     .ll-cara[data-emo="aprendiendo"] .grande-cara i { transform: translateY(-6px); }
     .ll-cara[data-emo="aprendiendo"] .boca { opacity: 1; width: 16px; height: 16px; margin-left: -8px; border-width: 4px; border-radius: 50%; }
-    .ll-cara[data-emo="aprendiendo"] .mano.emo { top: -10px; }
     /* 22. Saludando y 23. Despidiéndose */
     .ll-cara[data-emo="saludando"] .boca, .ll-cara[data-emo="despidiendo"] .boca { opacity: 1; width: 32px; height: 14px; margin-left: -16px; }
     .ll-cara[data-emo="saludando"] .mano.emo .tinte, .ll-cara[data-emo="despidiendo"] .mano.emo .tinte { transform-origin: 70% 90%; animation: arcoiris 4s linear infinite, saludar .45s ease-in-out infinite alternate; }
     @keyframes saludar { from { transform: rotate(-18deg); } to { transform: rotate(18deg); } }
     .ll-cara[data-emo="despidiendo"] { animation: achicarse 1.8s ease-in-out; }
     @keyframes achicarse { 60% { transform: scale(.82); opacity: .8; } 100% { transform: scale(1); } }
-    .ll-cara[data-emo="saludando"] .mano.emo, .ll-cara[data-emo="despidiendo"] .mano.emo { top: 30px; }
     @media (prefers-reduced-motion: reduce) { .ll-cara *, .ll-cara { animation: none !important; } }
     .ll-estado { font-size: 1rem; color: #cfc8ff; min-height: 1.3em; }
     .ll-texto { font-family: "Fredoka", sans-serif; font-size: clamp(1.2rem, 3.6vw, 1.9rem); line-height: 1.35; max-width: 760px; min-height: 2.7em; max-height: 34vh; overflow: auto; }
@@ -988,10 +982,10 @@ function responder(original) {
   if (control.problema) { actividad("🛡️", `Mi filtro frenó el mensaje (${control.problema})`); if (/tristeza|autocuidado/.test(control.problema)) emocion = "triste"; return { texto: control.msg, filtro: true }; }
   // Órdenes de caras: "ponete triste", "ponete feliz", "pensá"
   const orden = t.match(/^(?:frankers\s+)?(?:pone(?:te)?|poner(?:te)?|hace(?:te)?|estate|pone cara de|hace cara de|cara de)\s+(?:el\s+|la\s+|una?\s+)?(?:cara\s+(?:de\s+)?)?(triste|feliz|contento|contenta|alegre|pensativo|pensativa|normal)\b/) || (/^(pensa|pensa un poco|pensa algo|ponete a pensar)$/.test(t) && [0, "pensativo"]);
-  const ordenEmo = t.match(/^(?:frankers\s+)?(?:pone(?:te)?|poner(?:te)?|hace(?:te)?|estate|pone cara de|hace cara de|cara de)\s+(?:el\s+|la\s+|una?\s+)?(?:cara\s+(?:de\s+)?)?(enojad[oa]|sorprendid[oa]|asustad[oa]|nervios[oa]|aburrid[oa]|cansad[oa]|dormid[oa]|curios[oa]|confundid[oa]|emocionad[oa]|riendo|reite|orgullos[oa]|avergonzad[oa]|colorad[oa]|carinos[oa]|preocupad[oa]|agradecid[oa])\b/) || t.match(/^(reite|salud[a]|despedite|dibuja algo)$/);
+  const ordenEmo = t.match(/^(?:frankers\s+)?(?:pone(?:te)?|poner(?:te)?|hace(?:te)?|estate|pone cara de|hace cara de|cara de)\s+(?:el\s+|la\s+|una?\s+)?(?:cara\s+(?:de\s+)?)?(enojad[oa]|sorprendid[oa]|asustad[oa]|nervios[oa]|cansad[oa]|dormid[oa]|curios[oa]|confundid[oa]|emocionad[oa]|riendo|reite|orgullos[oa]|avergonzad[oa]|colorad[oa]|carinos[oa]|preocupad[oa]|agradecid[oa])\b/) || t.match(/^(reite|salud[a]|despedite|dibuja algo)$/);
   if (ordenEmo) {
     const w = ordenEmo[1];
-    const nombre = /enojad/.test(w) ? "enojada" : /sorprend/.test(w) ? "sorprendida" : /asustad/.test(w) ? "asustada" : /nervios/.test(w) ? "nerviosa" : /aburrid/.test(w) ? "aburrida" : /cansad|dormid/.test(w) ? "cansada" : /curios/.test(w) ? "curiosa" : /confundid/.test(w) ? "confundida" : /emocionad/.test(w) ? "emocionada" : /rie|reite/.test(w) ? "riendose" : /orgullos/.test(w) ? "orgullosa" : /avergonzad|colorad/.test(w) ? "avergonzada" : /cariñ|carin/.test(w) ? "carino" : /preocupad/.test(w) ? "preocupada" : /agradecid/.test(w) ? "agradecida" : /salud/.test(w) ? "saludando" : /despedite/.test(w) ? "despidiendo" : "curiosa";
+    const nombre = /enojad/.test(w) ? "enojada" : /sorprend/.test(w) ? "sorprendida" : /asustad/.test(w) ? "asustada" : /nervios/.test(w) ? "nerviosa" : /cansad|dormid/.test(w) ? "cansada" : /curios/.test(w) ? "curiosa" : /confundid/.test(w) ? "confundida" : /emocionad/.test(w) ? "emocionada" : /rie|reite/.test(w) ? "riendose" : /orgullos/.test(w) ? "orgullosa" : /avergonzad|colorad/.test(w) ? "avergonzada" : /cariñ|carin/.test(w) ? "carino" : /preocupad/.test(w) ? "preocupada" : /agradecid/.test(w) ? "agradecida" : /salud/.test(w) ? "saludando" : /despedite/.test(w) ? "despidiendo" : "curiosa";
     emocionPendiente = nombre; ordenDeCara = true;
     return { texto: `Así me pongo cuando estoy ${NOMBRES_EMO[nombre] || nombre}.` };
   }
@@ -1688,12 +1682,27 @@ function modoLlamada(m) { $("#pantallaLlamada").dataset.modo = m; } // escuchand
 /* ---------- EMOCIONES: cada una con su cara y (algunas) su emoji de manos ----------
    Duran menos de 2 segundos y vuelven a "normal". Escuchando, hablando, buscando, dibujando
    y usando la compu duran mientras Frankers lo está haciendo. */
+// Cada mano es un emoji de UNA mano, y va donde corresponde para hacer la pose (la cara mide 150 × 150):
+// [emoji, izquierda, arriba, giro, espejo]. "espejo" da vuelta la mano para que la de la derecha quede igual que la de la izquierda.
+// "sonido": lo que dice con su voz (así suena real, como una persona).
 const EMOCIONES = {
-  enojada: { manos: "👊👊" }, sorprendida: { manos: "🙌" }, asustada: {}, nerviosa: { manos: "🤞🤞" }, aburrida: {}, cansada: {},
-  curiosa: {}, confundida: { manos: "🤷" }, emocionada: { manos: "🙌" }, riendose: { manos: "👏" }, orgullosa: { manos: "👍👍" },
-  avergonzada: {}, carino: { manos: "🫶" }, preocupada: { manos: "🤲" }, agradecida: { manos: "🙏" },
-  escuchando: { mientras: true }, hablando: { mientras: true }, buscando: { manos: "👉", mientras: true }, dibujando: { manos: "✍️", mientras: true },
-  compu: { manos: "👆", mientras: true }, aprendiendo: { manos: "☝️" }, saludando: { manos: "👋" }, despidiendo: { manos: "👋" },
+  enojada: { manos: [["👊", -62, 92, 0], ["👊", 168, 92, 0, 1]], sonido: "¡Hmpf!" },
+  sorprendida: { manos: [["✋", -60, -6, -18], ["✋", 166, -6, 18, 1]], sonido: "¡Oh!" },            // manos arriba, abiertas
+  asustada: { sonido: "¡Ay!" }, cansada: { sonido: "Aaaah…" }, curiosa: { sonido: "¿Mmm?" }, avergonzada: { sonido: "Ups…" },
+  nerviosa: { manos: [["🤞", -58, 96, 0], ["🤞", 164, 96, 0, 1]], sonido: "Eh… eh…" },
+  confundida: { manos: [["🫴", -66, 66, 0], ["🫴", 172, 66, 0, 1]], sonido: "¿Eh?" },              // "no sé": palmas para arriba a los costados
+  emocionada: { manos: [["✋", -64, -24, -24], ["✋", 170, -24, 24, 1]], sonido: "¡Siii!" },           // brazos bien arriba
+  riendose: { manos: [["✋", 22, 138, -20], ["✋", 84, 138, -20, 1]], aplaude: 1, sonido: "¡Jajaja!" },   // aplaude en el medio
+  orgullosa: { manos: [["👍", -60, 90, 0], ["👍", 166, 90, 0, 1]], sonido: "¡Je, je!" },
+  carino: { manos: [["🫱", 26, 138, -25], ["🫲", 80, 138, 25]], sonido: "¡Aww!" },                  // se juntan en el medio, como un corazón
+  preocupada: { manos: [["🫴", 20, 140, 10], ["🫴", 86, 140, 10, 1]], sonido: "Ay, no…" },             // palmas para arriba en el medio
+  agradecida: { manos: [["🫸", 34, 134, -70], ["🫷", 72, 134, 70]], sonido: "¡Gracias!" },              // manos juntas en el medio
+  escuchando: { mientras: true }, hablando: { mientras: true },
+  buscando: { manos: [["👉", 162, 64, -10]], mientras: true },
+  dibujando: { manos: [["✍️", 150, 118, 0]], mientras: true },
+  compu: { manos: [["👆", 53, 150, 0]], mientras: true },
+  aprendiendo: { manos: [["☝️", 164, 8, 10]], sonido: "¡Ah!" },
+  saludando: { manos: [["👋", 166, 46, 0]] }, despidiendo: { manos: [["👋", 166, 46, 0]] },
 };
 const timersEmo = new WeakMap();
 function emocionar(el, nombre, ms = 1900) {
@@ -1701,16 +1710,21 @@ function emocionar(el, nombre, ms = 1900) {
   const e = EMOCIONES[nombre]; if (!e) return;
   if (["alegre", "triste", "pensando"].includes(el.dataset.cara) && e.mientras) return; // no tapa las caras de feliz, triste y pensando
   clearTimeout(timersEmo.get(el));
-  const manos = [...(e.manos || "")].filter(c => !/[\u{FE0F}\u{200D}]/u.test(c)).map(c => c + (e.manos.includes(c + "️") ? "️" : ""));
-  const [izq, der] = el.querySelectorAll(".mano.emo");
-  [izq, der].forEach(m => { m.classList.remove("activa", "solo"); m.querySelector(".tinte").textContent = ""; });
-  if (manos.length === 1) { izq.querySelector(".tinte").textContent = manos[0]; izq.classList.add("activa", "solo"); }
-  else if (manos.length >= 2) { izq.querySelector(".tinte").textContent = manos[0]; der.querySelector(".tinte").textContent = manos[1]; izq.classList.add("activa"); der.classList.add("activa"); }
+  const huecos = [...el.querySelectorAll(".mano.emo")];
+  huecos.forEach(m => { m.classList.remove("activa", "aplaude"); });
+  (e.manos || []).forEach(([emoji, x, y, giro = 0, espejo = 0], k) => {
+    const m = huecos[k]; if (!m) return;
+    m.querySelector(".tinte").textContent = emoji;
+    Object.assign(m.style, { left: x + "px", top: y + "px", right: "auto", marginLeft: "0", transform: `rotate(${giro}deg)${espejo ? " scaleX(-1)" : ""}` });
+    m.classList.add("activa"); if (e.aplaude) m.classList.add("aplaude");
+  });
   delete el.dataset.emo; void el.offsetWidth; // para que la animación arranque de nuevo
   if (el.dataset.cara === "normal") el.dataset.cara = "emo";
   el.dataset.emo = nombre;
   if (!e.mientras) timersEmo.set(el, setTimeout(() => terminarEmocion(el, nombre), ms));
 }
+// El sonido de cada emoción lo dice la voz de Frankers (suena como una persona, no como una máquina)
+function sonidoEmocion(nombre) { const e = EMOCIONES[nombre]; return e && e.sonido; }
 function terminarEmocion(el, nombre) {
   if (!el || (nombre && el.dataset.emo !== nombre)) return;
   el.querySelectorAll(".mano.emo").forEach(m => m.classList.remove("activa"));
@@ -1718,7 +1732,7 @@ function terminarEmocion(el, nombre) {
 }
 // En la llamada se ve la cara grande; en el chat, una carita chiquita en el mensaje de Frankers
 let emocionPendiente = null, ultimaEmo = null;
-const NOMBRES_EMO = { enojada: "enojado", sorprendida: "sorprendido", asustada: "asustado", nerviosa: "nervioso", aburrida: "aburrido", cansada: "con sueño", curiosa: "curioso", confundida: "confundido", emocionada: "emocionado", riendose: "a reír", orgullosa: "orgulloso", avergonzada: "colorado", carino: "cariñoso", preocupada: "preocupado", agradecida: "agradecido", saludando: "a saludar", despidiendo: "a despedirme", dibujando: "a dibujar", aprendiendo: "contento de aprender", buscando: "a buscar", compu: "a usar la compu" };
+const NOMBRES_EMO = { enojada: "enojado", sorprendida: "sorprendido", asustada: "asustado", nerviosa: "nervioso", cansada: "con sueño", curiosa: "curioso", confundida: "confundido", emocionada: "emocionado", riendose: "a reír", orgullosa: "orgulloso", avergonzada: "colorado", carino: "cariñoso", preocupada: "preocupado", agradecida: "agradecido", saludando: "a saludar", despidiendo: "a despedirme", dibujando: "a dibujar", aprendiendo: "contento de aprender", buscando: "a buscar", compu: "a usar la compu" };
 function sentir(nombre) {
   if (enLlamada) emocionar($("#llCara"), nombre); else emocionPendiente = nombre;
 }
@@ -1739,7 +1753,6 @@ function emocionDelMensaje(texto, respuesta) {
   if (/\b(te equivocaste|eso esta mal|no es asi|estas mal|mentira)\b/.test(t)) return "avergonzada";
   if (/\b(miedo|terror|asust\w*|monstruo|fantasma)\b/.test(t)) return "asustada";
   if (/\b(nervios\w*|prueba|examen|evaluacion)\b/.test(t)) return "nerviosa";
-  if (/\b(aburrid\w*|embole|que paja)\b/.test(t)) return "aburrida";
   if (/\b(sueno|cansad\w*|dormir|bostez\w*)\b/.test(t)) return "cansada";
   if (/\b(gane|vamos|siii+|genial|increible|buenisimo)\b/.test(t) || /!{2,}/.test(texto)) return "emocionada";
   if (/\b(wow|guau|sabias que|en serio|posta)\b/.test(t)) return "sorprendida";
@@ -1790,10 +1803,10 @@ function sonidoPensar(cual) {
 let pensandoSonidos = null;
 function empezarAPensar() {
   caraLlamada("pensando"); let n = 0;
-  const sonar = () => { const cual = n++ % 2 ? "mmm" : "hhh"; sonidoPensar(cual); textoLlamada("frankers", cual === "mmm" ? "Mmm…" : "Hmm…"); };
-  setTimeout(sonar, 250); clearInterval(pensandoSonidos); pensandoSonidos = setInterval(sonar, 1700);
+  const sonar = () => { const dice = n++ % 2 ? "Hmm…" : "Mmm…"; textoLlamada("frankers", dice); hablar(dice); }; // con su voz, como una persona que piensa
+  setTimeout(sonar, 250); clearInterval(pensandoSonidos); pensandoSonidos = setInterval(sonar, 3200);
 }
-function dejarDePensar() { clearInterval(pensandoSonidos); pensandoSonidos = null; }
+function dejarDePensar() { if (pensandoSonidos) callar(); clearInterval(pensandoSonidos); pensandoSonidos = null; }
 async function prenderMedidor() {
   try {
     const stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true } });
@@ -1838,7 +1851,7 @@ function escuchar() {
     const dice = nuevas.join(" ") || "Mmm, no sé qué decir.";
     if (/no sé qué decir|no me salió/i.test(dice)) emocion = "triste";
     caraLlamada(emocion);
-    if (emocion === "normal" && ultimaEmo) emocionar($("#llCara"), ultimaEmo);
+    if (emocion === "normal" && ultimaEmo) { emocionar($("#llCara"), ultimaEmo); const son = sonidoEmocion(ultimaEmo); if (son) { textoLlamada("frankers", son); await hablar(son); } }
     modoLlamada("hablando"); estadoLlamada("Frankers está hablando · tocá ✋ para interrumpir");
     if (emocion === "alegre") { textoLlamada("frankers", "¡Ah!"); await hablar("¡Ah!"); }
     textoLlamada("frankers", dice);
@@ -1925,6 +1938,7 @@ async function enviar(texto) {
   const emo = emocionPendiente || emocionDelMensaje(texto, respuesta); emocionPendiente = null;
   if (emo && !respuesta.cara) { respuesta.emo = emo; ultimaEmo = emo; actividad("🎭", `Me puse ${NOMBRES_EMO[emo] || emo}`); } else ultimaEmo = null;
   agregar({ de: "frankers", ...respuesta });
+  if (respuesta.emo && !enLlamada && sonidoEmocion(respuesta.emo)) hablar(sonidoEmocion(respuesta.emo)); // su sonido, con su voz
   if (!respuesta.filtro) setTimeout(() => aprenderDeLaCharla(texto), 50); // aprende de cada charla
   ocupado = false;
 }
