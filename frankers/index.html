@@ -274,7 +274,7 @@
 
     /* =========== EMOCIONES (23) =========== */
     .ceja2 { position: absolute; top: 34px; left: 38px; width: 26px; height: 6px; border-radius: 4px; background: #fff; opacity: 0; }
-    .boca { position: absolute; left: 50%; top: 104px; width: 30px; height: 10px; margin-left: -15px; border: 4px solid #fff; border-top: 0; border-radius: 0 0 20px 20px; opacity: 0; box-sizing: border-box; }
+    .boca { position: absolute; left: 50%; top: 104px; width: 30px; height: 14px; margin-left: -15px; border-radius: 0 0 50% 50% / 0 0 100% 100%; background: linear-gradient(to top, #ff7aa8 0 32%, #2a1458 32%); box-shadow: 0 2px 0 rgba(255,255,255,.25); opacity: 0; transition: width .5s ease, height .5s ease, border-radius .5s ease, opacity .5s ease; } /* boca rellena, de dibujo (no con signos) */
     .mejilla { position: absolute; top: 92px; width: 22px; height: 12px; border-radius: 50%; background: rgba(255, 120, 170, .75); filter: blur(1px); opacity: 0; }
     .mejilla.izq { left: 22px; } .mejilla.der { right: 22px; }
     .lengua { position: absolute; top: 108px; left: 82px; width: 11px; height: 13px; border-radius: 0 0 8px 8px; background: #ff7aa8; opacity: 0; transform: rotate(-18deg); }
@@ -305,28 +305,28 @@
     /* 1. Enojada */
     .ll-cara[data-emo="enojada"] .ceja, .ll-cara[data-emo="enojada"] .ceja2 { opacity: 1; top: 38px; }
     .ll-cara[data-emo="enojada"] .ceja { transform: rotate(-22deg); } .ll-cara[data-emo="enojada"] .ceja2 { transform: rotate(22deg); }
-    .ll-cara[data-emo="enojada"] .boca { opacity: 1; width: 22px; height: 0; margin-left: -11px; border-width: 4px 0 0 0; border-radius: 0; }
+    .ll-cara[data-emo="enojada"] .boca { opacity: 1; width: 24px; height: 7px; margin-left: -12px; border-radius: 5px 5px 3px 3px; }
     .ll-cara[data-emo="enojada"] .grande-cara { animation: sacudir .35s ease-in-out 4; }
     @keyframes sacudir { 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
     /* 2. Sorprendida */
     .ll-cara[data-emo="sorprendida"] .grande-cara i { transform: scale(1.3); }
-    .ll-cara[data-emo="sorprendida"] .boca { opacity: 1; width: 18px; height: 20px; margin-left: -9px; border: 4px solid #fff; border-radius: 50%; }
+    .ll-cara[data-emo="sorprendida"] .boca { opacity: 1; width: 18px; height: 22px; margin-left: -9px; border-radius: 50%; }
     .ll-cara[data-emo="sorprendida"] { animation: saltoChico .7s ease; }
     @keyframes saltoChico { 40% { transform: translateY(-18px); } 70% { transform: translateY(2px); } }
     /* 3. Asustada */
     .ll-cara[data-emo="asustada"] .grande-cara { animation: temblar .12s linear infinite; transform: scale(.88); }
     @keyframes temblar { 25% { margin-left: -2px; } 75% { margin-left: 2px; } }
     .ll-cara[data-emo="asustada"] .grande-cara i { transform: scale(1.15, .9); }
-    .ll-cara[data-emo="asustada"] .boca { opacity: 1; height: 8px; border-width: 4px 0 0 0; border-style: dashed; border-radius: 0; animation: bocaTiembla .25s linear infinite; }
+    .ll-cara[data-emo="asustada"] .boca { opacity: 1; width: 26px; height: 9px; margin-left: -13px; border-radius: 6px; animation: bocaTiembla .25s linear infinite; }
     @keyframes bocaTiembla { 50% { transform: skewX(20deg); } }
     /* 4. Nerviosa */
     .ll-cara[data-emo="nerviosa"] .grande-cara i { animation: costados .8s ease-in-out infinite; }
     @keyframes costados { 0%, 100% { transform: translateX(-8px); } 50% { transform: translateX(8px); } }
-    .ll-cara[data-emo="nerviosa"] .boca { opacity: 1; width: 40px; height: 8px; margin-left: -20px; border-radius: 0 0 6px 6px; }
+    .ll-cara[data-emo="nerviosa"] .boca { opacity: 1; width: 40px; height: 10px; margin-left: -20px; border-radius: 3px 3px 10px 10px; background: linear-gradient(#fff 0 45%, #2a1458 45%); }
     .ll-cara[data-emo="nerviosa"] .grande-cara { animation: temblar .3s linear infinite; }
     /* 5. Aburrida */
     .ll-cara[data-emo="aburrida"] .grande-cara i { height: 12px !important; border-radius: 3px 3px 9px 9px; transform: translateY(6px); }
-    .ll-cara[data-emo="aburrida"] .boca { opacity: 1; width: 24px; height: 0; margin-left: -12px; border-width: 4px 0 0 0; border-radius: 0; animation: bostezo 1.8s ease-in-out; }
+    .ll-cara[data-emo="aburrida"] .boca { opacity: 1; width: 24px; height: 6px; margin-left: -12px; border-radius: 3px; }
     @keyframes bostezo { 30%, 70% { width: 22px; height: 22px; margin-left: -11px; border-width: 4px; border-radius: 50%; } }
     /* 6. Cansada / con sueño */
     .ll-cara[data-emo="cansada"] .grande-cara i { animation: parpadeoLento 1.8s ease-in-out; }
@@ -341,32 +341,32 @@
     .ll-cara[data-emo="curiosa"] .ceja2 { opacity: 1; transform: translateY(-6px) rotate(-10deg); }
     /* 8. Confundida */
     .ll-cara[data-emo="confundida"] .ceja { opacity: 1; transform: translateY(-6px) rotate(-14deg); } .ll-cara[data-emo="confundida"] .ceja2 { opacity: 1; transform: translateY(4px) rotate(10deg); }
-    .ll-cara[data-emo="confundida"] .boca { opacity: 1; height: 0; width: 22px; margin-left: -8px; border-width: 4px 0 0 0; border-radius: 0; transform: rotate(-12deg); }
+    .ll-cara[data-emo="confundida"] .boca { opacity: 1; width: 18px; height: 7px; margin-left: -9px; border-radius: 4px; transform: rotate(-12deg); }
     .ll-cara[data-emo="confundida"] .signo { opacity: 1; animation: signo 1.8s ease-in-out; }
     @keyframes signo { 0% { transform: translateY(10px) scale(.5); } 30% { transform: translateY(0) scale(1.1); } 60% { transform: rotate(-10deg); } 100% { transform: rotate(8deg); } }
     /* 9. Emocionada */
     .ll-cara[data-emo="emocionada"] { animation: saltitos 1.8s ease; }
     @keyframes saltitos { 15%, 45%, 75% { transform: translateY(-20px); } 30%, 60%, 90% { transform: translateY(0); } }
     .ll-cara[data-emo="emocionada"] .grande-cara i { height: 14px !important; border-radius: 14px 14px 4px 4px; }
-    .ll-cara[data-emo="emocionada"] .boca { opacity: 1; width: 34px; height: 16px; margin-left: -17px; }
+    .ll-cara[data-emo="emocionada"] .boca { opacity: 1; width: 34px; height: 18px; margin-left: -17px; border-radius: 0 0 50% 50% / 0 0 100% 100%; }
     .ll-cara[data-emo="emocionada"] .brillos { opacity: 1; } .ll-cara[data-emo="emocionada"] .brillos i { animation: brillar .6s ease-in-out infinite alternate; }
     @keyframes brillar { from { transform: scale(.4) rotate(0); opacity: .4; } to { transform: scale(1.2) rotate(45deg); opacity: 1; } }
     /* 10. Riéndose */
-    .ll-cara[data-emo="riendose"] .grande-cara i { height: 12px !important; background: transparent !important; border: 4px solid #fff; border-bottom: 0; border-radius: 14px 14px 0 0; width: 22px !important; }
-    .ll-cara[data-emo="riendose"] .boca { opacity: 1; width: 36px; height: 18px; margin-left: -18px; background: rgba(255,255,255,.25); }
+    .ll-cara[data-emo="riendose"] .grande-cara i { height: 9px !important; width: 22px !important; border-radius: 12px 12px 3px 3px; transform: translateY(4px); } /* ojos felices cerrados, rellenos */
+    .ll-cara[data-emo="riendose"] .boca { opacity: 1; width: 36px; height: 20px; margin-left: -18px; border-radius: 0 0 50% 50% / 0 0 100% 100%; }
     .ll-cara[data-emo="riendose"] .grande-cara { animation: reir .3s ease-in-out 6; }
     @keyframes reir { 50% { transform: translateY(-7px); } }
     /* 11. Orgullosa */
     .ll-cara[data-emo="orgullosa"] .grande-cara { transform: translateY(-8px) rotate(-4deg); box-shadow: 0 0 60px rgba(255, 220, 120, .7); }
-    .ll-cara[data-emo="orgullosa"] .boca { opacity: 1; width: 40px; height: 18px; margin-left: -20px; }
+    .ll-cara[data-emo="orgullosa"] .boca { opacity: 1; width: 40px; height: 16px; margin-left: -20px; border-radius: 0 0 50% 50% / 0 0 100% 100%; }
     .ll-cara[data-emo="orgullosa"] .grande-cara i { height: 14px !important; border-radius: 14px 14px 4px 4px; }
     /* 12. Avergonzada */
     .ll-cara[data-emo="avergonzada"] .mejilla { opacity: 1; }
     .ll-cara[data-emo="avergonzada"] .grande-cara i { transform: translateY(12px) translateX(-4px) scaleY(.8); }
-    .ll-cara[data-emo="avergonzada"] .boca { opacity: 1; width: 16px; height: 6px; margin-left: -8px; }
+    .ll-cara[data-emo="avergonzada"] .boca { opacity: 1; width: 14px; height: 7px; margin-left: -7px; border-radius: 0 0 50% 50% / 0 0 100% 100%; }
     .ll-cara[data-emo="avergonzada"] .grande-cara { transform: rotate(-5deg) translateY(4px); }
     /* 13. Con cariño */
-    .ll-cara[data-emo="carino"] .boca { opacity: 1; width: 26px; height: 10px; margin-left: -13px; }
+    .ll-cara[data-emo="carino"] .boca { opacity: 1; width: 24px; height: 11px; margin-left: -12px; border-radius: 0 0 50% 50% / 0 0 100% 100%; }
     .ll-cara[data-emo="carino"] .grande-cara i { height: 14px !important; border-radius: 14px 14px 4px 4px; }
     .ll-cara[data-emo="carino"] .mejilla { opacity: .6; }
     .ll-cara[data-emo="carino"] .corazones { opacity: 1; } .ll-cara[data-emo="carino"] .corazones i { animation: corazon 1.8s ease-out infinite; }
@@ -374,17 +374,17 @@
     @keyframes corazon { from { transform: translateY(20px) rotate(45deg) scale(.4); opacity: 0; } 30% { opacity: 1; } to { transform: translateY(-80px) rotate(45deg) scale(1); opacity: 0; } }
     /* 14. Preocupada */
     .ll-cara[data-emo="preocupada"] .ceja { opacity: 1; transform: rotate(18deg) translateY(-2px); } .ll-cara[data-emo="preocupada"] .ceja2 { opacity: 1; transform: rotate(-18deg) translateY(-2px); }
-    .ll-cara[data-emo="preocupada"] .boca { opacity: 1; width: 24px; height: 10px; margin-left: -6px; border-width: 4px 4px 0 4px; border-radius: 20px 20px 0 0; transform: rotate(-8deg); }
+    .ll-cara[data-emo="preocupada"] .boca { opacity: 1; width: 22px; height: 9px; margin-left: -11px; border-radius: 50% 50% 0 0 / 100% 100% 0 0; margin-left: -7px; transform: rotate(-8deg); background: #2a1458; }
     /* 15. Agradecida */
-    .ll-cara[data-emo="agradecida"] .grande-cara i { height: 12px !important; background: transparent !important; border: 4px solid #fff; border-bottom: 0; border-radius: 14px 14px 0 0; width: 22px !important; }
-    .ll-cara[data-emo="agradecida"] .boca { opacity: 1; }
+    .ll-cara[data-emo="agradecida"] .grande-cara i { height: 9px !important; width: 22px !important; border-radius: 12px 12px 3px 3px; transform: translateY(4px); } /* ojos felices cerrados, rellenos */
+    .ll-cara[data-emo="agradecida"] .boca { opacity: 1; width: 26px; height: 12px; margin-left: -13px; border-radius: 0 0 50% 50% / 0 0 100% 100%; }
     .ll-cara[data-emo="agradecida"] .grande-cara { animation: reverencia 1.8s ease-in-out; }
     @keyframes reverencia { 40%, 60% { transform: translateY(14px) scale(.94) rotateX(18deg); } }
     /* 16. Escuchando */
     .ll-cara[data-emo="escuchando"] .grande-cara { transform: rotate(-7deg) translateX(-6px); }
     .ll-cara[data-emo="escuchando"] .ondas { opacity: 1; }
     /* 17. Hablando: la boca sigue la voz */
-    .ll-cara[data-emo="hablando"] .boca { opacity: 1; width: 26px; margin-left: -13px; height: calc(6px + var(--nivel, 0) * 20px); border-width: 4px; border-radius: 12px; transition: height .08s linear; }
+    .ll-cara[data-emo="hablando"] .boca { opacity: 1; width: 24px; margin-left: -12px; height: calc(6px + var(--nivel, 0) * 18px); border-radius: 50%; transition: height .08s linear; }
     /* 18. Buscando en internet */
     .ll-cara[data-emo="buscando"] .grande-cara i { animation: costados 1s ease-in-out infinite; }
     .ll-cara[data-emo="buscando"] .lupa { opacity: 1; animation: lupa 1s ease-in-out infinite; }
@@ -396,14 +396,14 @@
     @keyframes escribir { 50% { transform: translate(6px, 3px) rotate(8deg); } }
     /* 20. Usando la compu */
     .ll-cara[data-emo="compu"] .grande-cara i { height: 16px !important; transform: translateY(4px); }
-    .ll-cara[data-emo="compu"] .boca { opacity: 1; width: 14px; height: 0; margin-left: -7px; border-width: 4px 0 0 0; border-radius: 0; }
+    .ll-cara[data-emo="compu"] .boca { opacity: 1; width: 14px; height: 6px; margin-left: -7px; border-radius: 3px; background: #2a1458; }
     /* 21. Aprendiendo algo nuevo */
     .ll-cara[data-emo="aprendiendo"] .lampara { opacity: 1; animation: prender 1.8s ease; }
     @keyframes prender { 0% { opacity: 0; transform: scale(.4); } 30% { opacity: 1; transform: scale(1.15); } 100% { transform: scale(1); } }
     .ll-cara[data-emo="aprendiendo"] .grande-cara i { transform: translateY(-6px); }
-    .ll-cara[data-emo="aprendiendo"] .boca { opacity: 1; width: 16px; height: 16px; margin-left: -8px; border-width: 4px; border-radius: 50%; }
+    .ll-cara[data-emo="aprendiendo"] .boca { opacity: 1; width: 16px; height: 16px; margin-left: -8px; border-radius: 50%; }
     /* 22. Saludando y 23. Despidiéndose */
-    .ll-cara[data-emo="saludando"] .boca, .ll-cara[data-emo="despidiendo"] .boca { opacity: 1; width: 32px; height: 14px; margin-left: -16px; }
+    .ll-cara[data-emo="saludando"] .boca, .ll-cara[data-emo="despidiendo"] .boca { opacity: 1; width: 32px; height: 15px; margin-left: -16px; border-radius: 0 0 50% 50% / 0 0 100% 100%; }
     .ll-cara[data-emo="saludando"] .mano.emo .tinte, .ll-cara[data-emo="despidiendo"] .mano.emo .tinte { transform-origin: 70% 90%; animation: arcoiris 4s linear infinite, saludar .45s ease-in-out infinite alternate; }
     @keyframes saludar { from { transform: rotate(-18deg); } to { transform: rotate(18deg); } }
     .ll-cara[data-emo="despidiendo"] { animation: achicarse 1.8s ease-in-out; }
@@ -789,32 +789,35 @@ async function cargarDiccionario() {
 }
 const conocida = (w) => (gramatica && gramatica.conoce(w)) || (cerebro && cerebro.indice.has(w));
 // Frankers habla: la red arma varias frases, la gramática las arregla y revisa, el filtro las controla, y elige la mejor.
+function cortarFrase(tk) { // se queda con la primera o las dos primeras oraciones (lo que sigue suele salir mezclado)
+  let palabras = 0, cortes = 0;
+  for (let i = 0; i < tk.length; i++) { if (/\w/.test(tk[i])) palabras++; if (/^[.!?]$/.test(tk[i])) { cortes++; if ((palabras >= 4 && tk[i] !== "?") || cortes >= 2) return tk.slice(0, i + 1); } } // si pregunta algo (como en un chiste), deja también la respuesta
+  return tk;
+}
 function hablarConCerebro(mensaje) {
   if (!cerebro) return "Todavía me estoy despertando… 😴 Probá en un segundito.";
-  const { tokenizar, unir } = FrankersCerebro;
+  const { tokenizar, unir, YO, FRANKERS } = FrankersCerebro;
   const paso = actividad("🧠", "Armando frases palabra por palabra…", true);
-  const tm = tokenizar(mensaje), vocab = cerebro.indice;
+  const tm = tokenizar(mensaje), inicio = `${YO} ${mensaje} ${FRANKERS}`;
   let mejor = null, tiradas = 0;
-  for (let intento = 0; intento < 8; intento++) {
-    let frase = cerebro.contestar(mensaje, { temperatura: intento < 2 ? 0.55 : 0.8 });
-    if (!frase) continue;
-    let tk = tokenizar(frase);
-    if (gramatica) { tk = gramatica.concordar(tk); frase = unir(tk); }
-    const g = gramatica ? gramatica.revisar(tk, vocab) : { ok: true };
-    const problema = !g.ok ? g.motivo : revisar(frase).problema || (esFalso(frase) ? "falsa" : null);
-    if (problema) { tiradas++; continue; }
-    const seguridad = cerebro.ultimaSeguridad || 0;
-    if (seguridad < 0.45) { tiradas++; continue; } // si no estaba segura de sus palabras, es una mezcla: no la dice
-    const puntos = (gramatica ? gramatica.relacion(tk, tm) * 2 : 0) + seguridad * 2 + Math.min(tk.length, 14) / 14 - (tk.length > 28 ? 1 : 0);
-    if (!mejor || puntos > mejor.puntos) mejor = { frase, puntos };
-    if (puntos >= 2.5) break;
+  for (const temperatura of [0.15, 0.25, 0.35, 0.35, 0.45, 0.55, 0.65, 0.8]) {
+    let tk = tokenizar(cerebro.contestar(mensaje, { temperatura }));
+    if (gramatica) tk = gramatica.concordar(tk);
+    tk = cortarFrase(tk);
+    const frase = unir(tk); if (!frase) continue;
+    const g = gramatica ? gramatica.revisar(tk, cerebro.indice) : { ok: true };
+    if (!g.ok || revisar(frase).problema || esFalso(frase)) { tiradas++; continue; }
+    const seguridad = cerebro.puntuar(inicio, frase); // qué tan segura está de TODA la frase
+    const puntos = seguridad * 3 + (gramatica ? gramatica.relacion(tk, tm) * 0.4 : 0);
+    if (!mejor || puntos > mejor.puntos) mejor = { frase, puntos, seguridad };
   }
-  if (mejor) { paso.fin(`Armé la frase palabra por palabra${tiradas ? ` (tiré ${tiradas} que estaban mal escritas o no pasaban el filtro)` : ""}`, "🧠"); return mejor.frase; }
-  // Si la red no armó nada bien, arma una frase con reglas de gramática sobre el tema
+  if (mejor && mejor.seguridad >= 0.42) { paso.fin(`Armé la frase palabra por palabra (segura al ${Math.round(mejor.seguridad * 100)} %)${tiradas ? `; tiré ${tiradas} mal escritas` : ""}`, "🧠"); return mejor.frase; }
+  // Si no está segura, prueba con las reglas de gramática sobre el tema
   if (gramatica) for (const n of gramatica.sustantivos(tm)) { const f = gramatica.frasePropia(n); if (f && !revisar(f).problema) { paso.fin("Armé una frase con las reglas de gramática", "📐"); return f; } }
+  if (mejor && mejor.seguridad >= 0.3) { paso.fin(`Armé la frase, pero no muy segura (${Math.round(mejor.seguridad * 100)} %)`, "🧠"); return mejor.frase; }
   paso.fin("No estaba segura de ninguna frase, así que no invento", "🛡️");
   emocion = "triste";
-  return "Todavía estoy aprendiendo a hablar. 😅 Lo que mejor sé hacer es buscar en Wikipedia: decime, por ejemplo, «buscá dinosaurios» o «¿qué es un volcán?».";
+  return alAzar(["Uy, eso todavía no lo entiendo. 😅 ¿Me lo decís de otra forma?", "Estoy aprendiendo a hablar y eso no me salió. 🙈 Si querés, pedime que lo busque: «buscá …».", "Mmm, ¿me contás un poquito más?"]);
 }
 // Aprende de cada charla: palabras nuevas, qué palabras van juntas, y repasa lo que le dijiste
 function aprenderDeLaCharla(mensaje) {
@@ -1605,7 +1608,7 @@ function paraDecir(texto) {
     .replace(/[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}\u{FE0F}]/gu, "").replace(/×/g, " por ").replace(/÷/g, " dividido ").replace(/=/g, " es ")
     // Sonidos que la voz leería como letras ("eme"): se cambian por cómo suenan de verdad
     .replace(/\b[Hh]mpf\b/g, "uf").replace(/\b[Aa]ww+\b/g, "aaay, qué lindo")
-    .replace(/\b[Hh]+m+\b/g, "a ver").replace(/\b[Mm]{2,}h*\b/g, "eeeh").replace(/\b[Ee]mm+\b/g, "eeeh")
+    .replace(/[¿¡]?\b(?:[Hh]+m+|[Mm]{2,}h*|[Ee]mm+)\b[?!]?[…,.]*/g, "") // "Mmm" y "Hmm" no se dicen (la voz los leía como letras)
     .replace(/\s+/g, " ").trim();
 }
 // Voces de verdad (Piper): se descargan la primera vez y después quedan guardadas en la compu.
@@ -1692,9 +1695,9 @@ function modoLlamada(m) { $("#pantallaLlamada").dataset.modo = m; } // escuchand
 const EMOCIONES = {
   enojada: { manos: [["👊", -62, 92, 0], ["👊", 168, 92, 0, 1]], sonido: "¡Hmpf!" },
   sorprendida: { manos: [["✋", -60, -6, -18], ["✋", 166, -6, 18, 1]], sonido: "¡Oh!" },            // manos arriba, abiertas
-  asustada: { sonido: "¡Ay!" }, cansada: { sonido: "Aaaah…" }, curiosa: { sonido: "¿Mmm?" }, avergonzada: { sonido: "Ups…" },
+  asustada: { sonido: "¡Ay!" }, cansada: { sonido: "Aaaah…" }, curiosa: { sonido: "¿Ah, sí?" }, avergonzada: { sonido: "Ups…" },
   nerviosa: { manos: [["🤞", -58, 96, 0], ["🤞", 164, 96, 0, 1]], sonido: "Eh… eh…" },
-  confundida: { manos: [["🫴", -66, 66, 0], ["🫴", 172, 66, 0, 1]], sonido: "¿Eh?" },              // "no sé": palmas para arriba a los costados
+  confundida: { manos: [["🫴", -66, 66, 0, 1], ["🫴", 172, 66, 0]], sonido: "¿Eh?" },              // "no sé": palmas para arriba a los costados
   emocionada: { manos: [["✋", -64, -24, -24], ["✋", 170, -24, 24, 1]], sonido: "¡Siii!" },           // brazos bien arriba
   riendose: { manos: [["✋", 22, 138, -20], ["✋", 84, 138, -20, 1]], aplaude: 1, sonido: "¡Jajaja!" },   // aplaude en el medio
   orgullosa: { manos: [["👍", -60, 90, 0], ["👍", 166, 90, 0, 1]], sonido: "¡Je, je!" },
@@ -1807,10 +1810,10 @@ function sonidoPensar(cual) {
 let pensandoSonidos = null;
 function empezarAPensar() {
   caraLlamada("pensando"); let n = 0;
-  const sonar = () => { const dice = n++ % 2 ? "Hmm…" : "Mmm…"; textoLlamada("frankers", dice); hablar(dice); }; // con su voz, como una persona que piensa
+  const sonar = () => { textoLlamada("frankers", n++ % 2 ? "Hmm…" : "Mmm…"); }; // piensa en silencio (en la pantalla se ve "Mmm…")
   setTimeout(sonar, 250); clearInterval(pensandoSonidos); pensandoSonidos = setInterval(sonar, 3200);
 }
-function dejarDePensar() { if (pensandoSonidos) callar(); clearInterval(pensandoSonidos); pensandoSonidos = null; }
+function dejarDePensar() { clearInterval(pensandoSonidos); pensandoSonidos = null; }
 async function prenderMedidor() {
   try {
     const stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true } });

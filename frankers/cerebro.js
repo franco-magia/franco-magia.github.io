@@ -187,6 +187,15 @@
       this.ultimaSeguridad = seguridad.length ? seguridad.reduce((a, b) => a + b, 0) / seguridad.length : 0; // qué tan segura estaba de cada palabra
       return unir(salida);
     }
+    // Qué tan segura está de una respuesta entera (promedio de la probabilidad de cada palabra, incluido el final)
+    puntuar(inicio, respuesta) {
+      const N = this.contexto, fin = this.id(FIN);
+      let ids = [...Array(N).fill(fin), ...tokenizar(inicio).map(t => this.id(t))].slice(-N);
+      const objetivos = [...tokenizar(respuesta).map(t => this.id(t)), fin];
+      let suma = 0;
+      for (const o of objetivos) { const p = this.adelante(ids).pop(); suma += Math.log(Math.max(p[o], 1e-9)); ids = [...ids.slice(1), o]; }
+      return Math.exp(suma / objetivos.length);
+    }
     // Lo que contesta en una charla
     contestar(mensaje, opciones = {}) { return this.generar(`${YO} ${mensaje} ${FRANKERS}`, opciones); }
 
