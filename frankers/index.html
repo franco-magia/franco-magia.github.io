@@ -1602,7 +1602,11 @@ function cambiarVoz() {
 }
 function paraDecir(texto) {
   return texto.split("\n").filter(l => !/^📖|https?:\/\//.test(l)).join(". ")
-    .replace(/[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}\u{FE0F}]/gu, "").replace(/×/g, " por ").replace(/÷/g, " dividido ").replace(/=/g, " es ").replace(/\s+/g, " ").trim();
+    .replace(/[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}\u{FE0F}]/gu, "").replace(/×/g, " por ").replace(/÷/g, " dividido ").replace(/=/g, " es ")
+    // Sonidos que la voz leería como letras ("eme"): se cambian por cómo suenan de verdad
+    .replace(/\b[Hh]mpf\b/g, "uf").replace(/\b[Aa]ww+\b/g, "aaay, qué lindo")
+    .replace(/\b[Hh]+m+\b/g, "a ver").replace(/\b[Mm]{2,}h*\b/g, "eeeh").replace(/\b[Ee]mm+\b/g, "eeeh")
+    .replace(/\s+/g, " ").trim();
 }
 // Voces de verdad (Piper): se descargan la primera vez y después quedan guardadas en la compu.
 // Si no se pueden usar (sin internet, navegador viejo), habla con la voz que trae la compu.
