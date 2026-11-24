@@ -449,10 +449,22 @@
     .btn-lateral { flex: none; width: 38px; height: 38px; border-radius: 12px; border: 1px solid var(--borde); background: var(--tarjeta); color: var(--texto); cursor: pointer; display: grid; place-items: center; font-size: 1.1rem; }
     .btn-lateral:hover { border-color: var(--celeste); }
 
+    /* El chat ocupa solo el lugar que queda al lado de la barra (antes se salía de la pantalla y todo se apretaba) */
+    .app { width: auto; min-width: 0; flex: 1 1 0; }
+    @media (max-width: 1000px) and (min-width: 641px) { .lateral { width: 220px; } }
+    /* Barra de arriba que no se aprieta: si no entra, los botones bajan a otra fila */
+    header { flex-wrap: wrap; row-gap: 8px; }
+    header .identidad { min-width: 180px; }
+    header .acciones { flex-wrap: wrap; justify-content: flex-end; }
+    .volver span { display: none; }
+    .nombre h1 { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .repasando { max-width: 200px; }
+    #actividadAhora { max-width: 100%; }
+    @media (min-width: 641px) { #btnLateral, #btnCerrarLateral { display: none; } }
     /* =========== BARRA DE LA IZQUIERDA (como en Claude) =========== */
     body { flex-direction: row; }
     .lateral { width: 272px; flex: none; height: 100dvh; display: flex; flex-direction: column; gap: 2px; padding: 12px 10px; background: rgba(9, 6, 26, .6); border-right: 1px solid var(--borde); transition: margin-left .35s cubic-bezier(.4, 0, .2, 1); z-index: 60; }
-    body.sin-lateral .lateral { margin-left: -272px; }
+    @media (max-width: 640px) { body.sin-lateral .lateral { margin-left: -272px; } }
     .lat-arriba { display: flex; align-items: center; gap: 8px; padding: 4px 6px 12px; }
     .lat-arriba .cara { width: 30px; height: 30px; gap: 5px; box-shadow: 0 0 14px rgba(120, 110, 255, .5); }
     .lat-arriba .cara i { width: 5px; height: 8px; }
@@ -480,7 +492,7 @@
     .lat-pie .avatar { width: 28px; height: 28px; border-radius: 50%; background: var(--degrade); display: grid; place-items: center; font-weight: 700; color: #fff; font-size: .85rem; }
     .tapa-lateral { display: none; }
     .lat-cambiar { border: none; background: none; color: var(--celeste); cursor: pointer; font-size: .75rem; text-decoration: underline; padding: 0 6px 0 0; }
-    @media (max-width: 860px) {
+    @media (max-width: 640px) {
       .lateral { position: fixed; left: 0; top: 0; bottom: 0; margin-left: -290px; background: #120d2c; box-shadow: 10px 0 40px rgba(0,0,0,.5); }
       body.lateral-abierta .lateral { margin-left: 0; }
       body.lateral-abierta .tapa-lateral { display: block; position: fixed; inset: 0; z-index: 55; background: rgba(5,3,15,.55); }
@@ -582,6 +594,13 @@
     .cf-accion .boton { padding: 12px 16px; font-size: 1rem; }
     .cf-accion textarea, .cf-accion input { width: 100%; padding: 10px 12px; border-radius: 12px; border: 1px solid var(--borde); background: #120d2c; color: var(--texto); font: inherit; resize: vertical; }
     .cf-accion ol { margin: 0; padding-left: 20px; font-size: .9rem; line-height: 1.5; }
+    .cf-consejo { margin: 0 0 14px; background: linear-gradient(135deg, rgba(111,240,168,.12), rgba(79,216,255,.12)); border: 1px solid rgba(111,240,168,.45); border-radius: 18px; padding: 14px 18px; display: flex; gap: 12px; align-items: center; }
+    .cf-consejo .ic { font-size: 2rem; } .cf-consejo b { display: block; font-family: "Fredoka", sans-serif; font-size: 1.1rem; } .cf-consejo span { color: var(--suave); font-size: .92rem; }
+    .cf-consejo button { margin-left: auto; flex: none; }
+    .cf-curva { background: var(--tarjeta); border: 1px solid var(--borde); border-radius: 20px; padding: 14px 18px; margin-bottom: 14px; }
+    .cf-curva h3 { margin: 0 0 4px; font-family: "Fredoka", sans-serif; } .cf-curva p { margin: 0 0 8px; color: var(--suave); font-size: .88rem; }
+    #cfGrafico { width: 100%; height: 150px; display: block; }
+    .cf-accion select { padding: 10px 12px; border-radius: 12px; border: 1px solid var(--borde); background: #120d2c; color: var(--texto); font: inherit; }
     .cf-estado { min-height: 1.3em; font-size: .9rem; font-weight: 600; }
     .cf-progreso { height: 8px; border-radius: 999px; background: rgba(255,255,255,.08); overflow: hidden; display: none; }
     .cf-progreso.si { display: block; } .cf-progreso i { display: block; height: 100%; width: 0; background: var(--degrade); transition: width .25s linear; }
@@ -715,11 +734,14 @@
           <canvas id="redViva"></canvas>
           <div class="cf-leyenda"><span>⬅️ <b>Entrada</b>: las palabras que lee</span><span>💡 <b>Neuronas</b>: se pasan la información y se prenden</span><span><b>Salida</b>: la palabra que adivina ➡️</span></div>
         </div>
+        <div class="cf-consejo" id="cfConsejo" data-tour="consejo"></div>
+        <div class="cf-curva" data-tour="curva"><h3>📉 ¿Cuánto se equivoca?</h3><p>La línea sube y baja mientras aprende. <b>Cuanto más abajo, mejor</b>: quiere decir que se equivoca menos al adivinar la palabra que sigue.</p><canvas id="cfGrafico"></canvas></div>
         <div class="cf-datos" id="cfDatos" data-tour="datos"></div>
         <div class="cf-acciones">
           <div class="cf-accion" data-tour="ensenar"><span class="grande">🏋️</span><h3>Enseñale</h3><p>Frankers lee un montón de textos y practica adivinar la palabra que sigue. Cada vez que se equivoca, sus neuronas se arreglan un poquito. Así aprende.</p>
             <div class="cf-progreso" id="cfProgreso"><i></i></div><div class="cf-estado" id="cfEstado"></div>
-            <button class="boton principal" id="cfEnsenar">🏋️ Enseñale 30 segundos</button></div>
+            <select id="cfSegundos" aria-label="Cuánto tiempo"><option value="15">15 segundos</option><option value="30" selected>30 segundos</option><option value="60">1 minuto</option><option value="120">2 minutos</option><option value="180">3 minutos</option></select>
+            <button class="boton principal" id="cfEnsenar">🏋️ ¡Enseñale!</button><button class="boton" id="cfParar" hidden>⏹ Parar (se queda con lo mejor)</button></div>
           <div class="cf-accion" data-tour="crecer"><span class="grande">🧩</span><h3>Hacela más grande</h3><p>Le agrega <b>8 neuronas</b> nuevas. Con más neuronas puede acordarse de más cosas. No se olvida de nada: las neuronas nuevas empiezan calladitas y aprenden cuando la enseñás.</p>
             <div class="cf-estado" id="cfEstadoCrecer"></div>
             <button class="boton" id="cfCrecer">🧩 Agregar 8 neuronas</button></div>
@@ -1009,18 +1031,40 @@ let aprendidoAca = guardado.leer("frankers-charlas-aprendidas", []); // lo que a
 async function cargarCerebro() {
   const paso = actividad("🧠", "Despertando el cerebro…", true);
   let local = null, publicado = null;
-  try { const s = localStorage.getItem(CLAVE_CEREBRO); if (s) local = JSON.parse(s); } catch {}
+  try { local = await baseDatos("leer"); } catch {}                                   // 1º: el guardado en IndexedDB (exacto)
+  if (!local) try { const s = localStorage.getItem(CLAVE_CEREBRO); if (s) local = JSON.parse(s); } catch {} // (el de antes)
   try { const r = await fetch("cerebro.json?v=" + Date.now(), { cache: "no-store" }); if (r.ok) publicado = await r.json(); } catch {}
   // Usa el que más leyó: el de esta compu o el que publicó Franco
   const elegido = local && (!publicado || (local.vistas || 0) >= (publicado.vistas || 0)) ? local : publicado;
-  cerebro = elegido ? Cerebro.desdeJSON(elegido) : new Cerebro({ palabras: [], capas: [64] });
+  cerebro = !elegido ? new Cerebro({ palabras: [], capas: [64] }) : elegido.version === 2 ? Cerebro.desdeCrudo(elegido) : Cerebro.desdeJSON(elegido);
   paso.fin(`Cerebro despierto: ${cerebro.palabras.length} palabras, ${cerebro.neuronas.join(" + ")} neuronas, ${cerebro.vistas.toLocaleString("es-AR")} palabras leídas`, "🧠");
   if (dlgCerebro.open) pintarCerebro();
 }
+/* Truco 1: los pesos se guardan en IndexedDB (entra todo, sin achicar los números) y se cargan al abrir.
+   Así no empieza de cero. Si IndexedDB no anda, usa la memoria de antes (localStorage). */
+function baseDatos(que, valor) {
+  return new Promise((ok, mal) => {
+    const pedido = indexedDB.open("frankers", 1);
+    pedido.onupgradeneeded = () => pedido.result.createObjectStore("cerebro");
+    pedido.onerror = () => mal(pedido.error);
+    pedido.onsuccess = () => {
+      const db = pedido.result, tx = db.transaction("cerebro", que === "leer" ? "readonly" : "readwrite"), st = tx.objectStore("cerebro");
+      const r = que === "leer" ? st.get("pesos") : st.put(valor, "pesos");
+      r.onsuccess = () => ok(r.result); r.onerror = () => mal(r.error); tx.oncomplete = () => db.close();
+    };
+  });
+}
 function guardarCerebro(ahora = false) {
   clearTimeout(guardadoPendiente);
-  const hacer = () => { try { localStorage.setItem(CLAVE_CEREBRO, JSON.stringify(cerebro.aJSON())); } catch { actividad("⚠️", "No entró todo en la memoria del navegador"); } };
+  const hacer = () => baseDatos("guardar", cerebro.aCrudo()).then(() => { try { localStorage.removeItem(CLAVE_CEREBRO); } catch {} }).catch(() => {
+    try { localStorage.setItem(CLAVE_CEREBRO, JSON.stringify(cerebro.aJSON())); } catch { actividad("⚠️", "No entró todo en la memoria del navegador"); } });
   if (ahora) hacer(); else guardadoPendiente = setTimeout(hacer, 1500);
+}
+/* Truco 2: cuando aprende algo nuevo, practica lo nuevo junto con un poquito de lo viejo, para no olvidarse */
+function conRepaso(nuevos, cuantosViejos = Math.max(4, nuevos.length)) {
+  const viejos = [...(textosGrandes || []), ...aprendidoAca], extra = [];
+  for (let k = 0; k < cuantosViejos && viejos.length; k++) extra.push(viejos[Math.floor(Math.random() * viejos.length)]);
+  return [...nuevos, ...extra];
 }
 async function cargarTextosGrandes() {
   if (textosGrandes) return textosGrandes;
@@ -1088,7 +1132,7 @@ function aprenderDeLaCharla(mensaje) {
   if (nuevas.length && cerebro.palabras.length < 8000) { cerebro.agregarPalabras(nuevas); actividad("📝", `Aprendí ${nuevas.length === 1 ? "una palabra nueva" : nuevas.length + " palabras nuevas"}: ${nuevas.slice(0, 5).join(", ")}`); }
   if (gramatica) { gramatica.aprenderJuntas(tk); guardado.escribir("frankers-juntas", gramatica.juntas); }
   const texto = `${FrankersCerebro.YO} ${mensaje} ${FrankersCerebro.FRANKERS}`;
-  cerebro.entrenar([texto], { tasa: 0.02 });
+  cerebro.entrenar(conRepaso([texto]), { tasa: 0.005 });
   aprendidoAca = [...aprendidoAca, texto].slice(-200); guardado.escribir("frankers-charlas-aprendidas", aprendidoAca);
   guardarCerebro(); marcarCambio();
 }
@@ -1125,7 +1169,7 @@ async function aprenderPalabra(w) {
     if (r.sinonimo && !revisar(r.sinonimo).problema) aprendido.sinonimos = { ...(aprendido.sinonimos || {}), [w]: r.sinonimo };
     gramatica.sumar(w, entrada); if (r.significado) gramatica.significados[w] = r.significado;
     if (!cerebro.indice.has(w)) cerebro.agregarPalabras([w]);
-    if (r.significado) cerebro.entrenar(Array(6).fill(FrankersCerebro.charla(`qué significa ${w}`, `"${w}" significa: ${r.significado}`)), { tasa: 0.03 });
+    if (r.significado) cerebro.entrenar(conRepaso(Array(6).fill(FrankersCerebro.charla(`qué significa ${w}`, `"${w}" significa: ${r.significado}`))), { tasa: 0.03 });
     guardarAprendido(); guardarCerebro(); marcarCambio();
     if (!repasando) { dejarDeSentir("buscando"); sentir("aprendiendo"); } else emocion = "alegre";
     paso.fin(`Aprendí «${w}»${r.deForma ? ` (viene de «${r.deForma}»)` : ""}: ${gramatica.tipos[r.tipo] || r.tipo}${r.significado ? " — " + r.significado : ""}`, "📖");
@@ -1156,7 +1200,7 @@ async function aprenderTema(tema, pregunta, rapido = false) {
     for (const o of oraciones) gramatica.aprenderJuntas(FrankersCerebro.tokenizar(o));
     // lo practica hasta que se lo sabe (así lo guarda en sus neuronas)
     const textos = [FrankersCerebro.charla(pregunta, resumen), FrankersCerebro.charla(`qué es ${tema}`, resumen), ...oraciones.map(o => o + " " + FrankersCerebro.FIN)];
-    for (let k = 0; k < (rapido ? 3 : 12); k++) { cerebro.entrenar(textos, { tasa: 0.025 }); if (k % 4 === 3) await new Promise(r => setTimeout(r, 0)); }
+    for (let k = 0; k < (rapido ? 3 : 12); k++) { cerebro.entrenar(conRepaso(textos), { tasa: 0.025 }); if (k % 4 === 3) await new Promise(r => setTimeout(r, 0)); }
     aprendidoAca = [...aprendidoAca, ...textos].slice(-400); guardado.escribir("frankers-charlas-aprendidas", aprendidoAca);
     guardarCerebro(); marcarCambio();
     if (!rapido) { emocion = "alegre"; dejarDeSentir("buscando"); }
@@ -1197,7 +1241,7 @@ async function leerAlgoNuevo() {
       const oraciones = (texto.match(/[^.!?]+[.!?]+/g) || []).map(x => x.trim()).filter(x => x.split(" ").length > 3 && !revisar(x).problema);
       const textos = oraciones.map(o => o + " " + FrankersCerebro.FIN);
       for (const o of oraciones) gramatica.aprenderJuntas(FrankersCerebro.tokenizar(o));
-      for (let k = 0; k < 3; k++) { cerebro.entrenar(textos, { tasa: 0.02, hasta: Date.now() + 400 }); await new Promise(r => setTimeout(r, 0)); }
+      for (let k = 0; k < 3; k++) { cerebro.entrenar(conRepaso(textos, 20), { tasa: 0.02, hasta: Date.now() + 400 }); await new Promise(r => setTimeout(r, 0)); }
       aprendido.videos.push(v.id); guardarAprendido(); guardarCerebro(); marcarCambio();
       actividad("📺", `Miré el video «${v.titulo}» de Franclips (leí ${oraciones.length} frases de sus subtítulos)`);
     } else { // palabras del diccionario que todavía no usa
@@ -1218,11 +1262,11 @@ async function repasoSolo() {
       // las charlas importantes (saludos, "cómo estás", pedidos) se repasan más; si nunca le hablaron, casi solo esas
       const importantes = historial.some(m => m.de === "yo") ? 2 : 7;
       for (let k = 0; k < importantes; k++) lote.push(textos[Math.floor(Math.random() * Math.min(textos.length, 255))]);
-      cerebro.entrenar(lote, { tasa: 0.015, hasta: Date.now() + 60 });
+      cerebro.entrenar(lote, { tasa: 0.003, hasta: Date.now() + (document.querySelector("dialog[open]") ? 12 : 40) }); // de a poquito, para que la página no se trabe
       vueltas++;
       if (Date.now() - ultimaLectura > 1000) { ultimaLectura = Date.now(); await leerAlgoNuevo(); } // cada segundo lee algo nuevo
       if (vueltas % 100 === 0) { guardarCerebro(); marcarCambio(); }
-      await new Promise(r => setTimeout(r, 25));
+      await new Promise(r => setTimeout(r, document.querySelector("dialog[open]") ? 60 : 30));
     }
     guardarCerebro(); marcarCambio();
   } finally { repasando = false; mostrarRepasando(null); }
@@ -1405,7 +1449,7 @@ function contestarSeguimiento(t) {
   if (!mejor || mp < 0.9) return null;
   contexto.dichas.add(mejor);
   aprendido.respuestas = { ...(aprendido.respuestas || {}), [llave]: mejor }; guardarAprendido(); // se lo acuerda para siempre
-  cerebro && cerebro.entrenar([FrankersCerebro.charla(`${t} ${contexto.tema}`, mejor)], { tasa: 0.02 });
+  cerebro && cerebro.entrenar(conRepaso([FrankersCerebro.charla(`${t} ${contexto.tema}`, mejor)]), { tasa: 0.02 });
   return mejor;
 }
 function contarMas() {
@@ -1425,7 +1469,7 @@ function recibirCorreccion(original) {
   const falso = esFalso(original); if (falso) return `Mmm, eso no es cierto: ${falso} Así que no lo aprendo. 🤓`;
   if (temaDePregunta(pregunta) && aprendido.temas[normalizar(temaDePregunta(pregunta))]) return "Lo que yo sé lo leí en Wikipedia. Si me mostrás de dónde lo sacaste (un libro, una página), lo reviso. 📖";
   memoria.correcciones = { ...(memoria.correcciones || {}), [normalizar(pregunta)]: original.trim() }; guardarMemoria();
-  if (cerebro) { cerebro.entrenar(Array(4).fill(FrankersCerebro.charla(pregunta, original.trim())), { tasa: 0.03 }); guardarCerebro(); }
+  if (cerebro) { cerebro.entrenar(conRepaso(Array(4).fill(FrankersCerebro.charla(pregunta, original.trim()))), { tasa: 0.03 }); guardarCerebro(); }
   actividad("✏️", `Aprendí una corrección: «${pregunta}» → «${original.trim()}»`);
   return `¡Gracias por enseñarme! 💜 Ahora ya sé: «${original.trim()}».`;
 }
@@ -1528,13 +1572,28 @@ function responder(original) {
     const w = ordenEmo[1];
     const nombre = /enojad/.test(w) ? "enojada" : /sorprend/.test(w) ? "sorprendida" : /asustad/.test(w) ? "asustada" : /nervios/.test(w) ? "nerviosa" : /cansad|dormid/.test(w) ? "cansada" : /curios/.test(w) ? "curiosa" : /confundid/.test(w) ? "confundida" : /emocionad/.test(w) ? "emocionada" : /rie|reite/.test(w) ? "riendose" : /orgullos/.test(w) ? "orgullosa" : /avergonzad|colorad/.test(w) ? "avergonzada" : /cariñ|carin/.test(w) ? "carino" : /preocupad/.test(w) ? "preocupada" : /agradecid/.test(w) ? "agradecida" : /salud/.test(w) ? "saludando" : /despedite/.test(w) ? "despidiendo" : "curiosa";
     emocionPendiente = nombre; ordenDeCara = true;
-    return { texto: `Así me pongo cuando estoy ${NOMBRES_EMO[nombre] || nombre}.` };
+    return { texto: `Así me pongo cuando estoy ${NOMBRES_EMO[nombre] || nombre}.`, mostrarCara: true };
   }
   if (orden) {
     const c = /triste/.test(orden[1]) ? "triste" : /pensativ/.test(orden[1]) ? "pensando" : /normal/.test(orden[1]) ? "normal" : "alegre";
     emocion = c; ordenDeCara = true;
     actividad("🎭", `Me pongo ${c === "alegre" ? "feliz" : c === "pensando" ? "a pensar" : c}`);
-    return { texto: { triste: "Así me pongo cuando estoy triste… 😢", alegre: "¡Ah! ¡Así me pongo cuando estoy feliz! 🎉", pensando: "Mmm… dejame pensar… 🤔", normal: "Listo, vuelvo a mi cara de siempre. 🙂" }[c], cara: c };
+    return { texto: { triste: "Así me pongo cuando estoy triste… 😢", alegre: "¡Ah! ¡Así me pongo cuando estoy feliz! 🎉", pensando: "Mmm… dejame pensar… 🤔", normal: "Listo, vuelvo a mi cara de siempre. 🙂" }[c], cara: c, mostrarCara: true };
+  }
+  // Órdenes para usar sus aplicaciones: "entrá a Wikipedia", "abrí el Buscafrankers y buscá perros", "abrí el cerebro"
+  const app = t.match(/^(?:frankers\s+)?(?:entra|entrar|abri|abrime|abrir|anda|andate|ir|mostrame|usa)\s+(?:a\s+|al\s+|en\s+)?(?:el\s+|la\s+|las\s+|los\s+|tu\s+)?(wikipedia|wiki|buscafrankers|buscador|google|internet|cerebro|neuronas|diccionario|charlas|dibujos|pintor|mi compu|compu)\b(?:\s+y\s+(?:busca|buscame|buscar)\s+(.+))?$/);
+  if (app) {
+    const que = app[1], buscar = app[2] && original.replace(/^.*?\bbusc\w*\s+/i, "").replace(/[?!.]+$/, "");
+    actividad("🖱️", `Entro a ${que}`);
+    setTimeout(() => {
+      if (/cerebro|neuronas/.test(que)) return $("#btnCerebro").click();
+      if (/dibujos|pintor/.test(que)) return $("#latDibujos").click();
+      if (/compu/.test(que)) return $("#btnCompu").click();
+      $("#btnBusca").click(); elegirModoBusca(/wiki/.test(que) ? "wiki" : /diccionario/.test(que) ? "dic" : /charlas/.test(que) ? "charlas" : "todo");
+      if (buscar) { $("#buscaTexto").value = buscar; buscarEnBuscafrankers(buscar); }
+    }, 700);
+    const nombre = { wiki: "Wikipedia", wikipedia: "Wikipedia", cerebro: "mi cerebro", neuronas: "mi cerebro", diccionario: "el diccionario", charlas: "las charlas", dibujos: "los dibujos", pintor: "los dibujos" }[que] || "el Buscafrankers";
+    return { texto: `¡Dale! Entro a ${nombre}${buscar ? ` y busco «${buscar}»` : ""}. 🖱️` };
   }
   // Lo nuevo: se acuerda de vos, sigue la charla, fecha y hora, significados, cuentas, correcciones y juegos
   const listo = contestarInteligente(original); if (listo) return { texto: listo };
@@ -1607,30 +1666,91 @@ function mostrarError(antes, despues, que) {
   $("#cerebroEstado").textContent = `${que} Error: ${antes.toFixed(3)} → ${despues.toFixed(3)} ${mejora ? "✅ ¡mejoró!" : peor ? "⬆️ subió un poco (entrenando se arregla)" : "➖ igual (no se olvidó de nada)"}`;
 }
 let entrenando = false;
+/* ---------- ENTRENAR RÁPIDO EN UN WEB WORKER (truco 7) ----------
+   El Worker es como un ayudante que entrena en otro lado, así la página nunca se traba.
+   Usa el entrenador nuevo de cerebro.js (Adam, grupitos, dropout, mejor versión, etc.).
+   Si el navegador no puede, entrena en la página de a pedacitos. */
+let ayudante = null, pararEntreno = false;
+const CODIGO_AYUDANTE = `
+  let ent = null, cer = null, parar = false;
+  self.onmessage = (e) => {
+    const d = e.data;
+    if (d.tipo === "parar") { parar = true; return; }
+    if (d.tipo !== "entrenar") return;
+    try {
+      parar = false; cer = FrankersCerebro.Cerebro.desdeCrudo(d.cerebro);
+      ent = cer.crearEntrenador(d.textos, { ...d.opciones, prueba: d.prueba });
+      const vuelta = () => {
+        const est = ent.paso(250); postMessage({ tipo: "avance", est });
+        if (ent.terminado || parar) { const r = ent.terminar(); const crudo = cer.aCrudo(); postMessage({ tipo: "listo", r, cerebro: crudo }); }
+        else setTimeout(vuelta, 0);
+      };
+      vuelta();
+    } catch (err) { postMessage({ tipo: "error", mensaje: String(err && err.message || err) }); }
+  };`;
+function crearAyudante() {
+  if (ayudante) return ayudante;
+  try {
+    const codigo = "(" + FrankersCerebro.fabrica.toString() + ")(self);\n" + CODIGO_AYUDANTE;
+    ayudante = new Worker(URL.createObjectURL(new Blob([codigo], { type: "text/javascript" })));
+  } catch { ayudante = null; }
+  return ayudante;
+}
+// Separa un 10 % de las frases para probar (truco 15): con esas NO entrena, así se sabe si aprende de verdad
+const hashTexto = (t) => { let h = 2166136261; for (let i = 0; i < t.length; i++) h = Math.imul(h ^ t.charCodeAt(i), 16777619); return h >>> 0; };
+function separarPrueba(textos) { const prueba = [], entreno = []; for (const t of textos) (hashTexto(t) % 10 === 0 ? prueba : entreno).push(t); return { prueba: [...new Set(prueba)].slice(0, 300), entreno }; }
+let curvaEntreno = [];
+function entrenarConAyudante(textos, prueba, opciones, alAvanzar) {
+  return new Promise((ok) => {
+    const w = crearAyudante();
+    if (!w) return ok(entrenarEnLaPagina(textos, prueba, opciones, alAvanzar));
+    const vocab = cerebro.palabras.length;
+    w.onmessage = (e) => {
+      const d = e.data;
+      if (d.tipo === "avance") alAvanzar(d.est);
+      else if (d.tipo === "listo") {
+        if (cerebro.palabras.length !== vocab) { actividad("⚠️", "Aprendí palabras nuevas mientras entrenaba: me quedo con lo de antes"); return ok({ ...d.r, noAplicado: true }); }
+        const nuevo = Cerebro.desdeCrudo(d.cerebro); cerebro.E = nuevo.E; cerebro.capas = nuevo.capas; cerebro.vistas = nuevo.vistas; cerebro.historialError = nuevo.historialError;
+        ok(d.r);
+      } else if (d.tipo === "error") { console.warn("Ayudante:", d.mensaje); ayudante = null; ok(entrenarEnLaPagina(textos, prueba, opciones, alAvanzar)); }
+    };
+    w.onerror = (e) => { e.preventDefault && e.preventDefault(); ayudante = null; ok(entrenarEnLaPagina(textos, prueba, opciones, alAvanzar)); };
+    w.postMessage({ tipo: "entrenar", cerebro: cerebro.aCrudo(), textos, prueba, opciones });
+  });
+}
+async function entrenarEnLaPagina(textos, prueba, opciones, alAvanzar) { // plan B, sin Worker: de a pedacitos
+  const ent = cerebro.crearEntrenador(textos, { ...opciones, prueba });
+  while (!ent.terminado && !pararEntreno) { alAvanzar(ent.paso(60)); await new Promise(r => setTimeout(r, 15)); }
+  return ent.terminar();
+}
 async function entrenarUnRato(segundos = 15, textosExtra = null) {
   if (!cerebro || entrenando) return;
-  entrenando = true; $("#btnEntrenar").disabled = true;
-  const textos = textosExtra || [...await cargarTextosGrandes(), ...aprendidoAca];
-  const prueba = textosExtra ? textosExtra.slice(0, 20) : muestraPrueba();
-  const antes = cerebro.medirError(prueba), fin = Date.now() + segundos * 1000;
-  const paso = actividad("🏋️", `Entrenando ${segundos} segundos…`, true);
-  let leidas = 0;
-  while (Date.now() < fin) {
-    const lote = []; for (let k = 0; k < 12; k++) lote.push(textos[Math.floor(Math.random() * textos.length)]);
-    const v = cerebro.vistas; cerebro.entrenar(lote, { tasa: 0.02, hasta: Date.now() + 120 }); leidas += cerebro.vistas - v;
-    estadoCerebro(`🏋️ Aprendiendo… quedan ${Math.ceil((fin - Date.now()) / 1000)} segundos · ya leyó ${leidas.toLocaleString("es-AR")} palabras`);
-    $("#cfProgreso").classList.add("si"); $("#cfProgreso i").style.width = (100 - (fin - Date.now()) / (segundos * 10)).toFixed(1) + "%";
-    dibujarGrafico();
-    await new Promise(r => setTimeout(r, 0)); // deja respirar a la página
-  }
-  const despues = cerebro.medirError(prueba);
-  paso.fin(`Entrené: leí ${leidas.toLocaleString("es-AR")} palabras. Error ${antes.toFixed(3)} → ${despues.toFixed(3)}`, "🏋️");
-  mostrarError(antes, despues, `Leyó ${leidas.toLocaleString("es-AR")} palabras.`);
-  $("#cfProgreso").classList.remove("si");
-  estadoCerebro(despues < antes - 0.005 ? `✅ ¡Aprendió! Leyó ${leidas.toLocaleString("es-AR")} palabras y ahora se equivoca menos.` : `✅ Leyó ${leidas.toLocaleString("es-AR")} palabras. Para que mejore se nota más si la enseñás varias veces.`, "ok");
+  entrenando = true; pararEntreno = false; if (dlgCerebro.open) consejoCerebro();
+  for (const b of ["#btnEntrenar", "#cfEnsenar"]) $(b).disabled = true; $("#cfParar").hidden = false;
+  const todos = textosExtra ? conRepaso(textosExtra, textosExtra.length * 2) : [...await cargarTextosGrandes(), ...aprendidoAca];
+  let { prueba, entreno } = separarPrueba(todos);
+  if (textosExtra) { prueba = separarPrueba(textosGrandes || []).prueba.slice(0, 120); entreno = todos; }
+  const paso = actividad("🏋️", `Entrenando ${segundos} segundos (con el entrenador rápido)…`, true);
+  const empezo = Date.now(); curvaEntreno = [];
+  estadoCerebro("🏋️ Preparando los ejemplos…"); $("#cfProgreso").classList.add("si"); $("#cfProgreso i").style.width = "0%";
+  const r = await entrenarConAyudante(entreno, prueba, { segundos, variantes: !textosExtra }, (est) => {
+    curvaEntreno.push(est.errorEntreno ?? est.errorPrueba);
+    $("#cfProgreso i").style.width = (est.progreso * 100).toFixed(1) + "%";
+    estadoCerebro(`🏋️ Aprendiendo… ${Math.round(est.progreso * 100)} % · practicó ${est.ejemplos.toLocaleString("es-AR")} ejemplos · error de prueba ${est.errorPrueba} (empezó en ${est.errorAntes})`);
+    dibujarGrafico(); dibujarCurvaFacil();
+  });
+  const seg = ((Date.now() - empezo) / 1000).toFixed(0);
+  $("#cfProgreso").classList.remove("si"); $("#cfParar").hidden = true;
+  const mejoro = r.errorPrueba < r.errorAntes - 0.002;
+  paso.fin(`Entrené ${seg} s: practiqué ${r.ejemplos.toLocaleString("es-AR")} ejemplos. Error de prueba ${r.errorAntes} → ${r.errorPrueba}${r.paro ? " (" + r.paro + ")" : ""}`, "🏋️");
+  mostrarError(r.errorAntes, r.errorPrueba, `Practicó ${r.ejemplos.toLocaleString("es-AR")} ejemplos en ${seg} segundos.`);
+  estadoCerebro(r.noAplicado ? "⚠️ Mientras entrenaba aprendió palabras nuevas, así que no cambié nada. Probá de nuevo." : mejoro
+    ? `✅ ¡Aprendió! Practicó ${r.ejemplos.toLocaleString("es-AR")} ejemplos en ${seg} segundos y ahora se equivoca menos (${r.errorAntes} → ${r.errorPrueba}).`
+    : `✅ Practicó ${r.ejemplos.toLocaleString("es-AR")} ejemplos. Esta vez casi no mejoró, así que me quedé con su mejor versión (no empeoró).`, r.noAplicado ? "mal" : "ok");
+  if (!r.noAplicado) { guardarCerebro(true); marcarCambio(); }
   if (dlgCerebro.open) pintarCerebroFacil();
-  guardarCerebro(true); pintarCerebro();
-  entrenando = false; $("#btnEntrenar").disabled = false;
+  pintarCerebro(); dibujarCurvaFacil();
+  entrenando = false; for (const b of ["#btnEntrenar", "#cfEnsenar"]) $(b).disabled = false;
 }
 async function probarCerebro() {
   const q = $("#cerebroPregunta").value.trim() || "hola";
@@ -1655,6 +1775,7 @@ function pintarCerebroFacil() {
     [n(Object.keys(aprendido.temas || {}).length), "🌍 Temas de Wikipedia", "Cosas que buscó y se guardó para siempre."],
     [n(Object.keys(gramatica?.significados || {}).length), "📚 Significados", "Palabras que sabe qué quieren decir (del diccionario)."],
   ];
+  consejoCerebro(); setTimeout(dibujarCurvaFacil, 0);
   $("#cfDatos").innerHTML = datos.map(([num, t, p]) => `<div class="cf-dato"><span class="n">${num}</span><span class="l">${t}</span><p>${p}</p></div>`).join("");
 }
 function estadoCerebro(txt, clase = "") { for (const id of ["#cerebroEstado", "#cfEstado"]) { const e = $(id); if (e) { e.className = (id === "#cfEstado" ? "cf-estado " : "estado ") + clase; e.textContent = txt; } } }
@@ -1673,6 +1794,7 @@ function verPensar() {
   const { tokenizar, YO, FRANKERS, FIN } = FrankersCerebro, N = cerebro.contexto;
   const texto = $("#cfFrase").value.trim() || "hola";
   let ids = [...Array(N).fill(cerebro.id(FIN)), ...tokenizar(`${YO} ${texto} ${FRANKERS}`).map(t => cerebro.id(t))].slice(-N);
+  demo = demo || { ...pensarIds(ids), dijo: [], golpe: performance.now() };
   // Sigue la frase que de verdad contestaría, y en cada paso muestra qué palabras pensó y cuál eligió
   const respuesta = [...tokenizar(hablarConCerebro(texto)).map(w => cerebro.id(w)), cerebro.id(FIN)];
   const dijo = [];
@@ -1694,7 +1816,7 @@ function animarRed() {
   if (c.width !== Math.round(W * dpr)) { c.width = Math.round(W * dpr); c.height = Math.round(H * dpr); }
   const g = c.getContext("2d"); g.setTransform(dpr, 0, 0, dpr, 0, 0); g.clearRect(0, 0, W, H);
   const t = performance.now(), chico = W < 600, arriba = chico ? 128 : 104, abajo = H - 22;
-  if (!demo && cerebro) verPensar();
+  if (!demo && cerebro && !demoTimer) { demoTimer = -1; setTimeout(verPensar, 400); } // primero abre la página, después piensa
   if (!demo) { redRaf = requestAnimationFrame(animarRed); return; }
   // columnas: entrada, capas de neuronas, salida
   const cols = [], xE = chico ? 74 : 150, xS = W - (chico ? 92 : 170);
@@ -1710,14 +1832,14 @@ function animarRed() {
   const maxP = Math.max(...demo.salida.map(s => s.p), 1e-6);
   vis.salida = demo.salida.map((s, i) => (vis.salida[i] || 0) + (s.p / maxP - (vis.salida[i] || 0)) * 0.08);
   cols.push({ x: xS, ys: ys(demo.salida.length), val: vis.salida });
-  // cables
-  for (let k = 0; k + 1 < cols.length; k++) {
-    const A = cols[k], B = cols[k + 1];
-    for (let i = 0; i < A.ys.length; i++) for (let j = 0; j < B.ys.length; j++) {
-      const fuerza = Math.min(1, Math.abs(A.val[i] || 0) * Math.abs(B.val[j] || 0));
-      g.strokeStyle = `rgba(138, 92, 255, ${0.03 + fuerza * 0.18})`; g.lineWidth = 1;
-      g.beginPath(); g.moveTo(A.x, A.ys[i]); g.lineTo(B.x, B.ys[j]); g.stroke();
-    }
+  // cables (dibujados todos juntos: así no se traba)
+  for (const fuerte of [false, true]) {
+    g.beginPath(); g.strokeStyle = fuerte ? "rgba(138, 92, 255, .28)" : "rgba(138, 92, 255, .06)"; g.lineWidth = 1;
+    for (let k = 0; k + 1 < cols.length; k++) { const A = cols[k], B = cols[k + 1];
+      for (let i = 0; i < A.ys.length; i++) for (let j = 0; j < B.ys.length; j++) {
+        if ((Math.abs(A.val[i] || 0) * Math.abs(B.val[j] || 0) > 0.3) !== fuerte) continue;
+        g.moveTo(A.x, A.ys[i]); g.lineTo(B.x, B.ys[j]); } }
+    g.stroke();
   }
   // chispas que viajan (más cuando está aprendiendo)
   const ocupada = entrenando || repasando, nuevas = ocupada ? 3 : (t - (demo.golpe || 0) < 900 ? 4 : 0.35);
@@ -1725,15 +1847,14 @@ function animarRed() {
     const ci = Math.floor(Math.random() * (cols.length - 1)), A = cols[ci], B = cols[ci + 1];
     vis.chispas.push({ x1: A.x, y1: A.ys[Math.floor(Math.random() * A.ys.length)], x2: B.x, y2: B.ys[Math.floor(Math.random() * B.ys.length)], t: 0, v: 0.012 + Math.random() * 0.02, color: ["#4fd8ff", "#8a5cff", "#ff6ad5"][ci % 3] });
   }
-  vis.chispas = vis.chispas.filter(ch => (ch.t += ch.v) < 1).slice(-160);
-  for (const ch of vis.chispas) { const x = ch.x1 + (ch.x2 - ch.x1) * ch.t, y = ch.y1 + (ch.y2 - ch.y1) * ch.t; g.fillStyle = ch.color; g.shadowColor = ch.color; g.shadowBlur = 10; g.beginPath(); g.arc(x, y, 2.6, 0, Math.PI * 2); g.fill(); }
-  g.shadowBlur = 0;
+  vis.chispas = vis.chispas.filter(ch => (ch.t += ch.v) < 1).slice(-90);
+  for (const ch of vis.chispas) { const x = ch.x1 + (ch.x2 - ch.x1) * ch.t, y = ch.y1 + (ch.y2 - ch.y1) * ch.t; g.fillStyle = ch.color; g.globalAlpha = .35; g.beginPath(); g.arc(x, y, 5, 0, Math.PI * 2); g.fill(); g.globalAlpha = 1; g.beginPath(); g.arc(x, y, 2.2, 0, Math.PI * 2); g.fill(); } // brillo liviano (sin "shadowBlur", que trababa todo)
   // neuronas
   cols.forEach((col, k) => col.ys.forEach((y, i) => {
     const v = col.val[i] || 0, a = Math.min(1, Math.abs(v)), r = (chico ? 6 : 8) + a * 4 + Math.sin(t / 400 + i + k) * 0.8;
     const color = k === 0 ? "79, 216, 255" : k === cols.length - 1 ? "255, 106, 213" : v >= 0 ? "79, 216, 255" : "200, 107, 255";
-    g.fillStyle = `rgba(${color}, ${0.18 + a * 0.82})`; g.shadowColor = `rgba(${color}, 1)`; g.shadowBlur = 6 + a * 22;
-    g.beginPath(); g.arc(col.x, y, r, 0, Math.PI * 2); g.fill(); g.shadowBlur = 0;
+    g.fillStyle = `rgba(${color}, ${0.08 + a * 0.22})`; g.beginPath(); g.arc(col.x, y, r + 4 + a * 8, 0, Math.PI * 2); g.fill();
+    g.fillStyle = `rgba(${color}, ${0.18 + a * 0.82})`; g.beginPath(); g.arc(col.x, y, r, 0, Math.PI * 2); g.fill();
     g.strokeStyle = "rgba(255,255,255,.35)"; g.lineWidth = 1; g.stroke();
   }));
   // etiquetas
@@ -1751,7 +1872,34 @@ function animarRed() {
 // Botones grandes
 $("#cfPensar").onclick = verPensar;
 $("#cfFrase").addEventListener("keydown", e => { if (e.key === "Enter") verPensar(); });
-$("#cfEnsenar").onclick = async () => { $("#cfEnsenar").disabled = true; await entrenarUnRato(30); $("#cfEnsenar").disabled = false; pintarCerebroFacil(); verPensar(); };
+$("#cfEnsenar").onclick = async () => { await entrenarUnRato(+$("#cfSegundos").value || 30); pintarCerebroFacil(); verPensar(); };
+$("#cfParar").onclick = () => { pararEntreno = true; if (ayudante) ayudante.postMessage({ tipo: "parar" }); estadoCerebro("⏹ Parando… me quedo con la mejor versión"); };
+// La línea que sube y baja: cuánto se equivoca (cada entrenamiento, y en vivo mientras entrena)
+function dibujarCurvaFacil() {
+  const c = $("#cfGrafico"); if (!c || !c.offsetParent || !cerebro) return;
+  const dpr = devicePixelRatio || 1, W = c.clientWidth, H = c.clientHeight; c.width = W * dpr; c.height = H * dpr;
+  const g = c.getContext("2d"); g.setTransform(dpr, 0, 0, dpr, 0, 0); g.clearRect(0, 0, W, H);
+  const datos = (entrenando && curvaEntreno.length > 1 ? curvaEntreno : cerebro.historialError).filter(x => x != null).slice(-120);
+  if (datos.length < 2) { g.fillStyle = "#b9b0e0"; g.font = "14px Nunito, sans-serif"; g.fillText("Tocá «¡Enseñale!» y vas a ver la línea subir y bajar.", 12, H / 2); return; }
+  const max = Math.max(...datos), min = Math.min(...datos), x = i => 36 + i / (datos.length - 1) * (W - 48), y = v => 12 + (1 - (v - min) / (max - min || 1)) * (H - 30);
+  g.strokeStyle = "rgba(255,255,255,.08)"; for (let k = 0; k < 4; k++) { g.beginPath(); g.moveTo(36, 12 + k * (H - 30) / 3); g.lineTo(W - 12, 12 + k * (H - 30) / 3); g.stroke(); }
+  const grad = g.createLinearGradient(0, 0, W, 0); grad.addColorStop(0, "#4fd8ff"); grad.addColorStop(.6, "#8a5cff"); grad.addColorStop(1, "#ff6ad5");
+  g.strokeStyle = grad; g.lineWidth = 3; g.lineJoin = "round"; g.beginPath(); datos.forEach((v, i) => i ? g.lineTo(x(i), y(v)) : g.moveTo(x(i), y(v))); g.stroke();
+  g.fillStyle = "#b9b0e0"; g.font = "11px Nunito, sans-serif"; g.fillText(max.toFixed(2), 2, 16); g.fillText(min.toFixed(2), 2, H - 16);
+  g.fillText(entrenando ? "ahora, en vivo" : "cada vez que la enseñaste", W - 150, H - 4);
+}
+// "¿Qué hago ahora?": te dice qué conviene hacer
+function consejoCerebro() {
+  const caja = $("#cfConsejo"); if (!caja || !cerebro) return;
+  const h = cerebro.historialError, ultimo = h[h.length - 1], antes = h[h.length - 2];
+  let ic = "👉", titulo, texto, boton = null;
+  if (entrenando) { ic = "⏳"; titulo = "Está aprendiendo…"; texto = "Mirá cómo baja la línea. Podés parar cuando quieras: se queda con su mejor versión."; }
+  else if (!h.length || !curvaEntreno.length) { titulo = "Ahora: enseñale un rato"; texto = "Elegí cuánto tiempo y tocá «¡Enseñale!». Mientras aprende, mirá la línea de abajo."; boton = ["🏋️ Enseñale 30 segundos", () => { $("#cfSegundos").value = "30"; $("#cfEnsenar").click(); }]; }
+  else if (antes != null && ultimo < antes) { ic = "🎉"; titulo = "¡Mejoró! Ahora probá cómo habla"; texto = "Escribile algo en «Probá cómo habla», o enseñale otro rato para que mejore más."; boton = ["💬 Probar", () => $("#cfProbarTexto").focus()]; }
+  else { ic = "🧩"; titulo = "Casi no mejoró: hacela más grande"; texto = "Si ya no mejora, agregale 8 neuronas y después enseñale de nuevo."; boton = ["🧩 Agregar neuronas", () => $("#cfCrecer").click()]; }
+  caja.innerHTML = `<span class="ic">${ic}</span><div><b></b><span></span></div>`; caja.querySelector("b").textContent = titulo; caja.querySelector("span:last-child").textContent = texto;
+  if (boton) { const b = document.createElement("button"); b.className = "boton principal"; b.textContent = boton[0]; b.onclick = boton[1]; caja.appendChild(b); }
+}
 $("#cfCrecer").onclick = async () => {
   await cargarTextosGrandes();
   const capa = cerebro.neuronas.length - 1, prueba = muestraPrueba(), antes = cerebro.medirError(prueba);
@@ -1773,6 +1921,8 @@ $("#btnModoExperto").onclick = () => {
 const PASOS_TOUR = [
   ["nivel", "🏅 Su nivel", "Frankers sube de nivel cuanto más lee. Empezó siendo un bebé 🐣. La barra muestra cuánto le falta para el próximo nivel."],
   ["red", "💡 Su cerebro por dentro", "Esto es su red de neuronas, de verdad. A la izquierda entran tus palabras. En el medio, las neuronas se prenden (las más brillantes son las que más se prendieron). A la derecha, la palabra que cree que sigue. Escribí algo arriba y tocá ▶ Ver."],
+  ["consejo", "👉 Qué hacer ahora", "Acá Frankers te dice qué conviene hacer, paso por paso. ¡Seguí lo que dice!"],
+  ["curva", "📉 La línea que sube y baja", "Muestra cuánto se equivoca. Mientras aprende, la línea se mueve. Cuanto más abajo, mejor."],
   ["datos", "📊 Sus números", "Cuántas palabras sabe, cuántas neuronas tiene y cuánto leyó. Debajo de cada número dice qué es."],
   ["ensenar", "🏋️ Enseñale", "Este es el botón más importante. Frankers lee textos y practica. Cada vez que se equivoca, arregla un poquito sus neuronas. ¡Así aprende!"],
   ["crecer", "🧩 Hacela más grande", "Le agrega neuronas. Con más neuronas puede aprender más, pero después hay que enseñarle para que las use."],
@@ -1805,7 +1955,7 @@ async function pasoTour(k) {
   globo.querySelector('[data-t="sig"]').focus();
 }
 $("#btnTour").onclick = () => pasoTour(0);
-dlgCerebro.addEventListener("close", () => { cerrarTour(); clearInterval(demoTimer); cancelAnimationFrame(redRaf); redRaf = 0; });
+dlgCerebro.addEventListener("close", () => { cerrarTour(); clearInterval(demoTimer); demoTimer = null; cancelAnimationFrame(redRaf); redRaf = 0; });
 
 $("#btnCerebro").onclick = async () => {
   estadoCerebro(""); dlgCerebro.showModal(); pintarCerebro(); pintarCerebroFacil(); pintarActividad($("#cerebroActividad"));
@@ -2432,14 +2582,19 @@ function mostrar(m) {
     otra.onclick = () => { ultimoDibujo = m.dibujo.prompt; enviar("otra"); };
     extra.append(bajar, otra); div.appendChild(extra);
   }
-  // (la carita ya no aparece en los mensajes del chat: solo en la llamada)
+  // La carita aparece en el chat SOLO cuando le pedís una cara ("ponete triste", "ponete enojado"…)
+  if (m.mostrarCara && !enLlamada && document.querySelector("#llCara")) {
+    const copia = document.querySelector("#llCara").cloneNode(true); copia.removeAttribute("id"); copia.dataset.cara = "normal"; delete copia.dataset.emo;
+    copia.querySelectorAll(".mano.emo").forEach(x => x.classList.remove("activa")); div.appendChild(copia);
+    setTimeout(() => { if (m.cara) { copia.dataset.cara = m.cara; if (m.cara === "pensando") setTimeout(() => copia.querySelector(".mano.pensar").classList.add("tocando"), 2200); if (m.cara === "alegre") copia.classList.add("festejo"); } else if (m.emo) emocionar(copia, m.emo, 2600); }, 80);
+  }
   chat.appendChild(div);
   chat.scrollTop = chat.scrollHeight;
 }
 function agregar(m) { historial.push(m); guardarHistorial(); mostrar(m); }
 
 /* ---------- BARRA DE LA IZQUIERDA: nueva charla, buscar, recientes (cambiar nombre y borrar) ---------- */
-const esCelu = () => matchMedia("(max-width: 860px)").matches;
+const esCelu = () => matchMedia("(max-width: 640px)").matches; // en la compu la barra está siempre
 function abrirLateral(si) {
   if (esCelu()) { document.body.classList.toggle("lateral-abierta", si); document.body.classList.remove("sin-lateral"); }
   else { document.body.classList.toggle("sin-lateral", !si); guardado.escribir("frankers-lateral", si); }
@@ -2447,7 +2602,7 @@ function abrirLateral(si) {
 $("#btnLateral").onclick = () => abrirLateral(esCelu() ? !document.body.classList.contains("lateral-abierta") : document.body.classList.contains("sin-lateral"));
 $("#btnCerrarLateral").onclick = () => abrirLateral(false);
 $("#tapaLateral").onclick = () => abrirLateral(false);
-if (guardado.leer("frankers-lateral", true) === false) document.body.classList.add("sin-lateral");
+// (en la compu la barra de la izquierda queda siempre a la vista)
 function cerrarLateralEnCelu() { if (esCelu()) abrirLateral(false); }
 function reiniciarCharla() { contexto = { tema: null, dichas: new Set(), ultimaPregunta: null }; juego = null; esperandoCorreccion = null; ultimoDibujo = null; }
 function nuevaCharla() {
