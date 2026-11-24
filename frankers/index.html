@@ -600,6 +600,12 @@
     .cf-curva { background: var(--tarjeta); border: 1px solid var(--borde); border-radius: 20px; padding: 14px 18px; margin-bottom: 14px; }
     .cf-curva h3 { margin: 0 0 4px; font-family: "Fredoka", sans-serif; } .cf-curva p { margin: 0 0 8px; color: var(--suave); font-size: .88rem; }
     #cfGrafico { width: 100%; height: 150px; display: block; }
+    .cf-tiempo { display: flex; justify-content: space-between; font-size: .9rem; color: var(--suave); } .cf-tiempo b { color: var(--texto); }
+    #cfSegundos { width: 100%; accent-color: #8a5cff; padding: 0; border: none; background: none; }
+    .cf-infinito { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: .92rem; cursor: pointer; }
+    .cf-infinito input { width: 20px; height: 20px; accent-color: #8a5cff; }
+    .cf-progreso.infinito i { width: 40% !important; animation: barrido 1.4s ease-in-out infinite; }
+    @keyframes barrido { from { transform: translateX(-100%); } to { transform: translateX(250%); } }
     .cf-accion select { padding: 10px 12px; border-radius: 12px; border: 1px solid var(--borde); background: #120d2c; color: var(--texto); font: inherit; }
     .cf-estado { min-height: 1.3em; font-size: .9rem; font-weight: 600; }
     .cf-progreso { height: 8px; border-radius: 999px; background: rgba(255,255,255,.08); overflow: hidden; display: none; }
@@ -723,7 +729,7 @@
   <!-- Página: el cerebro (fácil, con modo experto) -->
   <dialog id="dlgCerebro" class="pagina">
     <div class="pagina-arriba"><button class="boton" id="cerebroCerrar">← Volver al chat</button><b>🧠 El cerebro de Frankers</b>
-      <div class="derecha"><button class="boton" id="btnTour">❓ ¿Cómo funciona?</button><button class="boton" id="btnModoExperto">🔧 Modo experto</button><button class="boton principal" id="btnPublicarCerebro" hidden>🌎 Publicar para todos</button></div></div>
+      <div class="derecha"><button class="boton" id="btnTour">❓ ¿Cómo funciona?</button><button class="boton" id="btnModoExperto">🔧 Modo experto</button><button class="boton" id="btnDescargarCerebro" title="Bajá tu cerebro y mandáselo a Claude para publicarlo para todo el mundo">📤 Descargar mi cerebro</button><button class="boton principal" id="btnPublicarCerebro" hidden>🌎 Publicar para todos</button></div></div>
     <div class="pagina-cuerpo">
       <section id="cerebroFacil">
         <h2 class="cf-titulo">Así piensa <span class="pn-degrade">Frankers</span></h2>
@@ -740,7 +746,9 @@
         <div class="cf-acciones">
           <div class="cf-accion" data-tour="ensenar"><span class="grande">🏋️</span><h3>Enseñale</h3><p>Frankers lee un montón de textos y practica adivinar la palabra que sigue. Cada vez que se equivoca, sus neuronas se arreglan un poquito. Así aprende.</p>
             <div class="cf-progreso" id="cfProgreso"><i></i></div><div class="cf-estado" id="cfEstado"></div>
-            <select id="cfSegundos" aria-label="Cuánto tiempo"><option value="15">15 segundos</option><option value="30" selected>30 segundos</option><option value="60">1 minuto</option><option value="120">2 minutos</option><option value="180">3 minutos</option></select>
+            <div class="cf-tiempo"><span>⏱️ ¿Cuánto tiempo?</span><b id="cfTiempoTxt">30 segundos</b></div>
+            <input type="range" id="cfSegundos" min="1" max="180" value="30" aria-label="Cuánto tiempo (de 1 segundo a 3 minutos)">
+            <label class="cf-infinito"><input type="checkbox" id="cfInfinito"> ♾️ Infinito: sigue hasta que toques «Parar»</label>
             <button class="boton principal" id="cfEnsenar">🏋️ ¡Enseñale!</button><button class="boton" id="cfParar" hidden>⏹ Parar (se queda con lo mejor)</button></div>
           <div class="cf-accion" data-tour="crecer"><span class="grande">🧩</span><h3>Hacela más grande</h3><p>Le agrega <b>8 neuronas</b> nuevas. Con más neuronas puede acordarse de más cosas. No se olvida de nada: las neuronas nuevas empiezan calladitas y aprenden cuando la enseñás.</p>
             <div class="cf-estado" id="cfEstadoCrecer"></div>
@@ -768,7 +776,7 @@
         <canvas id="graficoError"></canvas>
         <div class="estado" id="cerebroEstado"></div>
         <div class="fila">
-          <select id="cerebroSegundos" aria-label="Cuánto entrenar"><option value="15">15 segundos</option><option value="30">30 segundos</option><option value="60">1 minuto</option><option value="180">3 minutos</option></select>
+          <select id="cerebroSegundos" aria-label="Cuánto entrenar"><option value="1">1 segundo</option><option value="5">5 segundos</option><option value="15">15 segundos</option><option value="30">30 segundos</option><option value="60">1 minuto</option><option value="180">3 minutos</option><option value="inf">♾️ Infinito (hasta Parar)</option></select>
           <button class="boton principal" id="btnEntrenar">🏋️ Entrenar un rato</button>
         </div>
         <div class="fila">
@@ -1277,7 +1285,7 @@ setInterval(async () => {
   if (!token || !hayCambios || Date.now() - ultimaPublicacion < 600000 || !cerebro) return;
   hayCambios = false; ultimaPublicacion = Date.now();
   const a = await subirAGitHub("frankers/aprendido.json", JSON.stringify(aprendido), "Frankers: lo que aprendió buscando");
-  const c = await subirAGitHub("frankers/cerebro.json", JSON.stringify(cerebro.aJSON()), "Frankers: cerebro (" + cerebro.vistas + " palabras leídas)");
+  const c = await subirAGitHub("frankers/cerebro.json", JSON.stringify(cerebro.aJSON(true)), "Frankers: cerebro (" + cerebro.vistas + " palabras leídas)");
   actividad("🌎", a.ok && c.ok ? "Publiqué lo que aprendí para todo el mundo" : "No pude publicar lo que aprendí");
 }, 30000);
 
@@ -1730,13 +1738,14 @@ async function entrenarUnRato(segundos = 15, textosExtra = null) {
   const todos = textosExtra ? conRepaso(textosExtra, textosExtra.length * 2) : [...await cargarTextosGrandes(), ...aprendidoAca];
   let { prueba, entreno } = separarPrueba(todos);
   if (textosExtra) { prueba = separarPrueba(textosGrandes || []).prueba.slice(0, 120); entreno = todos; }
-  const paso = actividad("🏋️", `Entrenando ${segundos} segundos (con el entrenador rápido)…`, true);
+  const infinito = !isFinite(segundos);
+  const paso = actividad("🏋️", infinito ? "Entrenando sin parar, hasta que toques «Parar»…" : `Entrenando ${segundos} segundos (con el entrenador rápido)…`, true);
   const empezo = Date.now(); curvaEntreno = [];
-  estadoCerebro("🏋️ Preparando los ejemplos…"); $("#cfProgreso").classList.add("si"); $("#cfProgreso i").style.width = "0%";
+  estadoCerebro("🏋️ Preparando los ejemplos…"); $("#cfProgreso").classList.add("si"); $("#cfProgreso").classList.toggle("infinito", infinito); $("#cfProgreso i").style.width = "0%";
   const r = await entrenarConAyudante(entreno, prueba, { segundos, variantes: !textosExtra }, (est) => {
-    curvaEntreno.push(est.errorEntreno ?? est.errorPrueba);
-    $("#cfProgreso i").style.width = (est.progreso * 100).toFixed(1) + "%";
-    estadoCerebro(`🏋️ Aprendiendo… ${Math.round(est.progreso * 100)} % · practicó ${est.ejemplos.toLocaleString("es-AR")} ejemplos · error de prueba ${est.errorPrueba} (empezó en ${est.errorAntes})`);
+    curvaEntreno.push(est.errorEntreno ?? est.errorPrueba); if (curvaEntreno.length > 3000) curvaEntreno.splice(0, 1000);
+    if (est.progreso != null) $("#cfProgreso i").style.width = (est.progreso * 100).toFixed(1) + "%";
+    estadoCerebro(`🏋️ Aprendiendo… ${est.progreso == null ? "⏱️ " + textoTiempo(est.segundos) + " (tocá «Parar» cuando quieras)" : Math.round(est.progreso * 100) + " %"} · practicó ${est.ejemplos.toLocaleString("es-AR")} ejemplos · error de prueba ${est.errorPrueba} (empezó en ${est.errorAntes})`);
     dibujarGrafico(); dibujarCurvaFacil();
   });
   const seg = ((Date.now() - empezo) / 1000).toFixed(0);
@@ -1809,6 +1818,14 @@ function verPensar() {
   paso(); demoTimer = setInterval(paso, 1400);
 }
 const vis = { capas: [], salida: [], chispas: [] };
+// El brillo se dibuja UNA vez como "calcomanía" y después se pega: se ve igual de lindo y no traba
+const calcomanias = new Map();
+function brillo(rgb) {
+  if (calcomanias.has(rgb)) return calcomanias.get(rgb);
+  const c = document.createElement("canvas"); c.width = c.height = 64; const g = c.getContext("2d"), gr = g.createRadialGradient(32, 32, 0, 32, 32, 32);
+  gr.addColorStop(0, `rgba(${rgb}, 1)`); gr.addColorStop(.35, `rgba(${rgb}, .55)`); gr.addColorStop(1, `rgba(${rgb}, 0)`);
+  g.fillStyle = gr; g.fillRect(0, 0, 64, 64); calcomanias.set(rgb, c); return c;
+}
 let redRaf = 0;
 function animarRed() {
   const c = $("#redViva"); if (!c || !dlgCerebro.open) { redRaf = 0; return; }
@@ -1845,15 +1862,17 @@ function animarRed() {
   const ocupada = entrenando || repasando, nuevas = ocupada ? 3 : (t - (demo.golpe || 0) < 900 ? 4 : 0.35);
   for (let k = 0; k < Math.floor(nuevas) + (Math.random() < nuevas % 1 ? 1 : 0); k++) {
     const ci = Math.floor(Math.random() * (cols.length - 1)), A = cols[ci], B = cols[ci + 1];
-    vis.chispas.push({ x1: A.x, y1: A.ys[Math.floor(Math.random() * A.ys.length)], x2: B.x, y2: B.ys[Math.floor(Math.random() * B.ys.length)], t: 0, v: 0.012 + Math.random() * 0.02, color: ["#4fd8ff", "#8a5cff", "#ff6ad5"][ci % 3] });
+    vis.chispas.push({ x1: A.x, y1: A.ys[Math.floor(Math.random() * A.ys.length)], x2: B.x, y2: B.ys[Math.floor(Math.random() * B.ys.length)], t: 0, v: 0.012 + Math.random() * 0.02, rgb: ["79, 216, 255", "138, 92, 255", "255, 106, 213"][ci % 3] });
   }
   vis.chispas = vis.chispas.filter(ch => (ch.t += ch.v) < 1).slice(-90);
-  for (const ch of vis.chispas) { const x = ch.x1 + (ch.x2 - ch.x1) * ch.t, y = ch.y1 + (ch.y2 - ch.y1) * ch.t; g.fillStyle = ch.color; g.globalAlpha = .35; g.beginPath(); g.arc(x, y, 5, 0, Math.PI * 2); g.fill(); g.globalAlpha = 1; g.beginPath(); g.arc(x, y, 2.2, 0, Math.PI * 2); g.fill(); } // brillo liviano (sin "shadowBlur", que trababa todo)
+  g.globalCompositeOperation = "lighter"; // brillo fluorescente (las luces se suman)
+  for (const ch of vis.chispas) { const x = ch.x1 + (ch.x2 - ch.x1) * ch.t, y = ch.y1 + (ch.y2 - ch.y1) * ch.t; g.drawImage(brillo(ch.rgb), x - 9, y - 9, 18, 18); }
+  g.globalCompositeOperation = "source-over";
   // neuronas
   cols.forEach((col, k) => col.ys.forEach((y, i) => {
     const v = col.val[i] || 0, a = Math.min(1, Math.abs(v)), r = (chico ? 6 : 8) + a * 4 + Math.sin(t / 400 + i + k) * 0.8;
     const color = k === 0 ? "79, 216, 255" : k === cols.length - 1 ? "255, 106, 213" : v >= 0 ? "79, 216, 255" : "200, 107, 255";
-    g.fillStyle = `rgba(${color}, ${0.08 + a * 0.22})`; g.beginPath(); g.arc(col.x, y, r + 4 + a * 8, 0, Math.PI * 2); g.fill();
+    const t2 = r * 2 + 10 + a * 30; g.globalCompositeOperation = "lighter"; g.globalAlpha = 0.25 + a * 0.75; g.drawImage(brillo(color), col.x - t2, y - t2, t2 * 2, t2 * 2); g.globalAlpha = 1; g.globalCompositeOperation = "source-over";
     g.fillStyle = `rgba(${color}, ${0.18 + a * 0.82})`; g.beginPath(); g.arc(col.x, y, r, 0, Math.PI * 2); g.fill();
     g.strokeStyle = "rgba(255,255,255,.35)"; g.lineWidth = 1; g.stroke();
   }));
@@ -1872,7 +1891,11 @@ function animarRed() {
 // Botones grandes
 $("#cfPensar").onclick = verPensar;
 $("#cfFrase").addEventListener("keydown", e => { if (e.key === "Enter") verPensar(); });
-$("#cfEnsenar").onclick = async () => { await entrenarUnRato(+$("#cfSegundos").value || 30); pintarCerebroFacil(); verPensar(); };
+const textoTiempo = (s) => s < 60 ? `${s} segundo${s === 1 ? "" : "s"}` : `${Math.floor(s / 60)} minuto${s >= 120 ? "s" : ""}${s % 60 ? ` y ${s % 60} segundos` : ""}`;
+const tiempoElegido = () => $("#cfInfinito").checked ? Infinity : (+$("#cfSegundos").value || 30);
+function pintarTiempo() { $("#cfTiempoTxt").textContent = $("#cfInfinito").checked ? "♾️ infinito" : textoTiempo(+$("#cfSegundos").value); $("#cfSegundos").disabled = $("#cfInfinito").checked; }
+$("#cfSegundos").oninput = pintarTiempo; $("#cfInfinito").onchange = pintarTiempo;
+$("#cfEnsenar").onclick = async () => { await entrenarUnRato(tiempoElegido()); pintarCerebroFacil(); verPensar(); };
 $("#cfParar").onclick = () => { pararEntreno = true; if (ayudante) ayudante.postMessage({ tipo: "parar" }); estadoCerebro("⏹ Parando… me quedo con la mejor versión"); };
 // La línea que sube y baja: cuánto se equivoca (cada entrenamiento, y en vivo mientras entrena)
 function dibujarCurvaFacil() {
@@ -1894,7 +1917,7 @@ function consejoCerebro() {
   const h = cerebro.historialError, ultimo = h[h.length - 1], antes = h[h.length - 2];
   let ic = "👉", titulo, texto, boton = null;
   if (entrenando) { ic = "⏳"; titulo = "Está aprendiendo…"; texto = "Mirá cómo baja la línea. Podés parar cuando quieras: se queda con su mejor versión."; }
-  else if (!h.length || !curvaEntreno.length) { titulo = "Ahora: enseñale un rato"; texto = "Elegí cuánto tiempo y tocá «¡Enseñale!». Mientras aprende, mirá la línea de abajo."; boton = ["🏋️ Enseñale 30 segundos", () => { $("#cfSegundos").value = "30"; $("#cfEnsenar").click(); }]; }
+  else if (!h.length || !curvaEntreno.length) { titulo = "Ahora: enseñale un rato"; texto = "Elegí cuánto tiempo y tocá «¡Enseñale!». Mientras aprende, mirá la línea de abajo."; boton = ["🏋️ Enseñale 30 segundos", () => { $("#cfSegundos").value = "30"; $("#cfInfinito").checked = false; pintarTiempo(); $("#cfEnsenar").click(); }]; }
   else if (antes != null && ultimo < antes) { ic = "🎉"; titulo = "¡Mejoró! Ahora probá cómo habla"; texto = "Escribile algo en «Probá cómo habla», o enseñale otro rato para que mejore más."; boton = ["💬 Probar", () => $("#cfProbarTexto").focus()]; }
   else { ic = "🧩"; titulo = "Casi no mejoró: hacela más grande"; texto = "Si ya no mejora, agregale 8 neuronas y después enseñale de nuevo."; boton = ["🧩 Agregar neuronas", () => $("#cfCrecer").click()]; }
   caja.innerHTML = `<span class="ic">${ic}</span><div><b></b><span></span></div>`; caja.querySelector("b").textContent = titulo; caja.querySelector("span:last-child").textContent = texto;
@@ -1955,6 +1978,16 @@ async function pasoTour(k) {
   globo.querySelector('[data-t="sig"]').focus();
 }
 $("#btnTour").onclick = () => pasoTour(0);
+/* Descargar el cerebro EXACTO (todo lo que le enseñaste y entrenaste), para que Claude lo publique para todo el mundo */
+$("#btnDescargarCerebro").onclick = () => {
+  if (!cerebro) return;
+  const paquete = { tipo: "frankers-cerebro", fecha: new Date().toISOString(), de: memoria.nombre || null, cerebro: cerebro.aJSON(true), aprendido, charlasAprendidas: aprendidoAca, juntas: gramatica ? gramatica.juntas : null };
+  const blob = new Blob([JSON.stringify(paquete)], { type: "application/json" }), a = document.createElement("a");
+  a.href = URL.createObjectURL(blob); a.download = `frankers-cerebro-${new Date().toISOString().slice(0, 10)}.json`; a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+  actividad("📤", "Descargué mi cerebro exacto: mandáselo a Claude para que lo publique para todos");
+  estadoCerebro("📤 ¡Listo! Se descargó tu cerebro. Mandale ese archivo a Claude en el chat y lo publica para todo el mundo.", "ok");
+};
 dlgCerebro.addEventListener("close", () => { cerrarTour(); clearInterval(demoTimer); demoTimer = null; cancelAnimationFrame(redRaf); redRaf = 0; });
 
 $("#btnCerebro").onclick = async () => {
@@ -1964,7 +1997,7 @@ $("#btnCerebro").onclick = async () => {
   await cargarTextosGrandes();
 };
 $("#cerebroCerrar").onclick = () => dlgCerebro.close();
-$("#btnEntrenar").onclick = () => entrenarUnRato(+$("#cerebroSegundos").value || 15);
+$("#btnEntrenar").onclick = () => entrenarUnRato($("#cerebroSegundos").value === "inf" ? Infinity : (+$("#cerebroSegundos").value || 15));
 $("#btnProbar").onclick = probarCerebro;
 $("#cerebroPregunta").addEventListener("keydown", e => { if (e.key === "Enter") probarCerebro(); });
 $("#btnNeurona").onclick = async () => {
@@ -1999,7 +2032,7 @@ $("#cerebroArchivo").onchange = async (e) => { const f = e.target.files[0]; e.ta
 // Modo creador: publicar el cerebro para que todos lo tengan
 $("#btnPublicarCerebro").onclick = async () => {
   const estado = $("#cerebroEstado"); estado.className = "estado"; estado.textContent = "Publicando el cerebro… 🌎";
-  const r = await subirAGitHub("frankers/cerebro.json", JSON.stringify(cerebro.aJSON()), "Frankers: cerebro nuevo (" + cerebro.vistas + " palabras leídas)");
+  const r = await subirAGitHub("frankers/cerebro.json", JSON.stringify(cerebro.aJSON(true)), "Frankers: cerebro nuevo (" + cerebro.vistas + " palabras leídas)");
   estado.className = "estado " + (r.ok ? "ok" : "mal"); estado.textContent = r.ok ? "¡Listo! En un ratito todos van a tener este cerebro. 🌎" : r.motivo;
   actividad("🌎", r.ok ? "Publiqué mi cerebro para todos" : "No pude publicar el cerebro");
 };

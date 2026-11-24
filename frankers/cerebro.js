@@ -62,6 +62,17 @@
     for (let i = 0; i < bytes.length; i += 8192) s += String.fromCharCode.apply(null, bytes.subarray(i, i + 8192));
     return (typeof btoa === "function" ? btoa(s) : Buffer.from(s, "binary").toString("base64"));
   }
+  // Guardar números EXACTOS (32 bits): para que todo el mundo tenga exactamente el mismo cerebro
+  function empacar32(arr) {
+    const bytes = new Uint8Array(Float32Array.from(arr).buffer); let s = "";
+    for (let i = 0; i < bytes.length; i += 8192) s += String.fromCharCode.apply(null, bytes.subarray(i, i + 8192));
+    return (typeof btoa === "function" ? btoa(s) : Buffer.from(s, "binary").toString("base64"));
+  }
+  function desempacar32(b64) {
+    const s = typeof atob === "function" ? atob(b64) : Buffer.from(b64, "base64").toString("binary");
+    const bytes = new Uint8Array(s.length); for (let i = 0; i < s.length; i++) bytes[i] = s.charCodeAt(i);
+    return new Float32Array(bytes.buffer);
+  }
   function desempacar(b64) {
     const s = typeof atob === "function" ? atob(b64) : Buffer.from(b64, "base64").toString("binary");
     const bytes = new Uint8Array(s.length); for (let i = 0; i < s.length; i++) bytes[i] = s.charCodeAt(i);
@@ -240,7 +251,7 @@
     /* Prepara un entrenamiento. Devuelve { paso(ms), terminar() }: así se puede entrenar de a pedacitos
        (en un Web Worker o en la página, sin trabarla). */
     crearEntrenador(textos, { segundos = 30, prueba = [], tasaMax = 0.0015, tasaMin = 0.0002, grupo = 16, dropout = 0.1,
-      recorte = 2, variantes = true, paciencia = 4, errorMeta = 0.02, cadaPrueba = null } = {}) {
+      recorte = 2, variantes = true, paciencia: pac = 4, errorMeta = 0.02, cadaPrueba = null } = {}) {
       const N = this.contexto, D = this.dimension, L = this.capas.length;
       const ej = this.armarEjemplos(textos, { variantes });
       const ejPrueba = this.armarEjemplos(prueba, { variantes: false });
@@ -265,8 +276,9 @@
       const errorAntes = this.errorDe(ejPrueba, maxPrueba);
       let mejorError = errorAntes, mejorFoto = this.foto(), sinMejorar = 0, ejemplos = 0, sumaPerdida = 0, cuentaPerdida = 0;
       let ultimaPrueba = Date.now(), paro = null, errorPrueba = errorAntes;
-      const cada = cadaPrueba || Math.max(4000, duracion / 8);
-      const tasaAhora = () => { const f = Math.min(1, (Date.now() - inicio) / duracion), calentar = Math.min(1, f / 0.05); return calentar * (tasaMin + (tasaMax - tasaMin) * 0.5 * (1 + Math.cos(Math.PI * f))); };
+      const infinito = !isFinite(duracion), paciencia = infinito ? Infinity : pac; // infinito: sigue hasta que toques "Parar"
+      const cada = cadaPrueba || (infinito ? 8000 : Math.max(4000, duracion / 8));
+      const tasaAhora = () => { const f = infinito ? Math.min(0.5, (Date.now() - inicio) / 600000) : Math.min(1, (Date.now() - inicio) / duracion), calentar = Math.min(1, (Date.now() - inicio) / (infinito ? 3000 : Math.max(500, duracion * 0.05))); return calentar * (tasaMin + (tasaMax - tasaMin) * 0.5 * (1 + Math.cos(Math.PI * f))); };
       // Un grupito: suma cuánto hay que corregir cada peso (gradiente) y después corrige todo junto con Adam
       const grupito = () => {
         for (let b = 0; b < grupo; b++) {
@@ -335,12 +347,13 @@
         g.filas.clear();
       };
       const probar = () => {
+        if (!maxPrueba) return; // sin frases de prueba no puede medir
         errorPrueba = this.errorDe(ejPrueba, maxPrueba); ultimaPrueba = Date.now();
         if (errorPrueba < mejorError - 0.001) { mejorError = errorPrueba; mejorFoto = this.foto(); sinMejorar = 0; } else sinMejorar++;
         if (errorPrueba <= errorMeta) paro = "el error ya es muy bajo";
         else if (sinMejorar >= paciencia && Date.now() - inicio > duracion * 0.3) paro = "ya no mejoraba más";
       };
-      const estado = (final = false) => ({ progreso: Math.min(1, (Date.now() - inicio) / duracion), ejemplos, totalEjemplos: ej.n,
+      const estado = (final = false) => ({ progreso: infinito ? null : Math.min(1, (Date.now() - inicio) / duracion), segundos: Math.round((Date.now() - inicio) / 1000), ejemplos, totalEjemplos: ej.n,
         errorEntreno: cuentaPerdida ? +(sumaPerdida / cuentaPerdida).toFixed(3) : null, errorPrueba: +errorPrueba.toFixed(3), errorAntes: +errorAntes.toFixed(3),
         mejorError: +mejorError.toFixed(3), tasa: +tasaAhora().toFixed(5), paro, final });
       const yo = this;
@@ -456,7 +469,10 @@
     }
 
     /* ---------- GUARDAR Y CARGAR ---------- */
-    aJSON() {
+    aJSON(exacto = false) {
+      if (exacto) return { version: 3, contexto: this.contexto, dimension: this.dimension, palabras: this.palabras.slice(ESPECIALES.length),
+        E: empacar32(this.E), capas: this.capas.map(c => ({ entra: c.entra, sale: c.sale, W: empacar32(c.W), b: empacar32(c.b) })),
+        historialError: this.historialError, vistas: this.vistas };
       return { version: 1, contexto: this.contexto, dimension: this.dimension, palabras: this.palabras.slice(ESPECIALES.length),
         E: empacar(this.E), capas: this.capas.map(c => ({ entra: c.entra, sale: c.sale, W: empacar(c.W), b: empacar(c.b) })),
         historialError: this.historialError, vistas: this.vistas };
@@ -470,7 +486,8 @@
     }
     static desdeJSON(j) {
       const c = new Cerebro({ palabras: j.palabras, contexto: j.contexto, dimension: j.dimension, capas: [] });
-      c.E = desempacar(j.E); c.capas = j.capas.map(x => ({ entra: x.entra, sale: x.sale, W: desempacar(x.W), b: desempacar(x.b) }));
+      const des = j.version === 3 ? desempacar32 : desempacar;
+      c.E = des(j.E); c.capas = j.capas.map(x => ({ entra: x.entra, sale: x.sale, W: des(x.W), b: des(x.b) }));
       c.historialError = j.historialError || []; c.vistas = j.vistas || 0;
       return c;
     }
