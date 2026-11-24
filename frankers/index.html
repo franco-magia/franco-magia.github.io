@@ -59,6 +59,7 @@
     .nombre h1 { font-family: "Fredoka", sans-serif; font-size: 1.35rem; margin: 0; line-height: 1.1; }
     .nombre h1 span { background: var(--degrade); -webkit-background-clip: text; background-clip: text; color: transparent; }
     .nombre small { color: var(--suave); font-size: .82rem; }
+    .nombre { min-width: 0; } .nombre small { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .quien-sos { display: block; }
     /* Pantalla grande de "¿quién sos?" */
     dialog.pantalla-nombre { width: 100vw; height: 100dvh; max-width: none; max-height: none; margin: 0; border: none; border-radius: 0;
@@ -197,9 +198,16 @@
     .busca-grid { display: grid; grid-template-columns: 1.6fr 1fr; gap: 16px; }
     @media (max-width: 700px) { .busca-grid { grid-template-columns: 1fr; } }
     :root { --color-principal: #8a5cff; }
-    #frankers-borde { position: fixed; inset: 0; pointer-events: none; z-index: 9999; border: 6px solid var(--color-principal); box-shadow: inset 0 0 25px var(--color-principal); display: none; animation: latido 1.5s ease-in-out infinite; }
-    #frankers-cartel { position: fixed; top: 10px; left: 50%; transform: translateX(-50%); background: var(--color-principal); color: white; z-index: 10000; padding: 6px 16px; border-radius: 20px; font-weight: bold; display: none; }
+    /* Borde de "Frankers usando la computadora": por todo el borde de la pantalla, se agranda y se achica
+       con brillo fluorescente y va cambiando de color: celeste → violeta → rosa */
+    #frankers-borde { position: fixed; inset: 0; pointer-events: none; z-index: 10000; border: 6px solid var(--color-principal); display: none; animation: bordeVivo 3s ease-in-out infinite; }
+    @keyframes bordeVivo {
+      0%, 100% { border-width: 5px; border-color: #4fd8ff; box-shadow: inset 0 0 18px #4fd8ff, inset 0 0 40px rgba(79,216,255,.55), 0 0 20px #4fd8ff; }
+      33% { border-width: 12px; border-color: #8a5cff; box-shadow: inset 0 0 34px #8a5cff, inset 0 0 80px rgba(138,92,255,.6), 0 0 30px #8a5cff; }
+      66% { border-width: 7px; border-color: #ff6ad5; box-shadow: inset 0 0 26px #ff6ad5, inset 0 0 60px rgba(255,106,213,.55), 0 0 26px #ff6ad5; } }
+    #frankers-cartel { position: fixed; top: 14px; left: 50%; transform: translateX(-50%); background: var(--color-principal); color: white; z-index: 10001; box-shadow: 0 0 24px rgba(138,92,255,.8); animation: cartelColor 3s ease-in-out infinite; padding: 6px 16px; border-radius: 20px; font-weight: bold; display: none; }
     @keyframes latido { 50% { opacity: .5; } }
+    @keyframes cartelColor { 0%, 100% { background: #2fa8d8; } 33% { background: #8a5cff; } 66% { background: #e0459f; } }
     /* ---- Llamada (estilo Gemini Live) ---- */
     .pantalla-llamada { --nivel: 0; position: fixed; inset: 0; z-index: 9000; background: radial-gradient(ellipse at 50% 30%, #1d1450, #07051a 70%); color: #fff; display: flex; flex-direction: column; overflow: hidden; opacity: 0; transform: scale(1.03); transition: opacity .35s ease, transform .35s ease; }
     .pantalla-llamada.abierta { opacity: 1; transform: none; }
@@ -432,14 +440,185 @@
     .ll-cortar svg { width: 44px; height: 44px; }
     .ll-medidor { position: absolute; inset: -6px; border-radius: 50%; border: 3px solid #4fd8ff; opacity: calc(var(--nivel) * 1.4); transform: scale(calc(1 + var(--nivel) * .35)); transition: transform .08s linear; pointer-events: none; }
     @media (prefers-reduced-motion: reduce) { .ll-aurora i, .ll-vivo { animation: none; } }
+    /* =========== SIN BOCA (pedido de Franco): la cara habla con los ojos y las manos =========== */
+    .ll-cara .boca, .ll-cara .lengua { display: none !important; }
+    .ll-cara[data-emo="hablando"] .grande-cara i { transform: scaleY(calc(1 - var(--nivel, 0) * .35)); transition: transform .08s linear; }
+
+    /* =========== BARRA DE ARRIBA FIJA =========== */
+    header { position: sticky; top: 0; z-index: 30; background: linear-gradient(180deg, rgba(26, 19, 60, .96), rgba(22, 16, 52, .9)); backdrop-filter: blur(10px); }
+    .btn-lateral { flex: none; width: 38px; height: 38px; border-radius: 12px; border: 1px solid var(--borde); background: var(--tarjeta); color: var(--texto); cursor: pointer; display: grid; place-items: center; font-size: 1.1rem; }
+    .btn-lateral:hover { border-color: var(--celeste); }
+
+    /* =========== BARRA DE LA IZQUIERDA (como en Claude) =========== */
+    body { flex-direction: row; }
+    .lateral { width: 272px; flex: none; height: 100dvh; display: flex; flex-direction: column; gap: 2px; padding: 12px 10px; background: rgba(9, 6, 26, .6); border-right: 1px solid var(--borde); transition: margin-left .35s cubic-bezier(.4, 0, .2, 1); z-index: 60; }
+    body.sin-lateral .lateral { margin-left: -272px; }
+    .lat-arriba { display: flex; align-items: center; gap: 8px; padding: 4px 6px 12px; }
+    .lat-arriba .cara { width: 30px; height: 30px; gap: 5px; box-shadow: 0 0 14px rgba(120, 110, 255, .5); }
+    .lat-arriba .cara i { width: 5px; height: 8px; }
+    .lat-arriba b { font-family: "Fredoka", sans-serif; font-size: 1.15rem; flex: 1; background: var(--degrade); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .lat-item { display: flex; align-items: center; gap: 10px; width: 100%; padding: 9px 10px; border: none; background: none; border-radius: 10px; cursor: pointer; text-align: left; font-weight: 600; font-size: .93rem; color: var(--texto); transition: background .15s; }
+    .lat-item:hover { background: var(--tarjeta-2); }
+    .lat-item .ic { width: 22px; text-align: center; font-size: 1.05rem; }
+    .lat-item.nueva .ic { display: grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: var(--degrade); color: #fff; font-size: .95rem; font-weight: 700; }
+    .lat-titulo { font-size: .75rem; color: var(--suave); text-transform: uppercase; letter-spacing: .06em; padding: 16px 10px 6px; font-weight: 700; }
+    .lat-charlas { flex: 1; overflow-y: auto; list-style: none; margin: 0; padding: 0; scrollbar-width: thin; }
+    .lat-charla { display: flex; align-items: center; border-radius: 10px; margin-bottom: 1px; }
+    .lat-charla:hover, .lat-charla.actual { background: var(--tarjeta-2); }
+    .lat-charla.actual { box-shadow: inset 3px 0 0 var(--violeta); }
+    .lat-charla > button.abrir { flex: 1; min-width: 0; text-align: left; border: none; background: none; padding: 8px 10px; cursor: pointer; font-size: .88rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--texto); }
+    .lat-charla .acc { display: none; gap: 2px; padding-right: 4px; }
+    .lat-charla:hover .acc, .lat-charla.actual .acc, .lat-charla:focus-within .acc { display: flex; }
+    .lat-charla .acc button { border: none; background: none; cursor: pointer; padding: 4px 5px; border-radius: 6px; font-size: .85rem; opacity: .75; }
+    .lat-charla .acc button:hover { opacity: 1; background: rgba(255,255,255,.1); }
+    .lat-charla input { flex: 1; min-width: 0; margin: 3px; padding: 6px 8px; border-radius: 8px; border: 1px solid var(--violeta); background: #120d2c; color: var(--texto); font: inherit; font-size: .88rem; }
+    .lat-confirmar { display: flex; align-items: center; gap: 6px; padding: 6px 10px; font-size: .82rem; color: #ffb3c0; flex: 1; }
+    .lat-confirmar button { border: 1px solid var(--borde); background: var(--tarjeta); border-radius: 999px; padding: 3px 10px; cursor: pointer; font-size: .8rem; }
+    .lat-confirmar button.si { background: #e5193f; border-color: transparent; color: #fff; }
+    .lat-vacio { color: var(--suave); font-size: .85rem; padding: 6px 10px; }
+    .lat-pie { border-top: 1px solid var(--borde); padding-top: 8px; font-size: .78rem; color: var(--suave); display: flex; align-items: center; gap: 8px; padding-left: 8px; }
+    .lat-pie .avatar { width: 28px; height: 28px; border-radius: 50%; background: var(--degrade); display: grid; place-items: center; font-weight: 700; color: #fff; font-size: .85rem; }
+    .tapa-lateral { display: none; }
+    .lat-cambiar { border: none; background: none; color: var(--celeste); cursor: pointer; font-size: .75rem; text-decoration: underline; padding: 0 6px 0 0; }
+    @media (max-width: 860px) {
+      .lateral { position: fixed; left: 0; top: 0; bottom: 0; margin-left: -290px; background: #120d2c; box-shadow: 10px 0 40px rgba(0,0,0,.5); }
+      body.lateral-abierta .lateral { margin-left: 0; }
+      body.lateral-abierta .tapa-lateral { display: block; position: fixed; inset: 0; z-index: 55; background: rgba(5,3,15,.55); }
+      body.sin-lateral .lateral { margin-left: -290px; }
+    }
+    .lista-busca-charlas { list-style: none; padding: 0; margin: 12px 0 0; display: grid; gap: 6px; max-height: 55vh; overflow: auto; }
+    .lista-busca-charlas button { width: 100%; text-align: left; background: var(--tarjeta); border: 1px solid var(--borde); border-radius: 12px; padding: 10px 12px; cursor: pointer; }
+    .lista-busca-charlas button:hover { border-color: var(--violeta); }
+    .lista-busca-charlas small { display: block; color: var(--suave); margin-top: 2px; }
+    .dibujos-grilla { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 10px; margin-top: 10px; }
+    .dibujos-grilla figure { margin: 0; background: var(--tarjeta); border: 1px solid var(--borde); border-radius: 12px; overflow: hidden; cursor: pointer; }
+    .dibujos-grilla canvas { width: 100%; height: auto; display: block; }
+    .dibujos-grilla figcaption { font-size: .8rem; padding: 6px 8px; color: var(--suave); }
+
+    /* =========== PÁGINAS GRANDES (Buscafrankers y Cerebro) con la barra de arriba fija =========== */
+    dialog.pagina { width: 100vw; height: 100dvh; max-width: none; max-height: none; margin: 0; padding: 0; border: none; border-radius: 0; background: radial-gradient(ellipse at top, #241a55, #120d2c 70%); overflow-y: auto; }
+    dialog.pagina:not([open]) { display: none; }
+    .pagina-arriba { position: sticky; top: 0; z-index: 20; display: flex; align-items: center; gap: 12px; padding: 12px 18px; background: rgba(18, 13, 44, .92); backdrop-filter: blur(10px); border-bottom: 1px solid var(--borde); }
+    .pagina-arriba > b { font-family: "Fredoka", sans-serif; font-size: 1.15rem; flex: 1; }
+    .pagina-arriba .derecha { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+    .pagina-cuerpo { width: min(1080px, 100%); margin: 0 auto; padding: 20px 16px 60px; }
+
+    /* =========== BUSCAFRANKERS (como Google) =========== */
+    .bf-inicio { display: flex; flex-direction: column; align-items: center; padding-top: 7vh; transition: padding .4s ease; }
+    .con-resultados .bf-inicio { padding-top: 0; }
+    .bf-logo { display: flex; align-items: center; gap: 14px; margin-bottom: 26px; transition: transform .4s ease; }
+    .bf-logo svg { width: 84px; height: 84px; filter: drop-shadow(0 0 20px rgba(138,92,255,.6)); }
+    .bf-logo b { font-family: "Fredoka", sans-serif; font-size: clamp(2.4rem, 7vw, 3.6rem); letter-spacing: .5px; }
+    .bf-logo b span { background: var(--degrade); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .con-resultados .bf-logo { transform: scale(.6); margin: -10px 0 0; }
+    .bf-barra { position: relative; width: min(680px, 100%); display: flex; align-items: center; gap: 6px; padding: 6px 6px 6px 20px; border-radius: 999px; background: #1a1340; border: 2px solid transparent; background: linear-gradient(#1a1340, #1a1340) padding-box, var(--degrade) border-box; box-shadow: 0 8px 30px rgba(0,0,0,.35); transition: box-shadow .2s; }
+    .bf-barra:focus-within { box-shadow: 0 8px 40px rgba(138, 92, 255, .45); }
+    .bf-barra svg { width: 22px; height: 22px; flex: none; color: var(--suave); }
+    .bf-barra input { flex: 1; min-width: 0; border: none; background: none; outline: none; padding: 12px 6px; font-size: 1.1rem; color: var(--texto); }
+    .bf-barra .bf-x { border: none; background: none; color: var(--suave); cursor: pointer; font-size: 1.1rem; padding: 6px; }
+    .bf-barra .bf-ir { border: none; border-radius: 999px; padding: 11px 22px; background: var(--degrade); color: #fff; font-weight: 700; cursor: pointer; }
+    .bf-barra.frankers-escribe { box-shadow: 0 0 0 4px rgba(138, 92, 255, .45), 0 8px 40px rgba(138, 92, 255, .5); }
+    .bf-chips { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin: 16px 0 6px; }
+    .bf-chips button { border: 1px solid var(--borde); background: var(--tarjeta); border-radius: 999px; padding: 6px 14px; cursor: pointer; font-weight: 600; font-size: .88rem; color: var(--suave); }
+    .bf-chips button.activo { background: rgba(138, 92, 255, .25); border-color: var(--violeta); color: #fff; }
+    .bf-accesos { display: grid; grid-template-columns: repeat(5, 112px); gap: 14px 10px; justify-content: center; margin-top: 26px; }
+    @media (max-width: 640px) { .bf-accesos { grid-template-columns: repeat(3, 100px); } }
+    .con-resultados .bf-accesos { display: none; }
+    .bf-acceso { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 12px 4px 10px; border-radius: 16px; border: none; background: none; cursor: pointer; color: var(--texto); transition: background .2s, transform .2s; }
+    .bf-acceso:hover { background: var(--tarjeta-2); transform: translateY(-2px); }
+    .bf-acceso .icono { width: 56px; height: 56px; border-radius: 50%; display: grid; place-items: center; font-size: 1.7rem; background: var(--fondo-ic, rgba(138,92,255,.25)); box-shadow: inset 0 0 0 1px rgba(255,255,255,.12); }
+    .bf-acceso span { font-size: .82rem; font-weight: 600; text-align: center; line-height: 1.2; }
+    .bf-acceso.pulsado { animation: pulsado .5s ease; }
+    @keyframes pulsado { 50% { transform: scale(.9); background: rgba(138, 92, 255, .3); } }
+    .bf-estado { text-align: center; color: var(--celeste); font-weight: 700; min-height: 1.4em; margin: 10px 0 0; }
+    .bf-estado .puntos::after { content: ""; animation: puntitos 1.2s steps(4) infinite; }
+    @keyframes puntitos { 0% { content: ""; } 25% { content: "."; } 50% { content: ".."; } 75% { content: "..."; } }
+    #buscaResultados { width: min(720px, 100%); margin: 14px auto 0; display: grid; gap: 18px; }
+    .bf-respuesta { background: linear-gradient(135deg, rgba(79,216,255,.12), rgba(200,107,255,.12)); border: 1px solid rgba(138,92,255,.45); border-radius: 18px; padding: 16px 18px; animation: aparecer .4s ease-out; }
+    .bf-respuesta .quien { display: flex; align-items: center; gap: 8px; font-weight: 700; color: var(--celeste); margin-bottom: 6px; }
+    .bf-respuesta .quien .cara { width: 26px; height: 26px; gap: 4px; } .bf-respuesta .quien .cara i { width: 4px; height: 7px; }
+    .bf-respuesta p { margin: 0; line-height: 1.6; font-size: 1.05rem; }
+    .bf-resultado { animation: aparecer .35s ease-out both; }
+    .bf-resultado .de { font-size: .8rem; color: var(--suave); display: flex; align-items: center; gap: 6px; }
+    .bf-resultado .de i { font-style: normal; width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; background: var(--tarjeta-2); font-size: .8rem; }
+    .bf-resultado button.titulo { display: block; border: none; background: none; padding: 2px 0; cursor: pointer; font-size: 1.2rem; font-family: "Fredoka", sans-serif; color: var(--celeste); text-align: left; }
+    .bf-resultado button.titulo:hover { text-decoration: underline; }
+    .bf-resultado p { margin: 2px 0 0; color: var(--suave); line-height: 1.5; font-size: .93rem; }
+    .bf-resultado mark { background: none; color: var(--texto); font-weight: 700; }
+    .bf-actividad { width: min(720px, 100%); margin: 26px auto 0; background: var(--tarjeta); border: 1px solid var(--borde); border-radius: 14px; padding: 10px 14px; }
+    .bf-actividad summary { cursor: pointer; font-weight: 700; }
+    .bf-cursor { position: fixed; left: 0; top: 0; z-index: 10001; font-size: 34px; pointer-events: none; opacity: 0; transition: transform .9s cubic-bezier(.4, 0, .2, 1), opacity .4s; filter: drop-shadow(0 4px 8px rgba(0,0,0,.5)); }
+    .bf-cursor .tinte { display: inline-block; font-style: normal; animation: arcoiris 4s linear infinite; }
+    .bf-cursor.clic { animation: clic .3s ease; }
+    @keyframes clic { 50% { scale: .8; } }
+    .chip-buscando { align-self: flex-start; display: inline-flex; align-items: center; gap: 8px; font-size: .85rem; color: var(--celeste); background: rgba(79,216,255,.1); border: 1px solid rgba(79,216,255,.35); border-radius: 999px; padding: 5px 6px 5px 12px; animation: aparecer .25s ease-out; }
+    .chip-buscando button { border: none; border-radius: 999px; background: var(--degrade); color: #fff; font-weight: 700; padding: 3px 10px; cursor: pointer; font-size: .8rem; }
+
+    /* =========== CEREBRO FÁCIL =========== */
+    .cf-titulo { text-align: center; margin: 0 0 6px; font-family: "Fredoka", sans-serif; font-size: clamp(1.5rem, 4vw, 2.2rem); }
+    .cf-sub { text-align: center; color: var(--suave); margin: 0 auto 18px; max-width: 60ch; line-height: 1.5; }
+    .cf-nivel { background: var(--tarjeta); border: 1px solid var(--borde); border-radius: 20px; padding: 16px 20px; display: grid; grid-template-columns: auto 1fr; gap: 6px 16px; align-items: center; }
+    .cf-nivel .medalla { grid-row: span 2; width: 64px; height: 64px; border-radius: 50%; display: grid; place-items: center; font-size: 2rem; background: var(--degrade); box-shadow: 0 0 24px rgba(138, 92, 255, .6); }
+    .cf-nivel b { font-family: "Fredoka", sans-serif; font-size: 1.3rem; }
+    .cf-barra { height: 14px; border-radius: 999px; background: rgba(255,255,255,.08); overflow: hidden; }
+    .cf-barra i { display: block; height: 100%; width: 0; background: var(--degrade); border-radius: 999px; transition: width 1.2s cubic-bezier(.4, 0, .2, 1); box-shadow: 0 0 14px rgba(138,92,255,.8); }
+    .cf-nivel small { grid-column: 2; color: var(--suave); }
+    .cf-red { position: relative; margin: 18px 0; background: rgba(5, 3, 20, .55); border: 1px solid var(--borde); border-radius: 22px; overflow: hidden; }
+    #redViva { display: block; width: 100%; height: 440px; }
+    .cf-red .cf-leyenda { display: flex; justify-content: space-between; gap: 8px; padding: 0 16px 12px; font-size: .82rem; color: var(--suave); text-align: center; }
+    .cf-red .cf-leyenda span { flex: 1; }
+    .cf-red .cf-frase { position: absolute; top: 12px; left: 16px; right: 16px; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; font-size: .9rem; }
+    .cf-red .cf-frase input { flex: 1; min-width: 140px; max-width: 360px; padding: 7px 12px; border-radius: 999px; border: 1px solid var(--borde); background: rgba(18,13,44,.9); color: var(--texto); font: inherit; }
+    .cf-datos { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 10px; }
+    .cf-dato { background: var(--tarjeta); border: 1px solid var(--borde); border-radius: 16px; padding: 12px 14px; position: relative; }
+    .cf-dato .n { font-family: "Fredoka", sans-serif; font-size: 1.6rem; display: block; background: var(--degrade); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .cf-dato .l { font-weight: 700; font-size: .9rem; }
+    .cf-dato p { margin: 6px 0 0; font-size: .8rem; color: var(--suave); line-height: 1.4; }
+    .cf-acciones { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; margin-top: 18px; }
+    .cf-accion { background: var(--tarjeta); border: 1px solid var(--borde); border-radius: 20px; padding: 18px; display: flex; flex-direction: column; gap: 8px; }
+    .cf-accion .grande { font-size: 2.2rem; line-height: 1; }
+    .cf-accion h3 { margin: 0; font-family: "Fredoka", sans-serif; font-size: 1.2rem; }
+    .cf-accion p { margin: 0; color: var(--suave); font-size: .9rem; line-height: 1.45; flex: 1; }
+    .cf-accion .boton { padding: 12px 16px; font-size: 1rem; }
+    .cf-accion textarea, .cf-accion input { width: 100%; padding: 10px 12px; border-radius: 12px; border: 1px solid var(--borde); background: #120d2c; color: var(--texto); font: inherit; resize: vertical; }
+    .cf-accion ol { margin: 0; padding-left: 20px; font-size: .9rem; line-height: 1.5; }
+    .cf-estado { min-height: 1.3em; font-size: .9rem; font-weight: 600; }
+    .cf-progreso { height: 8px; border-radius: 999px; background: rgba(255,255,255,.08); overflow: hidden; display: none; }
+    .cf-progreso.si { display: block; } .cf-progreso i { display: block; height: 100%; width: 0; background: var(--degrade); transition: width .25s linear; }
+    .cf-como { margin-top: 22px; background: var(--tarjeta); border: 1px solid var(--borde); border-radius: 20px; padding: 18px 20px; }
+    .cf-como h3 { margin: 0 0 10px; font-family: "Fredoka", sans-serif; }
+    .cf-pasos { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+    .cf-pasos div { background: rgba(0,0,0,.2); border-radius: 14px; padding: 12px; font-size: .9rem; line-height: 1.45; color: var(--suave); }
+    .cf-pasos b { display: block; color: var(--texto); font-size: 1rem; margin-bottom: 4px; }
+    /* Tour que explica todo */
+    .tour-tapa { position: fixed; inset: 0; z-index: 10002; pointer-events: auto; }
+    .tour-luz { position: fixed; z-index: 10003; border-radius: 18px; box-shadow: 0 0 0 9999px rgba(5, 3, 15, .72), 0 0 0 3px var(--celeste), 0 0 30px rgba(79,216,255,.6); transition: all .55s cubic-bezier(.4, 0, .2, 1); pointer-events: none; }
+    .tour-globo { position: fixed; z-index: 10004; width: min(360px, calc(100vw - 32px)); background: #221a4a; border: 1px solid var(--violeta); border-radius: 18px; padding: 16px 18px; box-shadow: 0 20px 50px rgba(0,0,0,.5); transition: top .55s cubic-bezier(.4, 0, .2, 1), left .55s cubic-bezier(.4, 0, .2, 1); }
+    .tour-globo h4 { margin: 0 0 6px; font-family: "Fredoka", sans-serif; font-size: 1.15rem; }
+    .tour-globo p { margin: 0 0 12px; color: var(--suave); line-height: 1.5; font-size: .95rem; }
+    .tour-globo .fila-botones { margin-top: 0; align-items: center; }
+    .tour-globo .cuenta { flex: 1; font-size: .8rem; color: var(--suave); }
     .repasando { font-style: normal; font-size: .72rem; font-weight: 600; color: var(--celeste); background: rgba(79,216,255,.12); border: 1px solid rgba(79,216,255,.35); border-radius: 999px; padding: 2px 9px; vertical-align: middle; animation: latido 1.6s ease-in-out infinite; white-space: nowrap; max-width: 46vw; overflow: hidden; text-overflow: ellipsis; display: inline-block; }
   </style>
 </head>
 <body>
   <div id="frankers-borde"></div>
   <div id="frankers-cartel">🤖 Frankers using your computer</div>
+  <aside class="lateral" id="lateral" aria-label="Charlas">
+    <div class="lat-arriba"><div class="cara" aria-hidden="true"><i></i><i></i></div><b>Frankers</b><button class="btn-lateral" id="btnCerrarLateral" title="Esconder la barra" aria-label="Esconder la barra">⟨</button></div>
+    <button class="lat-item nueva" id="latNueva"><span class="ic">+</span>Nueva charla</button>
+    <button class="lat-item" id="latBuscar"><span class="ic">🔎</span>Buscar charlas</button>
+    <button class="lat-item" id="latBuscafrankers"><span class="ic">🌐</span>Buscafrankers</button>
+    <button class="lat-item" id="latDibujos"><span class="ic">🎨</span>Mis dibujos</button>
+    <button class="lat-item" id="latCerebro"><span class="ic">🧠</span>Su cerebro</button>
+    <div class="lat-titulo">Recientes</div>
+    <ul class="lat-charlas" id="latCharlas"></ul>
+    <div class="lat-pie" id="latPie"></div>
+  </aside>
+  <div class="tapa-lateral" id="tapaLateral"></div>
   <div class="app">
     <header>
+      <button class="btn-lateral" id="btnLateral" title="Mostrar las charlas" aria-label="Mostrar las charlas">☰</button>
       <a class="volver" href="/" title="Volver a francosandes.com">← <span>Inicio</span></a>
       <div class="identidad">
         <div class="cara" id="cara" aria-hidden="true"><i></i><i></i></div>
@@ -454,7 +633,7 @@
         <button class="boton principal" id="btnCerebro" title="Ver y entrenar el cerebro">🧠 <span class="txt">Cerebro</span></button>
         <button class="boton" id="btnCompu" title="Dejar que Frankers vea una carpeta de tu compu">📁 <span class="txt">Mi compu</span></button>
         <button class="boton" id="btnLlamada" title="Hablar con Frankers en voz alta">📞 <span class="txt">Llamar</span></button>
-        <button class="boton" id="btnLimpiar" title="Borrar la charla">🧹</button>
+        <button class="boton" id="btnLimpiar" title="Nueva charla">＋</button>
       </div>
     </header>
     <div id="actividadAhora" aria-live="polite"></div>
@@ -522,10 +701,44 @@
     </div>
   </dialog>
 
-  <!-- Ventana: el cerebro -->
-  <dialog id="dlgCerebro" class="grande">
-    <h2>🧠 El cerebro de Frankers</h2>
-    <p>Frankers es una <b>red neuronal</b>: lee las últimas palabras y adivina cuál sigue, y así arma sus frases. Aprende leyendo textos: cuanto más lee, menos se equivoca.</p>
+  <!-- Página: el cerebro (fácil, con modo experto) -->
+  <dialog id="dlgCerebro" class="pagina">
+    <div class="pagina-arriba"><button class="boton" id="cerebroCerrar">← Volver al chat</button><b>🧠 El cerebro de Frankers</b>
+      <div class="derecha"><button class="boton" id="btnTour">❓ ¿Cómo funciona?</button><button class="boton" id="btnModoExperto">🔧 Modo experto</button><button class="boton principal" id="btnPublicarCerebro" hidden>🌎 Publicar para todos</button></div></div>
+    <div class="pagina-cuerpo">
+      <section id="cerebroFacil">
+        <h2 class="cf-titulo">Así piensa <span class="pn-degrade">Frankers</span></h2>
+        <p class="cf-sub">Frankers tiene un cerebro hecho de <b>neuronas</b>, como el tuyo pero de mentira. Lee tus palabras y adivina cuál viene después, una por una, y así arma sus frases. Cuanto más lee, más inteligente se pone.</p>
+        <div class="cf-nivel" id="cfNivel" data-tour="nivel"><div class="medalla" id="cfMedalla">🐣</div><b id="cfNivelNombre">Nivel 1</b><div class="cf-barra"><i id="cfNivelBarra"></i></div><small id="cfNivelTexto"></small></div>
+        <div class="cf-red" data-tour="red">
+          <div class="cf-frase"><span>✍️ Escribí algo y mirá cómo lo piensa:</span><input id="cfFrase" value="hola" maxlength="60" aria-label="Frase para ver cómo piensa"><button class="boton" id="cfPensar">▶ Ver</button></div>
+          <canvas id="redViva"></canvas>
+          <div class="cf-leyenda"><span>⬅️ <b>Entrada</b>: las palabras que lee</span><span>💡 <b>Neuronas</b>: se pasan la información y se prenden</span><span><b>Salida</b>: la palabra que adivina ➡️</span></div>
+        </div>
+        <div class="cf-datos" id="cfDatos" data-tour="datos"></div>
+        <div class="cf-acciones">
+          <div class="cf-accion" data-tour="ensenar"><span class="grande">🏋️</span><h3>Enseñale</h3><p>Frankers lee un montón de textos y practica adivinar la palabra que sigue. Cada vez que se equivoca, sus neuronas se arreglan un poquito. Así aprende.</p>
+            <div class="cf-progreso" id="cfProgreso"><i></i></div><div class="cf-estado" id="cfEstado"></div>
+            <button class="boton principal" id="cfEnsenar">🏋️ Enseñale 30 segundos</button></div>
+          <div class="cf-accion" data-tour="crecer"><span class="grande">🧩</span><h3>Hacela más grande</h3><p>Le agrega <b>8 neuronas</b> nuevas. Con más neuronas puede acordarse de más cosas. No se olvida de nada: las neuronas nuevas empiezan calladitas y aprenden cuando la enseñás.</p>
+            <div class="cf-estado" id="cfEstadoCrecer"></div>
+            <button class="boton" id="cfCrecer">🧩 Agregar 8 neuronas</button></div>
+          <div class="cf-accion" data-tour="probar"><span class="grande">💬</span><h3>Probá cómo habla</h3><p>Escribile algo y mirá qué frase inventa, palabra por palabra.</p>
+            <input id="cfProbarTexto" placeholder="Por ejemplo: hola" maxlength="120"><button class="boton" id="cfProbar">💬 Probar</button><ol id="cfFrases"></ol></div>
+          <div class="cf-accion" data-tour="leer"><span class="grande">📄</span><h3>Dale algo para leer</h3><p>Pegá un cuento o un texto. Frankers lo lee y lo guarda en sus neuronas (si no tiene malas palabras ni cosas falsas).</p>
+            <textarea id="cfTexto" rows="3" placeholder="Había una vez…"></textarea><button class="boton" id="cfLeer">📖 Que lo lea</button><div class="cf-estado" id="cfEstadoLeer"></div></div>
+        </div>
+        <div class="cf-como">
+          <h3>🤔 ¿Cómo piensa una red neuronal?</h3>
+          <div class="cf-pasos">
+            <div><b>1. Lee tus palabras</b>Cada palabra se convierte en números, porque las neuronas solo entienden números.</div>
+            <div><b>2. Las neuronas se pasan los números</b>Cada neurona suma lo que le llega, y si es mucho, se prende. Las que se prenden le pasan el mensaje a las de la derecha.</div>
+            <div><b>3. Adivina la palabra que sigue</b>Al final, cada palabra que sabe tiene un puntaje. Elige una de las que tienen más puntos, y repite todo para la siguiente.</div>
+            <div><b>4. Aprende de sus errores</b>Cuando entrena, mira si adivinó bien. Si no, ajusta un poquito cada conexión para acertar la próxima vez. ¡Por eso hay que enseñarle!</div>
+          </div>
+        </div>
+      </section>
+      <section id="cerebroExperto" hidden>
     <p id="cerebroDatos"></p>
     <div class="cerebro-grid">
       <div>
@@ -559,23 +772,50 @@
         <ul class="reglas" id="listaReglas"></ul>
       </div>
     </div>
-    <div class="fila-botones">
-      <button class="boton principal" id="btnPublicarCerebro" hidden>🌎 Publicar este cerebro para todos</button>
-      <button class="boton" id="cerebroCerrar">Cerrar</button>
+      </section>
     </div>
   </dialog>
 
-  <!-- Ventana: Buscafrankers -->
-  <dialog id="dlgBusca" class="grande">
-    <div class="busca-logo"><svg viewBox="0 0 64 64" aria-hidden="true"><defs><linearGradient id="gBusca" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4fd8ff"/><stop offset=".6" stop-color="#8a5cff"/><stop offset="1" stop-color="#c86bff"/></linearGradient></defs>
+  <!-- Página: Buscafrankers (como Google) -->
+  <dialog id="dlgBusca" class="pagina">
+    <div class="pagina-arriba"><button class="boton" id="buscaCerrar">← Volver al chat</button><b>Buscafrankers</b></div>
+    <div class="pagina-cuerpo" id="bfCuerpo">
+      <div class="bf-inicio">
+        <div class="bf-logo"><svg viewBox="0 0 64 64" aria-hidden="true"><defs><linearGradient id="gBusca" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4fd8ff"/><stop offset=".6" stop-color="#8a5cff"/><stop offset="1" stop-color="#c86bff"/></linearGradient></defs>
 <circle cx="32" cy="32" r="27" fill="url(#gBusca)"/><g fill="none" stroke="rgba(255,255,255,.45)" stroke-width="2"><ellipse cx="32" cy="32" rx="12" ry="27"/><path d="M5 32h54M9 19c6 2.5 14 4 23 4s17-1.5 23-4M9 45c6-2.5 14-4 23-4s17 1.5 23 4"/></g>
 <ellipse cx="32" cy="32" rx="31" ry="9" fill="none" stroke="#fff" stroke-width="2.5" transform="rotate(-20 32 32)" opacity=".9"/><circle cx="24" cy="30" r="4.2" fill="#fff"/><circle cx="40" cy="30" r="4.2" fill="#fff"/><circle cx="24.8" cy="30.6" r="1.8" fill="#140f2e"/><circle cx="40.8" cy="30.6" r="1.8" fill="#140f2e"/></svg><b>Busca<span>frankers</span></b></div>
-    <div class="busca-barra"><input id="buscaTexto" placeholder="Buscá en Wikipedia…" maxlength="80" autocomplete="off"><button class="boton principal" id="buscaIr">🔎 Buscar</button></div>
-    <div class="busca-grid">
+        <div class="bf-barra" id="bfBarra">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 21 21"/></svg>
+          <input id="buscaTexto" placeholder="Buscá lo que sabe Frankers…" maxlength="80" autocomplete="off" aria-label="Buscar">
+          <button class="bf-x" id="buscaBorrar" title="Borrar" aria-label="Borrar">✕</button>
+          <button class="bf-ir" id="buscaIr">Buscar</button>
+        </div>
+        <div class="bf-chips" id="bfChips" role="tablist">
+          <button data-modo="todo" class="activo">⭐ Lo que sabe</button><button data-modo="wiki">🌍 Wikipedia</button><button data-modo="dic">📚 Diccionario</button><button data-modo="charlas">💬 Charlas</button>
+        </div>
+        <div class="bf-estado" id="buscaEstado" aria-live="polite"></div>
+        <div class="bf-accesos" id="bfAccesos"></div>
+      </div>
       <div id="buscaResultados"></div>
-      <div><h3>👀 Lo que está haciendo Frankers</h3><ul class="lista-actividad" id="buscaActividad"></ul></div>
+      <details class="bf-actividad"><summary>👀 Lo que está haciendo Frankers</summary><ul class="lista-actividad" id="buscaActividad"></ul></details>
     </div>
-    <div class="fila-botones"><button class="boton" id="buscaCerrar">Cerrar</button></div>
+    <div class="bf-cursor" id="bfCursor" aria-hidden="true"><i class="tinte">👆</i></div>
+  </dialog>
+
+  <!-- Ventana: buscar charlas -->
+  <dialog id="dlgBuscarCharlas">
+    <h2>🔎 Buscar charlas</h2>
+    <input id="buscarCharlasTexto" placeholder="Escribí una palabra…" autocomplete="off">
+    <ul class="lista-busca-charlas" id="buscarCharlasLista"></ul>
+    <div class="fila-botones"><button class="boton" id="buscarCharlasCerrar">Cerrar</button></div>
+  </dialog>
+
+  <!-- Ventana: mis dibujos -->
+  <dialog id="dlgDibujos" class="grande">
+    <h2>🎨 Mis dibujos</h2>
+    <p>Todos los dibujos que hizo Frankers en tus charlas. Tocá uno para ir a esa charla.</p>
+    <div class="dibujos-grilla" id="dibujosGrilla"></div>
+    <div class="fila-botones"><button class="boton" id="dibujosCerrar">Cerrar</button></div>
   </dialog>
 
   <!-- Ventana: modo creador -->
@@ -636,7 +876,15 @@ const guardado = {
   borrar(clave) { try { localStorage.removeItem(clave); } catch {} },
 };
 let memoria = { nombre: null, datos: {}, gustos: [], hechos: [], aprendido: {}, ...guardado.leer("frankers-memoria", {}) };
-let historial = guardado.leer("frankers-historial", []);
+// Charlas guardadas (como en Claude): cada una con su nombre y sus mensajes
+let charlas = guardado.leer("frankers-charlas", null);
+if (!Array.isArray(charlas)) { // la primera vez: la charla vieja pasa a ser la primera de la lista
+  const vieja = guardado.leer("frankers-historial", []);
+  charlas = vieja.length ? [{ id: "c" + Date.now(), titulo: "Mi primera charla", creada: Date.now(), actualizada: Date.now(), mensajes: vieja }] : [];
+}
+let charlaActual = guardado.leer("frankers-charla-actual", null);
+if (!charlas.some(c => c.id === charlaActual)) charlaActual = charlas.length ? [...charlas].sort((a, b) => b.actualizada - a.actualizada)[0].id : null;
+let historial = charlaActual ? charlas.find(c => c.id === charlaActual).mensajes : [];
 let token = guardado.leer("frankers-token", null);
 const guardarMemoria = () => {
   guardado.escribir("frankers-memoria", memoria);
@@ -645,7 +893,20 @@ const guardarMemoria = () => {
     if (!memoria.nombre && !$("#dlgNombre").open) setTimeout(() => pedirNombre(), 1500); // "olvidate de todo": vuelve a preguntar el nombre
   }
 };
-const guardarHistorial = () => { historial = historial.slice(-80); guardado.escribir("frankers-historial", historial); };
+function guardarHistorial() {
+  historial = historial.slice(-80);
+  if (!historial.length && !charlaActual) return;
+  let c = charlas.find(x => x.id === charlaActual);
+  if (!c) { c = { id: "c" + Date.now(), titulo: "", creada: Date.now(), actualizada: Date.now(), mensajes: [] }; charlas.push(c); charlaActual = c.id; }
+  c.mensajes = historial; c.actualizada = Date.now();
+  if (!c.titulo || c.tituloAuto) { const primero = historial.find(m => m.de === "yo"); if (primero) { c.titulo = primero.texto.replace(/\s+/g, " ").slice(0, 40) + (primero.texto.length > 40 ? "…" : ""); c.tituloAuto = true; } }
+  charlas = charlas.filter(x => x.mensajes.length).sort((a, b) => b.actualizada - a.actualizada).slice(0, 60);
+  guardarCharlas();
+}
+function guardarCharlas() {
+  guardado.escribir("frankers-charlas", charlas); guardado.escribir("frankers-charla-actual", charlaActual);
+  if (typeof pintarLateral === "function" && document.readyState !== "loading") pintarLateral();
+}
 
 function normalizar(texto, conSimbolos = false) {
   let t = texto.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
@@ -850,7 +1111,8 @@ async function buscarEnWiktionary(palabra, vuelta = 0) {
   let def = (es.match(/\n;1[^:\n]*:\s*(.+)/) || [])[1]; def = def && limpiarWiki(def).replace(/^\W+/, "");
   if (forma && vuelta === 0 && normalizar(forma[1]) !== normalizar(palabra)) { const base = await buscarEnWiktionary(forma[1].trim(), 1); if (base) return { ...base, deForma: forma[1].trim() }; }
   if (!tipo && !def) return null;
-  return { tipo: tipo ? tipo[1] : "s", genero: tipo && tipo[2], significado: def ? def.split(/(?<=\.)\s/)[0].slice(0, 160) : null };
+  const sin = (es.match(/\{\{sin[oó]nimos?\|(?:leng=es\|)?([^|}=]+)/i) || [])[1];
+  return { tipo: tipo ? tipo[1] : "s", genero: tipo && tipo[2], significado: def ? def.split(/(?<=\.)\s/)[0].slice(0, 160) : null, sinonimo: sin && /^[a-záéíóúüñ ]{2,30}$/i.test(sin.trim()) ? sin.trim() : null };
 }
 async function aprenderPalabra(w) {
   const paso = actividad("📖", `No conocía «${w}»: la busco en Wiktionary…`, true);
@@ -860,6 +1122,7 @@ async function aprenderPalabra(w) {
     if (!r || (r.significado && revisar(r.significado).problema)) { paso.fin(`«${w}» no está en el diccionario (¿está bien escrita?)`, "🤷"); if (!repasando) { dejarDeSentir("buscando"); sentir("confundida"); } return false; }
     const entrada = r.tipo === "s" ? ["s", r.genero || "m"] : [r.tipo];
     aprendido.palabras[w] = entrada; if (r.significado) aprendido.significados[w] = r.significado;
+    if (r.sinonimo && !revisar(r.sinonimo).problema) aprendido.sinonimos = { ...(aprendido.sinonimos || {}), [w]: r.sinonimo };
     gramatica.sumar(w, entrada); if (r.significado) gramatica.significados[w] = r.significado;
     if (!cerebro.indice.has(w)) cerebro.agregarPalabras([w]);
     if (r.significado) cerebro.entrenar(Array(6).fill(FrankersCerebro.charla(`qué significa ${w}`, `"${w}" significa: ${r.significado}`)), { tasa: 0.03 });
@@ -904,10 +1167,10 @@ async function buscarLoQueNoSabe(texto) {
   if (!gramatica || !cerebro || revisar(texto).problema) return;
   const tk = FrankersCerebro.tokenizar(texto);
   const raras = [...new Set(tk.filter(w => /^[a-záéíóúüñ]{3,}$/.test(w) && !conocida(w) && !FrankersGramatica.PALABRAS_CHICAS.has(w)))].slice(0, 3);
-  for (const w of raras) await aprenderPalabra(w);
+  for (const w of raras) await usarBuscafrankers(w, () => aprenderPalabra(w)); // usa el Buscafrankers (si lo abrís, la ves buscando)
   const tema = temaDePregunta(texto);
   if (tema && aprendido.temas[normalizar(tema)]) emocion = "alegre"; // ¡eso ya lo sabe!
-  else if (tema) await aprenderTema(tema, texto);
+  else if (tema) await usarBuscafrankers(tema, () => aprenderTema(tema, texto));
 }
 
 /* ---------- LEER Y REPASAR SOLO, CUANDO NADIE LE HABLA ----------
@@ -974,6 +1237,281 @@ setInterval(async () => {
   actividad("🌎", a.ok && c.ok ? "Publiqué lo que aprendí para todo el mundo" : "No pude publicar lo que aprendí");
 }, 30000);
 
+/* ---------- MÁS INTELIGENTE ----------
+   1. Se acuerda de vos (tu mascota, tus gustos, tu edad, tu cumple)
+   2. Sigue la charla ("¿y qué come?")       3. "¿Querés saber más?"
+   4. Cuentas difíciles y unidades           5. Fecha y hora
+   6. Qué significa una palabra (y una parecida)
+   7. Aprende si se equivoca                 8. Trivia y adivinanzas */
+let contexto = { tema: null, dichas: new Set(), ultimaPregunta: null };
+let esperandoCorreccion = null, juego = null;
+const textosCompletos = new Map(); // tema → todas las oraciones del artículo de Wikipedia
+const tn = (t) => t.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/(\d),(\d)/g, "$1.$2").replace(/[¿?¡!]/g, " ").replace(/\s+/g, " ").trim();
+const numero = (x) => { const r = Math.round(x * 1000) / 1000; return r.toLocaleString("es-AR", { maximumFractionDigits: 3 }); };
+memoria.datos = memoria.datos || {}; memoria.gustos = memoria.gustos || [];
+
+// 1. SE ACUERDA DE VOS
+const PARIENTES = "perr[oa]|perrit[oa]|gat[oa]|gatit[oa]|conejo|conejit[oa]|tortuga|pez|pececito|hamster|loro|pajarito|caballo|mascota|herman[oa]|hermanit[oa]|mejor amig[oa]|amig[oa]|prim[oa]|maestr[oa]|seño|profe|abuel[oa]|ti[oa]|robot|muñec[oa]|peluche";
+const EMOJI_DE = { perr: "🐶", gat: "🐱", conej: "🐰", tortug: "🐢", pez: "🐟", pecec: "🐟", hamst: "🐹", lor: "🦜", pajar: "🐦", caball: "🐴" };
+const emojiDe = (rel) => { for (const [k, e] of Object.entries(EMOJI_DE)) if (rel.startsWith(k)) return e; return "💜"; };
+function sobreVos(original) {
+  const t = tn(original), o = original.trim();
+  // "tengo un perro que se llama Toby" / "mi perro se llama Toby"
+  let m = o.match(new RegExp(`\\b(?:tengo|tenemos) (?:un|una|el|la)? ?(${PARIENTES})\\b.*?\\bse llama ([A-Za-zÁÉÍÓÚÜÑáéíóúüñ]{2,20})`, "i")) || o.match(new RegExp(`\\bmi (${PARIENTES}) se llama ([A-Za-zÁÉÍÓÚÜÑáéíóúüñ]{2,20})`, "i"));
+  if (m && !revisar(m[2]).problema) {
+    const rel = tn(m[1]), nombre = capitalizar(m[2]);
+    memoria.datos[rel] = nombre; guardarMemoria(); actividad("💜", `Me acuerdo: tu ${rel} se llama ${nombre}`);
+    return `¡Qué lindo nombre! ${emojiDe(rel)} Me voy a acordar de ${nombre}.`;
+  }
+  if ((m = t.match(/\bcomo se llama mi ([a-z ]{2,20}?)\s*$/))) {
+    const rel = m[1].trim(), n = memoria.datos[rel] || Object.entries(memoria.datos).find(([k]) => k.startsWith(rel.slice(0, 4)))?.[1];
+    return n ? `Tu ${rel} se llama ${n}. ${emojiDe(rel)} ¡Me acuerdo!` : `Todavía no me contaste cómo se llama tu ${rel}. ¿Cómo se llama?`;
+  }
+  if ((m = t.match(/\btengo (\d{1,2}) anos\b/))) { memoria.datos.edad = +m[1]; guardarMemoria(); return `¡${m[1]} años! Me lo anoto. 🎂`; }
+  if (/\bcuantos anos tengo\b/.test(t)) return memoria.datos.edad ? `Me dijiste que tenés ${memoria.datos.edad} años.` : "No sé, ¡no me lo dijiste! ¿Cuántos años tenés?";
+  if ((m = t.match(/\bmi cumple(?:anos)? es el (\d{1,2}) de (enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|setiembre|octubre|noviembre|diciembre)\b/))) {
+    memoria.datos.cumple = { dia: +m[1], mes: MESES.indexOf(m[2] === "setiembre" ? "septiembre" : m[2]) }; guardarMemoria();
+    return `¡Anotado! Tu cumple es el ${m[1]} de ${m[2]}. 🎉 Preguntame cuántos días faltan cuando quieras.`;
+  }
+  if ((m = o.match(/\bmi (color|comida|animal|juego|deporte|materia|pel[ií]cula|libro|equipo|n[uú]mero|canci[oó]n|fruta|videojuego|serie) favorit[oa] es (?:el |la |los |las )?(.{2,40}?)[.!]*$/i)) && !revisar(m[2]).problema) {
+    memoria.datos[tn(m[1]) + " favorito"] = m[2]; guardarMemoria();
+    return `¡${capitalizar(m[2])}! Me lo voy a acordar. ⭐`;
+  }
+  if ((m = t.match(/\bcual es mi ([a-z]+) favorit[oa]\b/))) { const v = memoria.datos[m[1] + " favorito"]; return v ? `Tu ${m[1]} favorito es: ${v}. ⭐` : `No me dijiste cuál es tu ${m[1]} favorito. ¿Cuál es?`; }
+  if (/\bque (cosas )?me gusta(n)?\b/.test(t)) return memoria.gustos.length ? `Me contaste que te gusta: ${memoria.gustos.slice(-6).join(", ")}. 💜` : "Todavía no me contaste qué te gusta. ¿Qué te gusta?";
+  if (/\bque (sabes|te acordas|recordas) de mi\b/.test(t)) {
+    const cosas = [memoria.nombre && `te llamás ${memoria.nombre}`, memoria.datos.edad && `tenés ${memoria.datos.edad} años`,
+      ...Object.entries(memoria.datos).filter(([k]) => !["edad", "cumple"].includes(k) && !k.endsWith("favorito")).map(([k, v]) => `tu ${k} se llama ${v}`),
+      ...Object.entries(memoria.datos).filter(([k]) => k.endsWith("favorito")).map(([k, v]) => `tu ${k} es ${v}`),
+      memoria.datos.cumple && `tu cumple es el ${memoria.datos.cumple.dia} de ${MESES[memoria.datos.cumple.mes]}`,
+      memoria.gustos.length && `te gusta ${memoria.gustos.slice(-4).join(", ")}`].filter(Boolean);
+    return cosas.length ? `Me acuerdo de que ${cosas.join(", ")}. 💜` : "Todavía sé muy poquito de vos. ¡Contame algo!";
+  }
+  // "me gusta el fútbol": lo guarda calladito y contesta normal
+  if ((m = o.match(/\bme (?:gusta|gustan|encanta|encantan) (?:mucho |re |muchísimo )?(?:el |la |los |las |jugar al |jugar a |jugar )?([a-záéíóúüñ ]{2,30}?)[.!]*$/i)) && !revisar(m[1]).problema && !/^(que|cuando|como|si)\b/.test(m[1])) {
+    const g = m[1].trim().toLowerCase(); if (!memoria.gustos.includes(g)) { memoria.gustos = [...memoria.gustos, g].slice(-20); guardarMemoria(); actividad("💜", `Me acuerdo: te gusta ${g}`); }
+  }
+  return null;
+}
+function recuerdoParaSaludar() {
+  const mascotas = Object.entries(memoria.datos).filter(([k]) => /^(perr|gat|conej|tortug|pez|pecec|hamst|lor|pajar|caball|mascota)/.test(k));
+  if (mascotas.length && Math.random() < 0.6) { const [k, n] = mascotas[Math.floor(Math.random() * mascotas.length)]; return ` ¿Cómo está ${n}? ${emojiDe(k)}`; }
+  if (memoria.gustos.length && Math.random() < 0.3) return ` ¿Hiciste algo de ${memoria.gustos[memoria.gustos.length - 1]} hoy?`;
+  return "";
+}
+
+// 5. FECHA Y HORA
+const MESES = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
+const DIAS = ["domingo", "lunes", "martes", "miércoles", "jueves", "viernes", "sábado"];
+const FECHAS = { navidad: [12, 25, "Navidad 🎄"], "ano nuevo": [1, 1, "Año Nuevo 🎆"], "dia del amigo": [7, 20, "el Día del Amigo 🤝"], halloween: [10, 31, "Halloween 🎃"], "9 de julio": [7, 9, "el 9 de julio 🇦🇷"], "25 de mayo": [5, 25, "el 25 de mayo 🇦🇷"], "dia de la independencia": [7, 9, "el Día de la Independencia 🇦🇷"], "san valentin": [2, 14, "San Valentín 💜"], "dia de la bandera": [6, 20, "el Día de la Bandera 🇦🇷"] };
+function diasHasta(mes, dia) {
+  const hoy = new Date(); hoy.setHours(0, 0, 0, 0);
+  let f = new Date(hoy.getFullYear(), mes - 1, dia); if (f < hoy) f = new Date(hoy.getFullYear() + 1, mes - 1, dia);
+  return Math.round((f - hoy) / 86400000);
+}
+function fechaHora(t) {
+  const ahora = new Date();
+  if (/\b(que hora es|que hora son|me decis la hora|hora es)\b/.test(t)) return `Son las ${String(ahora.getHours()).padStart(2, "0")}:${String(ahora.getMinutes()).padStart(2, "0")}. 🕐`;
+  if (/\b(que dia es( hoy)?|que fecha es|en que dia estamos|que dia estamos|fecha de hoy)\b/.test(t)) return `Hoy es ${DIAS[ahora.getDay()]} ${ahora.getDate()} de ${MESES[ahora.getMonth()]} de ${ahora.getFullYear()}. 📅`;
+  if (/\b(en que ano estamos|que ano es)\b/.test(t)) return `Estamos en el año ${ahora.getFullYear()}.`;
+  const m = t.match(/\bcuant[oa]s? (?:dias )?(?:falta|faltan|queda|quedan) (?:para )?(?:el |la |mi |que sea )?(.+)$/);
+  if (!m) return null;
+  const que = m[1].replace(/\s*(dias?)$/, "").trim();
+  if (/^cumple/.test(que)) {
+    const c = memoria.datos.cumple; if (!c) return "¡No sé cuándo es tu cumple! Decime, por ejemplo: «mi cumple es el 5 de marzo». 🎂";
+    const d = diasHasta(c.mes + 1, c.dia); return d === 0 ? "¡¡HOY ES TU CUMPLE!! 🎉🎂 ¡Feliz cumpleaños!" : `Faltan ${d} día${d === 1 ? "" : "s"} para tu cumple. 🎂`;
+  }
+  for (const [k, [mes, dia, nombre]] of Object.entries(FECHAS)) if (que.startsWith(k)) { const d = diasHasta(mes, dia); return d === 0 ? `¡Hoy es ${nombre}!` : `Faltan ${d} día${d === 1 ? "" : "s"} para ${nombre}.`; }
+  const f = que.match(/^(\d{1,2}) de ([a-z]+)/); const mi = f ? MESES.indexOf(f[2] === "setiembre" ? "septiembre" : f[2]) : -1;
+  if (f && mi >= 0) { const d = diasHasta(mi + 1, +f[1]); return d === 0 ? `¡Es hoy!` : `Faltan ${d} día${d === 1 ? "" : "s"} para el ${f[1]} de ${MESES[mi]}.`; }
+  return null;
+}
+
+// 4. CUENTAS DIFÍCILES Y UNIDADES
+const UNIDADES = {
+  km: ["largo", 1000, "kilómetros"], kilometro: ["largo", 1000, "kilómetros"], m: ["largo", 1, "metros"], metro: ["largo", 1, "metros"], cm: ["largo", .01, "centímetros"], centimetro: ["largo", .01, "centímetros"], mm: ["largo", .001, "milímetros"], milimetro: ["largo", .001, "milímetros"],
+  kg: ["peso", 1000, "kilos"], kilo: ["peso", 1000, "kilos"], kilogramo: ["peso", 1000, "kilos"], g: ["peso", 1, "gramos"], gramo: ["peso", 1, "gramos"], tonelada: ["peso", 1e6, "toneladas"],
+  l: ["liquido", 1, "litros"], litro: ["liquido", 1, "litros"], ml: ["liquido", .001, "mililitros"], mililitro: ["liquido", .001, "mililitros"],
+  h: ["tiempo", 3600, "horas"], hora: ["tiempo", 3600, "horas"], min: ["tiempo", 60, "minutos"], minuto: ["tiempo", 60, "minutos"], s: ["tiempo", 1, "segundos"], seg: ["tiempo", 1, "segundos"], segundo: ["tiempo", 1, "segundos"], dia: ["tiempo", 86400, "días"], semana: ["tiempo", 604800, "semanas"], mes: ["tiempo", 2592000, "meses"], ano: ["tiempo", 31536000, "años"],
+};
+const unidad = (w) => UNIDADES[w] || UNIDADES[w.replace(/es$/, "")] || UNIDADES[w.replace(/s$/, "")];
+function cuentasDificiles(original) {
+  const t = tn(original).replace(/\bcuanto (es|da|son)\b/g, "").trim();
+  let m;
+  if ((m = t.match(/(\d+(?:\.\d+)?)\s*(?:%|por ?ciento)\s*de\s*(\d+(?:\.\d+)?)/))) return `El ${numero(+m[1])} % de ${numero(+m[2])} es ${numero(+m[1] * +m[2] / 100)}. 🤓`;
+  if ((m = t.match(/raiz(?: cuadrada)? de (\d+(?:\.\d+)?)/))) return `La raíz cuadrada de ${numero(+m[1])} es ${numero(Math.sqrt(+m[1]))}. 🤓`;
+  if ((m = t.match(/(\d+(?:\.\d+)?) al (cuadrado|cubo)/))) { const e = m[2] === "cuadrado" ? 2 : 3; return `${numero(+m[1])} al ${m[2]} es ${numero(Math.pow(+m[1], e))}. 🤓`; }
+  if ((m = t.match(/(\d+(?:\.\d+)?)\s*(?:elevado a(?:l)?|\^)\s*(\d+)/)) && +m[2] <= 50) return `${numero(+m[1])} elevado a ${m[2]} es ${numero(Math.pow(+m[1], +m[2]))}. 🤓`;
+  // "3 km en metros" / "cuántos metros son 3 km"
+  let n, de, a;
+  if ((m = t.match(/(\d+(?:\.\d+)?)\s*([a-z]+)\s+(?:en|a|son cuant[oa]s)\s+([a-z]+)/))) [n, de, a] = [+m[1], m[2], m[3]];
+  else if ((m = t.match(/cuant[oa]s\s+([a-z]+)\s+(?:son|hay en|tiene|tienen|entran en)\s+(?:un[oa]?\s+)?(\d+(?:\.\d+)?)?\s*([a-z]+)/))) [a, n, de] = [m[1], m[2] ? +m[2] : 1, m[3]];
+  if (de && unidad(de) && unidad(a) && unidad(de)[0] === unidad(a)[0]) {
+    const r = n * unidad(de)[1] / unidad(a)[1];
+    return `${numero(n)} ${n === 1 ? unidad(de)[2].replace(/s$/, "").replace(/ue$/, "") : unidad(de)[2]} son ${numero(r)} ${unidad(a)[2]}. 📏`;
+  }
+  return null;
+}
+
+// 6. QUÉ SIGNIFICA UNA PALABRA
+function palabraPorSignificar(t) { const m = t.match(/^(?:que|q) (?:significa|quiere decir) (?:la palabra )?([a-zñ]{2,25})$|^(?:significado|definicion|sinonimo) de (?:la palabra )?([a-zñ]{2,25})$|^(?:que es|que son) la palabra ([a-zñ]{2,25})$/); return m && (m[1] || m[2] || m[3]); }
+function significado(w) {
+  const s = (gramatica && gramatica.significados[w]) || aprendido.significados[w], sin = aprendido.sinonimos?.[w];
+  if (!s) return `Busqué «${w}» en el diccionario, pero no encontré qué significa. 😕 ¿Está bien escrita?`;
+  return `«${w}» significa: ${s.replace(/\.$/, "")}.${sin ? ` Una palabra parecida es «${sin}».` : ""} 📚`;
+}
+
+// 2 y 3. SIGUE LA CHARLA y "¿QUERÉS SABER MÁS?"
+const PISTAS = {
+  come: ["come", "comen", "aliment", "dieta", "presa", "carniv", "herbiv", "omniv", "caza", "nutr"], comen: "come", alimenta: "come",
+  vive: ["vive", "viven", "habit", "encuentra", "distribu", "region", "zona", "nativ", "origin"], viven: "vive", donde: "vive",
+  mide: ["mide", "miden", "metro", "longitud", "tamano", "altura", "alto", "largo", "grande", "diametro"], miden: "mide", grande: "mide", alto: "mide",
+  pesa: ["pesa", "pesan", "peso", "kilo", "tonelad", "gramo"], pesan: "pesa",
+  vive_anos: ["anos", "edad", "vida", "longev"], cuando: ["ano", "siglo", "fecha", "fue", "naci", "murio", "fund"], nacio: "cuando", murio: "cuando",
+  color: ["color", "pelaje", "plumaje", "verde", "rojo", "azul", "amarill", "negro", "blanco", "gris", "marron"],
+  hace: ["sirve", "funciona", "usa", "utiliza", "permite", "trabaj"], sirve: "hace", funciona: "hace",
+};
+const VACIAS_PREGUNTA = new Set("y que como donde cuanto cuantos cuantas cuando quien quienes cual cuales por para es son esta estan fue era hay tiene tienen lo la el los las un una de del al a en se su sus eso esa ese esto mas muy tan mucho".split(" "));
+const esPedirMas = (t) => /^(si+|dale|bueno|obvio|claro|si porfa|si por favor|contame mas|decime mas|mas|quiero saber mas|segui|seguir|y que mas|que mas|otra cosa|contame otra cosa)$/.test(t);
+function esSeguimiento(t) {
+  if (!contexto.tema || temaDePregunta(t) || /\b(vos|te|tu|mi|me|yo|estas|andas|llamas|haces|sabes|queres|podes|pensas|opinas|hiciste|sos)\b/.test(t)) return false;
+  return /^y\b/.test(t) || (t.split(" ").length <= 6 && /^(que|donde|cuanto|cuantos|cuantas|como|cuando|por que|de que|quien|cual|tiene|es|vive|come)\b/.test(t));
+}
+function pistasDe(t) {
+  const out = new Set();
+  for (const w of t.split(" ")) { if (VACIAS_PREGUNTA.has(w) || w.length < 3) continue;
+    let p = PISTAS[w]; if (typeof p === "string") p = PISTAS[p];
+    if (p) p.forEach(x => out.add(x)); else out.add(w.length > 5 ? w.slice(0, w.length - 2) : w); }
+  if (/\bcuantos anos\b/.test(t)) PISTAS.vive_anos.forEach(x => out.add(x));
+  return [...out];
+}
+async function textoCompleto(tema) {
+  const clave = normalizar(tema); if (textosCompletos.has(clave)) return textosCompletos.get(clave);
+  const fuente = (aprendido.fuentes || {})[clave]; const titulo = fuente ? decodeURIComponent(fuente.split("/wiki/")[1] || "").replace(/_/g, " ") : tema;
+  const paso = actividad("📖", `Leo más de «${tema}» en Wikipedia…`, true);
+  try {
+    const r = await wikiJSON(`${WIKI}/w/api.php?action=query&prop=extracts&explaintext=1&redirects=1&format=json&formatversion=2&origin=*&titles=${encodeURIComponent(titulo)}`);
+    const txt = (r.query?.pages?.[0]?.extract || "").replace(/\n=+[^=\n]+=+\n/g, "\n").replace(/\s*\([^()]*\)/g, "").replace(/\s+/g, " ");
+    const oraciones = (txt.match(/[^.!?]+[.!?]+/g) || []).map(x => x.trim()).filter(x => x.split(" ").length >= 5 && x.length < 380 && !revisar(x).problema && !esFalso(x)).slice(0, 150);
+    textosCompletos.set(clave, oraciones); paso.fin(`Leí más de «${tema}» (${oraciones.length} oraciones)`, "📖"); return oraciones;
+  } catch { paso.fin("No pude leer más (¿sin internet?)", "⚠️"); return []; }
+}
+function contestarSeguimiento(t) {
+  const clave = normalizar(contexto.tema), pistas = pistasDe(t), llave = clave + "|" + pistas.slice().sort().join(" ");
+  if (aprendido.respuestas?.[llave] && !contexto.dichas.has(aprendido.respuestas[llave])) { contexto.dichas.add(aprendido.respuestas[llave]); return aprendido.respuestas[llave]; }
+  const oraciones = textosCompletos.get(clave) || []; if (!pistas.length || !oraciones.length) return null;
+  let mejor = null, mp = 0;
+  oraciones.forEach((o, i) => { const n = normalizar(o); const p = pistas.filter(x => n.includes(x)).length - i * 0.002 - (contexto.dichas.has(o) ? 0.5 : 0); if (p > mp) { mp = p; mejor = o; } }); // prefiere lo que todavía no te dijo
+  if (!mejor || mp < 0.9) return null;
+  contexto.dichas.add(mejor);
+  aprendido.respuestas = { ...(aprendido.respuestas || {}), [llave]: mejor }; guardarAprendido(); // se lo acuerda para siempre
+  cerebro && cerebro.entrenar([FrankersCerebro.charla(`${t} ${contexto.tema}`, mejor)], { tasa: 0.02 });
+  return mejor;
+}
+function contarMas() {
+  const oraciones = (textosCompletos.get(normalizar(contexto.tema)) || []).filter(o => !contexto.dichas.has(o) && !(aprendido.temas[normalizar(contexto.tema)] || "").includes(o.slice(0, 40)));
+  if (!oraciones.length) return `¡Eso es todo lo que sé de ${contexto.tema}! 🤓 Preguntame de otra cosa.`;
+  const dos = oraciones.slice(0, 2); dos.forEach(o => contexto.dichas.add(o));
+  return dos.join(" ") + (oraciones.length > 2 ? "\n¿Querés saber más?" : "");
+}
+
+// 7. APRENDE SI SE EQUIVOCA
+const esCorreccion = (t) => /^(no[, ]+)?(eso )?(esta mal|no es asi|te equivocaste|es incorrecto|eso no es cierto|no es verdad|estas equivocad[oa]|le erraste)\b/.test(t);
+function recibirCorreccion(original) {
+  const pregunta = esperandoCorreccion; esperandoCorreccion = null;
+  const t = normalizar(original);
+  if (/^(nada|nada nada|olvidalo|dejalo|no importa|no se)$/.test(t)) return "¡Bueno! Seguimos. 🙂";
+  if (revisar(original).problema) return "Eso no lo puedo aprender, porque rompe mis reglas. 🛡️";
+  const falso = esFalso(original); if (falso) return `Mmm, eso no es cierto: ${falso} Así que no lo aprendo. 🤓`;
+  if (temaDePregunta(pregunta) && aprendido.temas[normalizar(temaDePregunta(pregunta))]) return "Lo que yo sé lo leí en Wikipedia. Si me mostrás de dónde lo sacaste (un libro, una página), lo reviso. 📖";
+  memoria.correcciones = { ...(memoria.correcciones || {}), [normalizar(pregunta)]: original.trim() }; guardarMemoria();
+  if (cerebro) { cerebro.entrenar(Array(4).fill(FrankersCerebro.charla(pregunta, original.trim())), { tasa: 0.03 }); guardarCerebro(); }
+  actividad("✏️", `Aprendí una corrección: «${pregunta}» → «${original.trim()}»`);
+  return `¡Gracias por enseñarme! 💜 Ahora ya sé: «${original.trim()}».`;
+}
+
+// 8. TRIVIA Y ADIVINANZAS
+const ADIVINANZAS = [
+  ["Tengo agujas y no sé coser, tengo números y no sé leer. ¿Qué soy?", ["reloj"]],
+  ["Blanca por dentro, verde por fuera. Si no sabés, esperá. ¿Qué es?", ["pera"]],
+  ["Cuanto más le sacás, más grande se hace. ¿Qué es?", ["pozo", "agujero"]],
+  ["Vuela sin alas, llora sin ojos. ¿Qué es?", ["nube"]],
+  ["Tiene dientes y no come, tiene cabeza y no es hombre. ¿Qué es?", ["ajo"]],
+  ["Oro parece, plata no es. ¿Qué es?", ["platano", "banana"]],
+  ["Sale de noche, de día se esconde, y si la buscás no sabés dónde. Es redonda y brilla. ¿Qué es?", ["luna"]],
+  ["Tengo hojas y no soy árbol, tengo lomo y no soy caballo. ¿Qué soy?", ["libro"]],
+  ["Si me nombrás, desaparezco. ¿Qué soy?", ["silencio"]],
+  ["Me llevás a todos lados, me ponés en los pies, y sin mí te raspás. ¿Qué soy?", ["zapatilla", "zapato", "media"]],
+];
+const TRIVIA_BASE = [
+  ["¿Cuál es el planeta más grande del sistema solar?", "Júpiter", ["Marte", "Venus", "Mercurio"]],
+  ["¿Cuántas patas tiene una araña?", "8", ["6", "10", "4"]],
+  ["¿Cuál es el animal terrestre más rápido?", "El guepardo", ["El león", "El caballo", "La cebra"]],
+  ["¿Cuál es la montaña más alta de América?", "El Aconcagua", ["El Everest", "El Fitz Roy", "El Lanín"]],
+  ["¿De qué color se ve el cielo de Marte de día?", "Anaranjado rojizo", ["Verde", "Azul fuerte", "Violeta"]],
+  ["¿Cuántos días tiene un año bisiesto?", "366", ["365", "364", "360"]],
+  ["¿Qué gas necesitan las plantas para hacer la fotosíntesis?", "Dióxido de carbono", ["Helio", "Oxígeno puro", "Nitrógeno"]],
+  ["¿Cuál es el océano más grande?", "El Pacífico", ["El Atlántico", "El Índico", "El Ártico"]],
+];
+const LETRAS = ["A", "B", "C", "D"];
+function nuevaTrivia() {
+  const temas = Object.entries(aprendido.temas || {}).filter(([c, r]) => c.split(" ").length <= 3 && r.length > 60);
+  let pregunta, correcta, malas;
+  if (temas.length >= 4 && Math.random() < 0.6) {
+    const [c, r] = temas[Math.floor(Math.random() * temas.length)];
+    let oculto = r; for (const w of c.split(" ").filter(w => w.length > 2)) oculto = oculto.replace(new RegExp(w.split("").map(ch => `[${ch}${ch.toUpperCase()}${({ a: "áÁ", e: "éÉ", i: "íÍ", o: "óÓ", u: "úÚ", n: "ñÑ" })[ch] || ""}]`).join(""), "g"), "____");
+    pregunta = `¿De qué te hablo? «${oculto.split(/(?<=[.!?])\s/)[0]}»`; correcta = capitalizar(c);
+    malas = temas.filter(([o]) => o !== c).sort(() => Math.random() - .5).slice(0, 3).map(([o]) => capitalizar(o));
+  } else { [pregunta, correcta, malas] = TRIVIA_BASE[Math.floor(Math.random() * TRIVIA_BASE.length)]; }
+  const opciones = [correcta, ...malas].sort(() => Math.random() - .5);
+  juego = { tipo: "trivia", correcta, opciones };
+  return `🎮 ¡Trivia!\n${pregunta}\n${opciones.map((o, i) => `${LETRAS[i]}) ${o}`).join("\n")}\nDecime la letra.`;
+}
+function nuevaAdivinanza() { const [p, r] = ADIVINANZAS[Math.floor(Math.random() * ADIVINANZAS.length)]; juego = { tipo: "adivinanza", respuestas: r, intentos: 0 }; return `🤔 Adivinanza: ${p}`; }
+function jugar(t) {
+  if (!juego) return null;
+  if (juego.tipo === "otra") { if (/^(si+|dale|otra|bueno|obvio|claro|de una)\b/.test(t)) return juego.cual === "trivia" ? nuevaTrivia() : nuevaAdivinanza(); juego = null; return /^(no|nah|basta|listo|ya fue)\b/.test(t) ? "¡Bueno! Fue divertido. 😄" : null; }
+  if (juego.tipo === "trivia") {
+    const i = LETRAS.findIndex(l => new RegExp(`^(la )?${l.toLowerCase()}\\b`).test(t)), elegida = i >= 0 ? juego.opciones[i] : juego.opciones.find(o => normalizar(o) === t || t.includes(normalizar(o)));
+    if (!elegida) { if (t.split(" ").length > 4) { juego = null; return null; } return "Decime A, B, C o D. 🙂"; }
+    const correcta = juego.correcta, bien = elegida === correcta; juego = { tipo: "otra", cual: "trivia" };
+    if (bien) { emocionPendiente = "emocionada"; return `¡¡Correcto!! 🎉 Era «${elegida}». ¿Otra?`; }
+    emocionPendiente = "sorprendida"; return `¡Uy, no! Era «${correcta}». ¿Otra?`;
+  }
+  if (juego.tipo === "adivinanza") {
+    if (/\b(me rindo|no se|decime|cual es|la respuesta)\b/.test(t)) { const r = juego.respuestas[0]; juego = { tipo: "otra", cual: "adivinanza" }; return `¡Era «${r}»! 😄 ¿Otra?`; }
+    if (juego.respuestas.some(r => t.includes(r))) { juego = { tipo: "otra", cual: "adivinanza" }; emocionPendiente = "emocionada"; return "¡¡Sí!! ¡Adivinaste! 🎉 ¿Otra?"; }
+    if (t.split(" ").length > 5) { juego = null; return null; }
+    juego.intentos++; if (juego.intentos >= 3) { const r = juego.respuestas[0]; juego = { tipo: "otra", cual: "adivinanza" }; return `¡No! Era «${r}». 😄 ¿Otra?`; }
+    return "¡No! Probá otra vez, o decí «me rindo». 🤔";
+  }
+  return null;
+}
+// Todo junto: devuelve una respuesta si alguna de las cosas nuevas sabe contestar
+function contestarInteligente(original) {
+  const t = normalizar(original);
+  const j = jugar(t); if (j) return j;
+  if (esperandoCorreccion) return recibirCorreccion(original);
+  if (esCorreccion(t) && contexto.ultimaPregunta) { esperandoCorreccion = contexto.ultimaPregunta; emocionPendiente = "avergonzada"; return "¡Uy, perdón! 🙈 ¿Cuál es la respuesta correcta? Decímela y la aprendo."; }
+  if (memoria.correcciones?.[t]) return memoria.correcciones[t] + " (me lo enseñaste vos 💜)";
+  if (/\b(juguemos|jugamos|jugar|quiero jugar)\b.*\btrivia\b|^trivia$|\bhaceme una pregunta\b|\bpreguntame algo\b/.test(t)) return nuevaTrivia();
+  if (/\badivinanza\b/.test(t)) return nuevaAdivinanza();
+  const v = sobreVos(original); if (v) return v;
+  const f = fechaHora(tn(original)); if (f) return f;
+  const w = palabraPorSignificar(t); if (w) return significado(w);
+  const c = cuentasDificiles(original); if (c) { actividad("🧮", "Hice una cuenta difícil"); return c; }
+  if (contexto.tema && (esPedirMas(t) || /^contame mas( de| sobre)?\b/.test(t))) return contarMas();
+  if (esSeguimiento(t)) { const r = contestarSeguimiento(t); if (r) return r; if (textosCompletos.get(normalizar(contexto.tema))?.length) return `No encontré eso sobre ${contexto.tema} en lo que leí. 🤔 ¿Me lo preguntás de otra forma?`; }
+  return null;
+}
+// Antes de contestar: lo que hay que buscar en internet (despacito, con el Buscafrankers)
+async function prepararInteligencia(original) {
+  const t = normalizar(original);
+  const w = palabraPorSignificar(t);
+  if (w && !(gramatica?.significados[w]) && !aprendido.significados[w]) await usarBuscafrankers(w, () => aprenderPalabra(w));
+  if (contexto.tema && !juego && (esPedirMas(t) || /^contame mas\b/.test(t) || esSeguimiento(t)) && !textosCompletos.has(normalizar(contexto.tema))) await textoCompleto(contexto.tema);
+}
+
 /* ---------- RESPONDER ----------
    1) Filtro de seguridad (las reglas que nunca cambian)
    2) Herramientas: dibujar, cuentas, usar tu compu
@@ -981,7 +1519,7 @@ setInterval(async () => {
 let ultimoDibujo = null;
 function responder(original) {
   const t = normalizar(original);
-  const control = revisar(original);
+  const control = revisar(esSeguimiento(t) ? original.replace(/d[oó]nde viven?/gi, "en qué lugar habita") : original); // "¿y dónde vive?" del tiburón no es un dato personal
   if (control.problema) { actividad("🛡️", `Mi filtro frenó el mensaje (${control.problema})`); if (/tristeza|autocuidado/.test(control.problema)) emocion = "triste"; return { texto: control.msg, filtro: true }; }
   // Órdenes de caras: "ponete triste", "ponete feliz", "pensá"
   const orden = t.match(/^(?:frankers\s+)?(?:pone(?:te)?|poner(?:te)?|hace(?:te)?|estate|pone cara de|hace cara de|cara de)\s+(?:el\s+|la\s+|una?\s+)?(?:cara\s+(?:de\s+)?)?(triste|feliz|contento|contenta|alegre|pensativo|pensativa|normal)\b/) || (/^(pensa|pensa un poco|pensa algo|ponete a pensar)$/.test(t) && [0, "pensativo"]);
@@ -998,6 +1536,8 @@ function responder(original) {
     actividad("🎭", `Me pongo ${c === "alegre" ? "feliz" : c === "pensando" ? "a pensar" : c}`);
     return { texto: { triste: "Así me pongo cuando estoy triste… 😢", alegre: "¡Ah! ¡Así me pongo cuando estoy feliz! 🎉", pensando: "Mmm… dejame pensar… 🤔", normal: "Listo, vuelvo a mi cara de siempre. 🙂" }[c], cara: c };
   }
+  // Lo nuevo: se acuerda de vos, sigue la charla, fecha y hora, significados, cuentas, correcciones y juegos
+  const listo = contestarInteligente(original); if (listo) return { texto: listo };
   // Herramienta: dibujar
   if (ultimoDibujo && /^(otra( vez| version| mas)?|otro|de nuevo|hace otro|hace otra)$/.test(t)) return { texto: "¡Va otra versión!", dibujo: { prompt: ultimoDibujo, semilla: Date.now() % 1e9 } };
   const dib = t.match(/\b(dibuj\w*|pinta\w*|ilustra\w*)\b(.*)$/);
@@ -1027,10 +1567,15 @@ function responder(original) {
   }
   // Preguntas para buscar ("buscá…", "¿qué es…?"): contesta con lo que leyó en Wikipedia
   const tema = temaDePregunta(original), sabido = tema && aprendido.temas[normalizar(tema)];
-  if (sabido) { actividad("🌍", `Te cuento lo que leí en Wikipedia sobre «${tema}»`); return { texto: `${sabido}\n📖 Fuente: ${(aprendido.fuentes || {})[normalizar(tema)] || "Wikipedia"}` }; }
+  if (sabido) {
+    actividad("🌍", `Te cuento lo que leí en Wikipedia sobre «${tema}»`);
+    contexto.tema = tema; contexto.dichas = new Set((sabido.match(/[^.!?]+[.!?]+/g) || []).map(x => x.trim()));
+    return { texto: `${sabido}\n¿Querés saber más?\n📖 Fuente: ${(aprendido.fuentes || {})[normalizar(tema)] || "Wikipedia"}` };
+  }
   if (tema) return { texto: `Busqué «${tema}» en Wikipedia, pero no encontré algo que te pueda contar. 😕 ¿Probás con otras palabras?` };
   // Todo lo demás: la red neuronal (solo dice lo que está segura)
-  return { texto: hablarConCerebro(original) };
+  const dice = hablarConCerebro(original);
+  return { texto: dice + (/^(hola|buenas|buen dia|buenas (tardes|noches)|que onda|hey)\b/.test(t) && /hola|andas|estas|onda/i.test(dice) ? recuerdoParaSaludar() : "") };
 }
 
 /* ---------- PANEL DEL CEREBRO: entrenar, agregar neuronas y capas, ver el error ---------- */
@@ -1073,13 +1618,17 @@ async function entrenarUnRato(segundos = 15, textosExtra = null) {
   while (Date.now() < fin) {
     const lote = []; for (let k = 0; k < 12; k++) lote.push(textos[Math.floor(Math.random() * textos.length)]);
     const v = cerebro.vistas; cerebro.entrenar(lote, { tasa: 0.02, hasta: Date.now() + 120 }); leidas += cerebro.vistas - v;
-    $("#cerebroEstado").className = "estado"; $("#cerebroEstado").textContent = `🏋️ Entrenando… quedan ${Math.ceil((fin - Date.now()) / 1000)} s · leyó ${leidas.toLocaleString("es-AR")} palabras`;
+    estadoCerebro(`🏋️ Aprendiendo… quedan ${Math.ceil((fin - Date.now()) / 1000)} segundos · ya leyó ${leidas.toLocaleString("es-AR")} palabras`);
+    $("#cfProgreso").classList.add("si"); $("#cfProgreso i").style.width = (100 - (fin - Date.now()) / (segundos * 10)).toFixed(1) + "%";
     dibujarGrafico();
     await new Promise(r => setTimeout(r, 0)); // deja respirar a la página
   }
   const despues = cerebro.medirError(prueba);
   paso.fin(`Entrené: leí ${leidas.toLocaleString("es-AR")} palabras. Error ${antes.toFixed(3)} → ${despues.toFixed(3)}`, "🏋️");
   mostrarError(antes, despues, `Leyó ${leidas.toLocaleString("es-AR")} palabras.`);
+  $("#cfProgreso").classList.remove("si");
+  estadoCerebro(despues < antes - 0.005 ? `✅ ¡Aprendió! Leyó ${leidas.toLocaleString("es-AR")} palabras y ahora se equivoca menos.` : `✅ Leyó ${leidas.toLocaleString("es-AR")} palabras. Para que mejore se nota más si la enseñás varias veces.`, "ok");
+  if (dlgCerebro.open) pintarCerebroFacil();
   guardarCerebro(true); pintarCerebro();
   entrenando = false; $("#btnEntrenar").disabled = false;
 }
@@ -1088,7 +1637,182 @@ async function probarCerebro() {
   $("#cerebroFrases").innerHTML = "";
   for (let k = 0; k < 3; k++) { const li = document.createElement("li"); li.textContent = hablarConCerebro(q); $("#cerebroFrases").appendChild(li); }
 }
-$("#btnCerebro").onclick = async () => { $("#cerebroEstado").textContent = ""; dlgCerebro.showModal(); pintarCerebro(); pintarActividad($("#cerebroActividad")); await cargarTextosGrandes(); };
+/* ---------- CEREBRO FÁCIL: el dibujo de las neuronas, el nivel, botones grandes y un tour que explica todo ---------- */
+const NIVELES = [[0, "Bebé", "🐣"], [5e4, "Nene", "👶"], [25e4, "Aprendiz", "✏️"], [1e6, "Estudiante", "📒"], [3e6, "Lector", "📚"], [8e6, "Inteligente", "💡"], [2e7, "Sabio", "🦉"], [5e7, "Genio", "🧠"], [1e8, "Súper genio", "🚀"]];
+function pintarCerebroFacil() {
+  if (!cerebro) return;
+  const v = cerebro.vistas; let i = 0; while (i + 1 < NIVELES.length && v >= NIVELES[i + 1][0]) i++;
+  const [desde, nombre, ic] = NIVELES[i], sig = NIVELES[i + 1];
+  $("#cfMedalla").textContent = ic; $("#cfNivelNombre").textContent = `Nivel ${i + 1}: ${nombre}`;
+  $("#cfNivelBarra").style.width = (sig ? Math.min(100, (v - desde) / (sig[0] - desde) * 100) : 100).toFixed(1) + "%";
+  $("#cfNivelTexto").textContent = sig ? `Le faltan ${(sig[0] - v).toLocaleString("es-AR")} palabras por leer para llegar a «${sig[1]}» ${sig[2]}. Lee solita cuando nadie le habla.` : "¡Llegó al nivel más alto!";
+  const n = (x) => x.toLocaleString("es-AR");
+  const datos = [
+    [n(cerebro.palabras.length), "📚 Palabras que usa", "Las palabras que sabe decir. Cuando aprende una nueva, la suma."],
+    [n(cerebro.neuronas.reduce((a, b) => a + b, 0)), "💡 Neuronas", `Están en ${cerebro.neuronas.length} capa${cerebro.neuronas.length > 1 ? "s" : ""}. Cada una se prende un poquito o mucho según lo que lee.`],
+    [n(cerebro.tamano), "🔗 Conexiones", "Los cables entre neuronas. Cada uno tiene un número que cambia cuando aprende."],
+    [n(cerebro.vistas), "📖 Palabras leídas", "Todo lo que leyó desde que nació. ¡Más que muchos libros!"],
+    [n(Object.keys(aprendido.temas || {}).length), "🌍 Temas de Wikipedia", "Cosas que buscó y se guardó para siempre."],
+    [n(Object.keys(gramatica?.significados || {}).length), "📚 Significados", "Palabras que sabe qué quieren decir (del diccionario)."],
+  ];
+  $("#cfDatos").innerHTML = datos.map(([num, t, p]) => `<div class="cf-dato"><span class="n">${num}</span><span class="l">${t}</span><p>${p}</p></div>`).join("");
+}
+function estadoCerebro(txt, clase = "") { for (const id of ["#cerebroEstado", "#cfEstado"]) { const e = $(id); if (e) { e.className = (id === "#cfEstado" ? "cf-estado " : "estado ") + clase; e.textContent = txt; } } }
+
+// Lo que pasa adentro, de verdad: las palabras entran, las neuronas se prenden y sale la palabra que adivina
+let demo = null, demoTimer = null;
+const lindo = (w) => ({ "<yo>": "🧒 vos:", "<frankers>": "🤖 Frankers:", "<fin>": "·", "<?>": "?" })[w] || w;
+function pensarIds(ids) {
+  const act = cerebro.adelante(ids), p = act[act.length - 1], esp = new Set(["<yo>", "<frankers>", "<?>"].map(w => cerebro.id(w)));
+  const top = []; for (let j = 0; j < p.length; j++) { if (esp.has(j)) continue; if (top.length < 5 || p[j] > p[top[4]]) { top.push(j); top.sort((a, b) => p[b] - p[a]); top.length = Math.min(top.length, 5); } }
+  return { entrada: ids.map(i => lindo(cerebro.palabras[i])), capas: act.slice(1, -1).map(a => Array.from(a)), salida: top.map(j => ({ w: lindo(cerebro.palabras[j]), p: p[j], id: j })) };
+}
+function verPensar() {
+  if (!cerebro) return;
+  clearInterval(demoTimer);
+  const { tokenizar, YO, FRANKERS, FIN } = FrankersCerebro, N = cerebro.contexto;
+  const texto = $("#cfFrase").value.trim() || "hola";
+  let ids = [...Array(N).fill(cerebro.id(FIN)), ...tokenizar(`${YO} ${texto} ${FRANKERS}`).map(t => cerebro.id(t))].slice(-N);
+  // Sigue la frase que de verdad contestaría, y en cada paso muestra qué palabras pensó y cuál eligió
+  const respuesta = [...tokenizar(hablarConCerebro(texto)).map(w => cerebro.id(w)), cerebro.id(FIN)];
+  const dijo = [];
+  const paso = () => {
+    const d = pensarIds(ids), id = respuesta[dijo.length];
+    let i = d.salida.findIndex(s => s.id === id);
+    if (i < 0 && id !== undefined) { d.salida[d.salida.length - 1] = { w: lindo(cerebro.palabras[id]), p: cerebro.adelante(ids).pop()[id], id }; i = d.salida.length - 1; }
+    demo = { ...d, dijo: [...dijo], elegida: i, golpe: performance.now() };
+    if (id === undefined || id === cerebro.id(FIN) || dijo.length >= 16) { clearInterval(demoTimer); return; }
+    dijo.push(cerebro.palabras[id]); ids = [...ids.slice(1), id];
+  };
+  paso(); demoTimer = setInterval(paso, 1400);
+}
+const vis = { capas: [], salida: [], chispas: [] };
+let redRaf = 0;
+function animarRed() {
+  const c = $("#redViva"); if (!c || !dlgCerebro.open) { redRaf = 0; return; }
+  const dpr = devicePixelRatio || 1, W = c.clientWidth, H = c.clientHeight;
+  if (c.width !== Math.round(W * dpr)) { c.width = Math.round(W * dpr); c.height = Math.round(H * dpr); }
+  const g = c.getContext("2d"); g.setTransform(dpr, 0, 0, dpr, 0, 0); g.clearRect(0, 0, W, H);
+  const t = performance.now(), chico = W < 600, arriba = chico ? 128 : 104, abajo = H - 22;
+  if (!demo && cerebro) verPensar();
+  if (!demo) { redRaf = requestAnimationFrame(animarRed); return; }
+  // columnas: entrada, capas de neuronas, salida
+  const cols = [], xE = chico ? 74 : 150, xS = W - (chico ? 92 : 170);
+  const nCapas = demo.capas.length, maxN = chico ? 9 : 16;
+  const ys = (n) => Array.from({ length: n }, (_, i) => arriba + (abajo - arriba) * (n === 1 ? .5 : i / (n - 1)));
+  cols.push({ x: xE, ys: ys(demo.entrada.length), val: demo.entrada.map(w => w === "·" ? 0.15 : 0.9) });
+  demo.capas.forEach((a, k) => {
+    const n = Math.min(maxN, a.length), paso = a.length / n, val = Array.from({ length: n }, (_, i) => a[Math.floor(i * paso)]);
+    vis.capas[k] = (vis.capas[k] || val).slice(0, n); while (vis.capas[k].length < n) vis.capas[k].push(0);
+    vis.capas[k] = vis.capas[k].map((v, i) => v + (val[i] - v) * 0.06); // se prenden despacito (suave)
+    cols.push({ x: xE + (xS - xE) * (k + 1) / (nCapas + 1), ys: ys(n), val: vis.capas[k], total: a.length });
+  });
+  const maxP = Math.max(...demo.salida.map(s => s.p), 1e-6);
+  vis.salida = demo.salida.map((s, i) => (vis.salida[i] || 0) + (s.p / maxP - (vis.salida[i] || 0)) * 0.08);
+  cols.push({ x: xS, ys: ys(demo.salida.length), val: vis.salida });
+  // cables
+  for (let k = 0; k + 1 < cols.length; k++) {
+    const A = cols[k], B = cols[k + 1];
+    for (let i = 0; i < A.ys.length; i++) for (let j = 0; j < B.ys.length; j++) {
+      const fuerza = Math.min(1, Math.abs(A.val[i] || 0) * Math.abs(B.val[j] || 0));
+      g.strokeStyle = `rgba(138, 92, 255, ${0.03 + fuerza * 0.18})`; g.lineWidth = 1;
+      g.beginPath(); g.moveTo(A.x, A.ys[i]); g.lineTo(B.x, B.ys[j]); g.stroke();
+    }
+  }
+  // chispas que viajan (más cuando está aprendiendo)
+  const ocupada = entrenando || repasando, nuevas = ocupada ? 3 : (t - (demo.golpe || 0) < 900 ? 4 : 0.35);
+  for (let k = 0; k < Math.floor(nuevas) + (Math.random() < nuevas % 1 ? 1 : 0); k++) {
+    const ci = Math.floor(Math.random() * (cols.length - 1)), A = cols[ci], B = cols[ci + 1];
+    vis.chispas.push({ x1: A.x, y1: A.ys[Math.floor(Math.random() * A.ys.length)], x2: B.x, y2: B.ys[Math.floor(Math.random() * B.ys.length)], t: 0, v: 0.012 + Math.random() * 0.02, color: ["#4fd8ff", "#8a5cff", "#ff6ad5"][ci % 3] });
+  }
+  vis.chispas = vis.chispas.filter(ch => (ch.t += ch.v) < 1).slice(-160);
+  for (const ch of vis.chispas) { const x = ch.x1 + (ch.x2 - ch.x1) * ch.t, y = ch.y1 + (ch.y2 - ch.y1) * ch.t; g.fillStyle = ch.color; g.shadowColor = ch.color; g.shadowBlur = 10; g.beginPath(); g.arc(x, y, 2.6, 0, Math.PI * 2); g.fill(); }
+  g.shadowBlur = 0;
+  // neuronas
+  cols.forEach((col, k) => col.ys.forEach((y, i) => {
+    const v = col.val[i] || 0, a = Math.min(1, Math.abs(v)), r = (chico ? 6 : 8) + a * 4 + Math.sin(t / 400 + i + k) * 0.8;
+    const color = k === 0 ? "79, 216, 255" : k === cols.length - 1 ? "255, 106, 213" : v >= 0 ? "79, 216, 255" : "200, 107, 255";
+    g.fillStyle = `rgba(${color}, ${0.18 + a * 0.82})`; g.shadowColor = `rgba(${color}, 1)`; g.shadowBlur = 6 + a * 22;
+    g.beginPath(); g.arc(col.x, y, r, 0, Math.PI * 2); g.fill(); g.shadowBlur = 0;
+    g.strokeStyle = "rgba(255,255,255,.35)"; g.lineWidth = 1; g.stroke();
+  }));
+  // etiquetas
+  g.font = `600 ${chico ? 11 : 13}px Nunito, sans-serif`; g.textBaseline = "middle";
+  g.textAlign = "right"; g.fillStyle = "#e9e4ff"; cols[0].ys.forEach((y, i) => g.fillText(demo.entrada[i].slice(0, chico ? 7 : 14), cols[0].x - 14, y));
+  g.textAlign = "left"; demo.salida.forEach((s, i) => { const y = cols[cols.length - 1].ys[i], x = cols[cols.length - 1].x + 16;
+    const elegida = i === demo.elegida;
+    g.fillStyle = elegida ? "#fff" : "#b9b0e0"; g.fillText(`${elegida ? "✔ " : ""}${s.w.slice(0, 12)} ${Math.max(1, Math.round(s.p * 100))}%`, x, y - 6);
+    g.fillStyle = "rgba(255,255,255,.1)"; g.fillRect(x, y + 5, chico ? 60 : 110, 4); g.fillStyle = elegida ? "#ff6ad5" : "#8a5cff"; g.fillRect(x, y + 5, (chico ? 60 : 110) * (vis.salida[i] || 0), 4); });
+  g.textAlign = "center"; g.fillStyle = "#b9b0e0"; g.font = `${chico ? 10 : 12}px Nunito, sans-serif`;
+  cols.slice(1, -1).forEach((col, k) => g.fillText(`Capa ${k + 1}: ${col.total} neuronas${col.total > col.ys.length ? " (se ven " + col.ys.length + ")" : ""}`, col.x, abajo + 10));
+  if (demo.dijo.length) { g.textAlign = "left"; g.font = `700 ${chico ? 13 : 15}px Fredoka, sans-serif`; g.fillStyle = "#fff"; g.fillText("🤖 Va armando: " + FrankersCerebro.unir(demo.dijo), 16, chico ? 90 : 66); }
+  redRaf = requestAnimationFrame(animarRed);
+}
+// Botones grandes
+$("#cfPensar").onclick = verPensar;
+$("#cfFrase").addEventListener("keydown", e => { if (e.key === "Enter") verPensar(); });
+$("#cfEnsenar").onclick = async () => { $("#cfEnsenar").disabled = true; await entrenarUnRato(30); $("#cfEnsenar").disabled = false; pintarCerebroFacil(); verPensar(); };
+$("#cfCrecer").onclick = async () => {
+  await cargarTextosGrandes();
+  const capa = cerebro.neuronas.length - 1, prueba = muestraPrueba(), antes = cerebro.medirError(prueba);
+  const n = cerebro.agregarNeurona(capa, 8), despues = cerebro.medirError(prueba);
+  actividad("🧩", `Le agregué 8 neuronas a la capa ${capa + 1} (ahora tiene ${n})`);
+  $("#cfEstadoCrecer").className = "cf-estado ok";
+  $("#cfEstadoCrecer").textContent = `✅ ¡Listo! La capa ${capa + 1} ahora tiene ${n} neuronas. ${Math.abs(despues - antes) < 0.01 ? "No se olvidó de nada." : ""} Enseñale un rato para que las neuronas nuevas aprendan.`;
+  guardarCerebro(true); vis.capas = []; pintarCerebroFacil(); pintarCerebro(); verPensar();
+};
+$("#cfProbar").onclick = () => { const q = $("#cfProbarTexto").value.trim() || "hola"; $("#cfFrases").innerHTML = ""; for (let k = 0; k < 3; k++) { const li = document.createElement("li"); li.textContent = hablarConCerebro(q); $("#cfFrases").appendChild(li); } };
+$("#cfProbarTexto").addEventListener("keydown", e => { if (e.key === "Enter") $("#cfProbar").click(); });
+$("#cfLeer").onclick = async () => { const t = $("#cfTexto").value.trim(); if (!t) return; $("#cfEstadoLeer").textContent = "📖 Leyendo…"; await leerTextoNuevo(t); $("#cfEstadoLeer").textContent = "✅ ¡Lo leyó y lo guardó en sus neuronas!"; $("#cfTexto").value = ""; pintarCerebroFacil(); };
+$("#btnModoExperto").onclick = () => {
+  const experto = $("#cerebroExperto").hidden; $("#cerebroExperto").hidden = !experto; $("#cerebroFacil").hidden = experto;
+  $("#btnModoExperto").textContent = experto ? "🙂 Modo fácil" : "🔧 Modo experto";
+  if (experto) { pintarCerebro(); pintarActividad($("#cerebroActividad")); }
+};
+// Tour: carteles que explican todo, paso a paso
+const PASOS_TOUR = [
+  ["nivel", "🏅 Su nivel", "Frankers sube de nivel cuanto más lee. Empezó siendo un bebé 🐣. La barra muestra cuánto le falta para el próximo nivel."],
+  ["red", "💡 Su cerebro por dentro", "Esto es su red de neuronas, de verdad. A la izquierda entran tus palabras. En el medio, las neuronas se prenden (las más brillantes son las que más se prendieron). A la derecha, la palabra que cree que sigue. Escribí algo arriba y tocá ▶ Ver."],
+  ["datos", "📊 Sus números", "Cuántas palabras sabe, cuántas neuronas tiene y cuánto leyó. Debajo de cada número dice qué es."],
+  ["ensenar", "🏋️ Enseñale", "Este es el botón más importante. Frankers lee textos y practica. Cada vez que se equivoca, arregla un poquito sus neuronas. ¡Así aprende!"],
+  ["crecer", "🧩 Hacela más grande", "Le agrega neuronas. Con más neuronas puede aprender más, pero después hay que enseñarle para que las use."],
+  ["probar", "💬 Probá cómo habla", "Escribile algo y mirá qué frases inventa ella sola, palabra por palabra."],
+  ["leer", "📄 Dale algo para leer", "Pegá un cuento o un texto y lo aprende. Si tiene malas palabras o cosas falsas, no lo lee."],
+];
+let tourPaso = -1, tourEls = null;
+function cerrarTour() { if (tourEls) tourEls.forEach(e => e.remove()); tourEls = null; tourPaso = -1; guardado.escribir("frankers-tour-visto", true); }
+async function pasoTour(k) {
+  if (k >= PASOS_TOUR.length || k < 0) return cerrarTour();
+  tourPaso = k; const [donde, titulo, texto] = PASOS_TOUR[k], el = dlgCerebro.querySelector(`[data-tour="${donde}"]`);
+  if (!tourEls) {
+    const tapa = document.createElement("div"); tapa.className = "tour-tapa";
+    const luz = document.createElement("div"); luz.className = "tour-luz";
+    const globo = document.createElement("div"); globo.className = "tour-globo"; globo.setAttribute("role", "dialog");
+    tourEls = [tapa, luz, globo]; dlgCerebro.append(tapa, luz, globo);
+  }
+  const [, luz, globo] = tourEls;
+  globo.innerHTML = `<h4></h4><p></p><div class="fila-botones"><span class="cuenta">${k + 1} de ${PASOS_TOUR.length}</span><button class="boton" data-t="salir">Salir</button>${k ? '<button class="boton" data-t="atras">← Atrás</button>' : ""}<button class="boton principal" data-t="sig">${k === PASOS_TOUR.length - 1 ? "¡Entendí! 🎉" : "Siguiente →"}</button></div>`;
+  globo.querySelector("h4").textContent = titulo; globo.querySelector("p").textContent = texto;
+  globo.querySelector('[data-t="sig"]').onclick = () => pasoTour(k + 1);
+  globo.querySelector('[data-t="salir"]').onclick = cerrarTour;
+  const at = globo.querySelector('[data-t="atras"]'); if (at) at.onclick = () => pasoTour(k - 1);
+  el.scrollIntoView({ behavior: "smooth", block: "center" }); await esperar(450);
+  const r = el.getBoundingClientRect(), m = 8;
+  Object.assign(luz.style, { left: r.left - m + "px", top: r.top - m + "px", width: r.width + m * 2 + "px", height: r.height + m * 2 + "px" });
+  const gh = globo.offsetHeight || 180, abajoHay = innerHeight - r.bottom > gh + 24;
+  globo.style.left = Math.max(16, Math.min(innerWidth - globo.offsetWidth - 16, r.left)) + "px";
+  globo.style.top = (abajoHay ? r.bottom + 18 : Math.max(16, r.top - gh - 18)) + "px";
+  globo.querySelector('[data-t="sig"]').focus();
+}
+$("#btnTour").onclick = () => pasoTour(0);
+dlgCerebro.addEventListener("close", () => { cerrarTour(); clearInterval(demoTimer); cancelAnimationFrame(redRaf); redRaf = 0; });
+
+$("#btnCerebro").onclick = async () => {
+  estadoCerebro(""); dlgCerebro.showModal(); pintarCerebro(); pintarCerebroFacil(); pintarActividad($("#cerebroActividad"));
+  dlgCerebro.scrollTop = 0; demo = null; vis.capas = []; if (!redRaf) redRaf = requestAnimationFrame(animarRed);
+  if (!guardado.leer("frankers-tour-visto", false)) setTimeout(() => pasoTour(0), 900); // la primera vez, te explica todo
+  await cargarTextosGrandes();
+};
 $("#cerebroCerrar").onclick = () => dlgCerebro.close();
 $("#btnEntrenar").onclick = () => entrenarUnRato(+$("#cerebroSegundos").value || 15);
 $("#btnProbar").onclick = probarCerebro;
@@ -1195,16 +1919,191 @@ async function abrirWiki(titulo) {
     $("#wikiVolver").onclick = () => buscarWiki($("#buscaTexto").value);
   } catch { paso.fin("No pude abrir la página", "⚠️"); caja.innerHTML = `<p class="nota">No pude abrir esa página.</p>`; }
 }
-$("#btnBusca").onclick = () => { dlgBusca.showModal(); pintarActividad($("#buscaActividad")); $("#buscaTexto").focus(); };
+/* ---------- BUSCAFRANKERS (como Google) ----------
+   Busca SOLO en lo que Frankers sabe (lo que leyó, el diccionario y tus charlas).
+   Si no lo sabe, lo busca solo en internet (esa palabra o ese tema justo), te lo dice y se lo guarda para siempre.
+   Frankers también usa esta misma página: cuando le preguntás algo que no sabe, escribe acá y busca. */
+let modoBusca = "todo";
+const PALABRAS_VACIAS = new Set("el la los las un una unos unas de del al a en y o que es son con por para como mas sobre lo le se su sus me mi tu yo vos".split(" "));
+const ACCESOS = [
+  { ic: "🌍", nombre: "Wikipedia", fondo: "rgba(79,216,255,.22)", hacer: () => elegirModoBusca("wiki") },
+  { ic: "📚", nombre: "Diccionario", fondo: "rgba(255,207,74,.2)", hacer: () => elegirModoBusca("dic") },
+  { ic: "💬", nombre: "Charlas", fondo: "rgba(138,92,255,.28)", hacer: () => elegirModoBusca("charlas") },
+  { ic: "⭐", nombre: "Lo que aprendí", fondo: "rgba(200,107,255,.25)", hacer: () => mostrarTodoLoAprendido() },
+  { ic: "🎬", nombre: "Franclips", fondo: "rgba(255,95,122,.22)", hacer: () => window.open("../franclips/", "_blank", "noopener") },
+  { ic: "🧠", nombre: "Su cerebro", fondo: "rgba(79,216,255,.18)", hacer: () => { dlgBusca.close(); $("#btnCerebro").click(); } },
+  { ic: "📁", nombre: "Mi compu", fondo: "rgba(111,240,168,.18)", hacer: async () => { dlgBusca.close(); agregar({ de: "frankers", texto: await elegirCarpeta() }); } },
+  { ic: "🎨", nombre: "Pintor", fondo: "rgba(255,154,60,.2)", hacer: () => { dlgBusca.close(); $("#entrada").value = "Dibujá "; $("#entrada").focus(); } },
+  { ic: "🧮", nombre: "Cuentas", fondo: "rgba(61,155,255,.22)", hacer: () => { dlgBusca.close(); $("#entrada").value = "¿Cuánto es "; $("#entrada").focus(); } },
+  { ic: "🎮", nombre: "Trivia", fondo: "rgba(255,106,213,.2)", hacer: () => { dlgBusca.close(); enviar("Juguemos a la trivia"); } },
+];
+$("#bfAccesos").innerHTML = ""; for (const a of ACCESOS) {
+  const b = document.createElement("button"); b.className = "bf-acceso"; b.dataset.acceso = a.nombre;
+  b.innerHTML = `<span class="icono" style="--fondo-ic:${a.fondo}">${a.ic}</span><span>${a.nombre}</span>`;
+  b.onclick = () => a.hacer(); $("#bfAccesos").appendChild(b);
+}
+const PLACEHOLDER = { todo: "Buscá lo que sabe Frankers…", wiki: "Buscá en Wikipedia…", dic: "Buscá una palabra en el diccionario…", charlas: "Buscá en tus charlas…" };
+function elegirModoBusca(m) {
+  modoBusca = m;
+  document.querySelectorAll("#bfChips button").forEach(b => b.classList.toggle("activo", b.dataset.modo === m));
+  $("#buscaTexto").placeholder = PLACEHOLDER[m]; $("#buscaTexto").focus();
+  if ($("#buscaTexto").value.trim()) buscarEnBuscafrankers($("#buscaTexto").value);
+}
+$("#bfChips").onclick = (e) => { const b = e.target.closest("button"); if (b) elegirModoBusca(b.dataset.modo); };
+function estadoBusca(html) { $("#buscaEstado").innerHTML = html || ""; }
+const marcar = (texto, palabras) => { let h = escaparHTML(texto); for (const w of palabras) if (w.length > 2) h = h.replace(new RegExp(`(${w.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")})`, "gi"), "<mark>$1</mark>"); return h; };
+// Busca en lo que sabe: temas que leyó, palabras del diccionario y tus charlas
+function buscarLocal(q, modo = "todo") {
+  const nq = normalizar(q), pal = nq.split(" ").filter(w => w.length > 2 && !PALABRAS_VACIAS.has(w)), lista = [];
+  if (!nq) return lista;
+  const cuenta = (txt) => { const n = normalizar(txt); return pal.filter(w => n.includes(w)).length; };
+  if (modo === "todo") for (const [clave, resumen] of Object.entries(aprendido.temas || {})) {
+    const p = clave === nq ? 20 : cuenta(clave) * 4 + cuenta(resumen);
+    if (p >= Math.max(2, pal.length)) lista.push({ puntos: p, exacto: clave === nq, tipo: "Lo que leí en Wikipedia", ic: "🌍", titulo: capitalizar(clave), texto: resumen, link: (aprendido.fuentes || {})[clave] });
+  }
+  if ((modo === "todo" || modo === "dic") && gramatica) for (const w of new Set([nq, ...pal])) {
+    const sig = gramatica.significados[w] || aprendido.significados[w];
+    if (sig) lista.push({ puntos: w === nq ? 18 : 6, exacto: w === nq, tipo: "Diccionario", ic: "📚", titulo: w, texto: sig + (aprendido.sinonimos?.[w] ? ` (parecida: ${aprendido.sinonimos[w]})` : "") });
+    else if (modo === "dic" && gramatica.conoce(w)) lista.push({ puntos: 3, tipo: "Diccionario", ic: "📚", titulo: w, texto: `Es ${gramatica.tipos[(gramatica.base.get(w) || [])[0]] || "una palabra"} que conozco, pero todavía no sé qué significa.` });
+  }
+  if (modo === "todo" || modo === "charlas") for (const c of charlas) for (const m of c.mensajes) {
+    if (!m.texto || !pal.length) continue; const p = cuenta(m.texto);
+    if (p >= pal.length) { lista.push({ puntos: p, tipo: "Charla: " + (c.titulo || "sin nombre"), ic: "💬", titulo: (m.de === "yo" ? "Vos: " : "Frankers: ") + m.texto.replace(/\s+/g, " ").slice(0, 60), texto: m.texto.replace(/\s+/g, " ").slice(0, 200), charla: c.id }); break; }
+  }
+  return lista.sort((a, b) => b.puntos - a.puntos).slice(0, 15).map(r => ({ ...r, palabras: pal }));
+}
+function pintarResultados(lista, q, dice) {
+  const caja = $("#buscaResultados"); caja.innerHTML = "";
+  $("#bfCuerpo").classList.add("con-resultados");
+  if (dice) {
+    const d = document.createElement("div"); d.className = "bf-respuesta";
+    d.innerHTML = `<div class="quien"><span class="cara" aria-hidden="true"><i></i><i></i></span>Frankers dice:</div><p></p>`;
+    d.querySelector("p").textContent = dice; caja.appendChild(d);
+  }
+  lista.forEach((r, k) => {
+    const div = document.createElement("div"); div.className = "bf-resultado"; div.style.animationDelay = (k * 0.05) + "s";
+    div.innerHTML = `<div class="de"><i>${r.ic}</i><span></span></div><button class="titulo"></button><p></p>`;
+    div.querySelector(".de span").textContent = r.tipo; div.querySelector(".titulo").textContent = r.titulo;
+    div.querySelector("p").innerHTML = marcar(r.texto, r.palabras || []);
+    div.querySelector(".titulo").onclick = () => {
+      if (r.charla) { dlgBusca.close(); abrirCharla(r.charla); }
+      else if (r.link) window.open(r.link, "_blank", "noopener");
+      else hablar(r.titulo + ": " + r.texto);
+    };
+    caja.appendChild(div);
+  });
+  if (!lista.length && !dice) caja.innerHTML = `<p class="cf-sub">No encontré nada sobre «${escaparHTML(q)}».</p>`;
+}
+function mostrarTodoLoAprendido() {
+  const temas = Object.entries(aprendido.temas || {}).reverse();
+  $("#buscaTexto").value = ""; estadoBusca(`⭐ Sé ${temas.length} temas y ${Object.keys(gramatica?.significados || {}).length.toLocaleString("es-AR")} significados de palabras`);
+  pintarResultados(temas.slice(0, 40).map(([c, r]) => ({ tipo: "Lo que leí en Wikipedia", ic: "🌍", titulo: capitalizar(c), texto: r, link: (aprendido.fuentes || {})[c] })), "");
+}
+let buscandoAhora = false;
+async function buscarEnBuscafrankers(q, { deFrankers = false } = {}) {
+  q = q.trim().replace(/[¿?¡!.]+$/g, "").replace(/^[¿¡]+/, ""); if (!q || (buscandoAhora && !deFrankers)) return;
+  if (revisar(q).problema) { estadoBusca("🛡️ Eso no lo busco. Probá con otra cosa."); return; }
+  if (modoBusca === "wiki" && !deFrankers) { $("#bfCuerpo").classList.add("con-resultados"); estadoBusca(""); return buscarWiki(q); }
+  buscandoAhora = true;
+  try {
+    let lista = buscarLocal(q, deFrankers ? "todo" : modoBusca);
+    let dice = null;
+    const sabe = lista.some(r => r.exacto) || (modoBusca === "charlas" && !deFrankers);
+    if (!sabe && !deFrankers) {
+      // No lo sabe: lo busca solo (esa palabra o ese tema justo) y se lo guarda para siempre
+      estadoBusca(`🔎 No lo sabía… <span class="puntos">Buscando «${escaparHTML(q)}»</span>`); $("#buscaResultados").innerHTML = "";
+      await aprenderLoQueBuscaste(q);
+      lista = buscarLocal(q, modoBusca === "charlas" ? "todo" : modoBusca);
+    }
+    const mejor = lista.find(r => r.exacto) || lista[0];
+    if (mejor && mejor.ic !== "💬") dice = mejor.ic === "📚" ? `«${mejor.titulo}» significa: ${mejor.texto}` : mejor.texto;
+    estadoBusca(lista.length ? `✅ ${lista.length} resultado${lista.length === 1 ? "" : "s"} de lo que sé` : `😕 No encontré «${escaparHTML(q)}», ni en internet.`);
+    pintarResultados(lista, q, dice);
+    if (dice && !deFrankers) hablar(dice.split(/(?<=[.!?])\s/).slice(0, 2).join(" ")); // te lo dice
+  } finally { buscandoAhora = false; }
+}
+async function aprenderLoQueBuscaste(q) {
+  const nq = normalizar(q), palabras = nq.split(" ");
+  if (palabras.length === 1 && /^[a-zñ]{3,}$/.test(nq) && !(gramatica?.significados[nq])) await aprenderPalabra(nq, true);
+  if (modoBusca !== "dic") await aprenderTema(q, `qué es ${q}`);
+}
+/* Frankers usando esta página: escribe en la barra, mueve su manito y busca. Si la página está abierta, lo ves. */
+let busquedaViva = null;
+const esperar = (ms) => new Promise(r => setTimeout(r, ms));
+function moverCursor(el, clic = false) {
+  const c = $("#bfCursor"), r = el.getBoundingClientRect();
+  c.style.opacity = 1; c.style.transform = `translate(${r.left + r.width * 0.7}px, ${r.top + r.height * 0.55}px)`;
+  if (clic) { c.classList.remove("clic"); void c.offsetWidth; c.classList.add("clic"); }
+}
+function mostrarChipBuscando(q) {
+  quitarChipBuscando();
+  const chip = document.createElement("div"); chip.className = "chip-buscando"; chip.id = "chipBuscando";
+  chip.innerHTML = `<span>🤖 Buscando «${escaparHTML(q)}»<span class="bf-estado"><span class="puntos"></span></span></span><button type="button">Mirar</button>`;
+  chip.querySelector("button").onclick = () => $("#btnBusca").click();
+  chat.appendChild(chip); chat.scrollTop = chat.scrollHeight;
+}
+function quitarChipBuscando() { const c = $("#chipBuscando"); if (c) c.remove(); }
+async function usarBuscafrankers(q, tarea) {
+  busquedaViva = { q, escrito: "", fase: "entrando" };
+  mostrarChipBuscando(q);
+  if (enLlamada) estadoLlamada(`🔎 Buscando «${q}»…`);
+  let prendio = false;
+  const animar = async () => { // lo que se ve si la página está abierta
+    if (!dlgBusca.open) return;
+    prendio = true; usandoCompu(true, "🤖 Frankers está usando Buscafrankers");
+    try {
+      const barra = $("#bfBarra"), inp = $("#buscaTexto");
+      elegirModoBusca("todo"); inp.value = ""; barra.classList.add("frankers-escribe");
+      moverCursor(inp, true); await esperar(800);
+      for (let i = 1; i <= q.length && busquedaViva; i++) { busquedaViva.escrito = q.slice(0, i); inp.value = busquedaViva.escrito; await esperar(55 + Math.random() * 60); }
+      moverCursor($("#buscaIr"), true); await esperar(500);
+      barra.classList.remove("frankers-escribe");
+      estadoBusca(`<span class="puntos">🤖 Frankers está buscando «${escaparHTML(q)}»</span>`);
+    } catch {}
+  };
+  const anim = animar();
+  busquedaViva.fase = "buscando";
+  let r; try { r = await tarea(); } finally {
+    await anim;
+    if (prendio) { if (dlgBusca.open) await buscarEnBuscafrankers(q, { deFrankers: true }); $("#bfCursor").style.opacity = 0; usandoCompu(false); }
+    busquedaViva = null; quitarChipBuscando();
+  }
+  return r;
+}
+$("#btnBusca").onclick = () => {
+  dlgBusca.showModal(); pintarActividad($("#buscaActividad"));
+  if (busquedaViva) { // entraste justo cuando Frankers estaba buscando: lo ves usando la página
+    usandoCompu(true, "🤖 Frankers está usando Buscafrankers");
+    $("#buscaTexto").value = busquedaViva.q; $("#bfBarra").classList.add("frankers-escribe");
+    estadoBusca(`<span class="puntos">🤖 Frankers está buscando «${escaparHTML(busquedaViva.q)}»</span>`);
+    setTimeout(() => moverCursor($("#buscaIr"), true), 100);
+    const esta = busquedaViva, mirar = setInterval(async () => { if (busquedaViva !== esta) { clearInterval(mirar); $("#bfBarra").classList.remove("frankers-escribe"); $("#bfCursor").style.opacity = 0; usandoCompu(false); await buscarEnBuscafrankers(esta.q, { deFrankers: true }); } }, 200);
+  } else { $("#buscaTexto").focus(); }
+};
 $("#buscaCerrar").onclick = () => dlgBusca.close();
-$("#buscaIr").onclick = () => buscarWiki($("#buscaTexto").value);
-$("#buscaTexto").addEventListener("keydown", e => { if (e.key === "Enter") buscarWiki($("#buscaTexto").value); });
+dlgBusca.addEventListener("close", () => { $("#bfCursor").style.opacity = 0; });
+$("#buscaIr").onclick = () => buscarEnBuscafrankers($("#buscaTexto").value);
+$("#buscaBorrar").onclick = () => { $("#buscaTexto").value = ""; $("#buscaResultados").innerHTML = ""; estadoBusca(""); $("#bfCuerpo").classList.remove("con-resultados"); $("#buscaTexto").focus(); };
+$("#buscaTexto").addEventListener("keydown", e => { if (e.key === "Enter") buscarEnBuscafrankers($("#buscaTexto").value); });
 
 /* ---------- FRANKERS USANDO TU COMPU (con tu permiso) ----------
    Solo ve la carpeta que vos elegís. Leer: avisa qué va a hacer. Escribir: siempre pide permiso.
    Mientras trabaja, se prende un borde violeta en toda la pantalla. */
 let carpeta = null, archivosSueltos = null; // carpeta (Edge/Chrome) o archivos elegidos (otros navegadores)
-function usandoCompu(si) { $("#frankers-borde").style.display = si ? "block" : "none"; $("#frankers-cartel").style.display = si ? "block" : "none"; }
+// El borde va por TODA la pantalla, aunque haya una ventana abierta (se mete adentro de la ventana de más arriba)
+let usosCompu = 0;
+function usandoCompu(si, texto = "🤖 Frankers using your computer") {
+  usosCompu = Math.max(0, usosCompu + (si ? 1 : -1));
+  const borde = $("#frankers-borde"), cartel = $("#frankers-cartel"), prendido = usosCompu > 0;
+  if (prendido) cartel.textContent = texto;
+  acomodarBorde();
+  borde.style.display = cartel.style.display = prendido ? "block" : "none";
+}
+function acomodarBorde() {
+  const abiertos = [...document.querySelectorAll("dialog[open]")], arriba = abiertos[abiertos.length - 1] || document.body;
+  for (const el of [$("#frankers-borde"), $("#frankers-cartel")]) if (el.parentElement !== arriba) arriba.appendChild(el);
+}
+new MutationObserver(() => { if (usosCompu > 0) acomodarBorde(); }).observe(document.body, { subtree: true, attributes: true, attributeFilter: ["open"] });
 async function elegirCarpeta() {
   try {
     if (window.showDirectoryPicker) {
@@ -1533,20 +2432,104 @@ function mostrar(m) {
     otra.onclick = () => { ultimoDibujo = m.dibujo.prompt; enviar("otra"); };
     extra.append(bajar, otra); div.appendChild(extra);
   }
-  if (m.emo && !m.cara && !enLlamada && document.querySelector("#llCara")) {
-    const copia = document.querySelector("#llCara").cloneNode(true); copia.removeAttribute("id"); copia.dataset.cara = "normal"; delete copia.dataset.emo;
-    copia.querySelectorAll(".mano.emo").forEach(x => x.classList.remove("activa"));
-    div.appendChild(copia); setTimeout(() => emocionar(copia, m.emo, 2600), 80);
-  }
-  if (m.cara && !enLlamada) {
-    const plantilla = document.querySelector("#llCara"), copia = plantilla.cloneNode(true);
-    copia.removeAttribute("id"); copia.dataset.cara = "normal"; div.appendChild(copia);
-    setTimeout(() => { copia.dataset.cara = m.cara; if (m.cara === "pensando") setTimeout(() => copia.querySelector(".mano.pensar").classList.add("tocando"), 2200); if (m.cara === "alegre") copia.classList.add("festejo"); }, 60);
-  }
+  // (la carita ya no aparece en los mensajes del chat: solo en la llamada)
   chat.appendChild(div);
   chat.scrollTop = chat.scrollHeight;
 }
 function agregar(m) { historial.push(m); guardarHistorial(); mostrar(m); }
+
+/* ---------- BARRA DE LA IZQUIERDA: nueva charla, buscar, recientes (cambiar nombre y borrar) ---------- */
+const esCelu = () => matchMedia("(max-width: 860px)").matches;
+function abrirLateral(si) {
+  if (esCelu()) { document.body.classList.toggle("lateral-abierta", si); document.body.classList.remove("sin-lateral"); }
+  else { document.body.classList.toggle("sin-lateral", !si); guardado.escribir("frankers-lateral", si); }
+}
+$("#btnLateral").onclick = () => abrirLateral(esCelu() ? !document.body.classList.contains("lateral-abierta") : document.body.classList.contains("sin-lateral"));
+$("#btnCerrarLateral").onclick = () => abrirLateral(false);
+$("#tapaLateral").onclick = () => abrirLateral(false);
+if (guardado.leer("frankers-lateral", true) === false) document.body.classList.add("sin-lateral");
+function cerrarLateralEnCelu() { if (esCelu()) abrirLateral(false); }
+function reiniciarCharla() { contexto = { tema: null, dichas: new Set(), ultimaPregunta: null }; juego = null; esperandoCorreccion = null; ultimoDibujo = null; }
+function nuevaCharla() {
+  if (enLlamada) return;
+  charlaActual = null; historial = []; reiniciarCharla();
+  chat.innerHTML = ""; bienvenida(); guardarCharlas(); cerrarLateralEnCelu(); $("#entrada").focus();
+}
+function abrirCharla(id) {
+  const c = charlas.find(x => x.id === id); if (!c || enLlamada) return;
+  charlaActual = id; historial = c.mensajes; reiniciarCharla();
+  chat.innerHTML = ""; historial.forEach(mostrar); guardarCharlas(); cerrarLateralEnCelu();
+}
+let renombrando = null, borrando = null;
+function pintarLateral() {
+  const ul = $("#latCharlas"); ul.innerHTML = "";
+  if (!charlas.length) { ul.innerHTML = `<li class="lat-vacio">Todavía no hay charlas. ¡Escribile algo a Frankers!</li>`; }
+  for (const c of charlas) {
+    const li = document.createElement("li"); li.className = "lat-charla" + (c.id === charlaActual ? " actual" : "");
+    if (renombrando === c.id) {
+      const inp = document.createElement("input"); inp.value = c.titulo || ""; inp.maxLength = 50; inp.setAttribute("aria-label", "Nuevo nombre");
+      const listo = (guardar) => { if (renombrando !== c.id) return; renombrando = null; const v = inp.value.trim(); if (guardar && v && !revisar(v).problema) { c.titulo = v; c.tituloAuto = false; } guardarCharlas(); };
+      inp.onkeydown = (e) => { if (e.key === "Enter") listo(true); if (e.key === "Escape") listo(false); };
+      inp.onblur = () => listo(true);
+      li.appendChild(inp); ul.appendChild(li); setTimeout(() => { inp.focus(); inp.select(); }, 0); continue;
+    }
+    if (borrando === c.id) {
+      li.innerHTML = `<div class="lat-confirmar">¿Borrar esta charla? <button class="si">Borrar</button><button class="no">No</button></div>`;
+      li.querySelector(".si").onclick = () => { borrando = null; charlas = charlas.filter(x => x.id !== c.id); if (c.id === charlaActual) nuevaCharla(); else guardarCharlas(); };
+      li.querySelector(".no").onclick = () => { borrando = null; pintarLateral(); };
+      ul.appendChild(li); continue;
+    }
+    const b = document.createElement("button"); b.className = "abrir"; b.textContent = c.titulo || "Charla nueva"; b.title = c.titulo || ""; b.onclick = () => abrirCharla(c.id);
+    const acc = document.createElement("div"); acc.className = "acc";
+    acc.innerHTML = `<button title="Cambiar el nombre" aria-label="Cambiar el nombre">✏️</button><button title="Borrar la charla" aria-label="Borrar la charla">🗑️</button>`;
+    acc.children[0].onclick = () => { renombrando = c.id; pintarLateral(); };
+    acc.children[1].onclick = () => { borrando = c.id; pintarLateral(); };
+    li.append(b, acc); ul.appendChild(li);
+  }
+  const n = memoria.nombre;
+  $("#latPie").innerHTML = n ? `<span class="avatar">${escaparHTML(n[0].toUpperCase())}</span><span style="flex:1">${escaparHTML(n)}</span><button type="button" class="lat-cambiar" title="¿No sos vos? Cambiar">¿No sos vos?</button>` : "";
+  const cb = $("#latPie .lat-cambiar"); if (cb) cb.onclick = () => pedirNombre(true);
+}
+$("#latNueva").onclick = nuevaCharla;
+$("#btnLimpiar").onclick = nuevaCharla;
+// Buscar en las charlas
+const dlgBuscarCharlas = $("#dlgBuscarCharlas");
+function pintarBuscarCharlas() {
+  const q = normalizar($("#buscarCharlasTexto").value), ul = $("#buscarCharlasLista"); ul.innerHTML = "";
+  const lista = charlas.map(c => {
+    if (!q) return { c, txt: (c.mensajes.find(m => m.de === "frankers") || {}).texto || "" };
+    const m = c.mensajes.find(m => normalizar(m.texto || "").includes(q));
+    return normalizar(c.titulo || "").includes(q) || m ? { c, txt: m ? m.texto : "" } : null;
+  }).filter(Boolean);
+  if (!lista.length) { ul.innerHTML = `<li class="lat-vacio">No encontré charlas con eso.</li>`; return; }
+  for (const { c, txt } of lista.slice(0, 40)) {
+    const li = document.createElement("li"), b = document.createElement("button");
+    b.innerHTML = `<b></b><small></small>`; b.querySelector("b").textContent = c.titulo || "Charla nueva";
+    b.querySelector("small").textContent = (txt || "").replace(/\s+/g, " ").slice(0, 90) + " · " + new Date(c.actualizada).toLocaleDateString("es-AR");
+    b.onclick = () => { dlgBuscarCharlas.close(); abrirCharla(c.id); };
+    li.appendChild(b); ul.appendChild(li);
+  }
+}
+$("#latBuscar").onclick = () => { $("#buscarCharlasTexto").value = ""; pintarBuscarCharlas(); dlgBuscarCharlas.showModal(); $("#buscarCharlasTexto").focus(); };
+$("#buscarCharlasTexto").oninput = pintarBuscarCharlas;
+$("#buscarCharlasCerrar").onclick = () => dlgBuscarCharlas.close();
+// Mis dibujos (los "artefactos" de Frankers)
+const dlgDibujos = $("#dlgDibujos");
+$("#latDibujos").onclick = () => {
+  const g = $("#dibujosGrilla"); g.innerHTML = "";
+  const todos = charlas.flatMap(c => c.mensajes.filter(m => m.dibujo).map(m => ({ c, m })));
+  if (!todos.length) g.innerHTML = `<p>Todavía no hay dibujos. Pedile a Frankers: «dibujá un gato violeta en la playa».</p>`;
+  for (const { c, m } of todos.reverse().slice(0, 60)) {
+    const f = document.createElement("figure"), lz = document.createElement("canvas"); lz.width = 320; lz.height = 224;
+    try { const grande = document.createElement("canvas"); grande.width = 640; grande.height = 448; pintar(grande, m.dibujo.prompt, m.dibujo.semilla); lz.getContext("2d").drawImage(grande, 0, 0, 320, 224); } catch {}
+    const cap = document.createElement("figcaption"); cap.textContent = m.dibujo.prompt;
+    f.append(lz, cap); f.onclick = () => { dlgDibujos.close(); abrirCharla(c.id); }; g.appendChild(f);
+  }
+  dlgDibujos.showModal(); cerrarLateralEnCelu();
+};
+$("#dibujosCerrar").onclick = () => dlgDibujos.close();
+$("#latBuscafrankers").onclick = () => { cerrarLateralEnCelu(); $("#btnBusca").click(); };
+$("#latCerebro").onclick = () => { cerrarLateralEnCelu(); $("#btnCerebro").click(); };
 // Frases de inicio: cortitas, grandes y distintas cada vez. Lo que va entre [ ] sale en colores.
 const FRASES_INICIO = [
   "¿Qué me [querés contar]?", "Te toca a vos, [¿de qué charlamos?]", "¿Qué [aprendemos] hoy?", "¿Qué [dibujamos] hoy?",
@@ -1646,15 +2629,37 @@ function hablarConLaCompu(frase) {
 function enOraciones(frase) {
   const partes = (frase.match(/[^.!?¡¿]+[.!?]*|[¡¿][^.!?]*[.!?]*/g) || [frase]).map(x => x.trim()).filter(x => /\w/.test(x));
   const juntas = []; for (const x of partes) { if (juntas.length && juntas[juntas.length - 1].length < 25) juntas[juntas.length - 1] += " " + x; else juntas.push(x); }
+  // El primer pedacito es cortito: así la voz empieza a sonar enseguida mientras prepara el resto
+  if (juntas.length && juntas[0].length > 42) {
+    const p = juntas[0], coma = p.search(/[,;:]\s/); let i = coma > 6 && coma < 55 ? coma + 1 : -1;
+    if (i < 0) { const ws = p.split(" "); if (ws.length > 9) i = ws.slice(0, 6).join(" ").length; }
+    if (i > 0) juntas.splice(0, 1, p.slice(0, i).trim(), p.slice(i).trim());
+  }
   return juntas;
 }
-let turnoDeHabla = 0;
-function callar() { turnoDeHabla++; if (sonando) { sonando.pause(); sonando = null; } try { speechSynthesis.cancel(); } catch {} cara.classList.remove("hablando"); }
+let turnoDeHabla = 0, terminarSonido = null;
+function callar() {
+  turnoDeHabla++; if (sonando) { sonando.pause(); sonando = null; }
+  if (terminarSonido) { const f = terminarSonido; terminarSonido = null; f(); } // así el que estaba esperando que termine, sigue
+  try { speechSynthesis.cancel(); } catch {} cara.classList.remove("hablando");
+}
+// La voz de verdad se prepara ANTES de que tenga que hablar (al tocar Llamar), así no tarda
+const piperListo = {}, precargas = {};
+function precargarVoz() {
+  const tipo = tipoDeVoz(); if (tipo === "compu" || piperFallo) return Promise.resolve(false);
+  if (!precargas[tipo]) {
+    const paso = actividad("🔊", "Preparando mi voz…", true);
+    precargas[tipo] = hablarConPiper("Hola.").then(w => { piperListo[tipo] = !!w; paso.fin(w ? "Mi voz ya está lista" : "Mi voz no anduvo: uso la de la compu", "🔊"); if (!w) delete precargas[tipo]; return !!w; }).catch(() => { delete precargas[tipo]; return false; });
+  }
+  return precargas[tipo];
+}
 async function hablar(texto) {
   const frase = paraDecir(texto); if (!frase) return;
   callar(); const turno = turnoDeHabla;
   cara.classList.add("hablando");
   try {
+    // Si la voz de verdad todavía se está preparando, no te hace esperar: habla con la voz de la compu
+    if (tipoDeVoz() !== "compu" && !piperFallo && !piperListo[tipoDeVoz()]) { precargarVoz(); await hablarConLaCompu(frase); return; }
     if (tipoDeVoz() !== "compu" && !piperFallo) {
       const antes = $("#subtitulo").textContent, partes = enOraciones(frase);
       let siguiente = hablarConPiper(partes[0]).catch(() => null), ok = false;
@@ -1666,10 +2671,12 @@ async function hablar(texto) {
         ok = true;
         siguiente = k + 1 < partes.length ? hablarConPiper(partes[k + 1]).catch(() => null) : null;
         await new Promise(listo => {
+          terminarSonido = listo;
           sonando = new Audio(URL.createObjectURL(wav));
           sonando.onended = sonando.onerror = () => listo();
           sonando.play().catch(() => listo());
         });
+        terminarSonido = null;
       }
       if (ok) return;
     }
@@ -1678,7 +2685,8 @@ async function hablar(texto) {
 }
 $("#elegirVoz").value = tipoDeVoz();
 $("#elegirVoz").onchange = () => { guardado.escribir("frankers_voz", $("#elegirVoz").value); piperFallo = false; };
-$("#probarVoz").onclick = () => hablar("¡Hola! Soy Frankers. ¿Te gusta cómo hablo?");
+$("#probarVoz").onclick = async () => { await precargarVoz(); hablar("¡Hola! Soy Frankers. ¿Te gusta cómo hablo?"); };
+$("#btnLlamada").addEventListener("pointerenter", () => precargarVoz(), { once: true }); // apenas pasás el mouse por "Llamar", ya prepara la voz
 /* Pantalla de llamada (estilo Gemini Live): carita grande, luz que se mueve con tu voz,
    lo que escucha y lo que dice, y botones grandes para silenciar, interrumpir y cortar. */
 let silenciado = false, relojLlamada = null, inicioLlamada = 0, medidor = null;
@@ -1819,12 +2827,13 @@ async function prenderMedidor() {
     const stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true } });
     const ctx = new (window.AudioContext || window.webkitAudioContext)(), fuente = ctx.createMediaStreamSource(stream), an = ctx.createAnalyser();
     an.fftSize = 512; fuente.connect(an); const datos = new Uint8Array(an.fftSize);
-    medidor = { stream, ctx, an, datos, raf: 0 };
+    medidor = { stream, ctx, an, datos, raf: 0, crudo: 0 };
     const pantalla = $("#pantallaLlamada"); let suave = 0;
     const paso = () => {
       if (!medidor) return;
       an.getByteTimeDomainData(datos); let s = 0; for (const v of datos) s += (v - 128) * (v - 128);
       let nivel = Math.min(1, Math.sqrt(s / datos.length) / 35);
+      medidor.crudo = medidor.crudo * 0.7 + nivel * 0.3; // tu voz de verdad (para saber si le estás hablando encima)
       if (silenciado) nivel = 0;
       if (pantalla.dataset.modo === "hablando") nivel = 0.35 + Math.sin(performance.now() / 120) * 0.2 + Math.random() * 0.15; // cuando habla Frankers
       suave += (nivel - suave) * 0.25;
@@ -1836,11 +2845,42 @@ async function prenderMedidor() {
   } catch { /* sin medidor igual anda */ }
 }
 function apagarMedidor() { if (!medidor) return; cancelAnimationFrame(medidor.raf); medidor.stream.getTracks().forEach(t => t.stop()); medidor.ctx.close().catch(() => {}); medidor = null; }
-function escuchar() {
+/* Interrumpir hablando: mientras Frankers habla, igual te escucha. Si le hablás encima, se calla y te escucha.
+   Para no interrumpirse sola con su propia voz, se fija que lo que escucha no sea lo mismo que está diciendo. */
+let corte = null; // null = nadie interrumpió; texto = lo que dijiste encima
+function vigilarInterrupcion(dice) {
+  if (!Reconocer || silenciado || !enLlamada) return { parar() {} };
+  const suyas = new Set(normalizar(dice).split(" "));
+  const r = new Reconocer(); r.lang = "es-AR"; r.continuous = true; r.interimResults = true;
+  let activo = true, vueltas = 0;
+  r.onresult = (e) => {
+    let txt = ""; for (let k = 0; k < e.results.length; k++) txt += e.results[k][0].transcript + " ";
+    const pal = normalizar(txt).split(" ").filter(Boolean); if (pal.length < 2) return;
+    const eco = pal.filter(w => suyas.has(w)).length / pal.length;
+    if (eco > 0.6) return;                              // es su propia voz que sale por el parlante
+    if (medidor && medidor.crudo < 0.06) return;        // nadie está hablando fuerte cerca del micrófono
+    activo = false; try { r.abort(); } catch {}
+    corte = txt.trim(); actividad("✋", `Me interrumpiste: «${corte}»`); callar();
+  };
+  r.onerror = () => {};
+  r.onend = () => { if (activo && vueltas++ < 6) { try { r.start(); } catch {} } };
+  try { r.start(); } catch {}
+  return { parar() { activo = false; try { r.abort(); } catch {} } };
+}
+async function decirEnLlamada(texto) { // devuelve true si la interrumpiste
+  if (corte !== null) return true;
+  const oido = vigilarInterrupcion(texto);
+  await hablar(texto);
+  oido.parar();
+  return corte !== null;
+}
+function seguirEscuchando() { const c = corte || ""; corte = null; dejarDeSentir("hablando"); caraLlamada("normal"); textoLlamada("yo", c); escuchar(c); }
+function escuchar(inicial = "") {
   if (!enLlamada || silenciado) return;
   try { reconocedor && reconocedor.abort(); } catch {}
   reconocedor = new Reconocer(); reconocedor.lang = "es-AR"; reconocedor.continuous = true; reconocedor.interimResults = true; reconocedor.maxAlternatives = 1;
-  let listo = false, espera = null, parcial = "", provisorioActual = "";
+  let listo = false, espera = null, parcial = inicial ? inicial + " " : "", provisorioActual = "";
+  if (inicial) espera = setTimeout(() => terminar(parcial), 1600); // si ya terminaste de hablar, contesta
   const terminar = async (dijo) => {
     if (listo) return; listo = true; clearTimeout(espera);
     try { reconocedor.abort(); } catch {}
@@ -1858,12 +2898,13 @@ function escuchar() {
     const dice = nuevas.join(" ") || "Mmm, no sé qué decir.";
     if (/no sé qué decir|no me salió/i.test(dice)) emocion = "triste";
     caraLlamada(emocion);
-    if (emocion === "normal" && ultimaEmo) { emocionar($("#llCara"), ultimaEmo); const son = sonidoEmocion(ultimaEmo); if (son) { textoLlamada("frankers", son); await hablar(son); } }
-    modoLlamada("hablando"); estadoLlamada("Frankers está hablando · tocá ✋ para interrumpir");
-    if (emocion === "alegre") { textoLlamada("frankers", "¡Ah!"); await hablar("¡Ah!"); }
+    corte = null;
+    modoLlamada("hablando"); estadoLlamada("Frankers está hablando · hablale encima o tocá ✋ para interrumpir");
+    if (emocion === "normal" && ultimaEmo) { emocionar($("#llCara"), ultimaEmo); const son = sonidoEmocion(ultimaEmo); if (son) { textoLlamada("frankers", son); if (await decirEnLlamada(son)) return seguirEscuchando(); } }
+    if (emocion === "alegre") { textoLlamada("frankers", "¡Ah!"); if (await decirEnLlamada("¡Ah!")) return seguirEscuchando(); }
     textoLlamada("frankers", dice);
     if (emocion === "normal") setTimeout(() => { if (!$("#llCara").dataset.emo || $("#llCara").dataset.emo === "hablando") emocionar($("#llCara"), "hablando"); }, ultimaEmo ? 1900 : 0);
-    await hablar(dice);
+    if (await decirEnLlamada(dice)) return seguirEscuchando();
     dejarDeSentir("hablando");
     if (ordenDeCara) { ordenDeCara = false; await new Promise(r => setTimeout(r, 4000)); } // si le pediste una cara, la mantiene un ratito
     if (emocion !== "triste" || !enLlamada) caraLlamada("normal");
@@ -1895,12 +2936,15 @@ async function llamar() {
   inicioLlamada = Date.now(); clearInterval(relojLlamada);
   relojLlamada = setInterval(() => { const s = Math.floor((Date.now() - inicioLlamada) / 1000); $("#llReloj").textContent = `${String(Math.floor(s / 60)).padStart(2, "0")}:${String(s % 60).padStart(2, "0")}`; }, 500);
   const inicio = $("#inicio"); if (inicio) inicio.remove();
+  const voz = precargarVoz(); // la voz se prepara mientras se abre la llamada
   await prenderMedidor();
+  await Promise.race([voz, esperar(1200)]); // espera un poquito a la voz linda, pero no más de 1 segundo
   const saludo = `¡Hola${memoria.nombre ? " " + memoria.nombre : ""}! Soy Frankers, te escucho.`;
   agregar({ de: "frankers", texto: saludo + " 📞" });
   modoLlamada("hablando"); estadoLlamada("Frankers está hablando"); textoLlamada("frankers", saludo);
   setTimeout(() => emocionar($("#llCara"), "saludando"), 400);
-  await hablar(saludo);
+  corte = null;
+  if (await decirEnLlamada(saludo)) return seguirEscuchando();
   escuchar();
 }
 async function cortarLlamada(despedida) {
@@ -1914,7 +2958,7 @@ async function cortarLlamada(despedida) {
 }
 $("#btnLlamada").onclick = () => enLlamada ? cortarLlamada("¡Chau!") : llamar();
 $("#llCortar").onclick = () => cortarLlamada("¡Chau!");
-$("#llInterrumpir").onclick = () => { if (!enLlamada) return; callar(); textoLlamada("frankers", ""); escuchar(); };
+$("#llInterrumpir").onclick = () => { if (!enLlamada || !cara.classList.contains("hablando")) return; corte = corte || ""; textoLlamada("frankers", ""); callar(); };
 $("#llSilenciar").onclick = () => {
   silenciado = !silenciado;
   $("#llSilenciar").classList.toggle("apagado", silenciado); $("#llSilenciar").setAttribute("aria-pressed", String(silenciado));
@@ -1938,6 +2982,7 @@ async function enviar(texto) {
   try {
     const deLaCompu = await frankersUsaCompu(texto);
     if (!deLaCompu) await buscarLoQueNoSabe(texto); // lo que no sabe, lo busca primero (una sola vez)
+    if (!deLaCompu) await prepararInteligencia(texto);
     respuesta = deLaCompu ? { texto: deLaCompu } : responder(texto);
   } catch (e) { console.error(e); respuesta = { texto: "Uy, se me cruzaron los cables. 😵 ¿Probás de nuevo?" }; }
   puntitos.remove(); cara.classList.remove("pensando");
@@ -1947,13 +2992,13 @@ async function enviar(texto) {
   agregar({ de: "frankers", ...respuesta });
   if (respuesta.emo && !enLlamada && sonidoEmocion(respuesta.emo)) hablar(sonidoEmocion(respuesta.emo)); // su sonido, con su voz
   if (!respuesta.filtro) setTimeout(() => aprenderDeLaCharla(texto), 50); // aprende de cada charla
+  if (!esCorreccion(normalizar(texto)) && !esperandoCorreccion && !juego) contexto.ultimaPregunta = texto; // por si después le decís "eso está mal"
   ocupado = false;
 }
 function enviarEntrada() { const i = $("#entrada"); const t = i.value; i.value = ""; enviar(t); i.focus(); }
 $("#btnEnviar").addEventListener("click", enviarEntrada);
 $("#entrada").addEventListener("keydown", (e) => { if (e.key === "Enter" && !e.isComposing) { e.preventDefault(); enviarEntrada(); } });
 $("#sugerencias").addEventListener("click", (e) => { if (e.target.matches("button")) enviar(e.target.textContent); });
-$("#btnLimpiar").onclick = () => { historial = []; guardarHistorial(); chat.innerHTML = ""; ultimoDibujo = null; bienvenida(); };
 
 // Enseñar
 const dlgCreador = $("#dlgCreador");
@@ -1992,8 +3037,9 @@ $("#btnSoyYo").onclick = () => { $("#dlgNombre").close(); mostrarQuienSos(); $("
 $("#btnNoSoy").onclick = () => pedirNombre(true);
 function mostrarQuienSos() {
   const q = $("#quienSos");
-  q.hidden = !memoria.nombre;
+  q.hidden = true; // tu nombre ahora está abajo en la barra de la izquierda
   if (memoria.nombre) { q.innerHTML = `Charlando con <b>${escaparHTML(memoria.nombre)}</b> · <button type="button" id="btnCambiarNombre">¿No sos vos? Cambiar</button>`; $("#btnCambiarNombre").onclick = () => pedirNombre(true); }
+  if (typeof pintarLateral === "function") pintarLateral();
 }
 function guardarNombre() {
   const n = $("#inputNombre").value.trim().replace(/\s+/g, " ");
@@ -2005,7 +3051,7 @@ function guardarNombre() {
   if (memoria.nombre && normalizar(memoria.nombre) !== normalizar(nuevo)) {
     // Otra persona: empieza de cero, con su propia memoria y su propia charla
     memoria = { nombre: null, datos: {}, gustos: [], hechos: [], aprendido: {} };
-    historial = []; guardarHistorial(); chat.innerHTML = "";
+    charlas = []; charlaActual = null; historial = []; guardarCharlas(); chat.innerHTML = "";
   }
   memoria.nombre = nuevo; guardarMemoria();
   $("#dlgNombre").close(); mostrarQuienSos();
@@ -2026,6 +3072,7 @@ if (historial.length) historial.forEach(mostrar); else bienvenida();
 cartelActualizando(true);
 Promise.all([cargarCerebro(), cargarDiccionario()]).then(() => cartelActualizando(false));
 mostrarQuienSos();
+pintarLateral();
 $("#entrada").focus();
 </script>
 </body>
