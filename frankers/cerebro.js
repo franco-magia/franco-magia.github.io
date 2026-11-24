@@ -280,7 +280,9 @@
       const cada = cadaPrueba || (infinito ? 8000 : Math.max(4000, duracion / 8));
       const tasaAhora = () => { const f = infinito ? Math.min(0.5, (Date.now() - inicio) / 600000) : Math.min(1, (Date.now() - inicio) / duracion), calentar = Math.min(1, (Date.now() - inicio) / (infinito ? 3000 : Math.max(500, duracion * 0.05))); return calentar * (tasaMin + (tasaMax - tasaMin) * 0.5 * (1 + Math.cos(Math.PI * f))); };
       // Un grupito: suma cuánto hay que corregir cada peso (gradiente) y después corrige todo junto con Adam
+      let recientes = []; // el error de cada grupito (para la línea que sube y baja)
       const grupito = () => {
+        const antesSuma = sumaPerdida, antesCuenta = cuentaPerdida;
         for (let b = 0; b < grupo; b++) {
           const e = elegir(), ids = ej.ctx.subarray(e * N, e * N + N), objetivo = ej.obj[e];
           // adelante, apagando neuronas al azar (dropout)
@@ -328,6 +330,7 @@
           for (let k = 0; k < N; k++) { const fila = ids[k]; g.filas.add(fila); const off = fila * D; for (let d = 0; d < D; d++) g.E[off + d] += delta[k * D + d]; }
           ejemplos++;
         }
+        if (cuentaPerdida > antesCuenta && recientes.length < 400) recientes.push(+((sumaPerdida - antesSuma) / (cuentaPerdida - antesCuenta)).toFixed(3));
         // Limitar los cambios muy grandes (gradient clipping): si el gradiente es enorme, se achica
         const cols = []; for (let j = 0; j < usadas.length; j++) if (usadas[j]) { cols.push(j); usadas[j] = 0; }
         const So = salida.sale, Go = g.capas[L - 1];
@@ -355,7 +358,7 @@
       };
       const estado = (final = false) => ({ progreso: infinito ? null : Math.min(1, (Date.now() - inicio) / duracion), segundos: Math.round((Date.now() - inicio) / 1000), ejemplos, totalEjemplos: ej.n,
         errorEntreno: cuentaPerdida ? +(sumaPerdida / cuentaPerdida).toFixed(3) : null, errorPrueba: +errorPrueba.toFixed(3), errorAntes: +errorAntes.toFixed(3),
-        mejorError: +mejorError.toFixed(3), tasa: +tasaAhora().toFixed(5), paro, final });
+        mejorError: +mejorError.toFixed(3), tasa: +tasaAhora().toFixed(5), paro, final, recientes: (() => { const r = recientes; recientes = []; return r.filter((_, i, a) => i % Math.ceil(a.length / 6) === 0); })() });
       const yo = this;
       return {
         paso(ms = 200) { // entrena un ratito y devuelve cómo va
