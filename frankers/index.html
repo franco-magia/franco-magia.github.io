@@ -526,6 +526,11 @@
     .plan-neon .pn-nombre { font-family: "Fredoka", sans-serif; font-weight: 700; font-size: clamp(1rem, 1.5vw, 1.3rem); }
     .plan-neon small { color: #eee5ff; font-size: .82rem; margin-top: 6px; line-height: 1.35; }
     .planes-codigo input { width: min(420px, 90vw); padding: 12px 18px; border-radius: 999px; border: 2px solid #c18bff; background: #120a24; color: #fff; font: inherit; font-size: 1.1rem; text-align: center; letter-spacing: 1px; text-transform: uppercase; }
+    .planes-creditos { width: min(560px, 92vw); display: grid; gap: 10px; color: #fff; }
+    .pc-saldo { text-align: center; font-size: 1.25rem; margin: 0; } .pc-saldo b { color: #ffd34d; }
+    .pc-caja { border: 2px solid #c18bff; border-radius: 16px; padding: 10px 14px; background: #120a24; } .pc-caja p { margin: 4px 0 8px; }
+    .pc-semanas { display: flex; gap: 8px; } .pc-semanas span { flex: 1; text-align: center; padding: 6px; border-radius: 10px; background: #2a1d45; } .pc-semanas span.si { background: linear-gradient(90deg,#ff7ee0,#7fd4ff); color: #120a24; font-weight: 700; }
+    .pc-fila { display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap; } .pc-fila input { flex: 1; min-width: 180px; padding: 10px 14px; border-radius: 999px; border: 2px solid #c18bff; background: #0b0618; color: #fff; font: inherit; text-transform: uppercase; }
     .planes-estado { margin: 0; min-height: 1.4em; color: #fff; text-align: center; font-weight: 700; }
     .planes-continuar { width: min(520px, 90%); padding: 16px; border: none; border-radius: 999px; cursor: pointer; font-family: "Fredoka", sans-serif; font-size: clamp(1.3rem, 2.6vw, 2.1rem); color: #fff;
       background: linear-gradient(90deg, #a55cff, #ff6fd8); box-shadow: 0 0 26px rgba(200,100,255,.7); }
@@ -937,9 +942,16 @@
         <button class="plan-neon" data-plan="gratis" role="radio"><b>Free</b><svg viewBox="0 0 64 64" fill="none" stroke="url(#neonPlan)" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="12" y="26" width="40" height="28" rx="4"/><rect x="9" y="19" width="46" height="9" rx="3"/><path d="M32 19v35M32 19c-4-10-16-10-14-2 1 3 8 3 14 2zM32 19c4-10 16-10 14-2-1 3-8 3-14 2z"/></svg><span class="pn-nombre">Plan gratuito</span><small>Acceso básico • Funciones limitadas</small></button>
         <button class="plan-neon" data-plan="pro" role="radio"><b>Pagar Pro</b><svg viewBox="0 0 64 64" fill="none" stroke="url(#neonPlan)" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M44 8c-12 2-22 12-26 26l12 12c14-4 24-14 26-26 1-6-6-13-12-12z"/><circle cx="40" cy="24" r="5"/><path d="M18 34l-8 2 4-10 10-2M30 46l-2 8 10-4 2-10M16 44c-4 2-6 8-6 10 2 0 8-2 10-6"/></svg><span class="pn-nombre">Plan Pro</span><small>Mayor velocidad • Herramientas avanzadas</small></button>
         <button class="plan-neon" data-plan="promax" role="radio"><b>Pagar Pro Max</b><svg viewBox="0 0 64 64" fill="none" stroke="url(#neonPlan)" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 22l10 12 12-18 12 18 10-12-4 26H14z"/><circle cx="10" cy="20" r="3"/><circle cx="32" cy="13" r="3"/><circle cx="54" cy="20" r="3"/><circle cx="32" cy="36" r="3"/><path d="M14 54h36"/></svg><span class="pn-nombre">Plan Pro Max</span><small>Máximo rendimiento • Todo incluido • Prioridad 24/7</small></button>
-        <button class="plan-neon" data-plan="creditos" role="radio"><b>Comprar créditos de uso</b><svg viewBox="0 0 64 64" fill="none" stroke="url(#neonPlan)" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><ellipse cx="32" cy="14" rx="16" ry="6"/><path d="M16 14v8c0 3 7 6 16 6s16-3 16-6v-8M16 22v8c0 3 7 6 16 6s16-3 16-6v-8M16 30v8c0 3 7 6 16 6s16-3 16-6v-8M16 38v8c0 3 7 6 16 6s16-3 16-6v-8"/><path d="M34 10c-3-1-6 0-6 2s6 1 6 3-3 3-6 2M31 8v10"/></svg><span class="pn-nombre">Créditos de uso</span><small>Paga solo por lo que usas • Flexible • Sin suscripción</small></button>
+        <button class="plan-neon" data-plan="creditos" role="radio"><b>Ganar créditos de uso</b><svg viewBox="0 0 64 64" fill="none" stroke="url(#neonPlan)" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><ellipse cx="32" cy="14" rx="16" ry="6"/><path d="M16 14v8c0 3 7 6 16 6s16-3 16-6v-8M16 22v8c0 3 7 6 16 6s16-3 16-6v-8M16 30v8c0 3 7 6 16 6s16-3 16-6v-8M16 38v8c0 3 7 6 16 6s16-3 16-6v-8"/><path d="M34 10c-3-1-6 0-6 2s6 1 6 3-3 3-6 2M31 8v10"/></svg><span class="pn-nombre">Créditos de uso</span><small>Racha de un mes • Invitá amigos • Gratis</small></button>
       </div>
       <div class="planes-codigo" id="planCodigoCaja" hidden><input id="planCodigo" placeholder="Escribí tu código (por ejemplo FRK-MAX-…)" maxlength="20" autocomplete="off" aria-label="Código de activación"></div>
+      <div class="planes-creditos" id="planCreditos" hidden>
+        <p class="pc-saldo">🪙 Tenés <b id="pcSaldo">0</b> créditos de uso</p>
+        <div class="pc-caja"><b>🔥 Racha</b><p>Entrá a Frankers al menos un día por semana durante un mes entero (4 semanas seguidas) y ganás <b>20 créditos</b>.</p><div class="pc-semanas" id="pcSemanas"></div></div>
+        <div class="pc-caja"><b>👫 Invitá a un amigo</b><p>1. Mandale tu link. 2. Cuando lo abre, le aparece un número. 3. Escribilo acá y ganás <b>10 créditos</b>. (Hasta 3 amigos por mes.)</p>
+          <button type="button" class="boton" id="pcCopiar">📋 Copiar mi link</button>
+          <div class="pc-fila"><input id="pcNumero" placeholder="Número de tu amigo (ej: TOMI-4821)" maxlength="30" autocomplete="off" aria-label="Número de tu amigo"><button type="button" class="boton principal" id="pcCanjear">Canjear</button></div></div>
+      </div>
       <p class="planes-estado" id="planEstado" aria-live="polite"></p>
       <button class="planes-continuar" id="planContinuar">Continuar</button>
     </div>
@@ -2044,7 +2056,8 @@ function pintarPlan() {
   document.querySelectorAll(".plan-neon").forEach(b => { b.classList.toggle("elegido", b.dataset.plan === planElegido); b.setAttribute("aria-checked", b.dataset.plan === planElegido); });
   const pideCodigo = (planElegido === "pro" || planElegido === "promax") && planElegido !== actual;
   $("#planCodigoCaja").hidden = !pideCodigo;
-  $("#planEstado").textContent = planElegido === "creditos" ? "🪙 Comprar créditos: próximamente." : planElegido === actual ? `Este es tu plan ahora: ${NOMBRES_PLAN[actual]}.`
+  $("#planCreditos").hidden = planElegido !== "creditos"; if (planElegido === "creditos") pintarCreditos();
+  $("#planEstado").textContent = planElegido === "creditos" ? "" : planElegido === actual ? `Este es tu plan ahora: ${NOMBRES_PLAN[actual]}.`
     : pideCodigo ? `Para activar ${NOMBRES_PLAN[planElegido]}, escribí tu código de activación y tocá «Continuar».` : "Tocá «Continuar» para volver al plan gratis.";
 }
 document.querySelectorAll(".plan-neon").forEach(b => b.onclick = () => { planElegido = b.dataset.plan; pintarPlan(); if (!$("#planCodigoCaja").hidden) $("#planCodigo").focus(); });
@@ -2061,6 +2074,59 @@ $("#planContinuar").onclick = async () => {
   }
   $("#planCodigo").value = ""; pintarLateral(); $("#dlgPlan").close(); planElegido = null;
 };
+/* ---------- 🪙 CRÉDITOS DE USO (sin códigos ni plata) ----------
+   - Racha: si entrás al menos un día por semana, 4 semanas seguidas → 20 créditos.
+   - Invitar: tu amigo abre tu link (?invita=TuNombre), pone SU nombre (distinto) y le aparece un número
+     como TOMI-4821, hecho con los dos nombres. Vos lo escribís y ganás 10. Cada amigo una vez, hasta 3 por mes.
+   Se guarda en este navegador (el "cuadernito"): si se borra, se borran los créditos también. */
+const creditos = guardado.leer("frankers-creditos", null) || { saldo: 0, racha: 0, ultimaSemana: null, amigos: [], porMes: {} };
+const guardarCreditos = () => guardado.escribir("frankers-creditos", creditos);
+function semanaDe(f) { const d = new Date(f.getFullYear(), f.getMonth(), f.getDate()); d.setDate(d.getDate() - ((d.getDay() + 6) % 7)); return Math.round(d.getTime() / 6048e5); }
+function contarRacha() {
+  const hoy = semanaDe(new Date());
+  if (creditos.ultimaSemana === hoy) return;
+  creditos.racha = creditos.ultimaSemana === hoy - 1 ? creditos.racha + 1 : 1; creditos.ultimaSemana = hoy;
+  if (creditos.racha >= 4) { creditos.saldo += 20; creditos.racha = 0; setTimeout(() => actividad("🔥", "¡Un mes de racha! Ganaste 20 créditos de uso."), 1500); }
+  guardarCreditos();
+}
+contarRacha();
+async function numeroDeInvitacion(quienInvita, amigo) {
+  const h = await revolver("invita:" + normalizar(quienInvita) + ":" + normalizar(amigo));
+  const nombre = normalizar(amigo).replace(/[^a-z]/g, "").toUpperCase().slice(0, 10);
+  return nombre + "-" + String(parseInt(h.slice(0, 8), 16) % 9000 + 1000);
+}
+function pintarCreditos() {
+  $("#pcSaldo").textContent = creditos.saldo;
+  $("#pcSemanas").innerHTML = [1, 2, 3, 4].map(i => `<span class="${i <= creditos.racha ? "si" : ""}">Semana ${i}</span>`).join("");
+}
+$("#pcCopiar").onclick = async () => {
+  if (!memoria.nombre) { $("#planEstado").textContent = "Primero poné tu nombre."; return; }
+  const link = location.origin + location.pathname + "?invita=" + encodeURIComponent(memoria.nombre);
+  try { await navigator.clipboard.writeText(link); $("#planEstado").textContent = "✅ Link copiado. ¡Mandáselo a tu amigo!"; }
+  catch { $("#planEstado").textContent = "Tu link: " + link; }
+};
+$("#pcCanjear").onclick = async () => {
+  const t = $("#pcNumero").value.trim().toUpperCase(), m = t.match(/^([A-Z]+)-(\d{4})$/), est = $("#planEstado");
+  if (!memoria.nombre) { est.textContent = "Primero poné tu nombre."; return; }
+  if (!m) { est.textContent = "❌ Escribilo así: NOMBRE-1234."; return; }
+  if (intentosCodigo >= 5) { est.textContent = "⏳ Probaste muchas veces. Esperá un minuto."; return; }
+  const amigo = m[1].toLowerCase(), mes = new Date().toISOString().slice(0, 7);
+  if (amigo === normalizar(memoria.nombre).replace(/[^a-z]/g, "").slice(0, 10)) { est.textContent = "No vale invitarte a vos mismo 😉"; return; }
+  if (t !== await numeroDeInvitacion(memoria.nombre, amigo)) { intentosCodigo++; setTimeout(() => intentosCodigo = Math.max(0, intentosCodigo - 1), 60000); est.textContent = "❌ Ese número no es de tu invitación. Revisalo bien."; return; }
+  if (creditos.amigos.includes(amigo)) { est.textContent = "📒 Ese número ya lo usaste."; return; }
+  if ((creditos.porMes[mes] || 0) >= 3) { est.textContent = "Ya invitaste 3 amigos este mes. ¡El mes que viene podés más!"; return; }
+  creditos.amigos.push(amigo); creditos.porMes[mes] = (creditos.porMes[mes] || 0) + 1; creditos.saldo += 10; guardarCreditos();
+  $("#pcNumero").value = ""; pintarCreditos(); pintarLateral(); est.textContent = "🎉 ¡Ganaste 10 créditos de uso!";
+};
+// Si entraste con el link de un amigo: cuando ya pusiste tu nombre, te mostramos el número para devolverle
+const invitadoPor = new URLSearchParams(location.search).get("invita");
+async function mostrarNumeroInvitacion() {
+  if (!invitadoPor || !memoria.nombre || normalizar(invitadoPor) === normalizar(memoria.nombre)) return;
+  const clave = normalizar(invitadoPor) + ">" + normalizar(memoria.nombre); if (guardado.leer("frankers-invitacion-vista", "") === clave) return;
+  guardado.escribir("frankers-invitacion-vista", clave);
+  const num = await numeroDeInvitacion(invitadoPor, memoria.nombre.split(" ")[0]);
+  agregar({ de: "frankers", texto: `👫 ¡${invitadoPor.slice(0, 30)} te invitó a Frankers! Pasale este número para que gane sus créditos: ${num}` });
+}
 $("#planCerrar").onclick = () => { $("#dlgPlan").close(); planElegido = null; };
 /* ---------- ⚡ MODO TURBO: todo prendido a la vez, lo más rápido posible ----------
    - Varios ayudantes (uno por núcleo, según la potencia) entrenan al mismo tiempo, cada uno con una parte de los textos.
@@ -3520,7 +3586,7 @@ function pintarLateral() {
   }
   const n = memoria.nombre;
   const plan = guardado.leer("frankers-plan", "gratis");
-  $("#latPie").innerHTML = n ? `<span class="avatar">${escaparHTML(n[0].toUpperCase())}</span><span class="lat-cuenta"><b>${escaparHTML(n)}</b><small>${plan === "promax" ? "✨ Pro Max · preguntas ∞" : plan === "pro" ? "🚀 Pro · preguntas ∞" : "Plan gratis"}</small></span><button type="button" class="lat-plan" title="Tu plan">${plan === "promax" ? "✨" : plan === "pro" ? "🚀" : "⬆️ Mejorar"}</button><button type="button" class="lat-cambiar" title="¿No sos vos? Cambiar">¿No sos vos?</button>` : "";
+  $("#latPie").innerHTML = n ? `<span class="avatar">${escaparHTML(n[0].toUpperCase())}</span><span class="lat-cuenta"><b>${escaparHTML(n)}</b><small>${plan === "promax" ? "✨ Pro Max · preguntas ∞" : plan === "pro" ? "🚀 Pro · preguntas ∞" : "Plan gratis"}${typeof creditos === "object" && creditos.saldo ? " · 🪙 " + creditos.saldo : ""}</small></span><button type="button" class="lat-plan" title="Tu plan">${plan === "promax" ? "✨" : plan === "pro" ? "🚀" : "⬆️ Mejorar"}</button><button type="button" class="lat-cambiar" title="¿No sos vos? Cambiar">¿No sos vos?</button>` : "";
   const cb = $("#latPie .lat-cambiar"); if (cb) cb.onclick = () => pedirNombre(true);
   const pb = $("#latPie .lat-plan"); if (pb) pb.onclick = () => { pintarPlan(); $("#dlgPlan").showModal(); };
 }
@@ -4102,7 +4168,7 @@ function pedirNombre(cambiar = false) {
   if (!d.open) d.showModal();
   (confirmar ? $("#btnSoyYo") : $("#inputNombre")).focus();
 }
-$("#btnSoyYo").onclick = () => { $("#dlgNombre").close(); mostrarQuienSos(); $("#entrada").focus(); };
+$("#btnSoyYo").onclick = () => { $("#dlgNombre").close(); mostrarQuienSos(); mostrarNumeroInvitacion(); $("#entrada").focus(); };
 $("#btnNoSoy").onclick = () => pedirNombre(true);
 function mostrarQuienSos() {
   const q = $("#quienSos");
@@ -4125,6 +4191,7 @@ function guardarNombre() {
   memoria.nombre = nuevo; guardarMemoria();
   $("#dlgNombre").close(); mostrarQuienSos();
   if (!historial.length) { chat.innerHTML = ""; bienvenida(); }
+  mostrarNumeroInvitacion();
   $("#entrada").focus();
 }
 $("#btnNombre").onclick = guardarNombre;
