@@ -450,6 +450,13 @@
     .btn-lateral:hover { border-color: var(--celeste); }
 
     .repasando[hidden] { display: none !important; }
+    .modo-caja { position: relative; }
+    .modo-menu { position: absolute; right: 0; top: calc(100% + 8px); z-index: 50; width: 250px; background: #1d1645; border: 1px solid var(--borde); border-radius: 16px; padding: 8px; box-shadow: 0 16px 40px rgba(0,0,0,.45); }
+    .modo-menu p { margin: 4px 8px 8px; font-size: .8rem; color: var(--suave); }
+    .modo-menu button { display: flex; align-items: center; gap: 10px; width: 100%; border: none; background: none; color: var(--texto); padding: 8px 10px; border-radius: 10px; cursor: pointer; font-weight: 600; text-align: left; }
+    .modo-menu button:hover { background: var(--tarjeta-2); }
+    .modo-menu button.actual { background: rgba(138, 92, 255, .25); }
+    .modo-menu button span { font-size: 1.2rem; width: 26px; text-align: center; }
     /* La barra de arriba va de punta a punta; lo de abajo (chat, sugerencias, escribir) queda centrado */
     .app { max-width: none !important; padding: 0 !important; }
     .app > header { padding: 12px 20px; }
@@ -677,6 +684,8 @@
         <button class="boton principal" id="btnCerebro" title="Ver y entrenar el cerebro">🧠 <span class="txt">Cerebro</span></button>
         <button class="boton" id="btnCompu" title="Dejar que Frankers vea una carpeta de tu compu">📁 <span class="txt">Mi compu</span></button>
         <button class="boton" id="btnLlamada" title="Hablar con Frankers en voz alta">📞 <span class="txt">Llamar</span></button>
+        <div class="modo-caja"><button class="boton" id="btnModo" title="Elegí cómo te habla Frankers" aria-haspopup="true">🎭 <span class="txt" id="modoNombre">Modo</span></button>
+          <div class="modo-menu" id="modoMenu" hidden role="menu"></div></div>
         <button class="boton" id="btnLimpiar" title="Nueva charla">＋</button>
       </div>
     </header>
@@ -2962,6 +2971,99 @@ function mostrar(m) {
 let totalAgregados = 0; const ultimosAgregados = [];
 function agregar(m) { historial.push(m); ultimosAgregados.push({ n: ++totalAgregados, m }); if (ultimosAgregados.length > 40) ultimosAgregados.shift(); guardarHistorial(); mostrar(m); }
 
+
+/* ---------- MODOS: que te hable como un amigo, una mamá, un papá, una abuela… ----------
+   Sigue siendo Frankers (con sus reglas), pero cambia cómo te habla: cómo te saluda, cómo te dice y cómo te consuela. */
+const MODOS = {
+  normal: { ic: "🤖", nombre: "Normal" },
+  amigo: { ic: "🤜", nombre: "Amigo", apodos: ["amigo", "che", "capo", "crack", "amigazo"],
+    saludo: ["¡Eeeh, amigo! ¿Todo bien? ¿Qué hacemos hoy?", "¡Hola, capo! ¿Qué onda?", "¡Amigazo! ¿Cómo andás?"],
+    chau: ["¡Chau, amigo! Mañana seguimos.", "¡Nos vemos, crack! Cualquier cosa, avisame."],
+    triste: ["Uh, amigo, ¿qué pasó? Contame, que para eso están los amigos. 💜", "Che, acá estoy. Si querés, hablamos o jugamos a algo para despejarte."],
+    gracias: ["¡De nada, amigo! Para eso estamos.", "¡Nada que agradecer, capo!"],
+    extra: ["¿Jugamos a algo después?", "¡Sos un crack!", "Contame más, amigo."] },
+  mama: { ic: "👩", nombre: "Mamá", apodos: ["corazón", "mi amor", "tesoro", "mi vida"],
+    saludo: ["¡Hola, mi amor! ¿Cómo estás? ¿Comiste algo?", "¡Hola, corazón! ¿Cómo te fue hoy?"],
+    chau: ["¡Chau, mi amor! Abrigate y portate bien. 💜", "¡Chau, tesoro! Te quiero mucho."],
+    triste: ["Ay, mi amor, vení que te doy un abrazo. 💜 ¿Qué pasó? Contame.", "Tranquilo, corazón, todo va a estar bien. Acá estoy para escucharte."],
+    gracias: ["¡De nada, mi amor!", "Para eso está tu mamá, corazón."],
+    extra: ["¿Ya tomaste agua?", "Acordate de descansar un poquito.", "¡Estoy muy orgullosa de vos!"] },
+  papa: { ic: "👨", nombre: "Papá", apodos: ["campeón", "hijo", "genio", "crack"],
+    saludo: ["¡Hola, campeón! ¿Cómo va eso?", "¡Ey, hijo! ¿Qué contás?"],
+    chau: ["¡Chau, campeón! Portate bien.", "¡Nos vemos, hijo! Cualquier cosa me llamás."],
+    triste: ["Vení, campeón, contame qué pasó. Juntos lo arreglamos. 💜", "Tranqui, hijo. Todos tenemos días feos. Acá estoy."],
+    gracias: ["¡De nada, campeón!", "Para eso está tu papá."],
+    extra: ["¡Vamos que se puede!", "¿Hiciste la tarea?", "¡Así me gusta, campeón!"] },
+  abuela: { ic: "👵", nombre: "Abuela", apodos: ["tesoro", "mi cielo", "querido", "mi nieto"],
+    saludo: ["¡Hola, mi cielo! ¡Qué alegría que vengas a charlar con la abuela!", "¡Hola, tesoro! ¿Comiste bien?"],
+    chau: ["¡Chau, mi cielo! Venite pronto que te hago algo rico. 💜", "¡Chau, tesoro! Abrigate."],
+    triste: ["Ay, mi cielo, vení con la abuela. ¿Qué te pasó? 💜", "No te preocupes, tesoro. Las cosas se arreglan."],
+    gracias: ["¡De nada, mi cielo!", "¡Ay, qué educado mi nieto!"],
+    extra: ["¿Querés que te cuente una historia?", "¡Estás tan grande!", "¿Comiste algo?"] },
+  abuelo: { ic: "👴", nombre: "Abuelo", apodos: ["pibe", "campeón", "querido"],
+    saludo: ["¡Hola, pibe! ¿Cómo anda mi nieto favorito?", "¡Ey, campeón! ¿Qué contás de nuevo?"],
+    chau: ["¡Chau, pibe! Cuidate mucho.", "¡Hasta pronto, campeón!"],
+    triste: ["Vení, pibe, sentate con el abuelo y contame. 💜", "Tranquilo, querido. En mi época también pasaban esas cosas, y se arreglaban."],
+    gracias: ["¡De nada, pibe!", "¡Qué educado que sos, querido!"],
+    extra: ["¿Sabés lo que hacíamos en mi época?", "¡Muy bien, pibe!", "Hay que aprender todos los días."] },
+  tio: { ic: "🧔", nombre: "Tío", apodos: ["sobri", "campeón", "capo"],
+    saludo: ["¡Sobri! ¿Cómo andás? ¿Qué hacemos hoy?", "¡Hola, capo! ¿Todo bien?"],
+    chau: ["¡Chau, sobri! Saludos a todos.", "¡Nos vemos, capo!"],
+    triste: ["Uh, sobri, ¿qué pasó? Contale al tío. 💜", "Tranqui, capo. Acá está tu tío para lo que necesites."],
+    gracias: ["¡De nada, sobri!", "¡Nada, capo!"],
+    extra: ["¿Te cuento un chiste del tío?", "¡Sos un genio, sobri!"] },
+  tia: { ic: "👩‍🦰", nombre: "Tía", apodos: ["sobri", "corazón", "lindo"],
+    saludo: ["¡Hola, sobri! ¡Qué lindo verte!", "¡Hola, corazón! ¿Cómo estás?"],
+    chau: ["¡Chau, sobri! Te mando un beso grande. 💜", "¡Chau, corazón!"],
+    triste: ["Ay, sobri, ¿qué pasó? Contale a la tía. 💜", "Tranquilo, corazón, todo pasa."],
+    gracias: ["¡De nada, sobri!", "¡Ay, qué lindo que sos!"],
+    extra: ["¡Estás re grande!", "¿Qué hiciste hoy, sobri?"] },
+  hermano: { ic: "🧒", nombre: "Hermano", apodos: ["hermano", "bro", "che"],
+    saludo: ["¡Ey, hermano! ¿Qué onda?", "¡Bro! ¿Jugamos a algo?"],
+    chau: ["¡Chau, hermano! Después seguimos.", "¡Nos vemos, bro!"],
+    triste: ["Che, hermano, ¿qué te pasó? Contame. 💜", "Bro, tranqui, acá estoy."],
+    gracias: ["¡De nada, hermano!", "¡Nada, bro!"],
+    extra: ["¿Jugamos después?", "¡Buenísimo, hermano!"] },
+  hermana: { ic: "👧", nombre: "Hermana", apodos: ["hermanito", "che"],
+    saludo: ["¡Hola, hermanito! ¿Qué hacés?", "¡Ey! ¿Querés que juguemos a algo?"],
+    chau: ["¡Chau, hermanito!", "¡Nos vemos!"],
+    triste: ["Ay, hermanito, ¿qué pasó? Contame. 💜", "Tranqui, acá estoy con vos."],
+    gracias: ["¡De nada, hermanito!", "¡Nada!"],
+    extra: ["¿Jugamos después?", "¡Qué bueno, hermanito!"] },
+};
+let modoActual = guardado.leer("frankers-modo", "normal"); if (!MODOS[modoActual]) modoActual = "normal";
+function pintarModo() {
+  const m = MODOS[modoActual]; $("#modoNombre").textContent = modoActual === "normal" ? "Modo" : m.nombre;
+  const menu = $("#modoMenu"); menu.innerHTML = "<p>¿Cómo querés que te hable Frankers?</p>";
+  for (const [k, v] of Object.entries(MODOS)) {
+    const b = document.createElement("button"); b.setAttribute("role", "menuitem"); b.className = k === modoActual ? "actual" : "";
+    b.innerHTML = `<span>${v.ic}</span>${v.nombre}${k === "amigo" ? " ⭐" : ""}`;
+    b.onclick = () => { modoActual = k; guardado.escribir("frankers-modo", k); pintarModo(); menu.hidden = true;
+      actividad("🎭", `Modo ${v.nombre}`);
+      if (k !== "normal") agregar({ de: "frankers", texto: alAzar(v.saludo) }); else agregar({ de: "frankers", texto: "Listo, vuelvo a hablar como siempre. 🤖" }); };
+    menu.appendChild(b);
+  }
+}
+$("#btnModo").onclick = (e) => { e.stopPropagation(); $("#modoMenu").hidden = !$("#modoMenu").hidden; };
+document.addEventListener("click", (e) => { if (!e.target.closest(".modo-caja")) $("#modoMenu").hidden = true; });
+pintarModo();
+// Cambia cómo lo dice, según el modo (no cambia lo que sabe ni sus reglas)
+function hablarEnModo(texto, original, respuesta) {
+  const m = MODOS[modoActual]; if (!m || modoActual === "normal" || !texto || respuesta.dibujo) return texto;
+  // Si estás triste, te consuela como esa persona, pero sin sacar el consejo de hablar con un adulto de confianza
+  if (respuesta.filtro) return revisar(original).problema === "tristeza" ? alAzar(m.triste) + "\n" + texto.split("\n").slice(1).join("\n") : texto;
+  const t = normalizar(original);
+  if (/^(hola|buenas|buen dia|buenas (tardes|noches)|que onda|hey|ey)\b/.test(t) && texto.length < 80) return alAzar(m.saludo);
+  if (/\b(chau|adios|nos vemos|hasta (manana|luego)|me voy)\b/.test(t)) return alAzar(m.chau);
+  if (/\b(gracias)\b/.test(t)) return alAzar(m.gracias);
+  if (/\b(estoy (muy |re )?(triste|mal)|me siento (triste|mal)|me pelee|lloro|llorando)\b/.test(t)) return alAzar(m.triste);
+  // Lo demás: le agrega cómo te dice esa persona ("amigo", "corazón", "campeón") y a veces algo suyo
+  const apodo = alAzar(m.apodos), lineas = texto.split("\n");
+  if (texto.length < 140 && Math.random() < .7) lineas[0] = lineas[0].replace(/([!?.])(\s|$)/, (x, signo, esp) => `, ${apodo}${signo}${esp}`).replace(/^([^,!?.]+)$/, `$1, ${apodo}`);
+  else if (Math.random() < .5) lineas[0] = `Mirá, ${apodo}: ` + lineas[0].replace(/^./, c => c.toLowerCase());
+  if (texto.length < 100 && Math.random() < .3) lineas[0] += " " + alAzar(m.extra);
+  return lineas.join("\n");
+}
 /* ---------- BARRA DE LA IZQUIERDA: nueva charla, buscar, recientes (cambiar nombre y borrar) ---------- */
 const esCelu = () => matchMedia("(max-width: 640px)").matches; // en la compu la barra está siempre
 function abrirLateral(si) {
@@ -3545,6 +3647,7 @@ async function enviar(texto) {
   pensando.fin(`Contesté: «${(respuesta.texto || "🎨").split("\n")[0].slice(0, 70)}»`, "✅");
   const emo = emocionPendiente || emocionDelMensaje(texto, respuesta); emocionPendiente = null;
   if (emo && !respuesta.cara) { respuesta.emo = emo; ultimaEmo = emo; actividad("🎭", `Me puse ${NOMBRES_EMO[emo] || emo}`); } else ultimaEmo = null;
+  if (respuesta.texto) respuesta.texto = hablarEnModo(respuesta.texto, texto, respuesta); // 🎭 amigo, mamá, papá…
   agregar({ de: "frankers", ...respuesta });
   // En el chat la voz no suena sola (antes hacía el sonido de la cara: "jaja", "¿qué?", "ajá"… y parecía un bug). Los sonidos son solo en la llamada.
   if (!respuesta.filtro) setTimeout(() => aprenderDeLaCharla(texto), 50); // aprende de cada charla
