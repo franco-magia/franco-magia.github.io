@@ -3367,6 +3367,17 @@ async function prenderMedidor() {
   } catch { /* sin medidor igual anda */ }
 }
 function apagarMedidor() { if (!medidor) return; cancelAnimationFrame(medidor.raf); medidor.stream.getTracks().forEach(t => t.stop()); medidor.ctx.close().catch(() => {}); medidor = null; }
+/* Lo que decís en voz alta llega sin signos ("hola cómo estás"). En el chat escribís "Hola, ¿cómo estás?".
+   Para que Frankers sea igual de inteligente en los dos, a lo que escucha le pone los signos. */
+function comoEnElChat(t) {
+  t = t.trim().replace(/\s+/g, " "); if (!t || /[?¿!¡.]$/.test(t)) return t;
+  const PREGUNTA = /^(qu[eé]|c[oó]mo|cu[aá]l(es)?|cu[aá]ndo|d[oó]nde|qui[eé]n(es)?|cu[aá]nt[oa]s?|por qu[eé]|para qu[eé]|sab[eé]s|ten[eé]s|pod[eé]s|quer[eé]s|te gusta|sos|est[aá]s|hay|me (dec[ií]s|cont[aá]s)|y vos)\b/i;
+  // "hola cómo estás" → "Hola, ¿cómo estás?"
+  const saludo = t.match(/^(hola|buenas|buen d[ií]a|buenas (tardes|noches)|che|ey|frankers)\s+(.+)$/i);
+  if (saludo && PREGUNTA.test(saludo[saludo.length - 1])) return saludo[1].replace(/^./, c => c.toUpperCase()) + ", ¿" + saludo[saludo.length - 1] + "?";
+  if (PREGUNTA.test(t)) return "¿" + t + "?";
+  return t.replace(/^./, c => c.toUpperCase());
+}
 /* Interrumpir hablando: mientras Frankers habla, igual te escucha. Si le hablás encima, se calla y te escucha.
    Para no interrumpirse sola con su propia voz, se fija que lo que escucha no sea lo mismo que está diciendo. */
 let corte = null; // null = nadie interrumpió; texto = lo que dijiste encima
@@ -3409,6 +3420,7 @@ function escuchar(inicial = "") {
     dijo = dijo.trim(); if (!dijo) return escuchar();
     actividad("👂", `Te escuché decir: «${dijo}»`);
     if (/\b(chau|cortar|colgar|corta|colga)\b/i.test(normalizar(dijo))) { agregar({ de: "yo", texto: dijo }); return cortarLlamada("¡Chau! Fue lindo hablar con vos. 💜"); }
+    dijo = comoEnElChat(dijo); // le pone los signos que pone la gente al escribir, así entiende igual que en el chat
     modoLlamada("pensando"); estadoLlamada("Pensando…"); textoLlamada("yo", dijo);
     dejarDeSentir("escuchando"); empezarAPensar();
     const antes = totalAgregados; // (antes se contaba con el largo de la charla, y al llegar a 80 mensajes ya no encontraba la respuesta: por eso repetía "no sé qué decir")
