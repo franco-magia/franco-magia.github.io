@@ -451,6 +451,10 @@
 
     .repasando[hidden] { display: none !important; }
     .modo-caja { position: relative; }
+    #btnTurbo.prendido { background: linear-gradient(135deg, #ffb020, #ff6ad5); color: #1a0f00; border-color: transparent; font-weight: 800; animation: turboLatido 1.2s ease-in-out infinite; }
+    @keyframes turboLatido { 50% { box-shadow: 0 0 18px rgba(255, 176, 32, .8); } }
+    .turbo-lista { margin: 6px 0 12px; padding-left: 20px; line-height: 1.6; font-size: .92rem; color: var(--suave); }
+    .turbo-vivo { font-size: 1.05rem; }
     .modo-menu { position: absolute; right: 0; top: calc(100% + 8px); z-index: 50; width: 250px; background: #1d1645; border: 1px solid var(--borde); border-radius: 16px; padding: 8px; box-shadow: 0 16px 40px rgba(0,0,0,.45); }
     .modo-menu p { margin: 4px 8px 8px; font-size: .8rem; color: var(--suave); }
     .modo-menu button { display: flex; align-items: center; gap: 10px; width: 100%; border: none; background: none; color: var(--texto); padding: 8px 10px; border-radius: 10px; cursor: pointer; font-weight: 600; text-align: left; }
@@ -503,6 +507,13 @@
     .lat-pie { border-top: 1px solid var(--borde); padding-top: 8px; font-size: .78rem; color: var(--suave); display: flex; align-items: center; gap: 8px; padding-left: 8px; }
     .lat-pie .avatar { width: 28px; height: 28px; border-radius: 50%; background: var(--degrade); display: grid; place-items: center; font-weight: 700; color: #fff; font-size: .85rem; }
     .tapa-lateral { display: none; }
+    .lat-pie { flex-wrap: wrap; } .lat-cuenta { flex: 1; display: flex; flex-direction: column; line-height: 1.2; } .lat-cuenta small { color: var(--suave); font-size: .72rem; }
+    .lat-plan { border: none; border-radius: 999px; padding: 4px 10px; cursor: pointer; font-weight: 700; font-size: .75rem; background: linear-gradient(135deg, #ffb020, #ff6ad5); color: #1a0f00; }
+    .planes { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin-top: 10px; }
+    .plan { background: var(--tarjeta); border: 1px solid var(--borde); border-radius: 18px; padding: 16px; }
+    .plan.pro { border: 2px solid transparent; background: linear-gradient(#1d1645, #1d1645) padding-box, linear-gradient(135deg, #ffb020, #ff6ad5, #8a5cff) border-box; }
+    .plan h3 { margin: 0 0 4px; font-family: "Fredoka", sans-serif; } .plan .precio { font-size: 1.4rem; font-weight: 800; margin: 6px 0; }
+    .plan ul { padding-left: 18px; margin: 8px 0 12px; line-height: 1.6; font-size: .9rem; color: var(--suave); }
     .lat-cambiar { border: none; background: none; color: var(--celeste); cursor: pointer; font-size: .75rem; text-decoration: underline; padding: 0 6px 0 0; }
     @media (max-width: 640px) {
       .lateral { position: fixed; left: 0; top: 0; bottom: 0; margin-left: -290px; background: #120d2c; box-shadow: 10px 0 40px rgba(0,0,0,.5); }
@@ -684,6 +695,7 @@
         <button class="boton principal" id="btnCerebro" title="Ver y entrenar el cerebro">🧠 <span class="txt">Cerebro</span></button>
         <button class="boton" id="btnCompu" title="Dejar que Frankers vea una carpeta de tu compu">📁 <span class="txt">Mi compu</span></button>
         <button class="boton" id="btnLlamada" title="Hablar con Frankers en voz alta">📞 <span class="txt">Llamar</span></button>
+        <button class="boton" id="btnTurbo" title="Modo Turbo: aprende todo junto, rapidísimo">⚡ <span class="txt">Turbo</span></button>
         <div class="modo-caja"><button class="boton" id="btnModo" title="Elegí cómo te habla Frankers" aria-haspopup="true">🎭 <span class="txt" id="modoNombre">Modo</span></button>
           <div class="modo-menu" id="modoMenu" hidden role="menu"></div></div>
         <button class="boton" id="btnLimpiar" title="Nueva charla">＋</button>
@@ -784,6 +796,7 @@
           </div>
           <div class="cf-progreso" id="cfProgresoPalabras"><i></i></div>
           <div class="cf-palabras-botones">
+            <button class="boton" id="cfVerUsa">📋 Palabras que usa</button>
             <button class="boton" id="cfRepasar">🔁 Repasar las que usa</button>
             <button class="boton" id="cfAnadir">➕ Añadir palabras del diccionario</button>
             <button class="boton" id="cfEstudio">📚 Modo estudio: apagado</button>
@@ -889,6 +902,50 @@
     <div class="dic-chips" id="dicChips"></div>
     <ul class="dic-lista" id="dicLista"></ul>
     <div class="fila-botones"><button class="boton" id="dicCerrar">Cerrar</button></div>
+  </dialog>
+
+  <!-- Ventana: tu plan (Gratis / Pro Max). Por ahora todo es gratis: no se cobra nada ni se piden datos de pago. -->
+  <dialog id="dlgPlan" class="grande">
+    <h2>✨ Tu plan de Frankers</h2>
+    <p>Por ahora <b>todo es gratis</b>: no hay que pagar nada.</p>
+    <div class="planes">
+      <div class="plan"><h3>Gratis</h3><div class="precio">$0</div><ul><li>Charlar con Frankers</li><li>Llamadas, dibujos y Buscafrankers</li><li>Preguntas ilimitadas</li></ul><button class="boton" id="planGratis">Usar Gratis</button></div>
+      <div class="plan pro"><h3>✨ Pro Max</h3><div class="precio">Gratis <small style="font-size:.8rem;font-weight:600;color:var(--suave)">(por ahora)</small></div>
+        <ul><li>Preguntas infinitas ∞</li><li>Créditos de uso: ∞</li><li>⚡ Modo Turbo</li><li>Insignia ✨ Pro Max</li></ul>
+        <button class="boton principal" id="planPro">✨ Activar Pro Max</button></div>
+    </div>
+    <p style="margin-top:12px"><b>🪙 Créditos de uso:</b> <span id="planCreditos"></span> <button class="boton" disabled title="Todavía no se puede comprar nada">Comprar créditos (próximamente)</button></p>
+    <div class="fila-botones"><button class="boton" id="planCerrar">Cerrar</button></div>
+  </dialog>
+
+  <!-- Ventana: Modo Turbo -->
+  <dialog id="dlgTurbo">
+    <h2>⚡ Modo Turbo</h2>
+    <div id="turboApagado">
+      <p><b>¿Estás seguro de que querés usar el Modo Turbo?</b> El dispositivo puede ir muy lento mientras está prendido.</p>
+      <p>Prende todo junto y sin parar, hasta que toques «Parar»:</p>
+      <ul class="turbo-lista"><li>🏋️ Enseñale (sin parar, con varios ayudantes a la vez)</li><li>📖 ¡Que estudie! (infinitas palabras)</li><li>📚 Modo estudio</li><li>🔁 Repasar las que usa</li>
+        <li>⚡ Extras: usa los núcleos de tu compu, grupos más grandes, practica lo que le cuesta, busca 3 palabras a la vez, sin carteles ni animaciones, la pantalla no se apaga y guarda cada 30 minutos.</li></ul>
+      <label class="cf-tiempo" for="turboPotencia"><span>🔋 Potencia</span><b id="turboPotenciaTxt"></b></label>
+      <input type="range" id="turboPotencia" min="1" max="4" value="4" style="width:100%;accent-color:#ffb020">
+      <div class="fila-botones"><button class="boton" id="turboCancelar">Cancelar</button><button class="boton principal" id="turboActivar">⚡ ¡Sí, activar Turbo!</button></div>
+    </div>
+    <div id="turboPrendido" hidden>
+      <p class="turbo-vivo">⚡ <b>Turbo prendido</b> · <span id="turboTiempo">0 s</span></p>
+      <div class="cf-progreso si infinito"><i></i></div>
+      <ul class="turbo-lista" id="turboDatos"></ul>
+      <div class="fila-botones"><button class="boton" id="turboOcultar">Seguir mirando el chat</button><button class="boton principal" id="turboParar">⏹ Parar Turbo (guarda todo)</button></div>
+    </div>
+  </dialog>
+
+  <!-- Ventana: las palabras que usa Frankers (las que sabe y las que le faltan) -->
+  <dialog id="dlgUsa" class="grande">
+    <h2>📋 Palabras que usa Frankers</h2>
+    <p id="usaResumen"></p>
+    <div class="cf-palabras-botones"><button class="boton" data-ver="falta">❓ Le falta saber</button><button class="boton" data-ver="sabe">✅ Ya sabe</button>
+      <input id="usaFiltro" placeholder="Buscar una palabra…" autocomplete="off" style="flex:1;min-width:140px"></div>
+    <ul class="dic-lista" id="usaLista"></ul>
+    <div class="fila-botones"><button class="boton" id="usaMas">Ver más</button><button class="boton" id="usaCerrar">Cerrar</button></div>
   </dialog>
 
   <!-- Ventana: buscar charlas -->
@@ -1131,10 +1188,33 @@ function guardarCerebro(ahora = false) {
     try { localStorage.setItem(CLAVE_CEREBRO, JSON.stringify(cerebro.aJSON())); } catch { actividad("⚠️", "No entró todo en la memoria del navegador"); } });
   if (ahora) hacer(); else guardadoPendiente = setTimeout(hacer, 1500);
 }
+/* APRENDER DE A POQUITO: aprende exactamente lo mismo, pero en pedacitos de 6 milésimas de segundo,
+   entre cuadro y cuadro de la pantalla. Así aprender una palabra (o lo que sea) no traba la página. */
+const colaAprender = []; let trabajandoCola = false;
+const canalCola = new MessageChannel(); canalCola.port1.onmessage = () => seguirCola(); // la forma más rápida de "seguir después"
+function aprenderDeAPoco(textos, { tasa = 0.02, vueltas = 1 } = {}) {
+  return new Promise(listo => {
+    if (!cerebro) return listo();
+    const ej = []; for (let v = 0; v < vueltas; v++) for (const t of textos) for (const e of cerebro.ejemplos(t)) ej.push(e);
+    for (let k = ej.length - 1; k > 0; k--) { const j = Math.floor(Math.random() * (k + 1)); [ej[k], ej[j]] = [ej[j], ej[k]]; }
+    colaAprender.push({ ej, i: 0, tasa, listo });
+    if (!trabajandoCola) { trabajandoCola = true; canalCola.port2.postMessage(0); }
+  });
+}
+function seguirCola() {
+  const hasta = performance.now() + 6;
+  while (colaAprender.length && performance.now() < hasta) {
+    const tarea = colaAprender[0];
+    if (tarea.i < tarea.ej.length) { const [ids, obj] = tarea.ej[tarea.i++]; cerebro.paso(ids, obj, tarea.tasa); }
+    if (tarea.i >= tarea.ej.length) { colaAprender.shift(); tarea.listo(); }
+  }
+  if (colaAprender.length) setTimeout(seguirCola, 0); else trabajandoCola = false; // deja dibujar la pantalla y sigue
+}
 /* Truco 2: cuando aprende algo nuevo, practica lo nuevo junto con un poquito de lo viejo, para no olvidarse */
 function conRepaso(nuevos, cuantosViejos = Math.max(4, nuevos.length)) {
-  const viejos = [...(textosGrandes || []), ...aprendidoAca], extra = [];
-  for (let k = 0; k < cuantosViejos && viejos.length; k++) extra.push(viejos[Math.floor(Math.random() * viejos.length)]);
+  // la mitad de lo que repasa son CHARLAS (así no se olvida de charlar cuando aprende significados o temas)
+  const viejos = [...(textosGrandes || []), ...aprendidoAca], charlas = viejos.filter(t => t.startsWith("<yo>")), extra = [];
+  for (let k = 0; k < cuantosViejos && viejos.length; k++) { const de = k % 2 === 0 && charlas.length ? charlas : viejos; extra.push(de[Math.floor(Math.random() * de.length)]); }
   return [...nuevos, ...extra];
 }
 async function cargarTextosGrandes() {
@@ -1208,7 +1288,7 @@ function aprenderDeLaCharla(mensaje) {
   if (nuevas.length && cerebro.palabras.length < 8000) { cerebro.agregarPalabras(nuevas); actividad("📝", `Aprendí ${nuevas.length === 1 ? "una palabra nueva" : nuevas.length + " palabras nuevas"}: ${nuevas.slice(0, 5).join(", ")}`); }
   if (gramatica) { gramatica.aprenderJuntas(tk); guardado.escribir("frankers-juntas", gramatica.juntas); }
   const texto = `${FrankersCerebro.YO} ${mensaje} ${FrankersCerebro.FRANKERS}`;
-  cerebro.entrenar(conRepaso([texto]), { tasa: 0.005 });
+  aprenderDeAPoco(conRepaso([texto]), { tasa: 0.005 });
   aprendidoAca = [...aprendidoAca, texto].slice(-200); guardado.escribir("frankers-charlas-aprendidas", aprendidoAca);
   guardarCerebro(); marcarCambio();
 }
@@ -1248,8 +1328,9 @@ async function aprenderPalabra(w, callado = false) {
     gramatica.sumar(w, entrada); if (r.significado) gramatica.significados[w] = r.significado;
     // Las palabras feas las SABE (quedan en su diccionario), pero no se las enseño a la red que inventa frases: así no las dice
     const fea = ["insulto", "sexual"].includes(revisar(w).problema) || (r.significado && ["insulto", "sexual"].includes(revisar(r.significado).problema));
-    if (!fea && !cerebro.indice.has(w)) cerebro.agregarPalabras([w]);
-    if (r.significado && !fea) cerebro.entrenar(conRepaso(Array(6).fill(FrankersCerebro.charla(`qué significa ${w}`, `"${w}" significa: ${r.significado}`))), { tasa: 0.03 });
+    if (!fea && !cerebro.indice.has(w)) { if (turbo.activo) turbo.pendientes.add(w); else cerebro.agregarPalabras([w]); }
+    if (r.significado && !fea && turbo.activo) turbo.extra.push(...Array(3).fill(FrankersCerebro.charla(`qué significa ${w}`, `"${w}" significa: ${r.significado}`)));
+    else if (r.significado && !fea) aprenderDeAPoco(conRepaso(Array(6).fill(FrankersCerebro.charla(`qué significa ${w}`, `"${w}" significa: ${r.significado}`)), 12), { tasa: 0.012 });
     guardarAprendido(); guardarCerebro(); marcarCambio();
     if (!quieta) { dejarDeSentir("buscando"); sentir("aprendiendo"); }
     paso.fin(`Aprendí «${w}»${r.deForma ? ` (viene de «${r.deForma}»)` : ""}: ${gramatica.tipos[r.tipo] || r.tipo}${r.significado ? " — " + r.significado : ""}`, "📖");
@@ -1280,7 +1361,7 @@ async function aprenderTema(tema, pregunta, rapido = false) {
     for (const o of oraciones) gramatica.aprenderJuntas(FrankersCerebro.tokenizar(o));
     // lo practica hasta que se lo sabe (así lo guarda en sus neuronas)
     const textos = [FrankersCerebro.charla(pregunta, resumen), FrankersCerebro.charla(`qué es ${tema}`, resumen), ...oraciones.map(o => o + " " + FrankersCerebro.FIN)];
-    for (let k = 0; k < (rapido ? 3 : 12); k++) { cerebro.entrenar(conRepaso(textos), { tasa: 0.025, hasta: Date.now() + 40 }); await new Promise(r => setTimeout(r, 0)); } // de a poquito: la página no se traba
+    for (let k = 0; k < (rapido ? 3 : 12); k++) { await aprenderDeAPoco(conRepaso(textos), { tasa: 0.025 }); await new Promise(r => setTimeout(r, 0)); } // de a poquito: la página no se traba
     aprendidoAca = [...aprendidoAca, ...textos].slice(-400); guardado.escribir("frankers-charlas-aprendidas", aprendidoAca);
     guardarCerebro(); marcarCambio();
     if (!rapido) { emocion = "alegre"; dejarDeSentir("buscando"); }
@@ -1323,7 +1404,7 @@ async function leerAlgoNuevo() {
       const oraciones = (texto.match(/[^.!?]+[.!?]+/g) || []).map(x => x.trim()).filter(x => x.split(" ").length > 3 && !revisar(x).problema);
       const textos = oraciones.map(o => o + " " + FrankersCerebro.FIN);
       for (const o of oraciones) gramatica.aprenderJuntas(FrankersCerebro.tokenizar(o));
-      for (let k = 0; k < 3; k++) { cerebro.entrenar(conRepaso(textos, 20), { tasa: 0.02, hasta: Date.now() + 400 }); await new Promise(r => setTimeout(r, 0)); }
+      for (let k = 0; k < 3; k++) await aprenderDeAPoco(conRepaso(textos, 20), { tasa: 0.02 });
       aprendido.videos.push(v.id); guardarAprendido(); guardarCerebro(); marcarCambio();
       actividad("📺", `Miré el video «${v.titulo}» de Franclips (leí ${oraciones.length} frases de sus subtítulos)`);
     } else { // palabras del diccionario que todavía no usa
@@ -1340,11 +1421,13 @@ async function repasoSolo() {
     let vueltas = 0;
     while (Date.now() - ultimaAccion >= 1000 && !ocupado && !enLlamada && !document.hidden) {
       mostrarRepasando("repasando");
-      const lote = []; for (let k = 0; k < 8; k++) lote.push(textos[Math.floor(Math.random() * textos.length)]);
+      // la mitad de lo que repasa sola son charlas (si no, de tanto leer diccionario y Wikipedia se olvidaba de charlar)
+      const charlasRep = textos.filter(t => t.startsWith("<yo>"));
+      const lote = []; for (let k = 0; k < 8; k++) { const de = k % 2 === 0 && charlasRep.length ? charlasRep : textos; lote.push(de[Math.floor(Math.random() * de.length)]); }
       // las charlas importantes (saludos, "cómo estás", pedidos) se repasan más; si nunca le hablaron, casi solo esas
       const importantes = historial.some(m => m.de === "yo") ? 2 : 7;
       for (let k = 0; k < importantes; k++) lote.push(textos[Math.floor(Math.random() * Math.min(textos.length, 255))]);
-      cerebro.entrenar(lote, { tasa: 0.003, hasta: Date.now() + (document.querySelector("dialog[open]") ? 12 : 40) }); // de a poquito, para que la página no se trabe
+      cerebro.entrenar(lote, { tasa: 0.003, hasta: Date.now() + (document.querySelector("dialog[open]") ? 6 : 40) }); // de a poquito, para que la página no se trabe
       vueltas++;
       if (Date.now() - ultimaLectura > 1000 && !dlgCerebro.open) { ultimaLectura = Date.now(); await leerAlgoNuevo(); } // cada segundo lee algo nuevo (con el cerebro abierto, no: así no se traba)
       if (vueltas % 100 === 0) { guardarCerebro(); marcarCambio(); }
@@ -1536,7 +1619,7 @@ function contestarSeguimiento(t) {
   if (!mejor || mp < 0.9) return null;
   contexto.dichas.add(mejor);
   aprendido.respuestas = { ...(aprendido.respuestas || {}), [llave]: mejor }; guardarAprendido(); // se lo acuerda para siempre
-  cerebro && cerebro.entrenar(conRepaso([FrankersCerebro.charla(`${t} ${contexto.tema}`, mejor)]), { tasa: 0.02 });
+  aprenderDeAPoco(conRepaso([FrankersCerebro.charla(`${t} ${contexto.tema}`, mejor)]), { tasa: 0.02 });
   return mejor;
 }
 function contarMas() {
@@ -1556,7 +1639,7 @@ function recibirCorreccion(original) {
   const falso = esFalso(original); if (falso) return `Mmm, eso no es cierto: ${falso} Así que no lo aprendo. 🤓`;
   if (temaDePregunta(pregunta) && aprendido.temas[normalizar(temaDePregunta(pregunta))]) return "Lo que yo sé lo leí en Wikipedia. Si me mostrás de dónde lo sacaste (un libro, una página), lo reviso. 📖";
   memoria.correcciones = { ...(memoria.correcciones || {}), [normalizar(pregunta)]: original.trim() }; guardarMemoria();
-  if (cerebro) { cerebro.entrenar(conRepaso(Array(4).fill(FrankersCerebro.charla(pregunta, original.trim()))), { tasa: 0.03 }); guardarCerebro(); }
+  if (cerebro) aprenderDeAPoco(conRepaso(Array(4).fill(FrankersCerebro.charla(pregunta, original.trim()))), { tasa: 0.03 }).then(() => guardarCerebro());
   actividad("✏️", `Aprendí una corrección: «${pregunta}» → «${original.trim()}»`);
   return `¡Gracias por enseñarme! 💜 Ahora ya sé: «${original.trim()}».`;
 }
@@ -1627,6 +1710,11 @@ function contestarInteligente(original) {
   if (memoria.correcciones?.[t]) return memoria.correcciones[t] + " (me lo enseñaste vos 💜)";
   if (/\b(juguemos|jugamos|jugar|quiero jugar)\b.*\btrivia\b|^trivia$|\bhaceme una pregunta\b|\bpreguntame algo\b/.test(t)) return nuevaTrivia();
   if (/\badivinanza\b/.test(t)) return nuevaAdivinanza();
+  if (/^(que es dibujar|que significa dibujar|como dibujas|como haces (los )?dibujos|como dibujo|sabes dibujar)\b/.test(t))
+    return "Dibujar es hacer una imagen con formas, líneas y colores. 🎨 Yo no tengo dibujos guardados: cada vez invento uno con círculos, óvalos, curvas y polígonos. Si no conozco algo, busco qué es (un animal, una planta, una persona…) y me lo imagino. Y si me pedís «realista», le pongo luz de un lado, sombra del otro, texturas y una sombra en el piso. ¡Pedime «dibujá una jirafa realista»!";
+  const comoDib = t.match(/^como (se )?dibuja(s|r)? (un |una |el |la )?([a-zñ]+)/);
+  if (comoDib) { const cat = categoriaDe(comoDib[4]), pasos = { animal: "un óvalo para el cuerpo, cuatro rectángulos para las patas, un círculo para la cabeza, orejas, cola y un ojito", persona: "un círculo para la cabeza, un rectángulo para el cuerpo, líneas para brazos y piernas, pelo y una sonrisa", comida: "un círculo u óvalo con un degradado, un palito y una hojita", bicho: "un óvalo para el cuerpo, una cabecita, patitas finas y antenas", arbol: "un tronco marrón y círculos verdes uno arriba del otro para la copa", flor: "un tallo, pétalos en círculo y el centro amarillo" }[cat.tipo] || "una forma principal (un cuadrado, un cilindro o un triángulo) y después detalles chiquitos arriba";
+    return `Para dibujar ${comoDib[4]} hago así: ${pasos}. Primero lo de atrás y después lo de adelante. ¿Querés que lo dibuje? Decime «dibujá ${comoDib[4]}». ✏️`; }
   const v = sobreVos(original); if (v) return v;
   const f = fechaHora(tn(original)); if (f) return f;
   const w = palabraPorSignificar(t); if (w) return significado(w);
@@ -1638,6 +1726,12 @@ function contestarInteligente(original) {
 // Antes de contestar: lo que hay que buscar en internet (despacito, con el Buscafrankers)
 async function prepararInteligencia(original) {
   const t = normalizar(original);
+  // Dibujar algo que nunca vio: primero busca qué es (así sabe si es un animal, una fruta, una persona…)
+  const dib = t.match(/\b(dibuj\w*|pinta\w*|ilustra\w*)\b(.*)$/);
+  if (dib && gramatica) {
+    const nuevas = planearDibujo(dib[2]).items.filter(i => i.inventado && !(gramatica.significados[i.lema] || aprendido.significados[i.lema])).slice(0, 3);
+    for (const i of nuevas) await usarBuscafrankers(i.lema, () => aprenderPalabra(i.lema, true));
+  }
   const w = palabraPorSignificar(t);
   if (w && !(gramatica?.significados[w]) && !aprendido.significados[w]) await usarBuscafrankers(w, () => aprenderPalabra(w));
   if (contexto.tema && !juego && (esPedirMas(t) || /^contame mas\b/.test(t) || esSeguimiento(t)) && !textosCompletos.has(normalizar(contexto.tema))) await textoCompleto(contexto.tema);
@@ -1698,7 +1792,11 @@ function responder(original) {
         actividad("🎨", `Dibujando: ${pedido}`); emocionPendiente = "dibujando";
         if (enLlamada) { emocionar($("#llCara"), "dibujando"); setTimeout(() => dejarDeSentir("dibujando"), 1900); }
         ultimoDibujo = pedido;
-        return { texto: hablarConCerebro(original), dibujo: { prompt: pedido, semilla: Date.now() % 1e9 } };
+        const inventadas = plan.items.filter(i => i.inventado), realista = /\b(realista|real|hiperrealista)\b/.test(t);
+        let texto = `¡Ahí va${realista ? ", en modo realista" : ""}! 🎨`;
+        if (inventadas.length) { const w = inventadas[0].etiqueta, sig = (gramatica && gramatica.significados[inventadas[0].lema]) || aprendido.significados[inventadas[0].lema];
+          texto = sig ? `Nunca había dibujado «${w}», pero leí que es: «${sig.replace(/\.$/, "")}». ¡Así me lo imagino! 🎨` : `No sé bien qué es «${w}», así que lo inventé como me lo imagino. 🎨 Si me contás cómo es, lo dibujo mejor.`; }
+        return { texto, dibujo: { prompt: pedido, semilla: Date.now() % 1e9 } };
       }
     }
   }
@@ -1893,6 +1991,135 @@ $("#cfRepasar").onclick = async () => {
   repasandoPalabras = false; $("#cfRepasar").textContent = "🔁 Repasar las que usa"; pintarCerebroFacil();
 };
 
+
+
+/* ---------- TU PLAN: Gratis o Pro Max (por ahora todo gratis) ---------- */
+function pintarPlan() {
+  const plan = guardado.leer("frankers-plan", "gratis");
+  $("#planCreditos").textContent = plan === "promax" ? "∞ (infinitos)" : "ilimitados en el plan gratis (por ahora)";
+  $("#planPro").textContent = plan === "promax" ? "✅ Ya tenés Pro Max" : "✨ Activar Pro Max"; $("#planPro").disabled = plan === "promax";
+  $("#planGratis").textContent = plan === "gratis" ? "✅ Es tu plan" : "Usar Gratis"; $("#planGratis").disabled = plan === "gratis";
+}
+$("#planPro").onclick = () => { guardado.escribir("frankers-plan", "promax"); pintarPlan(); pintarLateral(); actividad("✨", "¡Ahora tenés Pro Max!"); };
+$("#planGratis").onclick = () => { guardado.escribir("frankers-plan", "gratis"); pintarPlan(); pintarLateral(); };
+$("#planCerrar").onclick = () => $("#dlgPlan").close();
+/* ---------- ⚡ MODO TURBO: todo prendido a la vez, lo más rápido posible ----------
+   - Varios ayudantes (uno por núcleo, según la potencia) entrenan al mismo tiempo, cada uno con una parte de los textos.
+     Cada 25 segundos se juntan: se promedia lo que aprendió cada uno (así aprende varias veces más rápido).
+   - Mientras tanto estudia palabras de a 3 (las que usa y no sabe, y del diccionario).
+   - Sin carteles ni animaciones, la pantalla no se apaga, y guarda cada 30 minutos (y al parar o cerrar la página). */
+const turbo = { activo: false, ayudantes: [], pendientes: new Set(), extra: [], inicio: 0, vueltas: 0, ejemplos: 0, palabras: 0, error: null, candado: null, reloj: null, ultimoGuardado: 0 };
+const NUCLEOS = Math.max(1, Math.min(navigator.hardwareConcurrency || 2, 8));
+$("#turboPotencia").max = NUCLEOS; $("#turboPotencia").value = Math.min(4, NUCLEOS);
+const pintarPotencia = () => { const n = +$("#turboPotencia").value; $("#turboPotenciaTxt").textContent = `${n} de ${NUCLEOS} núcleo${NUCLEOS > 1 ? "s" : ""}${n === NUCLEOS ? " (máximo)" : n === 1 ? " (poquito: la compu va normal)" : ""}`; };
+$("#turboPotencia").oninput = pintarPotencia; pintarPotencia();
+const dlgTurbo = $("#dlgTurbo");
+function pintarTurbo() {
+  $("#turboApagado").hidden = turbo.activo; $("#turboPrendido").hidden = !turbo.activo;
+  $("#btnTurbo").classList.toggle("prendido", turbo.activo); $("#btnTurbo").querySelector(".txt").textContent = turbo.activo ? "Turbo ON" : "Turbo";
+  if (!turbo.activo) return;
+  const seg = Math.round((Date.now() - turbo.inicio) / 1000);
+  $("#turboTiempo").textContent = seg < 60 ? `${seg} s` : `${Math.floor(seg / 60)} min ${seg % 60} s`;
+  $("#turboDatos").innerHTML = [`🧠 ${turbo.ayudantes.length} ayudante${turbo.ayudantes.length > 1 ? "s" : ""} entrenando a la vez`, `🔁 Vueltas: ${turbo.vueltas}`,
+    `🏋️ Practicó ${turbo.ejemplos.toLocaleString("es-AR")} ejemplos`, `📖 Aprendió ${turbo.palabras} significados`,
+    turbo.error != null ? `🎯 Acierta un ${Math.round(Math.exp(-turbo.error) * 100)} % (cuanto más, mejor)` : "🎯 Midiendo cuánto acierta…"].map(x => `<li>${x}</li>`).join("");
+}
+$("#btnTurbo").onclick = () => { pintarTurbo(); dlgTurbo.showModal(); };
+$("#turboCancelar").onclick = () => dlgTurbo.close();
+$("#turboOcultar").onclick = () => dlgTurbo.close();
+$("#turboActivar").onclick = () => { dlgTurbo.close(); prenderTurbo(+$("#turboPotencia").value); };
+$("#turboParar").onclick = () => apagarTurbo();
+function ayudanteDeTurbo(base, textos, prueba, opciones) {
+  return new Promise((ok) => {
+    let w; try { w = new Worker(URL.createObjectURL(new Blob(["(" + FrankersCerebro.fabrica.toString() + ")(self);\n" + CODIGO_AYUDANTE], { type: "text/javascript" }))); } catch { return ok(null); }
+    turbo.ayudantes.push(w);
+    const fin = (r) => { w.terminate(); turbo.ayudantes = turbo.ayudantes.filter(x => x !== w); ok(r); };
+    w.onmessage = (e) => { if (e.data.tipo === "listo") fin(e.data); else if (e.data.tipo === "error") fin(null); };
+    w.onerror = (e) => { e.preventDefault && e.preventDefault(); fin(null); };
+    w.postMessage({ tipo: "entrenar", cerebro: base, textos, prueba, opciones });
+  });
+}
+async function vueltaTurbo(potencia) {
+  const todos = [...(await cargarTextosGrandes()), ...aprendidoAca, ...turbo.extra.splice(0)];
+  const { prueba, entreno } = separarPrueba(todos);
+  for (let k = entreno.length - 1; k > 0; k--) { const j = Math.floor(Math.random() * (k + 1)); [entreno[k], entreno[j]] = [entreno[j], entreno[k]]; }
+  const base = cerebro.aCrudo(), vocab = cerebro.palabras.length, parte = Math.ceil(entreno.length / potencia);
+  const resultados = (await Promise.all(Array.from({ length: potencia }, (_, i) =>
+    ayudanteDeTurbo(base, entreno.slice(i * parte, (i + 1) * parte), prueba.slice(0, 120), { segundos: 25, grupo: 32, variantes: true, paciencia: Infinity })))).filter(Boolean);
+  if (!turbo.activo && !resultados.length) return;
+  if (resultados.length && cerebro.palabras.length === vocab) {
+    // juntar lo que aprendió cada ayudante: el promedio de todos
+    const n = resultados.length, prom = (sel) => { const a = new Float32Array(sel(resultados[0].cerebro).length); for (const r of resultados) { const x = sel(r.cerebro); for (let i = 0; i < a.length; i++) a[i] += x[i] / n; } return a; };
+    cerebro.E = prom(c => c.E); cerebro.capas = cerebro.capas.map((c, l) => ({ ...c, W: prom(x => x.capas[l].W), b: prom(x => x.capas[l].b) }));
+    const ej = resultados.reduce((a, r) => a + r.r.ejemplos, 0); cerebro.vistas = base.vistas + ej; turbo.ejemplos += ej;
+    turbo.error = resultados.reduce((a, r) => a + r.r.errorPrueba, 0) / n; cerebro.historialError.push(+turbo.error.toFixed(3)); if (cerebro.historialError.length > 200) cerebro.historialError.shift();
+    curvaEntreno.push(...resultados.flatMap(r => [r.r.errorPrueba])); marcarCambio();
+  }
+  if (turbo.pendientes.size) { cerebro.agregarPalabras([...turbo.pendientes]); turbo.pendientes.clear(); } // las palabras nuevas, entre vuelta y vuelta
+  turbo.vueltas++;
+  if (Date.now() - turbo.ultimoGuardado > 30 * 60000) { guardarCerebro(true); turbo.ultimoGuardado = Date.now(); } // guarda cada 30 minutos
+}
+async function palabrasTurbo() {
+  while (turbo.activo) {
+    const usa = palabrasSinSignificado(2), dic = palabrasSinSignificado(1, true), lote = [...usa, ...dic].slice(0, 3); // de a 3 a la vez
+    if (!lote.length) { await esperar(2000); continue; }
+    const oks = await Promise.all(lote.map(w => estudiarPalabra(w)));
+    turbo.palabras += oks.filter(Boolean).length;
+    await esperar(150);
+  }
+}
+async function prenderTurbo(potencia) {
+  if (turbo.activo || !cerebro) return;
+  if (entrenando) { pararEntreno = true; if (ayudante) ayudante.postMessage({ tipo: "parar" }); await esperar(1500); }
+  Object.assign(turbo, { activo: true, inicio: Date.now(), vueltas: 0, ejemplos: 0, palabras: 0, error: null, ultimoGuardado: Date.now() });
+  turbo.estudioAntes = estudioPrendido; entrenando = true; enSilencio = true; estudioPrendido = true; pintarEstudio(); // todo prendido, sin carteles
+  for (const b of ["#btnEntrenar", "#cfEnsenar", "#cfEstudiar", "#cfRepasar"]) $(b).disabled = true;
+  try { turbo.candado = await navigator.wakeLock.request("screen"); } catch {} // que la pantalla no se apague
+  turbo.reloj = setInterval(() => { if (dlgTurbo.open) pintarTurbo(); }, 1000);
+  actividad("⚡", `Modo Turbo prendido (${potencia} núcleo${potencia > 1 ? "s" : ""})`);
+  pintarTurbo(); palabrasTurbo();
+  while (turbo.activo) { try { await vueltaTurbo(potencia); } catch (e) { console.warn("Turbo:", e); await esperar(2000); } }
+}
+function apagarTurbo() {
+  if (!turbo.activo) return;
+  turbo.activo = false; turbo.ayudantes.forEach(w => w.postMessage({ tipo: "parar" })); // terminan su vuelta y se juntan
+  clearInterval(turbo.reloj); try { turbo.candado && turbo.candado.release(); } catch {}
+  setTimeout(() => {
+    if (turbo.pendientes.size) { cerebro.agregarPalabras([...turbo.pendientes]); turbo.pendientes.clear(); }
+    entrenando = false; enSilencio = false; estudioPrendido = !!turbo.estudioAntes; pintarEstudio(); for (const b of ["#btnEntrenar", "#cfEnsenar", "#cfEstudiar", "#cfRepasar"]) $(b).disabled = false;
+    guardarCerebro(true); marcarCambio(); pintarTurbo(); if (dlgCerebro.open) pintarCerebroFacil();
+    actividad("⚡", `Turbo apagado: practicó ${turbo.ejemplos.toLocaleString("es-AR")} ejemplos y aprendió ${turbo.palabras} significados. ¡Guardé todo!`);
+  }, 3000);
+  dlgTurbo.close();
+}
+window.addEventListener("beforeunload", () => { if (turbo.activo) guardarCerebro(true); }); // si cerrás la página, guarda
+// 📋 Palabras que usa: todas las palabras que usa al hablar. Las que no sabe qué significan tienen botón "Aprender".
+const dlgUsa = $("#dlgUsa"); let usaVer = "falta", usaCuantas = 80;
+const usaPalabras = () => cerebro.palabras.filter(w => /^[a-záéíóúüñ]{2,}$/.test(w));
+const sabeQueSignifica = (w) => !!((gramatica && gramatica.significados[w]) || aprendido.significados[w]);
+function pintarUsa() {
+  const todas = usaPalabras(), sabe = todas.filter(sabeQueSignifica), q = normalizar($("#usaFiltro").value);
+  $("#usaResumen").innerHTML = `Usa <b>${todas.length.toLocaleString("es-AR")}</b> palabras: ya sabe qué significan <b>${sabe.length.toLocaleString("es-AR")}</b> y le falta saber <b>${(todas.length - sabe.length).toLocaleString("es-AR")}</b>.`;
+  dlgUsa.querySelectorAll("[data-ver]").forEach(b => b.classList.toggle("principal", b.dataset.ver === usaVer));
+  const lista = todas.filter(w => (usaVer === "sabe") === sabeQueSignifica(w) && (!q || normalizar(w).includes(q)));
+  const ul = $("#usaLista"); ul.innerHTML = "";
+  if (!lista.length) ul.innerHTML = `<li>${usaVer === "falta" ? "🎉 ¡Ya sabe qué significan todas las palabras que usa!" : "Todavía no sabe el significado de ninguna."}</li>`;
+  for (const w of lista.slice(0, usaCuantas)) {
+    const li = document.createElement("li"); li.innerHTML = "<span><b></b><small></small></span>";
+    li.querySelector("b").textContent = w; li.querySelector("small").textContent = sabeQueSignifica(w) ? (gramatica.significados[w] || aprendido.significados[w]) : (probadas.has(w) ? "No la encontré en el diccionario" : "Todavía no sabe qué significa");
+    if (!sabeQueSignifica(w)) { const b = document.createElement("button"); b.className = "boton principal"; b.textContent = "➕ Aprender";
+      b.onclick = async () => { b.disabled = true; b.textContent = "Aprendiendo…"; const ok = await estudiarPalabra(w);
+        if (ok) { li.style.transition = "opacity .4s"; li.style.opacity = 0; setTimeout(pintarUsa, 400); } else { li.querySelector("small").textContent = "😕 No encontré su significado"; b.remove(); } };
+      li.appendChild(b); }
+    ul.appendChild(li);
+  }
+  $("#usaMas").hidden = lista.length <= usaCuantas;
+}
+$("#cfVerUsa").onclick = () => { usaVer = "falta"; usaCuantas = 80; $("#usaFiltro").value = ""; pintarUsa(); dlgUsa.showModal(); };
+dlgUsa.querySelectorAll("[data-ver]").forEach(b => b.onclick = () => { usaVer = b.dataset.ver; usaCuantas = 80; pintarUsa(); });
+$("#usaFiltro").oninput = () => { usaCuantas = 80; pintarUsa(); };
+$("#usaMas").onclick = () => { usaCuantas += 120; pintarUsa(); };
+$("#usaCerrar").onclick = () => { dlgUsa.close(); pintarCerebroFacil(); };
 // "¡Que estudie!": lee N palabras al azar del diccionario con su significado, y las repasa varias veces hasta entenderlas
 let estudiandoPalabras = false;
 $("#cfEstudiar").onclick = async () => {
@@ -1906,7 +2133,7 @@ $("#cfEstudiar").onclick = async () => {
     if (!grupo.length) return;
     const pares = grupo.map(w => FrankersCerebro.charla(`qué significa ${w}`, `"${w}" significa: ${(gramatica && gramatica.significados[w]) || aprendido.significados[w]}`));
     for (let vuelta = 1; vuelta <= 8 && estudiandoPalabras; vuelta++) {
-      cerebro.entrenar(conRepaso(pares, pares.length), { tasa: 0.02, hasta: Date.now() + 80 });
+      await aprenderDeAPoco(conRepaso(pares, pares.length * 2), { tasa: 0.012 });
       const err = cerebro.medirError(pares), entiende = Math.round(Math.exp(-err) * 100);
       $("#cfEstadoPalabras").textContent = `🔁 Repasando ${grupo.length === 1 ? "«" + grupo[0] + "»" : grupo.length + " palabras"} (vuelta ${vuelta}): ya las entiende un ${entiende} %`;
       await esperar(120);
@@ -2037,6 +2264,7 @@ let redRaf = 0;
 function animarRed() {
   const c = $("#redViva"); if (!c || !dlgCerebro.open) { redRaf = 0; return; }
   // 30 cuadros por segundo alcanzan (y la compu trabaja la mitad)
+  if (turbo.activo) { redRaf = requestAnimationFrame(animarRed); return; } // en Turbo no dibuja: más fuerza para aprender
   const ahora = performance.now(); if (ahora - (vis.ultimo || 0) < 32) { redRaf = requestAnimationFrame(animarRed); return; } vis.ultimo = ahora;
   const dpr = devicePixelRatio || 1, W = c.clientWidth, H = c.clientHeight;
   if (c.width !== Math.round(W * dpr)) { c.width = Math.round(W * dpr); c.height = Math.round(H * dpr); }
@@ -2712,6 +2940,64 @@ const OBJETOS = {
     c.fillStyle = "#1d1b2e"; const p = []; for (let i = 0; i < 5; i++) { const a = -Math.PI / 2 + i * Math.PI * 2 / 5; p.push([x + Math.cos(a) * R * .3, cy + Math.sin(a) * R * .3]); } poligono(c, p, "#1d1b2e");
     for (let i = 0; i < 5; i++) { const a = -Math.PI / 2 + i * Math.PI * 2 / 5 + Math.PI / 5; elipse(c, x + Math.cos(a) * R * .8, cy + Math.sin(a) * R * .8, R * .2, R * .14, "#1d1b2e", a); }
   } },
+  // ---- GENÉRICOS: para dibujar CUALQUIER cosa que le pidas, aunque nunca la haya visto ----
+  animal: { nombre: "animales", palabras: [], zona: "suelo", tam: 100, color: "#b07a4a", dibujar(c, x, y, s, col, r = Math.random, it = {}) {
+    const k = it.rasgos || {}, largo = .32 + (k.a || .5) * .14, pata = .18 + (k.b || .5) * .14, cuello = k.cuelloLargo ? .45 : .12;
+    for (const dx of [-.22, -.1, .12, .24]) rect(c, x + dx * s - s * .04, y - s * (pata + .02), s * .08, s * (pata + .02), tono(col, -.25), s * .03); // patas
+    elipse(c, x, y - s * (pata + .14), s * largo, s * .17, col); // cuerpo
+    if (k.rayas) for (let q = -2; q <= 2; q++) linea(c, [[x + q * s * .1, y - s * (pata + .28)], [x + q * s * .1 + s * .03, y - s * (pata + .02)]], tono(col, -.45), s * .04);
+    if (k.manchas) for (let q = 0; q < 5; q++) elipse(c, x + (r() - .5) * s * largo * 1.4, y - s * (pata + .14) + (r() - .5) * s * .16, s * .05, s * .035, tono(col, -.4));
+    linea(c, [[x - s * largo * .95, y - s * (pata + .18)], [x - s * (largo + .14), y - s * (pata + .32 + (k.c || .3) * .15)]], tono(col, -.15), s * .05); // cola
+    const hx = x + s * (largo * .85 + .08), hy = y - s * (pata + .3 + cuello);
+    if (cuello > .2) rect(c, hx - s * .07, hy, s * .12, s * (cuello + .1), col, s * .05);
+    elipse(c, hx + s * .05, hy, s * .15, s * .12, col); // cabeza
+    if (k.cuernos) { linea(c, [[hx - s * .02, hy - s * .1], [hx - s * .06, hy - s * .24]], "#efe6d0", s * .035); linea(c, [[hx + s * .08, hy - s * .1], [hx + s * .1, hy - s * .24]], "#efe6d0", s * .035); }
+    if (k.orejasLargas) { elipse(c, hx - s * .04, hy - s * .18, s * .04, s * .13, tono(col, -.2), -.2); elipse(c, hx + s * .06, hy - s * .18, s * .04, s * .13, tono(col, -.2), .2); }
+    else poligono(c, [[hx - s * .06, hy - s * .07], [hx - s * .02, hy - s * .2], [hx + s * .03, hy - s * .08]], tono(col, -.2));
+    if (k.trompa) linea(c, [[hx + s * .17, hy + s * .02], [hx + s * .26, hy + s * .2], [hx + s * .22, hy + s * .3]], col, s * .07);
+    circulo(c, hx + s * .1, hy - s * .02, s * .03, "#fff"); circulo(c, hx + s * .11, hy - s * .02, s * .016, "#1d1b2e");
+    circulo(c, hx + s * .19, hy + s * .03, s * .02, "#3a2230");
+  } },
+  bicho: { nombre: "bichos", palabras: [], zona: "suelo", tam: 95, color: "#5c3b2e", dibujar(c, x, y, s, col, r = Math.random, it = {}) {
+    const patas = (it.rasgos || {}).ocho ? 4 : 3, cy = y - s * .25;
+    for (let q = 0; q < patas; q++) for (const lado of [-1, 1]) linea(c, [[x + (q - (patas - 1) / 2) * s * .14, cy], [x + (q - (patas - 1) / 2) * s * .2, cy + lado * s * .18], [x + (q - (patas - 1) / 2) * s * .26, y]], "#222", s * .025);
+    elipse(c, x - s * .05, cy, s * .26, s * .15, col); elipse(c, x + s * .25, cy - s * .02, s * .1, s * .09, tono(col, -.2));
+    linea(c, [[x + s * .3, cy - s * .08], [x + s * .4, cy - s * .22]], "#222", s * .02); linea(c, [[x + s * .26, cy - s * .08], [x + s * .3, cy - s * .24]], "#222", s * .02);
+    circulo(c, x + s * .3, cy - s * .03, s * .025, "#fff");
+  } },
+  persona: { nombre: "personas", palabras: [], zona: "suelo", tam: 120, color: "#4fa3ff", dibujar(c, x, y, s, col, r = Math.random, it = {}) {
+    const piel = ["#f1c7a3", "#d9a57c", "#a8714a", "#7a4e2d"][Math.floor(((it.rasgos || {}).a || .3) * 4)], pelo = ["#2b1a10", "#6b3e1e", "#e0b25a", "#1d1b2e"][Math.floor(((it.rasgos || {}).b || .5) * 4)];
+    rect(c, x - s * .1, y - s * .32, s * .08, s * .32, "#334", s * .03); rect(c, x + s * .02, y - s * .32, s * .08, s * .32, "#334", s * .03); // piernas
+    rect(c, x - s * .16, y - s * .66, s * .32, s * .38, col, s * .08); // cuerpo
+    linea(c, [[x - s * .15, y - s * .6], [x - s * .26, y - s * .38]], piel, s * .06); linea(c, [[x + s * .15, y - s * .6], [x + s * .26, y - s * .38]], piel, s * .06);
+    circulo(c, x, y - s * .8, s * .15, piel); elipse(c, x, y - s * .9, s * .16, s * .08, pelo);
+    ojos(c, x, y - s * .8, s * .05, s * .03); c.strokeStyle = "#3a2230"; c.lineWidth = s * .015; c.beginPath(); c.arc(x, y - s * .76, s * .05, .2, Math.PI - .2); c.stroke();
+    if ((it.rasgos || {}).sombrero) { rect(c, x - s * .2, y - s * .96, s * .4, s * .04, tono(col, -.3)); rect(c, x - s * .11, y - s * 1.08, s * .22, s * .13, tono(col, -.3), s * .03); }
+  } },
+  comida: { nombre: "comidas", palabras: [], zona: "suelo", tam: 80, color: "#ffb347", dibujar(c, x, y, s, col, r = Math.random, it = {}) {
+    const larga = (it.rasgos || {}).alargada, cy = y - s * .3;
+    if (larga) { c.save(); c.translate(x, cy); c.rotate(-.5); elipse(c, 0, 0, s * .42, s * .14, col); elipse(c, -s * .1, -s * .05, s * .2, s * .04, tono(col, .3)); c.restore(); }
+    else { elipse(c, x, cy, s * .3, s * .28, col); elipse(c, x - s * .1, cy - s * .1, s * .08, s * .05, tono(col, .4), -.5); }
+    linea(c, [[x, cy - s * .27], [x + s * .03, cy - s * .38]], "#5a3518", s * .03); elipse(c, x + s * .1, cy - s * .36, s * .08, s * .035, "#3fa83a", -.4);
+  } },
+  barco: { nombre: "barcos", palabras: ["barco", "barcos", "velero", "bote", "lancha"], zona: "suelo", tam: 110, color: "#ff6b6b", dibujar(c, x, y, s, col) {
+    poligono(c, [[x - s * .5, y - s * .22], [x + s * .5, y - s * .22], [x + s * .36, y], [x - s * .36, y]], col);
+    rect(c, x - s * .02, y - s * .9, s * .04, s * .68, "#6b4a2a"); poligono(c, [[x + s * .02, y - s * .86], [x + s * .4, y - s * .3], [x + s * .02, y - s * .3]], "#fff");
+    poligono(c, [[x - s * .02, y - s * .7], [x - s * .3, y - s * .3], [x - s * .02, y - s * .3]], "#e8f4ff");
+  } },
+  avion: { nombre: "aviones", palabras: ["avion", "aviones", "avioneta", "jet"], zona: "cielo", tam: 110, color: "#e8eef8", dibujar(c, x, y, s, col) {
+    elipse(c, x, y, s * .5, s * .09, col); poligono(c, [[x - s * .05, y], [x + s * .12, y], [x - s * .12, y + s * .32], [x - s * .24, y + s * .32]], tono(col, -.15));
+    poligono(c, [[x - s * .05, y], [x + s * .12, y], [x - s * .12, y - s * .3], [x - s * .24, y - s * .3]], tono(col, -.1)); poligono(c, [[x - s * .4, y], [x - s * .5, y - s * .2], [x - s * .44, y]], tono(col, -.2));
+    for (let q = 0; q < 4; q++) circulo(c, x + s * (.1 + q * .08), y - s * .02, s * .02, "#4fa3ff");
+  } },
+  cosa: { nombre: "cosas", palabras: [], zona: "suelo", tam: 90, color: "#8a5cff", dibujar(c, x, y, s, col, r = Math.random, it = {}) {
+    const k = it.rasgos || {}, forma = Math.floor((k.a || .5) * 3), cy = y - s * .32;
+    if (forma === 0) rect(c, x - s * .3, cy - s * .3, s * .6, s * .6, col, s * .1);
+    else if (forma === 1) { rect(c, x - s * .2, cy - s * .32, s * .4, s * .62, col, s * .06); elipse(c, x, cy - s * .32, s * .2, s * .06, tono(col, .25)); }
+    else poligono(c, [[x, cy - s * .36], [x + s * .34, cy + s * .3], [x - s * .34, cy + s * .3]], col);
+    for (let q = 0; q < 3; q++) circulo(c, x + (q - 1) * s * .12, cy + s * .05, s * .035, tono(col, (k.b || .5) > .5 ? .5 : -.4));
+    rect(c, x - s * .18, cy - s * .14, s * .36, s * .05, tono(col, -.25), s * .02);
+  } },
   robot: { nombre: "robots", palabras: ["robot", "robots", "androide"], zona: "suelo", tam: 115, color: "#9aa0ad", dibujar(c, x, y, s, col) {
     rect(c, x - s * .17, y - s * .3, s * .12, s * .3, tono(col, -.2), s * .02); rect(c, x + s * .05, y - s * .3, s * .12, s * .3, tono(col, -.2), s * .02);
     rect(c, x - s * .4, y - s * .7, s * .1, s * .32, tono(col, -.15), s * .04); rect(c, x + s * .3, y - s * .7, s * .1, s * .32, tono(col, -.15), s * .04);
@@ -2740,6 +3026,39 @@ function buscarColor(w) {
   for (const forma of singular(w)) { if (COLORES[forma]) return COLORES[forma]; const m = forma.replace(/a$/, "o"); if (COLORES[m]) return COLORES[m]; }
   return null;
 }
+/* Para dibujar algo que nunca vio: se fija qué es (en su diccionario) y elige cómo inventarlo */
+const COLORES_TEXTO = { rojo: "#e0262e", roja: "#e0262e", verde: "#3fa83a", azul: "#3d7bff", amarillo: "#ffd23f", amarilla: "#ffd23f", negro: "#2a2a2a", negra: "#2a2a2a", blanco: "#f4f4f4", blanca: "#f4f4f4", gris: "#9a9aa8", marron: "#8b5a2b", "marrón": "#8b5a2b", naranja: "#ff8c2a", rosa: "#ff8fc6", violeta: "#8a5cff", dorado: "#e8b923" };
+function hashPalabra(w) { let h = 2166136261; for (const ch of w) h = Math.imul(h ^ ch.charCodeAt(0), 16777619); return h >>> 0; }
+let mapaSinTilde = null;
+function conTilde(w) { // busca la palabra del diccionario aunque la escribas sin tilde
+  if (!gramatica) return w; if (gramatica.base.has(w)) return w;
+  if (!mapaSinTilde) { mapaSinTilde = new Map(); for (const k of gramatica.base.keys()) { const n = normalizar(k); if (!mapaSinTilde.has(n)) mapaSinTilde.set(n, k); } }
+  return mapaSinTilde.get(w) || w;
+}
+function categoriaDe(w) {
+  const sig = normalizar((gramatica && gramatica.significados[w]) || aprendido.significados[w] || "");
+  const h = hashPalabra(w), azarW = (n) => ((h >>> n) % 100) / 100;
+  const rasgos = { a: azarW(1), b: azarW(7), c: azarW(13), rayas: /\braya/.test(sig), manchas: /\bmancha/.test(sig), cuernos: /\b(cuerno|asta)/.test(sig), trompa: /\btrompa\b/.test(sig),
+    cuelloLargo: /cuello (muy )?largo/.test(sig), orejasLargas: /orejas (muy )?largas/.test(sig), ocho: /\b(aracnido|arana|ocho patas)\b/.test(sig), alargada: /\balargad/.test(sig), sombrero: azarW(19) > .6 };
+  let color = null; for (const [k, v] of Object.entries(COLORES_TEXTO)) if (new RegExp("\\b" + normalizar(k) + "\\b").test(sig)) { color = v; break; }
+  let tipo = "cosa";
+  if (/\b(insecto|aracnido|arana|gusano|artropodo)\b/.test(sig)) tipo = "bicho";
+  else if (/\b(ave|pajaro)s?\b/.test(sig)) tipo = "pajaro";
+  else if (/\b(pez|peces|cetaceo)\b/.test(sig)) tipo = "pez";
+  else if (/\b(mamifero|animal|reptil|anfibio|felino|canido|roedor|cuadrupedo|bovino|equino|primate|marsupial)\b/.test(sig)) tipo = "animal";
+  else if (/\b(persona|hombre|mujer|nino|nina|profesional|oficio|se dedica|individuo)\b/.test(sig)) tipo = "persona";
+  else if (/\b(fruto|fruta|verdura|hortaliza|comida|alimento|plato|postre|golosina|dulce)\b/.test(sig)) tipo = "comida";
+  else if (/\bflor\b/.test(sig)) tipo = "flor";
+  else if (/\b(planta|arbol|arbusto|vegetal|hierba)\b/.test(sig)) tipo = "arbol";
+  else if (/\b(embarcacion|barco|nave acuatica)\b/.test(sig)) tipo = "barco";
+  else if (/\b(aeronave|avion|volar)\b/.test(sig)) tipo = "avion";
+  else if (/\b(vehiculo|automovil|transporte)\b/.test(sig)) tipo = "auto";
+  else if (/\b(edificio|construccion|vivienda|templo|castillo)\b/.test(sig)) tipo = "casa";
+  else if (/\b(astro|planeta|satelite|galaxia)\b/.test(sig)) tipo = "planeta";
+  return { tipo, rasgos, color: color || (tipo === "animal" ? ["#c58b4a", "#d9a441", "#8b5a2b", "#e8c07a", "#9a9aa8", "#6b4a2a", "#f0e0c0", "#b5651d"][h % 8]
+    : tipo === "bicho" ? ["#5c3b2e", "#2a2a2a", "#8b2b1e", "#3a5a2a"][h % 4]
+    : tipo === "cosa" || tipo === "comida" ? ["#e0262e", "#ff8c2a", "#ffd23f", "#3fa83a", "#3d7bff", "#8a5cff", "#ff8fc6", "#8b5a2b"][h % 8] : null), sabe: !!sig };
+}
 function planearDibujo(pedido) {
   const t = normalizar(pedido).replace("arco iris", "arcoiris");
   const items = [], escena = {}, desconocidas = [];
@@ -2752,7 +3071,17 @@ function planearDibujo(pedido) {
     const col = buscarColor(w);
     if (col) { const ult = items[items.length - 1]; if (ult && !ult.color) ult.color = col; else colorPendiente = col; continue; }
     if (ESCENAS[w]) { escena[ESCENAS[w]] = true; continue; }
-    if (!RELLENO.has(w) && w.length > 2 && !desconocidas.includes(w)) desconocidas.push(w);
+    if (!RELLENO.has(w) && w.length > 2 && !desconocidas.includes(w)) {
+      // ¡No la conoce! Se fija qué es y la inventa (un animal, una persona, una fruta, un vehículo, una cosa…)
+      const w1 = conTilde(w), w2 = conTilde(w.replace(/e?s$/, ""));
+      const lema = gramatica && !gramatica.base.has(w1) && gramatica.base.has(w2) ? w2 : w1;
+      const esCosa = gramatica && ((gramatica.base.get(lema) || [""])[0].includes("s") || aprendido.significados[lema]); // solo sustantivos (cosas, animales, personas…)
+      if (esCosa) {
+        const cat = categoriaDe(lema);
+        items.push({ tipo: cat.tipo, color: colorPendiente || cat.color, cant: cant || 1, etiqueta: lema === w2 && w !== w2 ? w : lema, lema, rasgos: cat.rasgos, inventado: true }); cant = null; colorPendiente = null; continue;
+      }
+      desconocidas.push(w);
+    }
   }
   if (items.some(i => i.tipo === "pez")) escena.mar = true;
   if (items.some(i => i.tipo === "luna") && !items.some(i => i.tipo === "sol")) escena.noche = true;
@@ -2765,12 +3094,12 @@ function siluetaDe(capa) { // copia de la forma, toda de un color (sirve para re
   const m = document.createElement("canvas"); m.width = capa.width; m.height = capa.height; const g = m.getContext("2d");
   g.drawImage(capa, 0, 0); g.globalCompositeOperation = "source-in"; g.fillStyle = "#000"; g.fillRect(0, 0, m.width, m.height); return m;
 }
-function dibujarRealista(c, o, x, y, s, col, r, enSuelo) {
+function dibujarRealista(c, o, x, y, s, col, r, enSuelo, it = {}) {
   const W = c.canvas.width, H = c.canvas.height, nueva = () => { const k = document.createElement("canvas"); k.width = W; k.height = H; return k; };
   const capa = nueva(), g = capa.getContext("2d");
   const cx = x - s * .02, cy = enSuelo ? y - s * .45 : y, R = s * .55, luzX = cx - R * .45, luzY = cy - R * .5; // la luz viene de arriba a la izquierda
   // 1, 13) contorno orgánico: la forma se deforma un poquito con ruido (nada de regla ni círculos perfectos)
-  o.dibujar(g, x, y, s, col, r);
+  o.dibujar(g, x, y, s, col, r, it);
   try { const d = nueva(), dg = d.getContext("2d"); dg.filter = "url(#frankersOrganico)"; dg.drawImage(capa, 0, 0); if (dg.getImageData(cx | 0, cy | 0, 1, 1).data[3]) { g.clearRect(0, 0, W, H); g.drawImage(d, 0, 0); } } catch {}
   const forma = siluetaDe(capa);
   // 28, 29, 31) sombras en el piso: grande, cálida y suave, corrida lejos de la luz; de contacto, oscura; y el color que rebota tiñe el piso
@@ -2852,7 +3181,11 @@ function pintar(lienzo, pedido, semilla) {
   const c = lienzo.getContext("2d"), W = lienzo.width, H = lienzo.height, r = azar(semilla);
   const { items, escena } = planearDibujo(pedido);
   const realista = /\b(realista|realistas|real|hiperrealista)\b/.test(normalizar(pedido));
-  const pintarCosa = (o, x, y, s, col, enSuelo) => realista ? dibujarRealista(c, o, x, y, s, col, r, enSuelo) : o.dibujar(c, x, y, s, col, r);
+  const pintarCosa = (o, x, y, s, col, enSuelo, it = {}) => {
+    if (realista) dibujarRealista(c, o, x, y, s, col, r, enSuelo, it); else o.dibujar(c, x, y, s, col, r, it);
+    if (it.inventado && it.etiqueta) { c.font = `700 ${Math.max(12, s * .16)}px Fredoka, sans-serif`; c.textAlign = "center"; c.fillStyle = "rgba(255,255,255,.9)"; c.strokeStyle = "rgba(20,10,40,.6)"; c.lineWidth = 3;
+      c.strokeText(it.etiqueta, x, y + s * .14); c.fillText(it.etiqueta, x, y + s * .14); }
+  };
   const espacio = !!escena.espacio, noche = !!escena.noche && !espacio, mar = !!escena.mar && !espacio, nieve = !!escena.nieve && !espacio;
   const horizonte = espacio ? H : H * .62;
 
@@ -2904,16 +3237,16 @@ function pintar(lienzo, pedido, semilla) {
     let y = espacio ? H * (.15 + r() * .7) : H * .1 + r() * (horizonte - H * .28);
     if (!espacio && it.tipo === "sol") { x = W * .82; y = H * .18; }
     if (!espacio && it.tipo === "luna") { x = cielo.some(i => i.tipo === "sol") ? W * .18 : W * .82; y = H * .18; }
-    pintarCosa(o, x, y, o.tam * escala * (.85 + r() * .3), it.color || o.color, false);
+    pintarCosa(o, x, y, o.tam * escala * (.85 + r() * .3), it.color || o.color, false, it);
   });
   if (!espacio) {
     const peces = lista("agua");
-    peces.forEach((it, k) => { const o = OBJETOS[it.tipo]; pintarCosa(o, (k + .5) / peces.length * W + (r() - .5) * 40, agua[0] + r() * (agua[1] - agua[0]), o.tam * escala, it.color || o.color, false); });
+    peces.forEach((it, k) => { const o = OBJETOS[it.tipo]; pintarCosa(o, (k + .5) / peces.length * W + (r() - .5) * 40, agua[0] + r() * (agua[1] - agua[0]), o.tam * escala, it.color || o.color, false, it); });
     const suelo = lista("suelo").map((it, k, arr) => ({ it, x: (k + .5) / arr.length * W + (r() - .5) * (W / arr.length) * .4, y: sueloArriba + r() * (sueloAbajo - sueloArriba) * .8 + 6 }));
     suelo.sort((a, b) => a.y - b.y).forEach(({ it, x, y }) => {
       const o = OBJETOS[it.tipo], prof = (y - sueloArriba) / Math.max(1, sueloAbajo - sueloArriba);
       const solo = suelo.length === 1 && realista; // si es una sola cosa realista, la hace grande y en el medio
-      pintarCosa(o, solo ? W * .47 : x, solo ? H * .86 : y, o.tam * escala * (solo ? Math.min(2.6, H * .72 / (o.tam * escala)) : (mar ? .75 : 1) * (.85 + prof * .35)), it.color || o.color, true);
+      pintarCosa(o, solo ? W * .47 : x, solo ? H * .86 : y, o.tam * escala * (solo ? Math.min(2.6, H * .72 / (o.tam * escala)) : (mar ? .75 : 1) * (.85 + prof * .35)), it.color || o.color, true, it);
     });
   }
   // Realista: viñeta suave (las esquinas más oscuras) y granito. Simple: colores lisos, sin granito.
@@ -3048,17 +3381,28 @@ $("#btnModo").onclick = (e) => { e.stopPropagation(); $("#modoMenu").hidden = !$
 document.addEventListener("click", (e) => { if (!e.target.closest(".modo-caja")) $("#modoMenu").hidden = true; });
 pintarModo();
 // Cambia cómo lo dice, según el modo (no cambia lo que sabe ni sus reglas)
+// Te llama por tu nombre: en los saludos siempre, y a veces en las respuestas cortas
+function conTuNombre(texto, original, respuesta) {
+  const n = memoria.nombre; if (!n || !texto || respuesta.filtro) return texto;
+  // Si la persona no es Franco, cuando le HABLA a ella usa su nombre (Franco queda solo cuando dice quién la creó: "me hizo Franco")
+  if (normalizar(n) !== "franco") texto = texto.replace(/(,\s*|¡?\b(?:hola|chau|gracias|bien|genial|dale|listo),?\s+)Franco\b/gi, `$1${n}`).replace(/\b(?:Franco)(?=\s*[!?]\s*$)/, n);
+  if (respuesta.dibujo || texto.includes(n)) return texto;
+  const t = normalizar(original), lineas = texto.split("\n");
+  const saludo = /^(hola|buenas|buen dia|buenas (tardes|noches)|que onda|hey|ey|chau|adios|nos vemos|gracias)\b/.test(t);
+  if ((saludo || (lineas[0].length < 90 && Math.random() < .35)) && /[!?.]/.test(lineas[0])) lineas[0] = lineas[0].replace(/([!?.])(\s|$)/, (x, signo, esp) => `, ${n}${signo}${esp}`);
+  return lineas.join("\n");
+}
 function hablarEnModo(texto, original, respuesta) {
-  const m = MODOS[modoActual]; if (!m || modoActual === "normal" || !texto || respuesta.dibujo) return texto;
+  const m = MODOS[modoActual]; if (!m || modoActual === "normal" || !texto || respuesta.dibujo) return conTuNombre(texto, original, respuesta);
   // Si estás triste, te consuela como esa persona, pero sin sacar el consejo de hablar con un adulto de confianza
   if (respuesta.filtro) return revisar(original).problema === "tristeza" ? alAzar(m.triste) + "\n" + texto.split("\n").slice(1).join("\n") : texto;
   const t = normalizar(original);
-  if (/^(hola|buenas|buen dia|buenas (tardes|noches)|que onda|hey|ey)\b/.test(t) && texto.length < 80) return alAzar(m.saludo);
+  if (/^(hola|buenas|buen dia|buenas (tardes|noches)|que onda|hey|ey)\b/.test(t) && texto.length < 80) return memoria.nombre ? alAzar(m.saludo).replace(/, [a-záéíóúñ ]+?([!?])/i, `, ${memoria.nombre}$1`) : alAzar(m.saludo);
   if (/\b(chau|adios|nos vemos|hasta (manana|luego)|me voy)\b/.test(t)) return alAzar(m.chau);
   if (/\b(gracias)\b/.test(t)) return alAzar(m.gracias);
   if (/\b(estoy (muy |re )?(triste|mal)|me siento (triste|mal)|me pelee|lloro|llorando)\b/.test(t)) return alAzar(m.triste);
   // Lo demás: le agrega cómo te dice esa persona ("amigo", "corazón", "campeón") y a veces algo suyo
-  const apodo = alAzar(m.apodos), lineas = texto.split("\n");
+  const apodo = memoria.nombre && Math.random() < .35 ? memoria.nombre : alAzar(m.apodos), lineas = texto.split("\n"); // a veces, tu nombre
   if (texto.length < 140 && Math.random() < .7) lineas[0] = lineas[0].replace(/([!?.])(\s|$)/, (x, signo, esp) => `, ${apodo}${signo}${esp}`).replace(/^([^,!?.]+)$/, `$1, ${apodo}`);
   else if (Math.random() < .5) lineas[0] = `Mirá, ${apodo}: ` + lineas[0].replace(/^./, c => c.toLowerCase());
   if (texto.length < 100 && Math.random() < .3) lineas[0] += " " + alAzar(m.extra);
@@ -3113,8 +3457,10 @@ function pintarLateral() {
     li.append(b, acc); ul.appendChild(li);
   }
   const n = memoria.nombre;
-  $("#latPie").innerHTML = n ? `<span class="avatar">${escaparHTML(n[0].toUpperCase())}</span><span style="flex:1">${escaparHTML(n)}</span><button type="button" class="lat-cambiar" title="¿No sos vos? Cambiar">¿No sos vos?</button>` : "";
+  const plan = guardado.leer("frankers-plan", "gratis");
+  $("#latPie").innerHTML = n ? `<span class="avatar">${escaparHTML(n[0].toUpperCase())}</span><span class="lat-cuenta"><b>${escaparHTML(n)}</b><small>${plan === "promax" ? "✨ Pro Max · preguntas ∞" : "Plan gratis"}</small></span><button type="button" class="lat-plan" title="Tu plan">${plan === "promax" ? "✨" : "⬆️ Pro Max"}</button><button type="button" class="lat-cambiar" title="¿No sos vos? Cambiar">¿No sos vos?</button>` : "";
   const cb = $("#latPie .lat-cambiar"); if (cb) cb.onclick = () => pedirNombre(true);
+  const pb = $("#latPie .lat-plan"); if (pb) pb.onclick = () => { pintarPlan(); $("#dlgPlan").showModal(); };
 }
 $("#latNueva").onclick = nuevaCharla;
 $("#btnLimpiar").onclick = nuevaCharla;
@@ -3624,7 +3970,8 @@ if (window.speechSynthesis) speechSynthesis.onvoiceschanged = () => {}; // hace 
 let ocupado = false;
 async function enviar(texto) {
   enSilencio = false; // cuando le hablás, vuelve a contar lo que hace
-  texto = texto.trim(); if (!texto) return;
+  // espacios raros (⠀, espacios invisibles del teclado o del dictado) → espacios normales: si no, leía todo como una sola palabra
+  texto = texto.replace(/[\u2800\u00a0\u2000-\u200b\u202f\u205f\u3000\ufeff]/g, " ").replace(/\s+/g, " ").trim(); if (!texto) return;
   // si todavía está contestando lo anterior, espera un poquito (antes se salteaba tu mensaje, y en la llamada decía "no sé qué decir")
   for (let k = 0; ocupado && k < 150; k++) await new Promise(r => setTimeout(r, 100));
   ocupado = true;
