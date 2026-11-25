@@ -525,6 +525,7 @@
     .plan-neon svg { width: 78%; height: auto; max-height: 38%; margin: auto 0; filter: drop-shadow(0 0 8px rgba(255,130,230,.7)); }
     .plan-neon .pn-nombre { font-family: "Fredoka", sans-serif; font-weight: 700; font-size: clamp(1rem, 1.5vw, 1.3rem); }
     .plan-neon small { color: #eee5ff; font-size: .82rem; margin-top: 6px; line-height: 1.35; }
+    .planes-codigo input { width: min(420px, 90vw); padding: 12px 18px; border-radius: 999px; border: 2px solid #c18bff; background: #120a24; color: #fff; font: inherit; font-size: 1.1rem; text-align: center; letter-spacing: 1px; text-transform: uppercase; }
     .planes-estado { margin: 0; min-height: 1.4em; color: #fff; text-align: center; font-weight: 700; }
     .planes-continuar { width: min(520px, 90%); padding: 16px; border: none; border-radius: 999px; cursor: pointer; font-family: "Fredoka", sans-serif; font-size: clamp(1.3rem, 2.6vw, 2.1rem); color: #fff;
       background: linear-gradient(90deg, #a55cff, #ff6fd8); box-shadow: 0 0 26px rgba(200,100,255,.7); }
@@ -931,13 +932,14 @@
     <div class="planes-cuerpo">
       <button class="planes-cerrar" id="planCerrar" aria-label="Cerrar">✕</button>
       <h2 class="planes-titulo">¿Qué suscripción querés pagar?</h2>
-      <p class="planes-gratis">✨ Por ahora <b>todo es gratis</b>: elegí el que quieras y se activa sin pagar nada.</p>
+      <p class="planes-gratis">🎁 Free es gratis. Para <b>Pro</b> y <b>Pro Max</b> necesitás un <b>código de activación</b>.</p>
       <div class="planes-tarjetas" role="radiogroup">
         <button class="plan-neon" data-plan="gratis" role="radio"><b>Free</b><svg viewBox="0 0 64 64" fill="none" stroke="url(#neonPlan)" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="12" y="26" width="40" height="28" rx="4"/><rect x="9" y="19" width="46" height="9" rx="3"/><path d="M32 19v35M32 19c-4-10-16-10-14-2 1 3 8 3 14 2zM32 19c4-10 16-10 14-2-1 3-8 3-14 2z"/></svg><span class="pn-nombre">Plan gratuito</span><small>Acceso básico • Funciones limitadas</small></button>
         <button class="plan-neon" data-plan="pro" role="radio"><b>Pagar Pro</b><svg viewBox="0 0 64 64" fill="none" stroke="url(#neonPlan)" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M44 8c-12 2-22 12-26 26l12 12c14-4 24-14 26-26 1-6-6-13-12-12z"/><circle cx="40" cy="24" r="5"/><path d="M18 34l-8 2 4-10 10-2M30 46l-2 8 10-4 2-10M16 44c-4 2-6 8-6 10 2 0 8-2 10-6"/></svg><span class="pn-nombre">Plan Pro</span><small>Mayor velocidad • Herramientas avanzadas</small></button>
         <button class="plan-neon" data-plan="promax" role="radio"><b>Pagar Pro Max</b><svg viewBox="0 0 64 64" fill="none" stroke="url(#neonPlan)" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 22l10 12 12-18 12 18 10-12-4 26H14z"/><circle cx="10" cy="20" r="3"/><circle cx="32" cy="13" r="3"/><circle cx="54" cy="20" r="3"/><circle cx="32" cy="36" r="3"/><path d="M14 54h36"/></svg><span class="pn-nombre">Plan Pro Max</span><small>Máximo rendimiento • Todo incluido • Prioridad 24/7</small></button>
         <button class="plan-neon" data-plan="creditos" role="radio"><b>Comprar créditos de uso</b><svg viewBox="0 0 64 64" fill="none" stroke="url(#neonPlan)" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><ellipse cx="32" cy="14" rx="16" ry="6"/><path d="M16 14v8c0 3 7 6 16 6s16-3 16-6v-8M16 22v8c0 3 7 6 16 6s16-3 16-6v-8M16 30v8c0 3 7 6 16 6s16-3 16-6v-8M16 38v8c0 3 7 6 16 6s16-3 16-6v-8"/><path d="M34 10c-3-1-6 0-6 2s6 1 6 3-3 3-6 2M31 8v10"/></svg><span class="pn-nombre">Créditos de uso</span><small>Paga solo por lo que usas • Flexible • Sin suscripción</small></button>
       </div>
+      <div class="planes-codigo" id="planCodigoCaja" hidden><input id="planCodigo" placeholder="Escribí tu código (por ejemplo FRK-MAX-…)" maxlength="20" autocomplete="off" aria-label="Código de activación"></div>
       <p class="planes-estado" id="planEstado" aria-live="polite"></p>
       <button class="planes-continuar" id="planContinuar">Continuar</button>
     </div>
@@ -2018,19 +2020,37 @@ $("#cfRepasar").onclick = async () => {
 
 
 
-/* ---------- TU PLAN (diseño de Franco): Free, Pro, Pro Max o créditos. Por ahora todo gratis, sin pagar nada. ---------- */
+/* ---------- TU PLAN (diseño de Franco): Free gratis; Pro y Pro Max con CÓDIGO DE ACTIVACIÓN ----------
+   Los códigos los tiene solo Franco. Acá NO están los códigos: están "revueltos" (SHA-256), y eso no se puede volver atrás.
+   Si alguien se pone el plan a mano en el navegador sin un código válido, vuelve a Free. */
+const CODIGOS_REVUELTOS = {"pro": ["a156075dc70b309da125ebd14d4339a48671332ddf089b549d33e54163c0a0d2", "7d6016907268c6d2ef982b15c02c3eeb63764f9112efa59f720b227237ea9a9f", "64a02859ff1af2844dad9e424f39954e85bc15e2877674e85679cc2fa9b04a58", "9eaee4afd1d5cb3faa4a904e2c10613139454fa9a8a01a88ac22df06e4bd8072", "acd1fadf6a2e48597661fea94b167cdd016a6eab4610f9e5b9f372c28c117a8d", "7c771a77db6a8207341b9cbdfd069291c2a6290ef4487c4d075d7766fbfb68a6", "28549f1dd5a5135a14d252c27ff4e8bc14d35da553e4f6c970aa6e005f774d3e", "837314c265502079360567a6ef9dcab9021efe63ae90c0529b2b738b402385a3", "a0fcdfeaee18d0078be1c704adfaf2a56587591e261da131790216b01dbfce11", "cf27054dc9990f027d058b64ad9258b64e2977a5a51e4a208b51ce7fe0c1cae4"], "promax": ["e9ff195bd1d408504741d290732aa8e4f99aea539a1f15691a5c3c6f69294c1b", "cee16b304388692d5bc57dacdd5371de3814f2011ee1a79ba96c45a9754e2c8e", "2376cf12e9cf0fa9c6c0c7193b47572f184f33ca9ea4d50bc10bfde07a674c2d", "97c07155f9b27a5a23236dd8cfc103f46f1b5c4ec7914e9a927f3a18f101b46e", "e6604ac3a8e43fc4ea1400bff34145105431ee1ac07074996ec6a0b225aad22e", "27bf1f519e725d55c5798294f734916293632ae355a4f7e5eef2d73acade28de", "d04a66c26ed926b0c336d08918a87a55a68181cb26845de91953266a0ad8db47", "bd35c9ec603b999ad79d84ed56aeff7a0b60c4ee1a8df44565d55eaca122c7dc", "5beb681fd953d3087cbed47b77da8bce63a15111e0ba4823b5471e1b84f9ea9d", "3e1036ab64821fd434c3785b07333b01bda07664367022ab22c35d33c3703cef"]};
 const NOMBRES_PLAN = { gratis: "Plan gratis", pro: "🚀 Pro", promax: "✨ Pro Max" };
+async function revolver(codigo) { const b = await crypto.subtle.digest("SHA-256", new TextEncoder().encode("frankers:" + codigo)); return [...new Uint8Array(b)].map(x => x.toString(16).padStart(2, "0")).join(""); }
+async function planDeCodigo(codigo) { if (!codigo) return null; try { const h = await revolver(codigo.trim().toUpperCase()); for (const [plan, lista] of Object.entries(CODIGOS_REVUELTOS)) if (lista.includes(h)) return plan; } catch {} return null; }
+// Al abrir: si dice Pro o Pro Max pero no tiene un código válido, vuelve a Free
+(async () => { const plan = guardado.leer("frankers-plan", "gratis"); if (plan !== "gratis" && (await planDeCodigo(guardado.leer("frankers-codigo", ""))) !== plan) { guardado.escribir("frankers-plan", "gratis"); if (typeof pintarLateral === "function") pintarLateral(); } })();
 let planElegido = null;
 function pintarPlan() {
   const actual = guardado.leer("frankers-plan", "gratis"); planElegido = planElegido || actual;
   document.querySelectorAll(".plan-neon").forEach(b => { b.classList.toggle("elegido", b.dataset.plan === planElegido); b.setAttribute("aria-checked", b.dataset.plan === planElegido); });
-  $("#planEstado").textContent = planElegido === "creditos" ? "🪙 Créditos de uso: por ahora son infinitos y gratis. ¡Todavía no hace falta comprar!"
-    : planElegido === actual ? `Este es tu plan ahora: ${NOMBRES_PLAN[actual]}.` : `Elegiste ${NOMBRES_PLAN[planElegido]}. Tocá «Continuar» para activarlo (gratis).`;
+  const pideCodigo = (planElegido === "pro" || planElegido === "promax") && planElegido !== actual;
+  $("#planCodigoCaja").hidden = !pideCodigo;
+  $("#planEstado").textContent = planElegido === "creditos" ? "🪙 Comprar créditos: próximamente." : planElegido === actual ? `Este es tu plan ahora: ${NOMBRES_PLAN[actual]}.`
+    : pideCodigo ? `Para activar ${NOMBRES_PLAN[planElegido]}, escribí tu código de activación y tocá «Continuar».` : "Tocá «Continuar» para volver al plan gratis.";
 }
-document.querySelectorAll(".plan-neon").forEach(b => b.onclick = () => { planElegido = b.dataset.plan; pintarPlan(); });
-$("#planContinuar").onclick = () => {
-  if (planElegido && planElegido !== "creditos") { guardado.escribir("frankers-plan", planElegido); actividad("✨", `¡Ahora tenés ${NOMBRES_PLAN[planElegido]}! (gratis por ahora)`); }
-  pintarLateral(); $("#dlgPlan").close(); planElegido = null;
+document.querySelectorAll(".plan-neon").forEach(b => b.onclick = () => { planElegido = b.dataset.plan; pintarPlan(); if (!$("#planCodigoCaja").hidden) $("#planCodigo").focus(); });
+let intentosCodigo = 0;
+$("#planContinuar").onclick = async () => {
+  const actual = guardado.leer("frankers-plan", "gratis");
+  if (planElegido === "gratis") { guardado.escribir("frankers-plan", "gratis"); guardado.escribir("frankers-codigo", ""); }
+  else if ((planElegido === "pro" || planElegido === "promax") && planElegido !== actual) {
+    if (intentosCodigo >= 5) { $("#planEstado").textContent = "⏳ Probaste muchas veces. Esperá un minuto."; return; }
+    const codigo = $("#planCodigo").value.trim().toUpperCase(), plan = await planDeCodigo(codigo);
+    if (plan !== planElegido) { intentosCodigo++; setTimeout(() => intentosCodigo = Math.max(0, intentosCodigo - 1), 60000);
+      $("#planEstado").textContent = plan ? `Ese código es para ${NOMBRES_PLAN[plan]}. Elegí esa tarjeta.` : "❌ Ese código no es válido. Revisalo bien."; return; }
+    guardado.escribir("frankers-plan", plan); guardado.escribir("frankers-codigo", codigo); actividad("✨", `¡Ahora tenés ${NOMBRES_PLAN[plan]}!`);
+  }
+  $("#planCodigo").value = ""; pintarLateral(); $("#dlgPlan").close(); planElegido = null;
 };
 $("#planCerrar").onclick = () => { $("#dlgPlan").close(); planElegido = null; };
 /* ---------- ⚡ MODO TURBO: todo prendido a la vez, lo más rápido posible ----------
