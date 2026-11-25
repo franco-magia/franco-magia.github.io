@@ -475,23 +475,23 @@
     aJSON(exacto = false) {
       if (exacto) return { version: 3, contexto: this.contexto, dimension: this.dimension, palabras: this.palabras.slice(ESPECIALES.length),
         E: empacar32(this.E), capas: this.capas.map(c => ({ entra: c.entra, sale: c.sale, W: empacar32(c.W), b: empacar32(c.b) })),
-        historialError: this.historialError, vistas: this.vistas };
+        historialError: this.historialError, vistas: this.vistas, edicion: this.edicion || 0 };
       return { version: 1, contexto: this.contexto, dimension: this.dimension, palabras: this.palabras.slice(ESPECIALES.length),
         E: empacar(this.E), capas: this.capas.map(c => ({ entra: c.entra, sale: c.sale, W: empacar(c.W), b: empacar(c.b) })),
-        historialError: this.historialError, vistas: this.vistas };
+        historialError: this.historialError, vistas: this.vistas, edicion: this.edicion || 0 };
     }
     // Copia exacta (sin achicar los números), para pasarla a un Web Worker o guardarla en IndexedDB
-    aCrudo() { return { version: 2, contexto: this.contexto, dimension: this.dimension, palabras: this.palabras.slice(ESPECIALES.length), E: this.E.slice(), capas: this.capas.map(c => ({ entra: c.entra, sale: c.sale, W: c.W.slice(), b: c.b.slice() })), historialError: this.historialError.slice(), vistas: this.vistas }; }
+    aCrudo() { return { version: 2, contexto: this.contexto, dimension: this.dimension, palabras: this.palabras.slice(ESPECIALES.length), E: this.E.slice(), capas: this.capas.map(c => ({ entra: c.entra, sale: c.sale, W: c.W.slice(), b: c.b.slice() })), historialError: this.historialError.slice(), vistas: this.vistas, edicion: this.edicion || 0 }; }
     static desdeCrudo(j) {
       const c = new Cerebro({ palabras: j.palabras, contexto: j.contexto, dimension: j.dimension, capas: [] });
       c.E = new Float32Array(j.E); c.capas = j.capas.map(x => ({ entra: x.entra, sale: x.sale, W: new Float32Array(x.W), b: new Float32Array(x.b) }));
-      c.historialError = j.historialError || []; c.vistas = j.vistas || 0; return c;
+      c.historialError = j.historialError || []; c.vistas = j.vistas || 0; c.edicion = j.edicion || 0; return c;
     }
     static desdeJSON(j) {
       const c = new Cerebro({ palabras: j.palabras, contexto: j.contexto, dimension: j.dimension, capas: [] });
       const des = j.version === 3 ? desempacar32 : desempacar;
       c.E = des(j.E); c.capas = j.capas.map(x => ({ entra: x.entra, sale: x.sale, W: des(x.W), b: des(x.b) }));
-      c.historialError = j.historialError || []; c.vistas = j.vistas || 0;
+      c.historialError = j.historialError || []; c.vistas = j.vistas || 0; c.edicion = j.edicion || 0;
       return c;
     }
   }

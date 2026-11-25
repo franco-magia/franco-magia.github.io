@@ -590,6 +590,16 @@
     .cf-dato .n { font-family: "Fredoka", sans-serif; font-size: 1.6rem; display: block; background: var(--degrade); -webkit-background-clip: text; background-clip: text; color: transparent; }
     .cf-dato .l { font-weight: 700; font-size: .9rem; }
     .cf-dato p { margin: 6px 0 0; font-size: .8rem; color: var(--suave); line-height: 1.4; }
+    .cf-palabras { margin-top: 14px; background: var(--tarjeta); border: 1px solid var(--borde); border-radius: 20px; padding: 16px 18px; }
+    .cf-palabras h3 { margin: 0 0 4px; font-family: "Fredoka", sans-serif; } .cf-palabras p { margin: 0 0 10px; color: var(--suave); font-size: .9rem; }
+    .cf-palabras-botones { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 8px; }
+    #cfEstudio.prendido { background: linear-gradient(135deg, #2fbf71, #4fd8ff); color: #08131a; border-color: transparent; font-weight: 800; }
+    .cf-ultimas { list-style: none; margin: 6px 0 0; padding: 0; display: grid; gap: 4px; max-height: 190px; overflow: auto; font-size: .88rem; }
+    .cf-ultimas li { background: rgba(0,0,0,.2); border-radius: 10px; padding: 6px 10px; } .cf-ultimas b { color: var(--celeste); }
+    .dic-lista { list-style: none; padding: 0; margin: 10px 0 0; display: grid; gap: 6px; max-height: 45vh; overflow: auto; }
+    .dic-lista li { display: flex; align-items: center; gap: 8px; background: var(--tarjeta); border: 1px solid var(--borde); border-radius: 12px; padding: 8px 10px; }
+    .dic-lista li span { flex: 1; } .dic-lista li small { color: var(--suave); display: block; }
+    .dic-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; } .dic-chips button { border: 1px solid var(--borde); background: var(--tarjeta); border-radius: 999px; padding: 4px 12px; cursor: pointer; font-size: .85rem; }
     .cf-acciones { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; margin-top: 18px; }
     .cf-accion { background: var(--tarjeta); border: 1px solid var(--borde); border-radius: 20px; padding: 18px; display: flex; flex-direction: column; gap: 8px; }
     .cf-accion .grande { font-size: 2.2rem; line-height: 1; }
@@ -674,7 +684,7 @@
       <button class="boton">¿Qué es un volcán?</button>
       <button class="boton">¿Quién fue San Martín?</button>
       <button class="boton">Contame sobre los planetas</button>
-      <button class="boton">Dibujá un gato violeta en la playa</button>
+      <button class="boton">Dibujá una manzana realista</button>
       <button class="boton">¿Cuánto es 12 x 7?</button>
     </div>
     <div class="escribir" id="formulario">
@@ -747,6 +757,26 @@
         <div class="cf-consejo" id="cfConsejo" data-tour="consejo"></div>
         <div class="cf-curva" data-tour="curva"><h3>📈 ¿Cuánto acierta?</h3><p>La línea sube y baja mientras aprende. <b>Cuanto más arriba, mejor</b>: quiere decir que adivina mejor la palabra que sigue.</p><canvas id="cfGrafico"></canvas></div>
         <div class="cf-datos" id="cfDatos" data-tour="datos"></div>
+        <div class="cf-palabras" data-tour="palabras">
+          <h3>📚 Palabras y significados</h3>
+          <p>Frankers conoce <b id="cfCuantasPalabras">…</b> palabras, pero solo sabe qué significan <b id="cfCuantosSig">…</b>. Acá le podés enseñar.</p>
+          <div class="cf-palabras-botones">
+            <select id="cfCuantasEstudiar" aria-label="Cuántas palabras estudia">
+              <option value="1">1 palabra al azar</option><option value="2">2 palabras</option><option value="3">3 palabras</option><option value="4">4 palabras</option><option value="5" selected>5 palabras</option>
+              <option value="10">10 palabras</option><option value="15">15 palabras</option><option value="20">20 palabras</option><option value="30">30 palabras</option><option value="40">40 palabras</option><option value="50">50 palabras</option>
+              <option value="60">60 palabras</option><option value="70">70 palabras</option><option value="80">80 palabras</option><option value="90">90 palabras</option><option value="100">100 palabras</option><option value="inf">♾️ Infinitas (hasta que toques «Parar»)</option>
+            </select>
+            <button class="boton principal" id="cfEstudiar">📖 ¡Que estudie!</button>
+          </div>
+          <div class="cf-progreso" id="cfProgresoPalabras"><i></i></div>
+          <div class="cf-palabras-botones">
+            <button class="boton" id="cfRepasar">🔁 Repasar las que usa</button>
+            <button class="boton" id="cfAnadir">➕ Añadir palabras del diccionario</button>
+            <button class="boton" id="cfEstudio">📚 Modo estudio: apagado</button>
+          </div>
+          <div class="cf-estado" id="cfEstadoPalabras"></div>
+          <ul class="cf-ultimas" id="cfUltimas"></ul>
+        </div>
         <div class="cf-acciones">
           <div class="cf-accion" data-tour="ensenar"><span class="grande">🏋️</span><h3>Enseñale</h3><p>Frankers lee un montón de textos y practica adivinar la palabra que sigue. Cada vez que se equivoca, sus neuronas se arreglan un poquito. Así aprende.</p>
             <div class="cf-progreso" id="cfProgreso"><i></i></div><div class="cf-estado" id="cfEstado"></div>
@@ -835,6 +865,18 @@
     <div class="bf-cursor" id="bfCursor" aria-hidden="true"><i class="tinte">👆</i></div>
   </dialog>
 
+  <!-- Filtro para que los bordes de los dibujos realistas no parezcan hechos con regla (ruido tipo Perlin) -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="frankersOrganico"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7" result="ruido"/><feDisplacementMap in="SourceGraphic" in2="ruido" scale="7" xChannelSelector="R" yChannelSelector="G"/></filter></svg>
+  <!-- Ventana: añadir palabras del diccionario (Wikcionario) -->
+  <dialog id="dlgDiccionario">
+    <h2>➕ Añadir palabras del diccionario</h2>
+    <p>Buscá cualquier palabra del español (también las nuevas, como «streamear» o «meme») y Frankers la aprende con su significado.</p>
+    <input id="dicTexto" placeholder="Escribí una palabra…" maxlength="40" autocomplete="off" aria-label="Palabra a buscar">
+    <div class="dic-chips" id="dicChips"></div>
+    <ul class="dic-lista" id="dicLista"></ul>
+    <div class="fila-botones"><button class="boton" id="dicCerrar">Cerrar</button></div>
+  </dialog>
+
   <!-- Ventana: buscar charlas -->
   <dialog id="dlgBuscarCharlas">
     <h2>🔎 Buscar charlas</h2>
@@ -884,8 +926,10 @@
 "use strict";
 /* ---------- ACTIVIDAD: lo que Frankers va haciendo (se ve en vivo en el Buscafrankers) ---------- */
 const ACTIVIDAD = [], oyentesActividad = new Set();
+var enSilencio = false; // true mientras repasa sola
 function actividad(icono, texto, haciendo = false) {
-  const a = { icono, texto, hora: Date.now(), haciendo, fin(t, ic) { this.haciendo = false; if (t) this.texto = t; if (ic) this.icono = ic; oyentesActividad.forEach(f => { try { f(this); } catch {} }); } };
+  // Lo que hace sola cuando nadie le habla (repasar, leer) es "en silencio": se anota en la lista, pero no aparece arriba
+  const a = { icono, texto, hora: Date.now(), haciendo, silencioso: enSilencio, fin(t, ic) { this.haciendo = false; if (t) this.texto = t; if (ic) this.icono = ic; oyentesActividad.forEach(f => { try { f(this); } catch {} }); } };
   ACTIVIDAD.push(a); if (ACTIVIDAD.length > 300) ACTIVIDAD.shift();
   oyentesActividad.forEach(f => { try { f(a); } catch {} });
   return a;
@@ -1046,7 +1090,9 @@ async function cargarCerebro() {
   if (!local) try { const s = localStorage.getItem(CLAVE_CEREBRO); if (s) local = JSON.parse(s); } catch {} // (el de antes)
   try { const r = await fetch("cerebro.json?v=" + Date.now(), { cache: "no-store" }); if (r.ok) publicado = await r.json(); } catch {}
   // Usa el que más leyó: el de esta compu o el que publicó Franco
-  const elegido = local && (!publicado || (local.vistas || 0) >= (publicado.vistas || 0)) ? local : publicado;
+  // Si Claude publicó una EDICIÓN nueva (entrenada con charlas nuevas), se usa esa aunque la de esta compu haya leído más
+  const edLocal = (local && local.edicion) || 0, edPublicada = (publicado && publicado.edicion) || 0;
+  const elegido = local && (!publicado || (edLocal > edPublicada) || (edLocal === edPublicada && (local.vistas || 0) >= (publicado.vistas || 0))) ? local : publicado;
   cerebro = !elegido ? new Cerebro({ palabras: [], capas: [64] }) : elegido.version === 2 ? Cerebro.desdeCrudo(elegido) : Cerebro.desdeJSON(elegido);
   paso.fin(`Cerebro despierto: ${cerebro.palabras.length} palabras, ${cerebro.neuronas.join(" + ")} neuronas, ${cerebro.vistas.toLocaleString("es-AR")} palabras leídas`, "🧠");
   if (dlgCerebro.open) pintarCerebro();
@@ -1123,6 +1169,11 @@ function hablarConCerebro(mensaje) {
     const frase = unir(tk); if (!frase) continue;
     const g = gramatica ? gramatica.revisar(tk, cerebro.indice) : { ok: true };
     if (!g.ok || revisar(frase).problema || esFalso(frase)) { tiradas++; continue; }
+    // No mezclar temas: si la frase habla de algo que leyó en Wikipedia (o de un "X es un Y") y vos no lo nombraste, la tira
+    const nf = normalizar(frase), nm = normalizar(mensaje);
+    if (Object.keys(aprendido.temas || {}).some(k => k.length > 3 && nf.includes(k) && !nm.includes(k))) { tiradas++; continue; }
+    const comparten = nm.split(" ").some(w => w.length >= 4 && nf.includes(w));
+    if (/\b(es|son|fue|era)\s+(un|una|el|la)\b/.test(nf) && !comparten && !/\b(que|quien|cual|como)\b/.test(nm)) { tiradas++; continue; } // "San Martín es un insecto" a un "hola": no
     const seguridad = cerebro.puntuar(inicio, frase); // qué tan segura está de TODA la frase
     const puntos = seguridad * 3 + (gramatica ? gramatica.relacion(tk, tm) * 0.4 : 0);
     if (!mejor || puntos > mejor.puntos) mejor = { frase, puntos, seguridad };
@@ -1169,12 +1220,13 @@ async function buscarEnWiktionary(palabra, vuelta = 0) {
   const sin = (es.match(/\{\{sin[oó]nimos?\|(?:leng=es\|)?([^|}=]+)/i) || [])[1];
   return { tipo: tipo ? tipo[1] : "s", genero: tipo && tipo[2], significado: def ? def.split(/(?<=\.)\s/)[0].slice(0, 160) : null, sinonimo: sin && /^[a-záéíóúüñ ]{2,30}$/i.test(sin.trim()) ? sin.trim() : null };
 }
-async function aprenderPalabra(w) {
+async function aprenderPalabra(w, callado = false) {
+  const quieta = repasando || callado; // estudiando: sin caras ni carteles
   const paso = actividad("📖", `No conocía «${w}»: la busco en Wiktionary…`, true);
-  if (!repasando) sentir("buscando");
+  if (!quieta) sentir("buscando");
   try {
     const r = await buscarEnWiktionary(w);
-    if (!r || (r.significado && revisar(r.significado).problema)) { paso.fin(`«${w}» no está en el diccionario (¿está bien escrita?)`, "🤷"); if (!repasando) { dejarDeSentir("buscando"); sentir("confundida"); } return false; }
+    if (!r || (r.significado && revisar(r.significado).problema)) { paso.fin(`«${w}» no está en el diccionario (¿está bien escrita?)`, "🤷"); if (!quieta) { dejarDeSentir("buscando"); sentir("confundida"); } return false; }
     const entrada = r.tipo === "s" ? ["s", r.genero || "m"] : [r.tipo];
     aprendido.palabras[w] = entrada; if (r.significado) aprendido.significados[w] = r.significado;
     if (r.sinonimo && !revisar(r.sinonimo).problema) aprendido.sinonimos = { ...(aprendido.sinonimos || {}), [w]: r.sinonimo };
@@ -1182,7 +1234,7 @@ async function aprenderPalabra(w) {
     if (!cerebro.indice.has(w)) cerebro.agregarPalabras([w]);
     if (r.significado) cerebro.entrenar(conRepaso(Array(6).fill(FrankersCerebro.charla(`qué significa ${w}`, `"${w}" significa: ${r.significado}`))), { tasa: 0.03 });
     guardarAprendido(); guardarCerebro(); marcarCambio();
-    if (!repasando) { dejarDeSentir("buscando"); sentir("aprendiendo"); } else emocion = "alegre";
+    if (!quieta) { dejarDeSentir("buscando"); sentir("aprendiendo"); }
     paso.fin(`Aprendí «${w}»${r.deForma ? ` (viene de «${r.deForma}»)` : ""}: ${gramatica.tipos[r.tipo] || r.tipo}${r.significado ? " — " + r.significado : ""}`, "📖");
     return true;
   } catch { paso.fin(`No pude buscar «${w}» (¿sin internet?)`, "⚠️"); return false; }
@@ -1234,7 +1286,7 @@ async function buscarLoQueNoSabe(texto) {
 let ultimaLectura = 0, ultimaAccion = Date.now(), repasando = false, hayCambios = false, ultimaPublicacion = Date.now();
 const marcarCambio = () => { hayCambios = true; };
 ["keydown", "pointerdown", "touchstart"].forEach(ev => addEventListener(ev, () => { ultimaAccion = Date.now(); }, { passive: true }));
-function mostrarRepasando(que) { const r = $("#repasando"); if (!r) return; r.hidden = !que; if (que) r.textContent = "📚 " + que; }
+function mostrarRepasando(que) { const r = $("#repasando"); if (r) r.hidden = true; } // repasa en silencio: no muestra nada (así la pantalla no se mueve)
 async function leerAlgoNuevo() {
   const azar = Math.random();
   try {
@@ -1263,7 +1315,7 @@ async function leerAlgoNuevo() {
 }
 async function repasoSolo() {
   if (repasando || !cerebro || !gramatica || entrenando || ocupado || enLlamada || document.hidden || Date.now() - ultimaAccion < 1000) return;
-  repasando = true;
+  repasando = true; enSilencio = true;
   try {
     const textos = [...await cargarTextosGrandes(), ...aprendidoAca];
     let vueltas = 0;
@@ -1280,12 +1332,17 @@ async function repasoSolo() {
       await new Promise(r => setTimeout(r, document.querySelector("dialog[open]") ? 60 : 30));
     }
     guardarCerebro(); marcarCambio();
-  } finally { repasando = false; mostrarRepasando(null); }
+  } finally { repasando = false; enSilencio = false; mostrarRepasando(null); }
 }
 setInterval(repasoSolo, 250); // apenas pasa 1 segundo sin que le hables, se pone a aprender
+// ¿Claude publicó un cerebro de una edición más nueva que el de esta compu? Entonces no lo pisamos.
+async function hayEdicionMasNueva() {
+  try { const r = await fetch("edicion.json?v=" + Date.now(), { cache: "no-store" }); if (!r.ok) return false; const e = (await r.json()).edicion || 0; return e > (cerebro.edicion || 0); } catch { return false; }
+}
 // Modo creador: cada 10 minutos, si aprendió algo, lo publica solo para todo el mundo
 setInterval(async () => {
   if (!token || !hayCambios || Date.now() - ultimaPublicacion < 600000 || !cerebro) return;
+  if (await hayEdicionMasNueva()) { ultimaPublicacion = Date.now(); actividad("🆕", "Hay un cerebro nuevo publicado: recargá la página (Ctrl + F5) para usarlo. No pisé el nuevo."); return; }
   hayCambios = false; ultimaPublicacion = Date.now();
   const a = await subirAGitHub("frankers/aprendido.json", JSON.stringify(aprendido), "Frankers: lo que aprendió buscando");
   const c = await subirAGitHub("frankers/cerebro.json", JSON.stringify(cerebro.aJSON(true)), "Frankers: cerebro (" + cerebro.vistas + " palabras leídas)");
@@ -1769,6 +1826,129 @@ async function probarCerebro() {
   $("#cerebroFrases").innerHTML = "";
   for (let k = 0; k < 3; k++) { const li = document.createElement("li"); li.textContent = hablarConCerebro(q); $("#cerebroFrases").appendChild(li); }
 }
+
+/* ---------- PALABRAS: repasar significados, añadir del diccionario y modo estudio ---------- */
+const cuantosSignificados = () => new Set([...Object.keys(gramatica?.significados || {}), ...Object.keys(aprendido.significados || {})]).size;
+function pintarPalabras() {
+  if (!cerebro) return;
+  $("#cfCuantasPalabras").textContent = (gramatica ? gramatica.base.size : cerebro.palabras.length).toLocaleString("es-AR");
+  $("#cfCuantosSig").textContent = cuantosSignificados().toLocaleString("es-AR");
+}
+function anotarPalabra(w) {
+  const sig = (gramatica && gramatica.significados[w]) || aprendido.significados[w]; if (!sig) return;
+  const li = document.createElement("li"); li.innerHTML = "<b></b>: <span></span>"; li.querySelector("b").textContent = w; li.querySelector("span").textContent = sig;
+  const ul = $("#cfUltimas"); ul.prepend(li); while (ul.children.length > 30) ul.lastChild.remove();
+}
+// Las palabras que usa y todavía no sabe qué significan (primero las más comunes de sus charlas)
+function palabrasSinSignificado(cuantas = 40, delDiccionario = false) {
+  const lista = delDiccionario && gramatica ? [...gramatica.base.keys()] : cerebro.palabras;
+  const out = [];
+  for (const w of (delDiccionario ? lista.sort(() => Math.random() - 0.5) : lista)) {
+    if (out.length >= cuantas) break;
+    if (!/^[a-záéíóúüñ]{3,}$/.test(w) || (gramatica && gramatica.significados[w]) || aprendido.significados[w] || probadas.has(w) || revisar(w).problema) continue;
+    out.push(w);
+  }
+  return out;
+}
+const probadas = new Set(); // las que ya buscó (aunque no las encontrara), para no buscarlas de nuevo
+let repasandoPalabras = false;
+async function estudiarPalabra(w) {
+  probadas.add(w);
+  const ok = await aprenderPalabra(w, true);
+  if (ok) { anotarPalabra(w); pintarPalabras(); }
+  return ok;
+}
+$("#cfRepasar").onclick = async () => {
+  if (repasandoPalabras) { repasandoPalabras = false; return; }
+  repasandoPalabras = true; $("#cfRepasar").textContent = "⏹ Parar de repasar";
+  const lista = palabrasSinSignificado(40); let aprendidas = 0, k = 0;
+  for (const w of lista) {
+    if (!repasandoPalabras) break;
+    k++; $("#cfEstadoPalabras").textContent = `🔁 Buscando qué significa «${w}»… (${k} de ${lista.length}, ya aprendió ${aprendidas})`;
+    if (await estudiarPalabra(w)) aprendidas++;
+    await esperar(400);
+  }
+  $("#cfEstadoPalabras").textContent = lista.length ? `✅ Repasó ${k} palabras y aprendió el significado de ${aprendidas}.` : "✅ ¡Ya sabe qué significan todas las palabras que usa!";
+  repasandoPalabras = false; $("#cfRepasar").textContent = "🔁 Repasar las que usa"; pintarCerebroFacil();
+};
+
+// "¡Que estudie!": lee N palabras al azar del diccionario con su significado, y las repasa varias veces hasta entenderlas
+let estudiandoPalabras = false;
+$("#cfEstudiar").onclick = async () => {
+  if (estudiandoPalabras) { estudiandoPalabras = false; $("#cfEstudiar").textContent = "⏹ Parando…"; return; }
+  const elegido = $("#cfCuantasEstudiar").value, total = elegido === "inf" ? Infinity : +elegido;
+  estudiandoPalabras = true; $("#cfEstudiar").textContent = "⏹ Parar"; $("#cfProgresoPalabras").classList.add("si");
+  const barra = $("#cfProgresoPalabras i"); barra.style.width = "0%";
+  let leidas = 0, aprendidas = 0, grupo = [];
+  // Repasa un grupito de palabras hasta que las entiende (o hasta 8 vueltas)
+  const repasarGrupo = async () => {
+    if (!grupo.length) return;
+    const pares = grupo.map(w => FrankersCerebro.charla(`qué significa ${w}`, `"${w}" significa: ${(gramatica && gramatica.significados[w]) || aprendido.significados[w]}`));
+    for (let vuelta = 1; vuelta <= 8 && estudiandoPalabras; vuelta++) {
+      cerebro.entrenar(conRepaso(pares, pares.length), { tasa: 0.02, hasta: Date.now() + 80 });
+      const err = cerebro.medirError(pares), entiende = Math.round(Math.exp(-err) * 100);
+      $("#cfEstadoPalabras").textContent = `🔁 Repasando ${grupo.length === 1 ? "«" + grupo[0] + "»" : grupo.length + " palabras"} (vuelta ${vuelta}): ya las entiende un ${entiende} %`;
+      await esperar(120);
+      if (err < 0.6) break; // ¡ya las entiende!
+    }
+    guardarCerebro(); marcarCambio(); grupo = [];
+  };
+  while (estudiandoPalabras && leidas < total) {
+    const [w] = palabrasSinSignificado(1, true); if (!w) break;
+    leidas++;
+    $("#cfEstadoPalabras").textContent = `📖 Leyendo «${w}» y su significado… (${leidas}${isFinite(total) ? " de " + total : ""}, aprendió ${aprendidas})`;
+    if (await estudiarPalabra(w)) { aprendidas++; grupo.push(w); }
+    if (grupo.length >= 5) await repasarGrupo();
+    barra.style.width = isFinite(total) ? (leidas / total * 100).toFixed(1) + "%" : ((leidas % 20) * 5) + "%";
+    await esperar(300);
+  }
+  await repasarGrupo();
+  $("#cfEstadoPalabras").textContent = `✅ Leyó ${leidas} palabra${leidas === 1 ? "" : "s"}, aprendió el significado de ${aprendidas} y las repasó hasta entenderlas.`;
+  estudiandoPalabras = false; $("#cfEstudiar").textContent = "📖 ¡Que estudie!"; $("#cfProgresoPalabras").classList.remove("si"); pintarCerebroFacil();
+};
+// Modo estudio: mientras la página está abierta, estudia una palabra del diccionario cada pocos segundos, en silencio
+let estudioPrendido = guardado.leer("frankers-estudio", false), estudiando = false;
+function pintarEstudio() { const b = $("#cfEstudio"); b.textContent = estudioPrendido ? "📚 Modo estudio: prendido" : "📚 Modo estudio: apagado"; b.classList.toggle("prendido", estudioPrendido); }
+$("#cfEstudio").onclick = () => { estudioPrendido = !estudioPrendido; guardado.escribir("frankers-estudio", estudioPrendido); pintarEstudio();
+  $("#cfEstadoPalabras").textContent = estudioPrendido ? "📚 Modo estudio prendido: mientras tengas la página abierta, estudia una palabra del diccionario cada 4 segundos." : "📚 Modo estudio apagado."; };
+setInterval(async () => {
+  if (!estudioPrendido || estudiando || !cerebro || !gramatica || ocupado || enLlamada || entrenando || repasandoPalabras || estudiandoPalabras || document.hidden) return;
+  estudiando = true;
+  try { const [w] = palabrasSinSignificado(1, true); if (w) { const prev = enSilencio; enSilencio = true; try { await estudiarPalabra(w); } finally { enSilencio = prev; } } }
+  finally { estudiando = false; }
+}, 4000);
+setTimeout(pintarEstudio, 0);
+// Añadir palabras del diccionario: buscador con Wikcionario
+const dlgDiccionario = $("#dlgDiccionario");
+const PALABRAS_DE_HOY = ["streaming", "streamer", "meme", "youtuber", "gamer", "viral", "emoji", "influencer", "videollamada", "tutorial", "selfie", "hashtag", "wifi", "app", "spoiler", "podcast"];
+$("#dicChips").innerHTML = ""; for (const w of PALABRAS_DE_HOY) { const b = document.createElement("button"); b.textContent = w; b.onclick = () => { $("#dicTexto").value = w; buscarEnDiccionario(w); }; $("#dicChips").appendChild(b); }
+let dicPedido = 0;
+async function buscarEnDiccionario(q) {
+  q = q.trim().toLowerCase(); const ul = $("#dicLista"); if (!q) { ul.innerHTML = ""; return; }
+  if (revisar(q).problema) { ul.innerHTML = "<li>🛡️ Esa palabra no la busco.</li>"; return; }
+  const mio = ++dicPedido; ul.innerHTML = "<li>🔎 Buscando en Wikcionario…</li>";
+  let palabras = [];
+  try {
+    const r = await fetch(`https://es.wiktionary.org/w/api.php?action=opensearch&format=json&origin=*&limit=12&namespace=0&search=${encodeURIComponent(q)}`).then(x => x.json());
+    palabras = (r[1] || []).filter(w => /^[a-záéíóúüñ ]{2,30}$/i.test(w) && !revisar(w).problema);
+  } catch { if (mio === dicPedido) ul.innerHTML = "<li>⚠️ No pude buscar (¿sin internet?)</li>"; return; }
+  if (mio !== dicPedido) return;
+  if (!palabras.length) { ul.innerHTML = "<li>🤷 No encontré esa palabra en Wikcionario.</li>"; return; }
+  ul.innerHTML = "";
+  for (const w of palabras) {
+    const li = document.createElement("li"), sig = (gramatica && gramatica.significados[w.toLowerCase()]) || aprendido.significados[w.toLowerCase()];
+    li.innerHTML = `<span><b></b><small></small></span>`; li.querySelector("b").textContent = w; li.querySelector("small").textContent = sig ? "✅ Ya la sabe: " + sig : "Todavía no la sabe";
+    if (!sig) { const b = document.createElement("button"); b.className = "boton principal"; b.textContent = "➕ Añadir";
+      b.onclick = async () => { b.disabled = true; b.textContent = "Aprendiendo…"; const ok = await estudiarPalabra(w.toLowerCase());
+        li.querySelector("small").textContent = ok ? "✅ ¡Aprendida! " + (aprendido.significados[w.toLowerCase()] || "") : "😕 No encontré su significado"; b.remove(); };
+      li.appendChild(b); }
+    ul.appendChild(li);
+  }
+}
+let dicEspera = null;
+$("#dicTexto").oninput = () => { clearTimeout(dicEspera); dicEspera = setTimeout(() => buscarEnDiccionario($("#dicTexto").value), 350); };
+$("#cfAnadir").onclick = () => { dlgDiccionario.showModal(); $("#dicTexto").focus(); };
+$("#dicCerrar").onclick = () => { dlgDiccionario.close(); pintarPalabras(); };
 /* ---------- CEREBRO FÁCIL: el dibujo de las neuronas, el nivel, botones grandes y un tour que explica todo ---------- */
 const NIVELES = [[0, "Bebé", "🐣"], [5e4, "Nene", "👶"], [25e4, "Aprendiz", "✏️"], [1e6, "Estudiante", "📒"], [3e6, "Lector", "📚"], [8e6, "Inteligente", "💡"], [2e7, "Sabio", "🦉"], [5e7, "Genio", "🧠"], [1e8, "Súper genio", "🚀"]];
 function pintarCerebroFacil() {
@@ -1786,9 +1966,9 @@ function pintarCerebroFacil() {
     [n(cerebro.tamano), "🔗 Conexiones", "Los cables entre neuronas. Cada uno tiene un número que cambia cuando aprende."],
     [n(cerebro.vistas), "📖 Palabras leídas", "Todo lo que leyó desde que nació. ¡Más que muchos libros!"],
     [n(Object.keys(aprendido.temas || {}).length), "🌍 Temas de Wikipedia", "Cosas que buscó y se guardó para siempre."],
-    [n(Object.keys(gramatica?.significados || {}).length), "📚 Significados", "Palabras que sabe qué quieren decir (del diccionario)."],
+    [n(cuantosSignificados()), "📚 Significados", "Palabras que sabe qué quieren decir (del diccionario)."],
   ];
-  consejoCerebro(); setTimeout(dibujarCurvaFacil, 0);
+  consejoCerebro(); setTimeout(dibujarCurvaFacil, 0); pintarPalabras();
   $("#cfDatos").innerHTML = datos.map(([num, t, p]) => `<div class="cf-dato"><span class="n">${num}</span><span class="l">${t}</span><p>${p}</p></div>`).join("");
 }
 function estadoCerebro(txt, clase = "") { for (const id of ["#cerebroEstado", "#cfEstado"]) { const e = $(id); if (e) { e.className = (id === "#cfEstado" ? "cf-estado " : "estado ") + clase; e.textContent = txt; } } }
@@ -1961,6 +2141,7 @@ const PASOS_TOUR = [
   ["ensenar", "🏋️ Enseñale", "Este es el botón más importante. Frankers lee textos y practica. Cada vez que se equivoca, arregla un poquito sus neuronas. ¡Así aprende!"],
   ["crecer", "🧩 Hacela más grande", "Le agrega neuronas. Con más neuronas puede aprender más, pero después hay que enseñarle para que las use."],
   ["probar", "💬 Probá cómo habla", "Escribile algo y mirá qué frases inventa ella sola, palabra por palabra."],
+  ["palabras", "📚 Palabras y significados", "Elegí cuántas palabras con la flechita y tocá «¡Que estudie!»: lee palabras al azar con su significado y las repasa hasta entenderlas. «Repasar» busca las que ya usa, «Añadir» te deja buscar cualquiera, y el «Modo estudio» la pone a estudiar sola."],
   ["leer", "📄 Dale algo para leer", "Pegá un cuento o un texto y lo aprende. Si tiene malas palabras o cosas falsas, no lo lee."],
 ];
 let tourPaso = -1, tourEls = null;
@@ -2043,6 +2224,7 @@ $("#cerebroArchivo").onchange = async (e) => { const f = e.target.files[0]; e.ta
 // Modo creador: publicar el cerebro para que todos lo tengan
 $("#btnPublicarCerebro").onclick = async () => {
   const estado = $("#cerebroEstado"); estado.className = "estado"; estado.textContent = "Publicando el cerebro… 🌎";
+  if (await hayEdicionMasNueva()) { estadoCerebro("🆕 Hay un cerebro más nuevo publicado. Recargá la página (Ctrl + F5) antes de publicar, así no lo pisás.", "mal"); return; }
   const r = await subirAGitHub("frankers/cerebro.json", JSON.stringify(cerebro.aJSON(true)), "Frankers: cerebro nuevo (" + cerebro.vistas + " palabras leídas)");
   estado.className = "estado " + (r.ok ? "ok" : "mal"); estado.textContent = r.ok ? "¡Listo! En un ratito todos van a tener este cerebro. 🌎" : r.motivo;
   actividad("🌎", r.ok ? "Publiqué mi cerebro para todos" : "No pude publicar el cerebro");
@@ -2062,7 +2244,7 @@ function pintarActividad(caja) {
 }
 oyentesActividad.add(() => {
   for (const caja of document.querySelectorAll(".lista-actividad")) if (caja.offsetParent) pintarActividad(caja);
-  const u = ACTIVIDAD[ACTIVIDAD.length - 1]; if (u) $("#actividadAhora").textContent = (u.haciendo ? "⏳ " : u.icono + " ") + u.texto;
+  const u = [...ACTIVIDAD].reverse().find(x => !x.silencioso); if (u) $("#actividadAhora").textContent = (u.haciendo ? "⏳ " : u.icono + " ") + u.texto;
 });
 
 /* ---------- BUSCAFRANKERS: buscar en Wikipedia y que Frankers lo lea ---------- */
@@ -2476,6 +2658,26 @@ const OBJETOS = {
     rect(c, x - s * .6, y - s * .42, s * 1.2, s * .26, col, s * .08); circulo(c, x + s * .55, y - s * .32, s * .04, "#ffe066");
     for (const dx of [-.33, .33]) { circulo(c, x + dx * s, y - s * .14, s * .13, "#222"); circulo(c, x + dx * s, y - s * .14, s * .06, "#bbb"); }
   } },
+  manzana: { nombre: "manzanas", palabras: ["manzana", "manzanas", "fruta"], zona: "suelo", tam: 110, color: "#e0262e", dibujar(c, x, y, s, col, r = Math.random) {
+    // forma irregular: más ancha arriba, un lado más alto, hoyito arriba (nada de círculos perfectos)
+    const w = s * .5, h = s * .9, cy = y - h * .5, d = () => (r() - .5) * s * .04, ladoAlto = (r() - .5) * s * .06;
+    c.fillStyle = col; c.beginPath();
+    c.moveTo(x, cy - h * .36);
+    c.bezierCurveTo(x - w * .35 + d(), cy - h * .55 + ladoAlto, x - w * 1.05 + d(), cy - h * .48, x - w * 1.0 + d(), cy - h * .02);
+    c.bezierCurveTo(x - w * .98 + d(), cy + h * .38, x - w * .5 + d(), cy + h * .52, x - w * .1, cy + h * .46);
+    c.quadraticCurveTo(x, cy + h * .42, x + w * .1, cy + h * .46);
+    c.bezierCurveTo(x + w * .5 + d(), cy + h * .52, x + w * .98 + d(), cy + h * .36, x + w * 1.0 + d(), cy - h * .04);
+    c.bezierCurveTo(x + w * 1.02 + d(), cy - h * .5 - ladoAlto, x + w * .35 + d(), cy - h * .56 - ladoAlto, x, cy - h * .36);
+    c.fill();
+    c.strokeStyle = "#5a3518"; c.lineWidth = s * .045; c.lineCap = "round"; c.beginPath(); c.moveTo(x, cy - h * .34); c.quadraticCurveTo(x + s * .02, cy - h * .52, x + s * .1, cy - h * .62); c.stroke();
+    c.fillStyle = "#3fa83a"; c.beginPath(); c.moveTo(x + s * .08, cy - h * .56); c.quadraticCurveTo(x + s * .3, cy - h * .78, x + s * .42, cy - h * .6); c.quadraticCurveTo(x + s * .25, cy - h * .48, x + s * .08, cy - h * .56); c.fill();
+  } },
+  pelota: { nombre: "pelotas", palabras: ["pelota", "pelotas", "balon"], zona: "suelo", tam: 80, color: "#f7f7ff", dibujar(c, x, y, s, col, r = Math.random) {
+    const R = s * .42, cy = y - R;
+    circulo(c, x, cy, R, col);
+    c.fillStyle = "#1d1b2e"; const p = []; for (let i = 0; i < 5; i++) { const a = -Math.PI / 2 + i * Math.PI * 2 / 5; p.push([x + Math.cos(a) * R * .3, cy + Math.sin(a) * R * .3]); } poligono(c, p, "#1d1b2e");
+    for (let i = 0; i < 5; i++) { const a = -Math.PI / 2 + i * Math.PI * 2 / 5 + Math.PI / 5; elipse(c, x + Math.cos(a) * R * .8, cy + Math.sin(a) * R * .8, R * .2, R * .14, "#1d1b2e", a); }
+  } },
   robot: { nombre: "robots", palabras: ["robot", "robots", "androide"], zona: "suelo", tam: 115, color: "#9aa0ad", dibujar(c, x, y, s, col) {
     rect(c, x - s * .17, y - s * .3, s * .12, s * .3, tono(col, -.2), s * .02); rect(c, x + s * .05, y - s * .3, s * .12, s * .3, tono(col, -.2), s * .02);
     rect(c, x - s * .4, y - s * .7, s * .1, s * .32, tono(col, -.15), s * .04); rect(c, x + s * .3, y - s * .7, s * .1, s * .32, tono(col, -.15), s * .04);
@@ -2494,7 +2696,7 @@ const COLORES = {
 };
 const NUMEROS = { un: 1, una: 1, uno: 1, dos: 2, tres: 3, cuatro: 4, cinco: 5, seis: 6, muchos: 5, muchas: 5, varios: 3, varias: 3 };
 const ESCENAS = { noche: "noche", nocturno: "noche", oscuro: "noche", playa: "mar", mar: "mar", oceano: "mar", agua: "mar", lago: "mar", espacio: "espacio", universo: "espacio", galaxia: "espacio", nieve: "nieve", invierno: "nieve", nevando: "nieve", dia: "dia", campo: "dia", parque: "dia" };
-const RELLENO = new Set("el la los las lo de del al a en con y e o u que muy un una por favor me mi tu su sobre arriba abajo lado cielo fondo paisaje tarde volando jugando sentado sentada parado feliz contento contenta grande gigante enorme chico chica chiquito chiquita pequeno pequena lindo linda hermoso hermosa bonito bonita super re mas entre cerca lejos frente detras adelante atras derecha izquierda medio centro costado hay esta estan como color hace haz haceme dibujo dibujame imagen frankers algo otra otro".split(" "));
+const RELLENO = new Set("realista realistas real hiperrealista simple el la los las lo de del al a en con y e o u que muy un una por favor me mi tu su sobre arriba abajo lado cielo fondo paisaje tarde volando jugando sentado sentada parado feliz contento contenta grande gigante enorme chico chica chiquito chiquita pequeno pequena lindo linda hermoso hermosa bonito bonita super re mas entre cerca lejos frente detras adelante atras derecha izquierda medio centro costado hay esta estan como color hace haz haceme dibujo dibujame imagen frankers algo otra otro".split(" "));
 function singular(w) { return [w, w.replace(/es$/, ""), w.replace(/s$/, "")]; }
 function buscarObjeto(w) {
   for (const forma of singular(w)) for (const [k, o] of Object.entries(OBJETOS)) if (o.palabras.includes(forma)) return k;
@@ -2522,9 +2724,101 @@ function planearDibujo(pedido) {
   if (items.some(i => i.tipo === "luna") && !items.some(i => i.tipo === "sol")) escena.noche = true;
   return { items, escena, desconocidas, hayEscena: Object.keys(escena).length > 0 };
 }
+/* MODO REALISTA: las técnicas de dibujo que le enseñó Franco. Frankers no tiene dibujos guardados:
+   inventa cada uno con formas, y le aplica estas reglas a CUALQUIER cosa que dibuje.
+   (Los números son los de la lista de técnicas de Franco.) */
+function siluetaDe(capa) { // copia de la forma, toda de un color (sirve para recortes y bordes)
+  const m = document.createElement("canvas"); m.width = capa.width; m.height = capa.height; const g = m.getContext("2d");
+  g.drawImage(capa, 0, 0); g.globalCompositeOperation = "source-in"; g.fillStyle = "#000"; g.fillRect(0, 0, m.width, m.height); return m;
+}
+function dibujarRealista(c, o, x, y, s, col, r, enSuelo) {
+  const W = c.canvas.width, H = c.canvas.height, nueva = () => { const k = document.createElement("canvas"); k.width = W; k.height = H; return k; };
+  const capa = nueva(), g = capa.getContext("2d");
+  const cx = x - s * .02, cy = enSuelo ? y - s * .45 : y, R = s * .55, luzX = cx - R * .45, luzY = cy - R * .5; // la luz viene de arriba a la izquierda
+  // 1, 13) contorno orgánico: la forma se deforma un poquito con ruido (nada de regla ni círculos perfectos)
+  o.dibujar(g, x, y, s, col, r);
+  try { const d = nueva(), dg = d.getContext("2d"); dg.filter = "url(#frankersOrganico)"; dg.drawImage(capa, 0, 0); if (dg.getImageData(cx | 0, cy | 0, 1, 1).data[3]) { g.clearRect(0, 0, W, H); g.drawImage(d, 0, 0); } } catch {}
+  const forma = siluetaDe(capa);
+  // 28, 29, 31) sombras en el piso: grande, cálida y suave, corrida lejos de la luz; de contacto, oscura; y el color que rebota tiñe el piso
+  if (enSuelo) {
+    const sombra = (dx, ancho, alto, colores) => { c.save(); c.translate(x + dx, y + s * .01); c.scale(1, alto / ancho); const sg = c.createRadialGradient(0, 0, 0, 0, 0, ancho);
+      colores.forEach(([p, cc]) => sg.addColorStop(p, cc)); c.fillStyle = sg; c.beginPath(); c.arc(0, 0, ancho, 0, Math.PI * 2); c.fill(); c.restore(); };
+    sombra(s * .22, s * .85, s * .16, [[0, "rgba(40,20,30,.42)"], [.5, "rgba(40,20,30,.18)"], [1, "rgba(40,20,30,0)"]]);
+    sombra(s * .04, s * .42, s * .06, [[0, "rgba(10,4,12,.75)"], [1, "rgba(10,4,12,0)"]]);
+    sombra(-s * .05, s * .6, s * .12, [[0, col + "40"], [1, col + "00"]]);
+  }
+  g.save(); g.globalCompositeOperation = "source-atop"; // 3) todo lo que sigue queda ADENTRO de la forma
+  // 5) degradado radial con el centro corrido hacia la luz, con muchas paradas
+  let gr = g.createRadialGradient(luzX, luzY, R * .05, cx + R * .1, cy + R * .1, R * 1.35);
+  [[0, "rgba(255,240,220,.35)"], [.25, "rgba(255,200,170,.12)"], [.55, "rgba(0,0,0,0)"], [.8, "rgba(40,10,60,.18)"], [1, "rgba(20,5,40,.4)"]].forEach(([p, cc]) => gr.addColorStop(p, cc));
+  g.fillStyle = gr; g.fillRect(0, 0, W, H);
+  // 15) bandas anchas difuminadas (veteado de fondo)
+  g.filter = `blur(${Math.max(2, s * .03)}px)`;
+  for (let k = 0; k < 6; k++) { const a = (r() - .5) * 1.2; g.strokeStyle = `rgba(${r() < .5 ? "120,20,30" : "255,190,80"},${.08 + r() * .08})`; g.lineWidth = s * (.04 + r() * .05);
+    g.beginPath(); g.moveTo(cx + Math.sin(a) * R * .2 + (r() - .5) * R, cy - R); g.quadraticCurveTo(cx + (r() - .5) * R * 1.4, cy, cx + (r() - .5) * R, cy + R); g.stroke(); }
+  // 11, 12, 14) rayitas que siguen los "meridianos" de la forma, cortadas, de grosor variable, apenas desenfocadas (debajo de la piel)
+  g.filter = "blur(0.6px)";
+  const esFruta = o === OBJETOS.manzana; // las rayas de cáscara son de las frutas; a lo demás, rayitas cortas
+  for (let k = 0; k < (esFruta ? 70 : 0); k++) {
+    const lon = (r() - .5) * Math.PI * .95, desde = -1 + r() * .6, hasta = desde + .3 + r() * 1.1, pasos = 8;
+    g.strokeStyle = r() < .6 ? `rgba(90,10,25,${.12 + r() * .2})` : `rgba(255,150,60,${.08 + r() * .14})`; g.lineWidth = .6 + r() * s * .012;
+    g.beginPath();
+    for (let q = 0; q <= pasos; q++) { const lat = (desde + (hasta - desde) * q / pasos) * Math.PI / 2, px = cx + Math.sin(lon) * Math.cos(lat) * R * .95, py = cy + Math.sin(lat) * R * 1.05;
+      q ? g.lineTo(px + (r() - .5) * 1.2, py) : g.moveTo(px, py); }
+    g.stroke();
+  }
+  if (!esFruta) for (let k = 0; k < 160; k++) { const a = r() * Math.PI * 2, d = Math.sqrt(r()) * R * 1.2, px = cx + Math.cos(a) * d, py = cy + Math.sin(a) * d, l = s * (.03 + r() * .06);
+    g.strokeStyle = r() < .55 ? `rgba(40,20,30,${.06 + r() * .1})` : `rgba(255,240,200,${.05 + r() * .1})`; g.lineWidth = .5 + r();
+    g.beginPath(); g.moveTo(px, py); g.quadraticCurveTo(px + (r() - .5) * l, py + l * .5, px + (r() - .5) * l, py + l); g.stroke(); }
+  g.filter = "none";
+  // 16) salpicaduras cortas naranja-amarillas
+  for (let k = 0; k < (esFruta ? 40 : 10); k++) { const px = cx + (r() - .5) * R * 1.8, py = cy + (r() - .5) * R * 1.8; g.strokeStyle = `rgba(255,${180 + r() * 60 | 0},80,${.1 + r() * .2})`; g.lineWidth = 1 + r() * 1.5;
+    g.beginPath(); g.moveTo(px, py); g.lineTo(px + (r() - .5) * 4, py + 2 + r() * 5); g.stroke(); }
+  // 17) puntitos (lenticelas) que se achatan cerca de los bordes, por la curvatura
+  for (let k = 0; k < 110; k++) { const a = r() * Math.PI * 2, d = Math.sqrt(r()), aplanar = Math.sqrt(Math.max(.05, 1 - d * d));
+    elipse(g, cx + Math.cos(a) * d * R, cy + Math.sin(a) * d * R * 1.05, (.7 + r() * 1.4) * (Math.abs(Math.cos(a)) * aplanar + Math.abs(Math.sin(a))), (.7 + r() * 1.4) * (Math.abs(Math.sin(a)) * aplanar + Math.abs(Math.cos(a))), `rgba(255,235,170,${.18 + r() * .35})`, a); }
+  // 19) imperfecciones: una mancha rugosa y un raspón
+  elipse(g, cx + (r() - .2) * R * .8, cy + (r() - .1) * R * .6, R * .09, R * .06, "rgba(80,40,20,.18)", r() * 3);
+  g.strokeStyle = "rgba(255,220,180,.25)"; g.lineWidth = 1; g.beginPath(); const rx = cx + R * .3, ry = cy + R * .2; g.moveTo(rx, ry); g.lineTo(rx + R * .12, ry + R * .05); g.stroke();
+  // 6, 36) sombra propia del lado contrario a la luz: con "multiply" y un color frío (violeta), no solo más oscuro
+  g.globalCompositeOperation = "multiply";
+  gr = g.createLinearGradient(luzX, luzY, cx + R * .9, cy + R * 1.0);
+  gr.addColorStop(0, "rgba(255,255,255,0)"); gr.addColorStop(.5, "rgba(255,255,255,0)"); gr.addColorStop(.78, "rgba(150,110,190,.85)"); gr.addColorStop(1, "rgba(70,40,110,1)");
+  g.fillStyle = gr; g.fillRect(0, 0, W, H);
+  g.globalCompositeOperation = "source-atop";
+  // 9) oscurecimiento suave en todo el borde, para que la forma se curve hacia atrás (sombra interior)
+  const afuera = nueva(), ag = afuera.getContext("2d"); ag.fillStyle = "#000"; ag.fillRect(0, 0, W, H); ag.globalCompositeOperation = "destination-out"; ag.drawImage(forma, 0, 0);
+  g.save(); g.shadowColor = "rgba(30,8,45,.55)"; g.shadowBlur = s * .12; g.drawImage(afuera, 0, 0); g.restore();
+  // 7) luz rebotada del piso: naranja cálida en la base, con "screen"
+  g.globalCompositeOperation = "screen";
+  gr = g.createRadialGradient(cx + R * .15, cy + R * 1.05, 0, cx + R * .15, cy + R * 1.05, R * .75);
+  gr.addColorStop(0, "rgba(255,140,60,.45)"); gr.addColorStop(1, "rgba(255,140,60,0)"); g.fillStyle = gr; g.fillRect(0, 0, W, H);
+  // 34) dispersión: franjita brillante y saturada en la línea donde la luz pasa a sombra (el terminador)
+  g.filter = `blur(${Math.max(2, s * .025)}px)`; g.strokeStyle = "rgba(255,90,40,.35)"; g.lineWidth = s * .05;
+  g.beginPath(); g.arc(luzX + R * .1, luzY + R * .1, R * 1.05, -.1 * Math.PI, .75 * Math.PI); g.stroke(); g.filter = "none";
+  // brillo principal difuminado del lado de la luz (cálido)
+  gr = g.createRadialGradient(luzX, luzY, 0, luzX, luzY, R * .55);
+  gr.addColorStop(0, "rgba(255,250,235,.75)"); gr.addColorStop(.35, "rgba(255,230,200,.25)"); gr.addColorStop(1, "rgba(255,230,200,0)"); g.fillStyle = gr; g.fillRect(0, 0, W, H);
+  // 30) reflejo de una ventana (dos paños) deformado por la curva
+  g.globalCompositeOperation = "source-atop"; g.save(); g.translate(luzX + R * .05, luzY - R * .02); g.rotate(-.35);
+  for (const dx of [-1, 1]) { g.fillStyle = "rgba(255,255,255,.55)"; g.beginPath(); g.ellipse(dx * R * .07, 0, R * .055, R * .1, dx * .15, 0, Math.PI * 2); g.fill(); }
+  g.restore();
+  // 8, 35) borde de luz finito del lado de la sombra (rim) y aro con el color del ambiente (Fresnel)
+  const borde = (dx, dy, color) => { const b = nueva(), bg = b.getContext("2d"); bg.drawImage(forma, 0, 0); bg.globalCompositeOperation = "destination-out"; bg.drawImage(forma, dx, dy);
+    bg.globalCompositeOperation = "source-in"; bg.fillStyle = color; bg.fillRect(0, 0, W, H); g.drawImage(b, 0, 0); };
+  borde(-s * .014, -s * .014, "rgba(255,190,170,.3)");
+  borde(s * .008, -s * .01, "rgba(220,215,230,.18)");
+  g.restore();
+  // 3) recorte final: todo queda adentro de la silueta (las mezclas multiply/screen también pintan afuera)
+  g.globalCompositeOperation = "destination-in"; g.drawImage(forma, 0, 0); g.globalCompositeOperation = "source-over";
+  // 18, 32) microtextura y grano: la pone el pintor al final, en todo el dibujo
+  c.drawImage(capa, 0, 0);
+}
 function pintar(lienzo, pedido, semilla) {
   const c = lienzo.getContext("2d"), W = lienzo.width, H = lienzo.height, r = azar(semilla);
   const { items, escena } = planearDibujo(pedido);
+  const realista = /\b(realista|realistas|real|hiperrealista)\b/.test(normalizar(pedido));
+  const pintarCosa = (o, x, y, s, col, enSuelo) => realista ? dibujarRealista(c, o, x, y, s, col, r, enSuelo) : o.dibujar(c, x, y, s, col, r);
   const espacio = !!escena.espacio, noche = !!escena.noche && !espacio, mar = !!escena.mar && !espacio, nieve = !!escena.nieve && !espacio;
   const horizonte = espacio ? H : H * .62;
 
@@ -2564,6 +2858,8 @@ function pintar(lienzo, pedido, semilla) {
     }
   }
 
+  // 27) profundidad: en realista, el fondo queda un poquito desenfocado (lo lejano, borroso)
+  if (realista) { const f = document.createElement("canvas"); f.width = W; f.height = H; const fg = f.getContext("2d"); fg.filter = "blur(2px)"; fg.drawImage(c.canvas, 0, 0); c.drawImage(f, 0, 0); }
   // Repartir objetos en su zona
   const lista = (zona) => items.filter(i => OBJETOS[i.tipo].zona === zona || (espacio && zona === "cielo" && OBJETOS[i.tipo].zona !== "fondo"))
     .flatMap(i => Array.from({ length: i.tipo === "estrella" ? Math.min(i.cant * 2, 16) : i.cant }, () => i));
@@ -2574,19 +2870,21 @@ function pintar(lienzo, pedido, semilla) {
     let y = espacio ? H * (.15 + r() * .7) : H * .1 + r() * (horizonte - H * .28);
     if (!espacio && it.tipo === "sol") { x = W * .82; y = H * .18; }
     if (!espacio && it.tipo === "luna") { x = cielo.some(i => i.tipo === "sol") ? W * .18 : W * .82; y = H * .18; }
-    o.dibujar(c, x, y, o.tam * escala * (.85 + r() * .3), it.color || o.color, r);
+    pintarCosa(o, x, y, o.tam * escala * (.85 + r() * .3), it.color || o.color, false);
   });
   if (!espacio) {
     const peces = lista("agua");
-    peces.forEach((it, k) => { const o = OBJETOS[it.tipo]; o.dibujar(c, (k + .5) / peces.length * W + (r() - .5) * 40, agua[0] + r() * (agua[1] - agua[0]), o.tam * escala, it.color || o.color, r); });
+    peces.forEach((it, k) => { const o = OBJETOS[it.tipo]; pintarCosa(o, (k + .5) / peces.length * W + (r() - .5) * 40, agua[0] + r() * (agua[1] - agua[0]), o.tam * escala, it.color || o.color, false); });
     const suelo = lista("suelo").map((it, k, arr) => ({ it, x: (k + .5) / arr.length * W + (r() - .5) * (W / arr.length) * .4, y: sueloArriba + r() * (sueloAbajo - sueloArriba) * .8 + 6 }));
     suelo.sort((a, b) => a.y - b.y).forEach(({ it, x, y }) => {
       const o = OBJETOS[it.tipo], prof = (y - sueloArriba) / Math.max(1, sueloAbajo - sueloArriba);
-      o.dibujar(c, x, y, o.tam * escala * (mar ? .75 : 1) * (.85 + prof * .35), it.color || o.color, r);
+      const solo = suelo.length === 1 && realista; // si es una sola cosa realista, la hace grande y en el medio
+      pintarCosa(o, solo ? W * .47 : x, solo ? H * .86 : y, o.tam * escala * (solo ? Math.min(2.6, H * .72 / (o.tam * escala)) : (mar ? .75 : 1) * (.85 + prof * .35)), it.color || o.color, true);
     });
   }
-  // Textura: un granito suave para que parezca pintado de verdad
-  try {
+  // Realista: viñeta suave (las esquinas más oscuras) y granito. Simple: colores lisos, sin granito.
+  if (realista) { const v = c.createRadialGradient(W / 2, H / 2, H * .3, W / 2, H / 2, W * .75); v.addColorStop(0, "rgba(0,0,0,0)"); v.addColorStop(1, "rgba(0,0,0,.35)"); c.fillStyle = v; c.fillRect(0, 0, W, H); }
+  if (realista) try {
     const img = c.getImageData(0, 0, W, H), d = img.data;
     for (let k = 0; k < d.length; k += 4) { const n = (r() - 0.5) * 14; d[k] += n; d[k + 1] += n; d[k + 2] += n; }
     c.putImageData(img, 0, 0);
@@ -2635,7 +2933,9 @@ function mostrar(m) {
   chat.appendChild(div);
   chat.scrollTop = chat.scrollHeight;
 }
-function agregar(m) { historial.push(m); guardarHistorial(); mostrar(m); }
+// Cada mensaje nuevo se anota con un número, así la llamada sabe qué contestó (aunque la charla sea larguísima)
+let totalAgregados = 0; const ultimosAgregados = [];
+function agregar(m) { historial.push(m); ultimosAgregados.push({ n: ++totalAgregados, m }); if (ultimosAgregados.length > 40) ultimosAgregados.shift(); guardarHistorial(); mostrar(m); }
 
 /* ---------- BARRA DE LA IZQUIERDA: nueva charla, buscar, recientes (cambiar nombre y borrar) ---------- */
 const esCelu = () => matchMedia("(max-width: 640px)").matches; // en la compu la barra está siempre
@@ -2717,7 +3017,7 @@ const dlgDibujos = $("#dlgDibujos");
 $("#latDibujos").onclick = () => {
   const g = $("#dibujosGrilla"); g.innerHTML = "";
   const todos = charlas.flatMap(c => c.mensajes.filter(m => m.dibujo).map(m => ({ c, m })));
-  if (!todos.length) g.innerHTML = `<p>Todavía no hay dibujos. Pedile a Frankers: «dibujá un gato violeta en la playa».</p>`;
+  if (!todos.length) g.innerHTML = `<p>Todavía no hay dibujos. Pedile a Frankers: «dibujá una manzana realista» o «dibujá un árbol».</p>`;
   for (const { c, m } of todos.reverse().slice(0, 60)) {
     const f = document.createElement("figure"), lz = document.createElement("canvas"); lz.width = 320; lz.height = 224;
     try { const grande = document.createElement("canvas"); grande.width = 640; grande.height = 448; pintar(grande, m.dibujo.prompt, m.dibujo.semilla); lz.getContext("2d").drawImage(grande, 0, 0, 320, 224); } catch {}
@@ -3088,11 +3388,11 @@ function escuchar(inicial = "") {
     if (/\b(chau|cortar|colgar|corta|colga)\b/i.test(normalizar(dijo))) { agregar({ de: "yo", texto: dijo }); return cortarLlamada("¡Chau! Fue lindo hablar con vos. 💜"); }
     modoLlamada("pensando"); estadoLlamada("Pensando…"); textoLlamada("yo", dijo);
     dejarDeSentir("escuchando"); empezarAPensar();
-    const antes = historial.length;
+    const antes = totalAgregados; // (antes se contaba con el largo de la charla, y al llegar a 80 mensajes ya no encontraba la respuesta: por eso repetía "no sé qué decir")
     emocion = "normal";
     await enviar(dijo);
     dejarDePensar();
-    const nuevas = historial.slice(antes).filter(m => m.de === "frankers" && m.texto && !/^Dejame buscar/.test(m.texto)).map(m => m.texto);
+    const nuevas = ultimosAgregados.filter(x => x.n > antes).map(x => x.m).filter(m => m.de === "frankers" && m.texto && !/^Dejame buscar/.test(m.texto)).map(m => m.texto);
     if (!enLlamada) return;
     const dice = nuevas.join(" ") || "Mmm, no sé qué decir.";
     if (/no sé qué decir|no me salió/i.test(dice)) emocion = "triste";
@@ -3168,6 +3468,7 @@ document.addEventListener("keydown", (e) => { if (e.key === "Escape" && enLlamad
 if (window.speechSynthesis) speechSynthesis.onvoiceschanged = () => {}; // hace que el navegador cargue las voces
 let ocupado = false;
 async function enviar(texto) {
+  enSilencio = false; // cuando le hablás, vuelve a contar lo que hace
   texto = texto.trim(); if (!texto || ocupado) return;
   ocupado = true;
   const inicio = $("#inicio"); if (inicio) inicio.remove();
