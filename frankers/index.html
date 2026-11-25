@@ -449,6 +449,11 @@
     .btn-lateral { flex: none; width: 38px; height: 38px; border-radius: 12px; border: 1px solid var(--borde); background: var(--tarjeta); color: var(--texto); cursor: pointer; display: grid; place-items: center; font-size: 1.1rem; }
     .btn-lateral:hover { border-color: var(--celeste); }
 
+    .repasando[hidden] { display: none !important; }
+    /* La barra de arriba va de punta a punta; lo de abajo (chat, sugerencias, escribir) queda centrado */
+    .app { max-width: none !important; padding: 0 !important; }
+    .app > header { padding: 12px 20px; }
+    .app > #actividadAhora, .app > .chat, .app > .sugerencias, .app > .escribir, .app > footer { width: 100%; max-width: 812px; margin-left: auto; margin-right: auto; padding-left: 16px; padding-right: 16px; }
     /* El chat ocupa solo el lugar que queda al lado de la barra (antes se salía de la pantalla y todo se apretaba) */
     .app { width: auto; min-width: 0; flex: 1 1 0; }
     @media (max-width: 1000px) and (min-width: 641px) { .lateral { width: 220px; } }
@@ -1273,7 +1278,9 @@ async function aprenderTema(tema, pregunta, rapido = false) {
 async function buscarLoQueNoSabe(texto) {
   if (!gramatica || !cerebro || revisar(texto).problema) return;
   const tk = FrankersCerebro.tokenizar(texto);
-  const raras = [...new Set(tk.filter(w => /^[a-záéíóúüñ]{3,}$/.test(w) && !conocida(w) && !FrankersGramatica.PALABRAS_CHICAS.has(w)))].slice(0, 3);
+  // no busca risas ("jajaja") ni palabras con letras de más ("holaa" = "hola")
+  const esRisa = (w) => /^(j[aeiou])+j?$|^(ja|je|ji|jsj|xd)+$/.test(w) || /^(.)\1+$/.test(w);
+  const raras = [...new Set(tk.filter(w => /^[a-záéíóúüñ]{3,}$/.test(w) && !conocida(w) && !conocida(letrasDobles(w)) && !esRisa(w) && !FrankersGramatica.PALABRAS_CHICAS.has(w)))].slice(0, 3);
   for (const w of raras) await usarBuscafrankers(w, () => aprenderPalabra(w)); // usa el Buscafrankers (si lo abrís, la ves buscando)
   const tema = temaDePregunta(texto);
   if (tema && aprendido.temas[normalizar(tema)]) emocion = "alegre"; // ¡eso ya lo sabe!
@@ -3105,6 +3112,7 @@ function paraDecir(texto) {
     // Sonidos que la voz leería como letras ("eme"): se cambian por cómo suenan de verdad
     .replace(/\b[Hh]mpf\b/g, "uf").replace(/\b[Aa]ww+\b/g, "ay, qué lindo")
     .replace(/[A-Za-zÁÉÍÓÚáéíóúÜüÑñ]+/g, letrasDobles) // "aa", "ee", "holaa": que no lea letras sueltas
+    .replace(/[¿¡]?\b(?:[Ee]h|[Aa]h|[Oo]h)\b[?!]?/g, (m) => /e/i.test(m) ? "¿qué?" : /a/i.test(m) ? "ajá" : "uau") // "Eh" lo leía como la letra E
     .replace(/[¿¡]?\b(?:[Hh]+m+|[Mm]{2,}h*|[Ee]mm+)\b[?!]?[…,.]*/g, "") // "Mmm" y "Hmm" no se dicen (la voz los leía como letras)
     .replace(/\s+/g, " ").trim();
 }
@@ -3216,10 +3224,10 @@ function modoLlamada(m) { $("#pantallaLlamada").dataset.modo = m; } // escuchand
 // "sonido": lo que dice con su voz (así suena real, como una persona).
 const EMOCIONES = {
   enojada: { manos: [["👊", -62, 92, 0], ["👊", 168, 92, 0, 1]], sonido: "¡Hmpf!" },
-  sorprendida: { manos: [["✋", -60, -6, -18], ["✋", 166, -6, 18, 1]], sonido: "¡Oh!" },            // manos arriba, abiertas
-  asustada: { sonido: "¡Ay!" }, cansada: { sonido: "Aaaah…" }, curiosa: { sonido: "¿Ah, sí?" }, avergonzada: { sonido: "Ups…" },
-  nerviosa: { manos: [["🤞", -58, 96, 0], ["🤞", 164, 96, 0, 1]], sonido: "Eh… eh…" },
-  confundida: { manos: [["🫴", -66, 66, 0, 1], ["🫴", 172, 66, 0]], sonido: "¿Eh?" },              // "no sé": palmas para arriba a los costados
+  sorprendida: { manos: [["✋", -60, -6, -18], ["✋", 166, -6, 18, 1]], sonido: "¡Uau!" },            // manos arriba, abiertas
+  asustada: { sonido: "¡Ay!" }, cansada: { sonido: "Uf, qué sueño…" }, curiosa: { sonido: "¿En serio?" }, avergonzada: { sonido: "Ups…" },
+  nerviosa: { manos: [["🤞", -58, 96, 0], ["🤞", 164, 96, 0, 1]], sonido: "Este… este…" },
+  confundida: { manos: [["🫴", -66, 66, 0, 1], ["🫴", 172, 66, 0]], sonido: "¿Qué?" },              // "no sé": palmas para arriba a los costados
   emocionada: { manos: [["✋", -64, -24, -24], ["✋", 170, -24, 24, 1]], sonido: "¡Siii!" },           // brazos bien arriba
   riendose: { manos: [["✋", 22, 138, -20], ["✋", 84, 138, -20, 1]], aplaude: 1, sonido: "¡Jajaja!" },   // aplaude en el medio
   orgullosa: { manos: [["👍", -60, 90, 0], ["👍", 166, 90, 0, 1]], sonido: "¡Je, je!" },
@@ -3230,7 +3238,7 @@ const EMOCIONES = {
   buscando: { manos: [["👉", 162, 64, -10]], mientras: true },
   dibujando: { manos: [["✍️", 150, 118, 0]], mientras: true },
   compu: { manos: [["👆", 53, 150, 0]], mientras: true },
-  aprendiendo: { manos: [["☝️", 164, 8, 10]], sonido: "¡Ah!" },
+  aprendiendo: { manos: [["☝️", 164, 8, 10]], sonido: "¡Ajá!" },
   saludando: { manos: [["👋", 166, 46, 0]] }, despidiendo: { manos: [["👋", 166, 46, 0]] },
 };
 const timersEmo = new WeakMap();
