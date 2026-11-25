@@ -2027,7 +2027,7 @@ const CODIGOS_REVUELTOS = {"pro": ["a156075dc70b309da125ebd14d4339a48671332ddf08
 const NOMBRES_PLAN = { gratis: "Plan gratis", pro: "🚀 Pro", promax: "✨ Pro Max" };
 async function revolver(codigo) { const b = await crypto.subtle.digest("SHA-256", new TextEncoder().encode("frankers:" + codigo)); return [...new Uint8Array(b)].map(x => x.toString(16).padStart(2, "0")).join(""); }
 // Códigos con nombre: solo andan si en Frankers pusiste ESE nombre (mayúsculas y tildes no importan)
-const CODIGOS_CON_NOMBRE = { pro: [], promax: [] };
+const CODIGOS_CON_NOMBRE = { pro: [], promax: ["121e5bac1a4ef5696a65ab27ed1606eca5e957508bab22730e0b4a98ab9066de"] }; // promax: Tiburux (regalo de Franco)
 async function planDeCodigo(codigo) {
   if (!codigo) return null;
   try {
