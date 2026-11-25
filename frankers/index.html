@@ -3085,11 +3085,26 @@ function cambiarVoz() {
   const sel = document.getElementById("elegirVoz"); if (sel) sel.value = nueva;
   return { mujer: "¡Listo! Ahora hablo con la voz de Daniela, una voz argentina.", hombre: "¡Listo! Ahora hablo con una voz de hombre.", compu: "¡Listo! Ahora hablo con la voz que trae tu compu." }[nueva] + " Si querés otra, decime \"cambiá la voz\".";
 }
+/* Letras repetidas: la voz leía "aa" como "A" y "ee" como "E".
+   - Si la palabra es una sola letra repetida ("aaa", "eee") → "ah", "eh"… (y si es consonante, no la dice)
+   - Si tiene letras de más ("holaa", "graciass") → las saca, salvo en palabras de verdad como "leer", "perro" o "llamar" */
+function letrasDobles(w) {
+  const m = w.toLowerCase();
+  if (/^(.)\1+$/.test(m)) return /[aeiouáéíóú]/.test(m[0]) ? m[0].normalize("NFD")[0] + "h" : "";
+  if (!/(.)\1/.test(m)) return w;
+  const conocida = (x) => !!(gramatica && gramatica.conoce && gramatica.conoce(x)) || (cerebro && cerebro.indice && cerebro.indice.has(x));
+  if (conocida(m)) return w;                                  // "leer", "creer", "perro", "llamar": están bien
+  let corta = m.replace(/(.)\1{2,}/g, "$1$1");                 // tres o más iguales → dos
+  if (!/(.)\1/.test(corta) || conocida(corta)) return corta;
+  const una = corta.replace(/([^rlc])\1/g, "$1").replace(/([rlc])\1(?=\1)/g, "$1"); // las dobles que no son rr/ll/cc → una sola
+  return conocida(una) || !/(.)\1/.test(una) ? una : corta.replace(/(.)\1/g, "$1");
+}
 function paraDecir(texto) {
   return texto.split("\n").filter(l => !/^📖|https?:\/\//.test(l)).join(". ")
     .replace(/[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}\u{FE0F}]/gu, "").replace(/×/g, " por ").replace(/÷/g, " dividido ").replace(/=/g, " es ")
     // Sonidos que la voz leería como letras ("eme"): se cambian por cómo suenan de verdad
-    .replace(/\b[Hh]mpf\b/g, "uf").replace(/\b[Aa]ww+\b/g, "aaay, qué lindo")
+    .replace(/\b[Hh]mpf\b/g, "uf").replace(/\b[Aa]ww+\b/g, "ay, qué lindo")
+    .replace(/[A-Za-zÁÉÍÓÚáéíóúÜüÑñ]+/g, letrasDobles) // "aa", "ee", "holaa": que no lea letras sueltas
     .replace(/[¿¡]?\b(?:[Hh]+m+|[Mm]{2,}h*|[Ee]mm+)\b[?!]?[…,.]*/g, "") // "Mmm" y "Hmm" no se dicen (la voz los leía como letras)
     .replace(/\s+/g, " ").trim();
 }
