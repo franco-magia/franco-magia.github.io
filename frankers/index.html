@@ -3383,6 +3383,7 @@ pintarModo();
 // Cambia cómo lo dice, según el modo (no cambia lo que sabe ni sus reglas)
 // Te llama por tu nombre: en los saludos siempre, y a veces en las respuestas cortas
 function conTuNombre(texto, original, respuesta) {
+  if (texto) texto = texto.replace(/\bfranco\b/g, "Franco").replace(/\bfrankers\b/g, "Frankers"); // nombres con mayúscula
   const n = memoria.nombre; if (!n || !texto || respuesta.filtro) return texto;
   // Si la persona no es Franco, cuando le HABLA a ella usa su nombre (Franco queda solo cuando dice quién la creó: "me hizo Franco")
   if (normalizar(n) !== "franco") texto = texto.replace(/(,\s*|¡?\b(?:hola|chau|gracias|bien|genial|dale|listo),?\s+)Franco\b/gi, `$1${n}`).replace(/\b(?:Franco)(?=\s*[!?]\s*$)/, n);
