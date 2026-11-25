@@ -3469,8 +3469,11 @@ if (window.speechSynthesis) speechSynthesis.onvoiceschanged = () => {}; // hace 
 let ocupado = false;
 async function enviar(texto) {
   enSilencio = false; // cuando le hablás, vuelve a contar lo que hace
-  texto = texto.trim(); if (!texto || ocupado) return;
+  texto = texto.trim(); if (!texto) return;
+  // si todavía está contestando lo anterior, espera un poquito (antes se salteaba tu mensaje, y en la llamada decía "no sé qué decir")
+  for (let k = 0; ocupado && k < 150; k++) await new Promise(r => setTimeout(r, 100));
   ocupado = true;
+  try {
   const inicio = $("#inicio"); if (inicio) inicio.remove();
   agregar({ de: "yo", texto });
   const pensando = actividad("💬", `Leí tu mensaje: «${texto.length > 60 ? texto.slice(0, 60) + "…" : texto}». Pensando…`, true);
@@ -3493,7 +3496,8 @@ async function enviar(texto) {
   if (respuesta.emo && !enLlamada && sonidoEmocion(respuesta.emo)) hablar(sonidoEmocion(respuesta.emo)); // su sonido, con su voz
   if (!respuesta.filtro) setTimeout(() => aprenderDeLaCharla(texto), 50); // aprende de cada charla
   if (!esCorreccion(normalizar(texto)) && !esperandoCorreccion && !juego) contexto.ultimaPregunta = texto; // por si después le decís "eso está mal"
-  ocupado = false;
+  } catch (e) { console.error(e); agregar({ de: "frankers", texto: "Uy, se me cruzaron los cables. 😵 ¿Me lo decís de nuevo?" }); }
+  finally { ocupado = false; } // pase lo que pase, queda libre para tu próximo mensaje (si no, se quedaba trabada para siempre)
 }
 function enviarEntrada() { const i = $("#entrada"); const t = i.value; i.value = ""; enviar(t); i.focus(); }
 $("#btnEnviar").addEventListener("click", enviarEntrada);
