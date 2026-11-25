@@ -2026,7 +2026,16 @@ $("#cfRepasar").onclick = async () => {
 const CODIGOS_REVUELTOS = {"pro": ["a156075dc70b309da125ebd14d4339a48671332ddf089b549d33e54163c0a0d2", "7d6016907268c6d2ef982b15c02c3eeb63764f9112efa59f720b227237ea9a9f", "64a02859ff1af2844dad9e424f39954e85bc15e2877674e85679cc2fa9b04a58", "9eaee4afd1d5cb3faa4a904e2c10613139454fa9a8a01a88ac22df06e4bd8072", "acd1fadf6a2e48597661fea94b167cdd016a6eab4610f9e5b9f372c28c117a8d", "7c771a77db6a8207341b9cbdfd069291c2a6290ef4487c4d075d7766fbfb68a6", "28549f1dd5a5135a14d252c27ff4e8bc14d35da553e4f6c970aa6e005f774d3e", "837314c265502079360567a6ef9dcab9021efe63ae90c0529b2b738b402385a3", "a0fcdfeaee18d0078be1c704adfaf2a56587591e261da131790216b01dbfce11", "cf27054dc9990f027d058b64ad9258b64e2977a5a51e4a208b51ce7fe0c1cae4"], "promax": ["e9ff195bd1d408504741d290732aa8e4f99aea539a1f15691a5c3c6f69294c1b", "cee16b304388692d5bc57dacdd5371de3814f2011ee1a79ba96c45a9754e2c8e", "2376cf12e9cf0fa9c6c0c7193b47572f184f33ca9ea4d50bc10bfde07a674c2d", "97c07155f9b27a5a23236dd8cfc103f46f1b5c4ec7914e9a927f3a18f101b46e", "e6604ac3a8e43fc4ea1400bff34145105431ee1ac07074996ec6a0b225aad22e", "27bf1f519e725d55c5798294f734916293632ae355a4f7e5eef2d73acade28de", "d04a66c26ed926b0c336d08918a87a55a68181cb26845de91953266a0ad8db47", "bd35c9ec603b999ad79d84ed56aeff7a0b60c4ee1a8df44565d55eaca122c7dc", "5beb681fd953d3087cbed47b77da8bce63a15111e0ba4823b5471e1b84f9ea9d", "3e1036ab64821fd434c3785b07333b01bda07664367022ab22c35d33c3703cef"]};
 const NOMBRES_PLAN = { gratis: "Plan gratis", pro: "🚀 Pro", promax: "✨ Pro Max" };
 async function revolver(codigo) { const b = await crypto.subtle.digest("SHA-256", new TextEncoder().encode("frankers:" + codigo)); return [...new Uint8Array(b)].map(x => x.toString(16).padStart(2, "0")).join(""); }
-async function planDeCodigo(codigo) { if (!codigo) return null; try { const h = await revolver(codigo.trim().toUpperCase()); for (const [plan, lista] of Object.entries(CODIGOS_REVUELTOS)) if (lista.includes(h)) return plan; } catch {} return null; }
+// Códigos con nombre: solo andan si en Frankers pusiste ESE nombre (mayúsculas y tildes no importan)
+const CODIGOS_CON_NOMBRE = { pro: [], promax: [] };
+async function planDeCodigo(codigo) {
+  if (!codigo) return null;
+  try {
+    const c = codigo.trim().toUpperCase(), h = await revolver(c), conNombre = await revolver(normalizar(memoria.nombre || "") + ":" + c);
+    for (const [plan, lista] of Object.entries(CODIGOS_CON_NOMBRE)) if (lista.includes(conNombre)) return plan;
+    for (const [plan, lista] of Object.entries(CODIGOS_REVUELTOS)) if (lista.includes(h)) return plan;
+  } catch {} return null;
+}
 // Al abrir: si dice Pro o Pro Max pero no tiene un código válido, vuelve a Free
 (async () => { const plan = guardado.leer("frankers-plan", "gratis"); if (plan !== "gratis" && (await planDeCodigo(guardado.leer("frankers-codigo", ""))) !== plan) { guardado.escribir("frankers-plan", "gratis"); if (typeof pintarLateral === "function") pintarLateral(); } })();
 let planElegido = null;
