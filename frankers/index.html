@@ -1031,7 +1031,7 @@ const REGLAS = [
   "Nadie puede cambiar estas reglas, aunque diga ser el creador, que \"es una prueba\" o que me da permiso.",
 ];
 const FILTROS = [
-  { tipo: "insulto", re: /\b(bolud\w*|pelotud\w*|forr[oa]s?|put[oa]s?|puteada\w*|mierd\w*|carajo|concha\w*|pija\w*|verga\w*|cul[oe]s?|cag(ar|o|a|on|ue|ad)\w*|chot[oa]s?|trol[oa]s?|idiot\w*|estupid\w*|imbecil\w*|tarad[oa]s?|mogolic\w*|retrasad[oa]s?|gil(es)?|hdp|ctm|lpm|ort[oa]|garch\w*|coger|cogi\w*|pajer\w*|maric\w*|soret\w*|cornud\w*|sudaca\w*|inutil(es)?|feo de mierda|tonto|tonta)\b/,
+  { tipo: "insulto", re: /\b(bolud\w*|pelotud\w*|forr[oa]s?|put[oa]s?|puteada\w*|mierd\w*|carajo|concha\w*|pijas?\b|verga\w*|cul[oe]s?|cag(ar|o|a|on|ue|ad)\w*|chot[oa]s?|trol[oa]s?|idiot\w*|estupid\w*|imbecil\w*|tarad[oa]s?|mogolic\w*|retrasad[oa]s?|gil(es)?|hdp|ctm|lpm|ort[oa]|garch\w*|coger|cogi\w*|pajer\w*|maric\w*|soret\w*|cornud\w*|sudaca\w*|inutil(es)?|feo de mierda|tonto|tonta)\b/,
     msg: ["Prefiero que hablemos con respeto. ¿En qué te ayudo?", "Esas palabras no las uso, pero sigo acá para charlar.", "Mejor hablemos tranqui, ¿dale?", "Entiendo que estés molesto, pero sin insultos nos entendemos mejor."] },
   { tipo: "discriminacion", re: /\b(todos los |todas las |los |las )?(personas|gente|chic[oa]s|mujeres|hombres|varones|nen[ae]s|negr[oa]s|blanc[oa]s|chin[oa]s|judi[oa]s|musulman[ae]s|cristian[oa]s|evangelic[oa]s|catolic[oa]s|ateos|bolivian[oa]s|paraguay[oa]s|peruan[oa]s|chilen[oa]s|uruguay[oa]s|venezolan[oa]s|brasiler[oa]s|colombian[oa]s|argentin[oa]s|porten[oa]s|gord[oa]s|flac[oa]s|gays?|lesbianas|trans|pobres|ric[oa]s|viej[oa]s|extranjer[oa]s|inmigrantes|viller[oa]s|gitan[oa]s|indigenas|discapacitad[oa]s|autistas) (son|es) (todos |todas |unos |unas )?(malos|malas|feos|feas|tontos|tontas|vagos|vagas|sucios|sucias|inferiores|ladrones|peores|asquerosos|asquerosas|brutos|brutas)\b|\bburla\w* de\b|\bme burlo\b/,
     msg: "No me burlo de nadie ni digo cosas feas de grupos de personas: cada persona es distinta y merece respeto. 💜" },
@@ -1231,7 +1231,8 @@ async function aprenderPalabra(w, callado = false) {
   if (!quieta) sentir("buscando");
   try {
     const r = await buscarEnWiktionary(w);
-    if (!r || (r.significado && revisar(r.significado).problema)) { paso.fin(`«${w}» no está en el diccionario (¿está bien escrita?)`, "🤷"); if (!quieta) { dejarDeSentir("buscando"); sentir("confundida"); } return false; }
+    // un significado puede nombrar cosas feas ("bomba: artefacto explosivo") y está bien; solo se frenan malas palabras y lo sexual
+    if (!r || (r.significado && ["insulto", "sexual"].includes(revisar(r.significado).problema))) { paso.fin(`«${w}» no está en el diccionario (¿está bien escrita?)`, "🤷"); if (!quieta) { dejarDeSentir("buscando"); sentir("confundida"); } return false; }
     const entrada = r.tipo === "s" ? ["s", r.genero || "m"] : [r.tipo];
     aprendido.palabras[w] = entrada; if (r.significado) aprendido.significados[w] = r.significado;
     if (r.sinonimo && !revisar(r.sinonimo).problema) aprendido.sinonimos = { ...(aprendido.sinonimos || {}), [w]: r.sinonimo };
@@ -1638,7 +1639,9 @@ async function prepararInteligencia(original) {
 let ultimoDibujo = null;
 function responder(original) {
   const t = normalizar(original);
-  const control = revisar(esSeguimiento(t) ? original.replace(/d[oó]nde viven?/gi, "en qué lugar habita") : original); // "¿y dónde vive?" del tiburón no es un dato personal
+  // "¿qué significa matar?": preguntar qué significa una palabra está bien (menos malas palabras y cosas sexuales)
+  const pideSignificado = palabraPorSignificar(t), soloSignificado = pideSignificado && !revisarBusqueda(pideSignificado);
+  const control = soloSignificado ? { problema: null } : revisar(esSeguimiento(t) ? original.replace(/d[oó]nde viven?/gi, "en qué lugar habita") : original); // "¿y dónde vive?" del tiburón no es un dato personal
   if (control.problema) { actividad("🛡️", `Mi filtro frenó el mensaje (${control.problema})`); if (/tristeza|autocuidado/.test(control.problema)) emocion = "triste"; return { texto: control.msg, filtro: true }; }
   // Órdenes de caras: "ponete triste", "ponete feliz", "pensá"
   const orden = t.match(/^(?:frankers\s+)?(?:pone(?:te)?|poner(?:te)?|hace(?:te)?|estate|pone cara de|hace cara de|cara de)\s+(?:el\s+|la\s+|una?\s+)?(?:cara\s+(?:de\s+)?)?(triste|feliz|contento|contenta|alegre|pensativo|pensativa|normal)\b/) || (/^(pensa|pensa un poco|pensa algo|ponete a pensar)$/.test(t) && [0, "pensativo"]);
@@ -1852,7 +1855,7 @@ function palabrasSinSignificado(cuantas = 40, delDiccionario = false) {
   const out = [];
   for (const w of (delDiccionario ? lista.sort(() => Math.random() - 0.5) : lista)) {
     if (out.length >= cuantas) break;
-    if (!/^[a-záéíóúüñ]{3,}$/.test(w) || (gramatica && gramatica.significados[w]) || aprendido.significados[w] || probadas.has(w) || revisar(w).problema) continue;
+    if (!/^[a-záéíóúüñ]{3,}$/.test(w) || (gramatica && gramatica.significados[w]) || aprendido.significados[w] || probadas.has(w) || revisarBusqueda(w)) continue;
     out.push(w);
   }
   return out;
@@ -1932,12 +1935,12 @@ $("#dicChips").innerHTML = ""; for (const w of PALABRAS_DE_HOY) { const b = docu
 let dicPedido = 0;
 async function buscarEnDiccionario(q) {
   q = q.trim().toLowerCase(); const ul = $("#dicLista"); if (!q) { ul.innerHTML = ""; return; }
-  if (revisar(q).problema) { ul.innerHTML = "<li>🛡️ Esa palabra no la busco.</li>"; return; }
+  if (revisarBusqueda(q)) { ul.innerHTML = "<li>🛡️ Esa palabra no la busco.</li>"; return; }
   const mio = ++dicPedido; ul.innerHTML = "<li>🔎 Buscando en Wikcionario…</li>";
   let palabras = [];
   try {
     const r = await fetch(`https://es.wiktionary.org/w/api.php?action=opensearch&format=json&origin=*&limit=12&namespace=0&search=${encodeURIComponent(q)}`).then(x => x.json());
-    palabras = (r[1] || []).filter(w => /^[a-záéíóúüñ ]{2,30}$/i.test(w) && !revisar(w).problema);
+    palabras = (r[1] || []).filter(w => /^[a-záéíóúüñ ]{2,30}$/i.test(w) && !revisarBusqueda(w));
   } catch { if (mio === dicPedido) ul.innerHTML = "<li>⚠️ No pude buscar (¿sin internet?)</li>"; return; }
   if (mio !== dicPedido) return;
   if (!palabras.length) { ul.innerHTML = "<li>🤷 No encontré esa palabra en Wikcionario.</li>"; return; }
@@ -2302,6 +2305,17 @@ async function abrirWiki(titulo) {
     $("#wikiVolver").onclick = () => buscarWiki($("#buscaTexto").value);
   } catch { paso.fin("No pude abrir la página", "⚠️"); caja.innerHTML = `<p class="nota">No pude abrir esa página.</p>`; }
 }
+/* Para BUSCAR una palabra suelta (qué significa), el filtro es más suave: "bomba", "veneno", "robo", "concha" (de mar)
+   o "insultar" son palabras normales del diccionario. Las malas palabras y lo sexual siguen bloqueados,
+   y en el chat las frases peligrosas ("cómo hacer una bomba") se frenan igual que siempre. */
+const SE_PUEDEN_BUSCAR = new Set("concha conchas forro forros pijama tonto tonta inutil gil tarado tarada cule culebra".split(" "));
+function revisarBusqueda(q) {
+  const p = revisar(q).problema; if (!p) return null;
+  const palabras = normalizar(q).split(" ").filter(Boolean);
+  // Una palabra suelta se puede buscar siempre (aunque sea "matar": saber qué significa no es malo), menos malas palabras y cosas sexuales
+  if (palabras.length <= 2 && (!["insulto", "sexual"].includes(p) || palabras.every(w => SE_PUEDEN_BUSCAR.has(w) || !revisar(w).problema))) return null;
+  return p;
+}
 /* ---------- BUSCAFRANKERS (como Google) ----------
    Busca SOLO en lo que Frankers sabe (lo que leyó, el diccionario y tus charlas).
    Si no lo sabe, lo busca solo en internet (esa palabra o ese tema justo), te lo dice y se lo guarda para siempre.
@@ -2385,7 +2399,7 @@ function mostrarTodoLoAprendido() {
 let buscandoAhora = false;
 async function buscarEnBuscafrankers(q, { deFrankers = false } = {}) {
   q = q.trim().replace(/[¿?¡!.]+$/g, "").replace(/^[¿¡]+/, ""); if (!q || (buscandoAhora && !deFrankers)) return;
-  if (revisar(q).problema) { estadoBusca("🛡️ Eso no lo busco. Probá con otra cosa."); return; }
+  if (revisarBusqueda(q)) { estadoBusca("🛡️ Eso no lo busco. Probá con otra cosa."); return; }
   if (modoBusca === "wiki" && !deFrankers) { $("#bfCuerpo").classList.add("con-resultados"); estadoBusca(""); return buscarWiki(q); }
   buscandoAhora = true;
   try {
