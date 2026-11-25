@@ -1232,13 +1232,15 @@ async function aprenderPalabra(w, callado = false) {
   try {
     const r = await buscarEnWiktionary(w);
     // un significado puede nombrar cosas feas ("bomba: artefacto explosivo") y está bien; solo se frenan malas palabras y lo sexual
-    if (!r || (r.significado && ["insulto", "sexual"].includes(revisar(r.significado).problema))) { paso.fin(`«${w}» no está en el diccionario (¿está bien escrita?)`, "🤷"); if (!quieta) { dejarDeSentir("buscando"); sentir("confundida"); } return false; }
+    if (!r) { paso.fin(`«${w}» no está en el diccionario (¿está bien escrita?)`, "🤷"); if (!quieta) { dejarDeSentir("buscando"); sentir("confundida"); } return false; }
     const entrada = r.tipo === "s" ? ["s", r.genero || "m"] : [r.tipo];
     aprendido.palabras[w] = entrada; if (r.significado) aprendido.significados[w] = r.significado;
     if (r.sinonimo && !revisar(r.sinonimo).problema) aprendido.sinonimos = { ...(aprendido.sinonimos || {}), [w]: r.sinonimo };
     gramatica.sumar(w, entrada); if (r.significado) gramatica.significados[w] = r.significado;
-    if (!cerebro.indice.has(w)) cerebro.agregarPalabras([w]);
-    if (r.significado) cerebro.entrenar(conRepaso(Array(6).fill(FrankersCerebro.charla(`qué significa ${w}`, `"${w}" significa: ${r.significado}`))), { tasa: 0.03 });
+    // Las palabras feas las SABE (quedan en su diccionario), pero no se las enseño a la red que inventa frases: así no las dice
+    const fea = ["insulto", "sexual"].includes(revisar(w).problema) || (r.significado && ["insulto", "sexual"].includes(revisar(r.significado).problema));
+    if (!fea && !cerebro.indice.has(w)) cerebro.agregarPalabras([w]);
+    if (r.significado && !fea) cerebro.entrenar(conRepaso(Array(6).fill(FrankersCerebro.charla(`qué significa ${w}`, `"${w}" significa: ${r.significado}`))), { tasa: 0.03 });
     guardarAprendido(); guardarCerebro(); marcarCambio();
     if (!quieta) { dejarDeSentir("buscando"); sentir("aprendiendo"); }
     paso.fin(`Aprendí «${w}»${r.deForma ? ` (viene de «${r.deForma}»)` : ""}: ${gramatica.tipos[r.tipo] || r.tipo}${r.significado ? " — " + r.significado : ""}`, "📖");
@@ -1855,7 +1857,7 @@ function palabrasSinSignificado(cuantas = 40, delDiccionario = false) {
   const out = [];
   for (const w of (delDiccionario ? lista.sort(() => Math.random() - 0.5) : lista)) {
     if (out.length >= cuantas) break;
-    if (!/^[a-záéíóúüñ]{3,}$/.test(w) || (gramatica && gramatica.significados[w]) || aprendido.significados[w] || probadas.has(w) || revisarBusqueda(w)) continue;
+    if (!/^[a-záéíóúüñ]{3,}$/.test(w) || (gramatica && gramatica.significados[w]) || aprendido.significados[w] || probadas.has(w)) continue; // estudia todas, sin filtro
     out.push(w);
   }
   return out;
@@ -1907,7 +1909,9 @@ $("#cfEstudiar").onclick = async () => {
     const [w] = palabrasSinSignificado(1, true); if (!w) break;
     leidas++;
     $("#cfEstadoPalabras").textContent = `📖 Leyendo «${w}» y su significado… (${leidas}${isFinite(total) ? " de " + total : ""}, aprendió ${aprendidas})`;
-    if (await estudiarPalabra(w)) { aprendidas++; grupo.push(w); }
+    if (await estudiarPalabra(w)) { aprendidas++;
+      const sig = (gramatica && gramatica.significados[w]) || aprendido.significados[w] || "", fea = (x) => ["insulto", "sexual"].includes(revisar(x).problema);
+      if (!fea(w) && !fea(sig)) grupo.push(w); } // las feas las sabe, pero no las practica para decirlas
     if (grupo.length >= 5) await repasarGrupo();
     barra.style.width = isFinite(total) ? (leidas / total * 100).toFixed(1) + "%" : ((leidas % 20) * 5) + "%";
     await esperar(300);
@@ -1935,12 +1939,12 @@ $("#dicChips").innerHTML = ""; for (const w of PALABRAS_DE_HOY) { const b = docu
 let dicPedido = 0;
 async function buscarEnDiccionario(q) {
   q = q.trim().toLowerCase(); const ul = $("#dicLista"); if (!q) { ul.innerHTML = ""; return; }
-  if (revisarBusqueda(q)) { ul.innerHTML = "<li>🛡️ Esa palabra no la busco.</li>"; return; }
+  // (el diccionario no tiene filtro: Frankers tiene que SABER todas las palabras, aunque no las diga)
   const mio = ++dicPedido; ul.innerHTML = "<li>🔎 Buscando en Wikcionario…</li>";
   let palabras = [];
   try {
     const r = await fetch(`https://es.wiktionary.org/w/api.php?action=opensearch&format=json&origin=*&limit=12&namespace=0&search=${encodeURIComponent(q)}`).then(x => x.json());
-    palabras = (r[1] || []).filter(w => /^[a-záéíóúüñ ]{2,30}$/i.test(w) && !revisarBusqueda(w));
+    palabras = (r[1] || []).filter(w => /^[a-záéíóúüñ ]{2,30}$/i.test(w));
   } catch { if (mio === dicPedido) ul.innerHTML = "<li>⚠️ No pude buscar (¿sin internet?)</li>"; return; }
   if (mio !== dicPedido) return;
   if (!palabras.length) { ul.innerHTML = "<li>🤷 No encontré esa palabra en Wikcionario.</li>"; return; }
