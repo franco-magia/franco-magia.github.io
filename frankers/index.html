@@ -3528,7 +3528,7 @@ async function enviar(texto) {
   const emo = emocionPendiente || emocionDelMensaje(texto, respuesta); emocionPendiente = null;
   if (emo && !respuesta.cara) { respuesta.emo = emo; ultimaEmo = emo; actividad("🎭", `Me puse ${NOMBRES_EMO[emo] || emo}`); } else ultimaEmo = null;
   agregar({ de: "frankers", ...respuesta });
-  if (respuesta.emo && !enLlamada && sonidoEmocion(respuesta.emo)) hablar(sonidoEmocion(respuesta.emo)); // su sonido, con su voz
+  // En el chat la voz no suena sola (antes hacía el sonido de la cara: "jaja", "¿qué?", "ajá"… y parecía un bug). Los sonidos son solo en la llamada.
   if (!respuesta.filtro) setTimeout(() => aprenderDeLaCharla(texto), 50); // aprende de cada charla
   if (!esCorreccion(normalizar(texto)) && !esperandoCorreccion && !juego) contexto.ultimaPregunta = texto; // por si después le decís "eso está mal"
   } catch (e) { console.error(e); agregar({ de: "frankers", texto: "Uy, se me cruzaron los cables. 😵 ¿Me lo decís de nuevo?" }); }
