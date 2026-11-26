@@ -1360,7 +1360,17 @@ async function aprenderPalabra(w, callado = false) {
   const paso = actividad("📖", `No conocía «${w}»: la busco en Wiktionary…`, true);
   if (!quieta) sentir("buscando");
   try {
-    const r = await buscarEnWiktionary(w);
+    let r = await buscarEnWiktionary(w);
+    // Si no la encuentra tal cual: prueba sin tildes, en singular, y con la versión que Wiktionary sugiere
+    if (!r) {
+      const sinTilde = w.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+      const variantes = [...new Set([sinTilde, w.replace(/es$/, ""), w.replace(/s$/, ""), w.replace(/as$/, "a"), w.replace(/os$/, "o")])].filter(x => x && x !== w && x.length > 2);
+      for (const v of variantes) { r = await buscarEnWiktionary(v); if (r) { r.deForma = v; break; } }
+    }
+    if (!r) {
+      const sugerida = await wikiJSON(`https://es.wiktionary.org/w/api.php?action=opensearch&format=json&origin=*&limit=1&namespace=0&search=${encodeURIComponent(w)}`).then(x => x?.[1]?.[0]).catch(() => null);
+      if (sugerida && normalizar(sugerida) !== normalizar(w)) { paso.fin(`No encuentro «${w}». ¿Querías decir «${sugerida}»?`, "🤔"); if (!quieta) { dejarDeSentir("buscando"); sentir("confundida"); } return false; }
+    }
     // un significado puede nombrar cosas feas ("bomba: artefacto explosivo") y está bien; solo se frenan malas palabras y lo sexual
     if (!r) { paso.fin(`«${w}» no está en el diccionario (¿está bien escrita?)`, "🤷"); if (!quieta) { dejarDeSentir("buscando"); sentir("confundida"); } return false; }
     const entrada = r.tipo === "s" ? ["s", r.genero || "m"] : [r.tipo];
