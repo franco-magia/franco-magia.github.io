@@ -4203,12 +4203,26 @@ $("#llSilenciar").onclick = () => {
 document.addEventListener("keydown", (e) => { if (e.key === "Escape" && enLlamada) cortarLlamada("¡Chau!"); });
 if (window.speechSynthesis) speechSynthesis.onvoiceschanged = () => {}; // hace que el navegador cargue las voces
 let ocupado = false;
+// Límite diario del plan gratis: 20 preguntas por día. Después se gastan créditos de uso (1 por pregunta).
+const LIMITE_FREE = 20;
+function usarPregunta() {
+  const plan = token ? "ultra" : guardado.leer("frankers-plan", "gratis");
+  if (plan === "pro" || plan === "promax" || plan === "ultra") return true;
+  const hoy = new Date().toISOString().slice(0, 10);
+  const uso = guardado.leer("frankers-uso", { dia: hoy, n: 0 });
+  if (uso.dia !== hoy) { uso.dia = hoy; uso.n = 0; }
+  if (uso.n < LIMITE_FREE) { uso.n++; guardado.escribir("frankers-uso", uso); return true; }
+  if (creditos.saldo > 0) { creditos.saldo--; guardarCreditos(); pintarLateral(); return true; }
+  agregar({ de: "frankers", texto: `Hoy ya usaste tus ${LIMITE_FREE} preguntas gratis. Mañana se renuevan, o ganá créditos de uso en 🪙 Ganar créditos.` });
+  return false;
+}
 async function enviar(texto) {
   enSilencio = false; // cuando le hablás, vuelve a contar lo que hace
   // espacios raros (⠀, espacios invisibles del teclado o del dictado) → espacios normales: si no, leía todo como una sola palabra
   texto = texto.replace(/[\u2800\u00a0\u2000-\u200b\u202f\u205f\u3000\ufeff]/g, " ").replace(/\s+/g, " ").trim(); if (!texto) return;
   // si todavía está contestando lo anterior, espera un poquito (antes se salteaba tu mensaje, y en la llamada decía "no sé qué decir")
   for (let k = 0; ocupado && k < 150; k++) await new Promise(r => setTimeout(r, 100));
+  if (!usarPregunta()) { ocupado = false; return; }
   ocupado = true;
   try {
   const inicio = $("#inicio"); if (inicio) inicio.remove();
