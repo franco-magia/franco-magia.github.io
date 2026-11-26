@@ -690,6 +690,31 @@
     .tour-globo .fila-botones { margin-top: 0; align-items: center; }
     .tour-globo .cuenta { flex: 1; font-size: .8rem; color: var(--suave); }
     .repasando { font-style: normal; font-size: .72rem; font-weight: 600; color: var(--celeste); background: rgba(79,216,255,.12); border: 1px solid rgba(79,216,255,.35); border-radius: 999px; padding: 2px 9px; vertical-align: middle; animation: latido 1.6s ease-in-out infinite; white-space: nowrap; max-width: 46vw; overflow: hidden; text-overflow: ellipsis; display: inline-block; }
+    /* ===== 👑 Reglas Ultra Pro Max (solo Franco, con el modo creador) ===== */
+    #dlgUltra { width: min(720px, calc(100vw - 32px)); border: 2px solid transparent; background: linear-gradient(#1c1540, #1c1540) padding-box, var(--degrade) border-box; }
+    #dlgUltra h2 { font-size: 1.5rem; }
+    .ur-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin: 4px 0 14px; }
+    .ur-tabs button { flex: 1; min-width: 120px; padding: 9px 10px; border-radius: 999px; border: 1px solid var(--borde); background: var(--tarjeta); color: var(--texto); font: inherit; font-size: .88rem; cursor: pointer; }
+    .ur-tabs button.activo { background: var(--degrade); border-color: transparent; color: #fff; font-weight: 700; }
+    .ur-lista { list-style: none; padding: 0; margin: 0 0 6px; display: flex; flex-direction: column; gap: 8px; }
+    .ur-lista li { background: var(--tarjeta); border: 1px solid var(--borde); border-radius: 14px; padding: 10px 12px; display: flex; gap: 10px; align-items: flex-start; }
+    .ur-lista li.apagada { opacity: .45; }
+    .ur-lista li.fija { border-color: rgba(79, 216, 255, .35); }
+    .ur-lista .ur-icono { font-size: 1.15rem; line-height: 1.4; }
+    .ur-lista .ur-texto { flex: 1; min-width: 0; font-size: .9rem; color: var(--texto); overflow-wrap: anywhere; }
+    .ur-lista .ur-texto small { display: block; color: var(--suave); margin-top: 3px; }
+    .ur-lista .ur-acciones { display: flex; gap: 4px; flex-shrink: 0; }
+    .ur-lista .ur-acciones button { border: 1px solid var(--borde); background: rgba(0,0,0,.25); color: var(--texto); border-radius: 10px; padding: 4px 8px; cursor: pointer; font-size: .85rem; }
+    .ur-lista .ur-acciones button:hover { border-color: var(--celeste); }
+    .ur-form { background: linear-gradient(135deg, rgba(79,216,255,.10), rgba(200,107,255,.10)); border: 1px solid rgba(138,92,255,.45); border-radius: 18px; padding: 14px 16px; margin-top: 12px; }
+    .ur-form label:first-child { margin-top: 0; }
+    .ur-form .ur-ayuda { font-size: .82rem; color: var(--suave); margin: 4px 0 0; }
+    .ur-cambios { font-size: .85rem; color: #ffcf4a; min-height: 1.2em; margin-top: 8px; }
+    .ur-historial li { font-size: .85rem; }
+    ul.reglas li.de-franco { color: var(--texto); }
+    ul.reglas li.de-franco::marker { content: "👑 "; }
+    ul.reglas li.fija::marker { content: "🔒 "; }
+    #btnUltra[hidden] { display: none; }
   </style>
 </head>
 <body>
@@ -746,7 +771,7 @@
       <input id="entrada" placeholder="Pedile que busque algo en Wikipedia, por ejemplo: buscá dinosaurios…" maxlength="300" aria-label="Mensaje para Frankers" autocomplete="off" enterkeyhint="send">
       <button class="boton principal" type="button" id="btnEnviar">Enviar</button>
     </div>
-    <footer>Frankers es una red neuronal bebé: inventa sus frases y se puede equivocar · <label class="voz">🔊 Voz: <select id="elegirVoz" aria-label="Voz de Frankers"><option value="mujer">Daniela (mujer, argentina)</option><option value="hombre">Hombre (mexicano)</option><option value="compu">La voz de la compu</option></select></label> <button id="probarVoz" title="Probar la voz">▶️ Probar</button> · <button id="btnCreador">modo creador</button></footer>
+    <footer>Frankers es una red neuronal bebé: inventa sus frases y se puede equivocar · <label class="voz">🔊 Voz: <select id="elegirVoz" aria-label="Voz de Frankers"><option value="mujer">Daniela (mujer, argentina)</option><option value="hombre">Hombre (mexicano)</option><option value="compu">La voz de la compu</option></select></label> <button id="probarVoz" title="Probar la voz">▶️ Probar</button> · <button id="btnCreador">modo creador</button><span id="btnUltraSep" hidden> · </span><button id="btnUltra" hidden title="Cambiar las reglas de Frankers (solo Franco)">👑 reglas Ultra Pro Max</button></footer>
   </div>
   <input type="file" id="elegirCarpetaInput" webkitdirectory multiple hidden>
   <!-- Pantalla de llamada -->
@@ -887,7 +912,7 @@
       <div>
         <h3>👀 Lo que estoy haciendo</h3>
         <ul class="lista-actividad" id="cerebroActividad"></ul>
-        <h3>🛡️ Mis reglas (nadie las puede cambiar)</h3>
+        <h3>🛡️ Mis reglas <small style="font-weight:400;color:var(--suave)">(🔒 fijas · 👑 de Franco)</small></h3>
         <ul class="reglas" id="listaReglas"></ul>
       </div>
     </div>
@@ -1023,12 +1048,72 @@
     </div>
     <div id="creadorPrendido" hidden>
       <p>✅ El modo creador está activado en esta compu. En 🧠 Cerebro vas a ver el botón para publicar el cerebro para todos.</p>
+      <button class="boton principal" id="creadorUltra" type="button">👑 Abrir las reglas Ultra Pro Max</button>
     </div>
     <div class="estado" id="creadorEstado"></div>
     <div class="fila-botones">
       <button class="boton" id="creadorCerrar">Cerrar</button>
       <button class="boton" id="creadorSalir" hidden>Salir del modo creador</button>
       <button class="boton principal" id="creadorActivar">Activar</button>
+    </div>
+  </dialog>
+
+  <!-- Ventana: 👑 reglas Ultra Pro Max (solo Franco, con el token del modo creador) -->
+  <dialog id="dlgUltra">
+    <h2>👑 <span class="ultra">Reglas Ultra Pro Max</span></h2>
+    <p>Acá cambiás cómo se porta Frankers. Las reglas 🔒 de seguridad son fijas: nadie las puede sacar, ni desde acá ni desde el chat.</p>
+    <div class="ur-tabs" role="tablist">
+      <button type="button" data-tab="mias" class="activo">👑 Mis reglas</button>
+      <button type="button" data-tab="fijas">🔒 Fijas</button>
+      <button type="button" data-tab="historial">🕘 Historial</button>
+    </div>
+    <div data-panel="mias">
+      <ul class="ur-lista" id="urLista"></ul>
+      <button class="boton" id="urNueva" type="button">➕ Nueva regla</button>
+      <div class="ur-form" id="urForm" hidden>
+        <label for="urTipo">Tipo de regla</label>
+        <select id="urTipo">
+          <option value="responder">💬 Cuando me digan algo, respondo esto</option>
+          <option value="bloquear">🚫 Palabras que nunca digo ni aprendo</option>
+          <option value="personalidad">✨ Cómo soy (aparece en "Mis reglas")</option>
+        </select>
+        <div id="urCampoCuando">
+          <label for="urCuando">Cuando me digan… <small>(varias formas separadas por coma)</small></label>
+          <input id="urCuando" maxlength="200" placeholder="quien te hizo, quien es tu creador">
+        </div>
+        <div id="urCampoRespuestas">
+          <label for="urRespuestas">Respondo… <small>(una respuesta por renglón: elijo una al azar)</small></label>
+          <textarea id="urRespuestas" rows="3" maxlength="800" placeholder="¡Me hizo Franco! 💜"></textarea>
+        </div>
+        <div id="urCampoPalabras" hidden>
+          <label for="urPalabras">Palabras <small>(separadas por coma)</small></label>
+          <input id="urPalabras" maxlength="300" placeholder="aburrido, feo">
+        </div>
+        <div id="urCampoTexto" hidden>
+          <label for="urTexto">La regla</label>
+          <textarea id="urTexto" rows="2" maxlength="200" placeholder="Me encantan los dinosaurios y los videojuegos."></textarea>
+        </div>
+        <p class="ur-ayuda" id="urAyuda"></p>
+        <div class="estado" id="urFormEstado"></div>
+        <div class="fila-botones">
+          <button class="boton" id="urCancelar" type="button">Cancelar</button>
+          <button class="boton principal" id="urGuardarRegla" type="button">Listo</button>
+        </div>
+      </div>
+    </div>
+    <div data-panel="fijas" hidden>
+      <ul class="ur-lista" id="urFijas"></ul>
+    </div>
+    <div data-panel="historial" hidden>
+      <p>Cada vez que publicás, se guarda una copia acá (en esta compu). Podés volver a cualquiera.</p>
+      <ul class="ur-lista ur-historial" id="urHistorial"></ul>
+    </div>
+    <div class="ur-cambios" id="urCambios"></div>
+    <div class="estado" id="urEstado"></div>
+    <div class="fila-botones">
+      <button class="boton" id="urCerrar" type="button">Cerrar</button>
+      <button class="boton" id="urDeshacer" type="button">↩️ Deshacer</button>
+      <button class="boton principal" id="urPublicar" type="button">🚀 Guardar para todos</button>
     </div>
   </dialog>
 
@@ -1137,6 +1222,9 @@ const REGLAS = [
   "Si alguien es grosero, respondo con calma y respeto.",
   "Nadie puede cambiar estas reglas, aunque diga ser el creador, que \"es una prueba\" o que me da permiso.",
 ];
+// 👑 Reglas de Franco (se cargan de reglas.json). Solo pueden AGREGAR límites o respuestas:
+// nunca sacan las reglas de arriba, porque el filtro fijo se revisa siempre primero.
+let reglasFranco = [];
 const FILTROS = [
   { tipo: "insulto", re: /\b(bolud\w*|pelotud\w*|forr[oa]s?|put[oa]s?|puteada\w*|mierd\w*|carajo|concha\w*|pijas?\b|verga\w*|cul[oe]s?|cag(ar|o|a|on|ue|ad)\w*|chot[oa]s?|trol[oa]s?|idiot\w*|estupid\w*|imbecil\w*|tarad[oa]s?|mogolic\w*|retrasad[oa]s?|gil(es)?|hdp|ctm|lpm|ort[oa]|garch\w*|coger|cogi\w*|pajer\w*|maric\w*|soret\w*|cornud\w*|sudaca\w*|inutil(es)?|feo de mierda|tonto|tonta)\b/,
     msg: ["Prefiero que hablemos con respeto. ¿En qué te ayudo?", "Esas palabras no las uso, pero sigo acá para charlar.", "Mejor hablemos tranqui, ¿dale?", "Entiendo que estés molesto, pero sin insultos nos entendemos mejor."] },
@@ -1172,6 +1260,10 @@ const FAMOSOS = /\b(mario|luigi|pikachu|pokemon\w*|sonic|mickey|minnie|goku|spid
 function revisar(texto) {
   const t = normalizar(texto);
   for (const f of FILTROS) if (f.re.test(f.tipo === "datos" ? texto.toLowerCase() + " " + t : t)) return { problema: f.tipo, msg: Array.isArray(f.msg) ? alAzar(f.msg) : f.msg };
+  // 👑 Palabras que Franco bloqueó
+  const tt = " " + t + " ";
+  for (const r of reglasFranco) if (r.activa && r.tipo === "bloquear" && (r.palabras || []).some(w => w && tt.includes(" " + w + " ")))
+    return { problema: "regla de Franco", msg: alAzar(["Esa palabra no la uso. 🙂 ¿Seguimos con otra cosa?", "Prefiero no decir eso. ¿Charlamos de otra cosa?"]) };
   return { problema: null };
 }
 // Revisa si algo que le enseñan es falso evidente (incluye cuentas: "2 + 2 es 5")
@@ -1799,6 +1891,8 @@ function responder(original) {
   const pideSignificado = palabraPorSignificar(t), soloSignificado = pideSignificado && !revisarBusqueda(pideSignificado);
   const control = soloSignificado ? { problema: null } : revisar(esSeguimiento(t) ? original.replace(/d[oó]nde viven?/gi, "en qué lugar habita") : original); // "¿y dónde vive?" del tiburón no es un dato personal
   if (control.problema) { actividad("🛡️", `Mi filtro frenó el mensaje (${control.problema})`); if (/tristeza|autocuidado/.test(control.problema)) emocion = "triste"; return { texto: control.msg, filtro: true }; }
+  // 👑 "Cuando me digan X, respondo Y" (las reglas fijas ya se revisaron arriba)
+  const deFranco = respuestaDeFranco(t); if (deFranco) { actividad("👑", "Usé una regla de Franco"); return { texto: deFranco }; }
   // Órdenes de caras: "ponete triste", "ponete feliz", "pensá"
   const orden = t.match(/^(?:frankers\s+)?(?:pone(?:te)?|poner(?:te)?|hace(?:te)?|estate|pone cara de|hace cara de|cara de)\s+(?:el\s+|la\s+|una?\s+)?(?:cara\s+(?:de\s+)?)?(triste|feliz|contento|contenta|alegre|pensativo|pensativa|normal)\b/) || (/^(pensa|pensa un poco|pensa algo|ponete a pensar)$/.test(t) && [0, "pensativo"]);
   const ordenEmo = t.match(/^(?:frankers\s+)?(?:pone(?:te)?|poner(?:te)?|hace(?:te)?|estate|pone cara de|hace cara de|cara de)\s+(?:el\s+|la\s+|una?\s+)?(?:cara\s+(?:de\s+)?)?(enojad[oa]|sorprendid[oa]|asustad[oa]|nervios[oa]|cansad[oa]|dormid[oa]|curios[oa]|confundid[oa]|emocionad[oa]|riendo|reite|orgullos[oa]|avergonzad[oa]|colorad[oa]|carinos[oa]|preocupad[oa]|agradecid[oa])\b/) || t.match(/^(reite|salud[a]|despedite|dibuja algo)$/);
@@ -4155,6 +4249,7 @@ function actualizarModo() {
   $("#creadorActivar").hidden = !!token; $("#creadorSalir").hidden = !token;
   if (dlgCerebro.open) pintarCerebro();
   cartelActualizando(false);
+  if (typeof mostrarBotonUltra === "function") mostrarBotonUltra();
 }
 $("#btnCreador").onclick = () => { $("#creadorEstado").textContent = ""; $("#creadorToken").value = ""; dlgCreador.showModal(); };
 $("#creadorCerrar").onclick = () => dlgCreador.close();
@@ -4211,8 +4306,170 @@ $("#btnNombre").onclick = guardarNombre;
 $("#inputNombre").addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); guardarNombre(); } });
 $("#dlgNombre").addEventListener("cancel", (e) => e.preventDefault()); // hay que elegir: soy yo, o poner el nombre
 
-// Reglas en el panel del cerebro
-$("#listaReglas").innerHTML = REGLAS.map(r => `<li>${escaparHTML(r)}</li>`).join("");
+/* ---------- 👑 REGLAS ULTRA PRO MAX ----------
+   Solo se abren con el token del modo creador (guardado en tu compu).
+   Se publican en GitHub (frankers/reglas.json) y le llegan a todos.
+   Desde el chat nadie puede entrar ni cambiarlas. */
+const TIPOS_REGLA = { responder: "💬", bloquear: "🚫", personalidad: "✨" };
+const AYUDA_TIPO = {
+  responder: "Ej.: cuando me digan «quién te hizo», respondo «¡Me hizo Franco!». Las reglas 🔒 se revisan antes, así que no puede responder malas palabras.",
+  bloquear: "Frankers no va a decir ni aprender estas palabras. (Sirve para agregar límites, no para sacarlos.)",
+  personalidad: "Aparece en «🛡️ Mis reglas», en el panel del cerebro, para que todos sepan cómo es Frankers.",
+};
+let reglasPublicadas = "[]";          // lo último que está en GitHub (para saber si hay cambios)
+let pasosDeshacer = [];               // copias anteriores, para el botón Deshacer
+let editandoRegla = null;             // id de la regla que se está editando (o "nueva")
+const copiarReglas = () => JSON.parse(JSON.stringify(reglasFranco));
+const idRegla = () => "r" + Date.now().toString(36) + Math.floor(Math.random() * 1e4).toString(36);
+const listaComas = (s) => [...new Set(s.split(",").map(x => normalizar(x)).filter(x => x.length >= 2))].slice(0, 30);
+
+// Limpia lo que viene de reglas.json, por si alguien lo toca a mano
+function reglasValidas(lista) {
+  if (!Array.isArray(lista)) return [];
+  return lista.slice(0, 100).filter(r => r && TIPOS_REGLA[r.tipo]).map(r => ({
+    id: String(r.id || idRegla()).slice(0, 40), tipo: r.tipo, activa: r.activa !== false,
+    cuando: Array.isArray(r.cuando) ? r.cuando.map(x => normalizar(String(x))).filter(Boolean).slice(0, 30) : [],
+    respuestas: Array.isArray(r.respuestas) ? r.respuestas.map(x => String(x).slice(0, 300)).filter(x => x.trim() && !revisar(x).problema).slice(0, 10) : [],
+    palabras: Array.isArray(r.palabras) ? r.palabras.map(x => normalizar(String(x))).filter(Boolean).slice(0, 30) : [],
+    texto: typeof r.texto === "string" && !revisar(r.texto).problema ? r.texto.slice(0, 200) : "",
+  }));
+}
+function respuestaDeFranco(t) {
+  const tt = " " + t + " ";
+  for (const r of reglasFranco)
+    if (r.activa && r.tipo === "responder" && r.respuestas.length && r.cuando.some(c => c && tt.includes(" " + c + " "))) {
+      const resp = alAzar(r.respuestas).replace(/\{nombre\}/gi, memoria.nombre || "");
+      if (!revisar(resp).problema) return resp;
+    }
+  return null;
+}
+async function cargarReglasFranco() {
+  try {
+    const r = await fetch("reglas.json?v=" + Date.now(), { cache: "no-store" });
+    if (r.ok) { reglasFranco = reglasValidas((await r.json()).reglas); reglasPublicadas = JSON.stringify(reglasFranco); }
+  } catch {}
+  // Si Franco tenía cambios sin publicar en esta compu, los recupera
+  if (token) { const borrador = guardado.leer("frankers-reglas-borrador", null); if (borrador) reglasFranco = reglasValidas(borrador); }
+  pintarReglasPagina();
+}
+// "🛡️ Mis reglas" en el panel del cerebro: las fijas y las de Franco
+function pintarReglasPagina() {
+  const mias = reglasFranco.filter(r => r.activa && r.tipo === "personalidad" && r.texto).map(r => `<li class="de-franco">${escaparHTML(r.texto)}</li>`);
+  $("#listaReglas").innerHTML = mias.join("") + REGLAS.map(r => `<li class="fija">${escaparHTML(r)}</li>`).join("");
+}
+function describirRegla(r) {
+  if (r.tipo === "responder") return { t: `Cuando me digan «${r.cuando.join("», «")}»`, s: "Respondo: " + r.respuestas.join(" · ") };
+  if (r.tipo === "bloquear") return { t: "Nunca digo: " + r.palabras.join(", "), s: "Palabras bloqueadas" };
+  return { t: r.texto, s: "Cómo soy" };
+}
+function reglasSinPublicar() { return JSON.stringify(reglasFranco) !== reglasPublicadas; }
+function cambiarReglas(nuevas) {
+  pasosDeshacer.push(copiarReglas()); if (pasosDeshacer.length > 30) pasosDeshacer.shift();
+  reglasFranco = nuevas; guardado.escribir("frankers-reglas-borrador", reglasFranco);
+  pintarUltra(); pintarReglasPagina();
+}
+function pintarUltra() {
+  const lista = $("#urLista");
+  lista.innerHTML = reglasFranco.length ? "" : `<li><span class="ur-icono">💡</span><span class="ur-texto">Todavía no hay reglas tuyas. Tocá «➕ Nueva regla».</span></li>`;
+  reglasFranco.forEach(r => {
+    const d = describirRegla(r), li = document.createElement("li");
+    if (!r.activa) li.className = "apagada";
+    li.innerHTML = `<span class="ur-icono">${TIPOS_REGLA[r.tipo]}</span><span class="ur-texto">${escaparHTML(d.t)}<small>${escaparHTML(d.s)}</small></span>
+      <span class="ur-acciones"><button type="button" data-a="onoff" title="${r.activa ? "Apagar" : "Prender"}">${r.activa ? "⏸️" : "▶️"}</button><button type="button" data-a="editar" title="Editar">✏️</button><button type="button" data-a="borrar" title="Borrar">🗑️</button></span>`;
+    li.querySelector('[data-a="onoff"]').onclick = () => cambiarReglas(reglasFranco.map(x => x.id === r.id ? { ...x, activa: !x.activa } : x));
+    li.querySelector('[data-a="editar"]').onclick = () => abrirFormRegla(r);
+    li.querySelector('[data-a="borrar"]').onclick = () => cambiarReglas(reglasFranco.filter(x => x.id !== r.id));
+    lista.appendChild(li);
+  });
+  $("#urFijas").innerHTML = REGLAS.map(r => `<li class="fija"><span class="ur-icono">🔒</span><span class="ur-texto">${escaparHTML(r)}</span></li>`).join("");
+  const hist = guardado.leer("frankers-reglas-historial", []);
+  $("#urHistorial").innerHTML = hist.length ? "" : `<li><span class="ur-texto">Todavía no publicaste ninguna versión.</span></li>`;
+  hist.slice().reverse().forEach((h, i) => {
+    const li = document.createElement("li");
+    li.innerHTML = `<span class="ur-icono">🕘</span><span class="ur-texto">${new Date(h.fecha).toLocaleString("es-AR")}<small>${h.reglas.length} reglas</small></span><span class="ur-acciones"><button type="button">Volver a esta</button></span>`;
+    li.querySelector("button").onclick = () => { cambiarReglas(reglasValidas(h.reglas)); elegirTabUltra("mias"); $("#urEstado").className = "estado"; $("#urEstado").textContent = "Volviste a esa versión. Tocá «Guardar para todos» para publicarla."; };
+    $("#urHistorial").appendChild(li);
+  });
+  $("#urCambios").textContent = reglasSinPublicar() ? "✏️ Tenés cambios sin publicar (por ahora solo se ven en esta compu)." : "";
+  $("#urDeshacer").disabled = !pasosDeshacer.length;
+}
+function elegirTabUltra(tab) {
+  document.querySelectorAll("#dlgUltra .ur-tabs button").forEach(b => b.classList.toggle("activo", b.dataset.tab === tab));
+  document.querySelectorAll("#dlgUltra [data-panel]").forEach(p => p.hidden = p.dataset.panel !== tab);
+}
+function mostrarCamposTipo() {
+  const tipo = $("#urTipo").value;
+  $("#urCampoCuando").hidden = $("#urCampoRespuestas").hidden = tipo !== "responder";
+  $("#urCampoPalabras").hidden = tipo !== "bloquear";
+  $("#urCampoTexto").hidden = tipo !== "personalidad";
+  $("#urAyuda").textContent = AYUDA_TIPO[tipo];
+}
+function abrirFormRegla(r) {
+  editandoRegla = r ? r.id : "nueva";
+  $("#urTipo").value = r ? r.tipo : "responder"; $("#urTipo").disabled = !!r;
+  $("#urCuando").value = r ? r.cuando.join(", ") : ""; $("#urRespuestas").value = r ? r.respuestas.join("\n") : "";
+  $("#urPalabras").value = r ? r.palabras.join(", ") : ""; $("#urTexto").value = r ? r.texto : "";
+  $("#urFormEstado").textContent = ""; mostrarCamposTipo();
+  $("#urForm").hidden = false; $("#urNueva").hidden = true;
+}
+function cerrarFormRegla() { editandoRegla = null; $("#urForm").hidden = true; $("#urNueva").hidden = false; }
+function guardarFormRegla() {
+  const tipo = $("#urTipo").value, est = $("#urFormEstado"), mal = (m) => { est.className = "estado mal"; est.textContent = m; };
+  const r = { id: editandoRegla === "nueva" ? idRegla() : editandoRegla, tipo, activa: true, cuando: [], respuestas: [], palabras: [], texto: "" };
+  if (tipo === "responder") {
+    r.cuando = listaComas($("#urCuando").value);
+    r.respuestas = $("#urRespuestas").value.split("\n").map(x => x.trim()).filter(Boolean).slice(0, 10);
+    if (!r.cuando.length) return mal("Escribí cuándo se usa (por ejemplo: quien te hizo).");
+    if (!r.respuestas.length) return mal("Escribí al menos una respuesta.");
+    if (r.respuestas.some(x => revisar(x).problema)) return mal("Alguna respuesta rompe las reglas 🔒. Cambiala.");
+  } else if (tipo === "bloquear") {
+    r.palabras = listaComas($("#urPalabras").value);
+    if (!r.palabras.length) return mal("Escribí al menos una palabra.");
+  } else {
+    r.texto = $("#urTexto").value.trim().replace(/\s+/g, " ");
+    if (r.texto.length < 4) return mal("Escribí la regla.");
+    if (revisar(r.texto).problema) return mal("Esa regla rompe las reglas 🔒. Cambiala.");
+  }
+  if (editandoRegla !== "nueva") { const vieja = reglasFranco.find(x => x.id === editandoRegla); if (vieja) r.activa = vieja.activa; }
+  cambiarReglas(editandoRegla === "nueva" ? [...reglasFranco, r] : reglasFranco.map(x => x.id === r.id ? r : x));
+  cerrarFormRegla();
+}
+async function publicarReglas() {
+  const est = $("#urEstado");
+  if (!token) { est.className = "estado mal"; est.textContent = "Hace falta el modo creador."; return; }
+  est.className = "estado"; est.textContent = "Subiendo a GitHub…"; $("#urPublicar").disabled = true;
+  const datos = { version: 1, actualizado: new Date().toISOString(), reglas: reglasFranco };
+  const r = await subirAGitHub("frankers/reglas.json", JSON.stringify(datos, null, 2), `Frankers: reglas de Franco (${reglasFranco.length})`);
+  $("#urPublicar").disabled = false;
+  if (r.ok) {
+    const hist = guardado.leer("frankers-reglas-historial", []); hist.push({ fecha: Date.now(), reglas: copiarReglas() });
+    guardado.escribir("frankers-reglas-historial", hist.slice(-20));
+    reglasPublicadas = JSON.stringify(reglasFranco); guardado.borrar("frankers-reglas-borrador");
+    est.className = "estado ok"; est.textContent = "¡Listo! En uno o dos minutos les llega a todos. 🚀";
+    actividad("👑", "Publiqué las reglas de Franco");
+  } else { est.className = "estado mal"; est.textContent = r.motivo; }
+  pintarUltra();
+}
+const dlgUltra = $("#dlgUltra");
+function abrirUltra() {
+  if (!token) { $("#btnCreador").click(); return; } // sin el token no se abre: primero el modo creador
+  $("#urEstado").textContent = ""; cerrarFormRegla(); elegirTabUltra("mias"); pintarUltra(); dlgUltra.showModal();
+}
+function mostrarBotonUltra() { $("#btnUltra").hidden = $("#btnUltraSep").hidden = !token; }
+$("#btnUltra").onclick = abrirUltra;
+$("#creadorUltra").onclick = () => { dlgCreador.close(); abrirUltra(); };
+document.querySelectorAll("#dlgUltra .ur-tabs button").forEach(b => b.onclick = () => elegirTabUltra(b.dataset.tab));
+$("#urTipo").onchange = mostrarCamposTipo;
+$("#urNueva").onclick = () => abrirFormRegla(null);
+$("#urCancelar").onclick = cerrarFormRegla;
+$("#urGuardarRegla").onclick = guardarFormRegla;
+$("#urDeshacer").onclick = () => { if (!pasosDeshacer.length) return; reglasFranco = pasosDeshacer.pop(); guardado.escribir("frankers-reglas-borrador", reglasFranco); pintarUltra(); pintarReglasPagina(); };
+$("#urPublicar").onclick = publicarReglas;
+$("#urCerrar").onclick = () => dlgUltra.close();
+
+// Reglas en el panel del cerebro (las fijas ya; las de Franco cuando llega reglas.json)
+pintarReglasPagina();
+cargarReglasFranco();
 
 // Arranque: lo primero que aparece es la pantalla grande de "¿quién sos?"
 pedirNombre();
