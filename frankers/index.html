@@ -1480,12 +1480,19 @@ async function repasoSolo() {
   repasando = true; enSilencio = true;
   try {
     const textos = [...await cargarTextosGrandes(), ...aprendidoAca];
-    let vueltas = 0;
+    let vueltas = 0, dificiles = [];
+    // "repasar solo lo que le cuesta": cada tanto mide qué frases le cuestan más (con un límite de tiempo) y las repasa más
+    const medirDificiles = () => {
+      const muestra = [], t0 = Date.now();
+      for (let k = 0; k < 400 && Date.now() - t0 < 40; k++) { const t = textos[Math.floor(Math.random() * textos.length)]; muestra.push([cerebro.medirError([t]), t]); }
+      dificiles = muestra.sort((x, y) => y[0] - x[0]).slice(0, 30).map(x => x[1]);
+    };
+    medirDificiles();
     while (Date.now() - ultimaAccion >= 1000 && !ocupado && !enLlamada && !document.hidden) {
       mostrarRepasando("repasando");
       // la mitad de lo que repasa sola son charlas (si no, de tanto leer diccionario y Wikipedia se olvidaba de charlar)
       const charlasRep = textos.filter(t => t.startsWith("<yo>"));
-      const lote = []; for (let k = 0; k < 8; k++) { const de = k % 2 === 0 && charlasRep.length ? charlasRep : textos; lote.push(de[Math.floor(Math.random() * de.length)]); }
+      const lote = []; for (let k = 0; k < 8; k++) { const de = k % 4 === 3 && dificiles.length ? dificiles : k % 2 === 0 && charlasRep.length ? charlasRep : textos; lote.push(de[Math.floor(Math.random() * de.length)]); }
       // las charlas importantes (saludos, "cómo estás", pedidos) se repasan más; si nunca le hablaron, casi solo esas
       const importantes = historial.some(m => m.de === "yo") ? 2 : 7;
       for (let k = 0; k < importantes; k++) lote.push(textos[Math.floor(Math.random() * Math.min(textos.length, 255))]);
@@ -1493,6 +1500,7 @@ async function repasoSolo() {
       vueltas++;
       if (Date.now() - ultimaLectura > 1000 && !dlgCerebro.open) { ultimaLectura = Date.now(); await leerAlgoNuevo(); } // cada segundo lee algo nuevo (con el cerebro abierto, no: así no se traba)
       if (vueltas % 100 === 0) { guardarCerebro(); marcarCambio(); }
+      if (vueltas % 50 === 0) medirDificiles();
       await new Promise(r => setTimeout(r, document.querySelector("dialog[open]") ? 60 : 30));
     }
     guardarCerebro(); marcarCambio();
