@@ -1223,10 +1223,21 @@ function baseDatos(que, valor) {
     };
   });
 }
+// Huella rápida del cerebro: si no cambió desde el último guardado, no se vuelve a escribir todo (Turbo: "guardar solo lo que cambió")
+let ultimaHuella = null;
+function huellaCerebro() {
+  let suma = cerebro.palabras.length * 31 + (cerebro.historialError ? cerebro.historialError.length : 0);
+  const E = cerebro.E; for (let i = 0; i < E.length; i += 97) suma = (suma + Math.round(E[i] * 1e6)) % 2147483647;
+  return suma;
+}
 function guardarCerebro(ahora = false) {
   clearTimeout(guardadoPendiente);
-  const hacer = () => baseDatos("guardar", cerebro.aCrudo()).then(() => { try { localStorage.removeItem(CLAVE_CEREBRO); } catch {} }).catch(() => {
-    try { localStorage.setItem(CLAVE_CEREBRO, JSON.stringify(cerebro.aJSON())); } catch { actividad("⚠️", "No entró todo en la memoria del navegador"); } });
+  const hacer = () => {
+    const huella = huellaCerebro();
+    if (huella === ultimaHuella) return; // nada cambió: no hace falta escribirlo otra vez
+    baseDatos("guardar", cerebro.aCrudo()).then(() => { ultimaHuella = huella; try { localStorage.removeItem(CLAVE_CEREBRO); } catch {} }).catch(() => {
+      try { localStorage.setItem(CLAVE_CEREBRO, JSON.stringify(cerebro.aJSON())); ultimaHuella = huella; } catch { actividad("⚠️", "No entró todo en la memoria del navegador"); } });
+  };
   if (ahora) hacer(); else guardadoPendiente = setTimeout(hacer, 1500);
 }
 /* APRENDER DE A POQUITO: aprende exactamente lo mismo, pero en pedacitos de 6 milésimas de segundo,
