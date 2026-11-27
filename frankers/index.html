@@ -1485,14 +1485,15 @@ async function repasoSolo() {
     const medirDificiles = () => {
       const muestra = [], t0 = Date.now();
       for (let k = 0; k < 400 && Date.now() - t0 < 40; k++) { const t = textos[Math.floor(Math.random() * textos.length)]; muestra.push([cerebro.medirError([t]), t]); }
-      dificiles = muestra.sort((x, y) => y[0] - x[0]).slice(0, 30).map(x => x[1]);
+      // "menos del 50% seguro": la pérdida pasa de ln(2) cuando la probabilidad de acertar es menor a 1/2
+      dificiles = muestra.filter(x => x[0] > Math.log(2)).sort((x, y) => y[0] - x[0]).slice(0, 60).map(x => x[1]);
     };
     medirDificiles();
     while (Date.now() - ultimaAccion >= 1000 && !ocupado && !enLlamada && !document.hidden) {
       mostrarRepasando("repasando");
       // la mitad de lo que repasa sola son charlas (si no, de tanto leer diccionario y Wikipedia se olvidaba de charlar)
       const charlasRep = textos.filter(t => t.startsWith("<yo>"));
-      const lote = []; for (let k = 0; k < 8; k++) { const de = k % 4 === 3 && dificiles.length ? dificiles : k % 2 === 0 && charlasRep.length ? charlasRep : textos; lote.push(de[Math.floor(Math.random() * de.length)]); }
+      const lote = []; for (let k = 0; k < 8; k++) { const de = k % 2 === 1 && dificiles.length ? dificiles : k % 2 === 0 && charlasRep.length ? charlasRep : textos; lote.push(de[Math.floor(Math.random() * de.length)]); }
       // las charlas importantes (saludos, "cómo estás", pedidos) se repasan más; si nunca le hablaron, casi solo esas
       const importantes = historial.some(m => m.de === "yo") ? 2 : 7;
       for (let k = 0; k < importantes; k++) lote.push(textos[Math.floor(Math.random() * Math.min(textos.length, 255))]);
